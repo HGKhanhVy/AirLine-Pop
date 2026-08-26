@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 702da56c0d214754eb7f1b490d572fa1, type: 3}
+  m_Name: AdsConfigs
+  m_EditorClassIdentifier: 
+  testDeviceIds:
+  - 96e23e80653bb28980d3f40beb58915c
+  SdkAppId: h690ed4f8bc370
+  SdkKey: aec9762b64beb2cf822a2b6b36faed2ae
+  isOpenAd: 0
+  openAdUnitId: 
+  timeToTriggerOpenAd: 180
+  isBanner: 0
+  bannerAdUnitId: n1gtfgtg3jme1m
+  bannerAdsize: 1
+  bannerPosition: 1
+  interstitialAdUnitId: n1gtfgtg3jm2u6
+  rewardedAdUnitId: n1gtfgtg3jm9fr
+  reloadInterval: 10
+  delayBetweenAds: 45

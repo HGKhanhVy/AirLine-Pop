@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 97dd552bb2269ef46b3feae9ca431261, type: 3}
+  m_Name: FailTypeSO
+  m_EditorClassIdentifier: Assembly-CSharp::ASTeams.Base.Gameplay.FailTypeSO
+  configs:
+  - failType: 2
+    loseSprite: {fileID: 21300000, guid: a89f0b4b0007a4a45acd82e243e4d53f, type: 3}
+    loseText: Bomb
+    reviveSprite: {fileID: 21300000, guid: a89f0b4b0007a4a45acd82e243e4d53f, type: 3}
+    reviveTitle: Bomb
+    reviveDescription: + 1 space and 30 seconds
+  - failType: 3
+    loseSprite: {fileID: 21300000, guid: 225294183e074d5409dc5b0535410d24, type: 3}
+    loseText: No Avaliable Moves
+    reviveSprite: {fileID: 21300000, guid: 225294183e074d5409dc5b0535410d24, type: 3}
+    reviveTitle: No Avaliable Moves
+    reviveDescription: + 1 space and 30 seconds
+  - failType: 0
+    loseSprite: {fileID: 21300000, guid: 9ad2bf1891696c4409dffe0c6f284298, type: 3}
+    loseText: TIME UP
+    reviveSprite: {fileID: 21300000, guid: 9ad2bf1891696c4409dffe0c6f284298, type: 3}
+    reviveTitle: TIME UP
+    reviveDescription: + 1 space and 30 seconds
