@@ -1,0 +1,21 @@
+{
+    "Packs":
+	[
+	    {
+		    "Name": "Beginner",
+			"LevelsCount" : 100
+		},
+		 {
+		    "Name": "Medium",
+			"LevelsCount" : 100
+		},
+		 {
+		    "Name": "Expert",
+			"LevelsCount" : 100
+		},
+		 {
+		    "Name": "Master",
+			"LevelsCount" : 100
+		}
+	]
+}
