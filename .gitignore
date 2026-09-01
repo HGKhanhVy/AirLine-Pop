@@ -109,3 +109,8 @@ InitTestScene*.unity*
 # AI tooling (local only)
 .claude/
 .mcp.json
+
+# Unity MCP plugin va dependency cua no (local only)
+/[Aa]ssets/[Pp]lugins/NuGet/
+/[Aa]ssets/[Pp]lugins/NuGet.meta
+/ProjectSettings/Packages/
