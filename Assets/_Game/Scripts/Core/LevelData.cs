@@ -128,6 +128,26 @@ namespace ASTeams.SingleLine.Core
             return cell >= 0 && cell < activeMask.Length && activeMask[cell];
         }
 
+        /// <summary>
+        /// Copy of this level under a new id and difficulty. The importer builds its own
+        /// chapter ordering, so a level keeps its board but is renamed and re-rated on the
+        /// way into a build; everything else carries over untouched.
+        /// </summary>
+        public LevelData WithIdentity(string id, int difficulty)
+        {
+            return new LevelData(
+                id,
+                Version,
+                Grid,
+                declaredActiveCells,
+                FixedStart,
+                FixedEnd,
+                solution,
+                difficulty,
+                ThemeId,
+                tags);
+        }
+
         public override string ToString()
         {
             return $"{Id} ({Grid}, {ActiveCellCount} cells)";

@@ -13,17 +13,26 @@ namespace ASTeams.SingleLine.Import
 
         public LevelFeatures Features { get; }
 
-        /// <summary>Weighted blend of the percentile ranked signals, from 0 to 1.</summary>
-        public double RawScore { get; }
+        /// <summary>
+        /// Where this level sits among the whole corpus, from 0 to 1, and the number the
+        /// chapter assembler places by.
+        ///
+        /// It is the percentile rank of the blended signals rather than the blend itself.
+        /// Averaging four uniform rankings does not stay uniform: the tails compress, so
+        /// the hardest level in the corpus blends to about 0.88 and never reaches 1. An
+        /// assembler asking for a level at 0.95 would then find nothing and quietly bend
+        /// its curve. Ranking once more restores an even spread across the range.
+        /// </summary>
+        public double Score { get; }
 
         /// <summary>The 1 to 10 value GDD 6.3 requires, taken from the decile of the raw score.</summary>
         public int Difficulty { get; }
 
-        public ScoredLevel(LevelData level, LevelFeatures features, double rawScore, int difficulty)
+        public ScoredLevel(LevelData level, LevelFeatures features, double score, int difficulty)
         {
             Level = level;
             Features = features;
-            RawScore = rawScore;
+            Score = score;
             Difficulty = difficulty;
         }
 

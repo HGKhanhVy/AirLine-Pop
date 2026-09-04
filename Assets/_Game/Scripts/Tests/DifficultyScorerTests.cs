@@ -128,7 +128,7 @@ namespace ASTeams.SingleLine.Core.Tests
             for (int i = 0; i < first.Count; i++)
             {
                 Assert.AreEqual(first[i].Difficulty, second[i].Difficulty, "level " + i);
-                Assert.AreEqual(first[i].RawScore, second[i].RawScore, 1e-12);
+                Assert.AreEqual(first[i].Score, second[i].Score, 1e-12);
             }
         }
 

@@ -207,10 +207,16 @@ namespace CorpusCheck
 
         private static void ReportDifficulty(List<LevelData> levels, int budget)
         {
+            var deduplicator = new LevelDeduplicator(new BoardCanonicalizer());
+            List<LevelData> unique = deduplicator.Group(levels)
+                .Select(g => g.Representative)
+                .ToList();
+
             var scorer = new DifficultyScorer(new WarnsdorffSolver(budget));
             var stopwatch = Stopwatch.StartNew();
-            List<ScoredLevel> scored = scorer.Score(levels);
+            List<ScoredLevel> scored = scorer.Score(unique);
             stopwatch.Stop();
+            levels = unique;
 
             Console.WriteLine();
             Console.WriteLine("Cham do kho (" + stopwatch.ElapsedMilliseconds + " ms):");
@@ -237,6 +243,86 @@ namespace CorpusCheck
             }
 
             ReportBeginnerCorrelation(scored);
+            ReportCampaign(scored);
+        }
+
+        /// <summary>
+        /// Builds the campaign and measures how faithfully the real pool follows the
+        /// designed curve. The pool is finite, so the assembler takes the nearest unused
+        /// level rather than one at the exact target, and the drift that causes is the
+        /// number worth watching.
+        /// </summary>
+        private static void ReportCampaign(List<ScoredLevel> scored)
+        {
+            Campaign campaign;
+
+            try
+            {
+                campaign = new ChapterAssembler().Assemble(scored);
+            }
+            catch (ArgumentException e)
+            {
+                Console.WriteLine();
+                Console.WriteLine("Dung chapter that bai: " + e.Message);
+                return;
+            }
+
+            Console.WriteLine();
+            Console.WriteLine("Dung campaign: " + campaign.Chapters.Count + " chapter, " +
+                              campaign.LevelCount + " level, noi long " + campaign.RelaxedPlacements + " lan");
+            Console.WriteLine();
+            Console.WriteLine("  chapter   diem tb   lech target tb   tut sau nhat   nhip nghi/10");
+
+            double worstDip = 0;
+
+            foreach (Chapter chapter in campaign.Chapters)
+            {
+                IReadOnlyList<PlacedLevel> placed = chapter.Placements;
+                double mean = placed.Average(x => x.Score);
+                double meanMiss = placed.Average(x => Math.Abs(x.Miss));
+
+                double dip = 0;
+                double previous = double.MinValue;
+
+                for (int i = 0; i + 10 <= placed.Count; i++)
+                {
+                    double average = 0;
+
+                    for (int j = i; j < i + 10; j++)
+                    {
+                        average += placed[j].Score;
+                    }
+
+                    average /= 10;
+
+                    if (previous > double.MinValue && average < previous)
+                    {
+                        dip = Math.Max(dip, previous - average);
+                    }
+
+                    previous = average;
+                }
+
+                worstDip = Math.Max(worstDip, dip);
+
+                int dips = 0;
+
+                for (int i = 1; i < placed.Count; i++)
+                {
+                    if (placed[i].Score < placed[i - 1].Score)
+                    {
+                        dips++;
+                    }
+                }
+
+                Console.WriteLine("  " + chapter.Id + "      " + mean.ToString("0.000") +
+                                  "     " + meanMiss.ToString("0.0000") +
+                                  "          " + dip.ToString("0.0000") +
+                                  "        " + dips + "/30");
+            }
+
+            Console.WriteLine();
+            Console.WriteLine("  Tut sau nhat tren toan bo campaign: " + worstDip.ToString("0.0000"));
         }
 
         /// <summary>
@@ -266,7 +352,7 @@ namespace CorpusCheck
                 for (int i = 0; i < inPack.Count; i++)
                 {
                     shipOrder[i] = i;
-                    ourScore[i] = inPack[i].RawScore;
+                    ourScore[i] = inPack[i].Score;
                 }
 
                 double rho = Spearman(shipOrder, ourScore);

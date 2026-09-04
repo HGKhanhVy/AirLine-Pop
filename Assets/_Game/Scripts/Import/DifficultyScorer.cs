@@ -90,13 +90,14 @@ namespace ASTeams.SingleLine.Import
                                 degreeRanks[i] * weights.AverageDegree) / weights.Total;
             }
 
-            // Ranking the blended score again spreads levels evenly over the ten bands
-            // even when the individual signals cluster.
+            // Ranking the blend again is what makes the result usable downstream. The
+            // blend of four uniform rankings is not itself uniform, so both the ten bands
+            // and the chapter curve would be fed a distribution with compressed tails.
             double[] finalRanks = PercentileRanks(rawScores);
 
             for (int i = 0; i < count; i++)
             {
-                scored.Add(new ScoredLevel(levels[i], features[i], rawScores[i], ToDifficulty(finalRanks[i])));
+                scored.Add(new ScoredLevel(levels[i], features[i], finalRanks[i], ToDifficulty(finalRanks[i])));
             }
 
             return scored;
