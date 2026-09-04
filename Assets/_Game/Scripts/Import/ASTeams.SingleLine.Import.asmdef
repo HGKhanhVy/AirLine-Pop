@@ -1,0 +1,16 @@
+{
+    "name": "ASTeams.SingleLine.Import",
+    "rootNamespace": "ASTeams.SingleLine.Import",
+    "references": [
+        "ASTeams.SingleLine.Core"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": true
+}

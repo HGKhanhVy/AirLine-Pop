@@ -3,6 +3,7 @@
     "rootNamespace": "ASTeams.SingleLine.Core.Tests",
     "references": [
         "ASTeams.SingleLine.Core",
+        "ASTeams.SingleLine.Import",
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner"
     ],

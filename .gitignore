@@ -114,3 +114,10 @@ InitTestScene*.unity*
 /[Aa]ssets/[Pp]lugins/NuGet/
 /[Aa]ssets/[Pp]lugins/NuGet.meta
 /ProjectSettings/Packages/
+
+# dotnet build output cho tool trong Tools/
+/Tools/**/bin/
+/Tools/**/obj/
+
+# Tools/ chua csproj viet tay, khong phai loai Unity tu sinh o thu muc goc
+!/Tools/**/*.csproj
