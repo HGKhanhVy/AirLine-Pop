@@ -75,15 +75,16 @@ namespace ASTeams.SingleLine.Unity
             return true;
         }
 
+        /// <summary>Rewinds the path back to the start, one cell at a time.</summary>
         public void Restart()
         {
             controller.Restart();
         }
 
-        /// <summary>Unwinds the path back to the start rather than stepping back once.</summary>
+        /// <summary>Steps back one cell.</summary>
         public void Undo()
         {
-            controller.RewindToStart();
+            controller.Undo();
         }
 
         public bool LoadNext()

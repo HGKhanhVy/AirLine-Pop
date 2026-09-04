@@ -81,22 +81,33 @@ namespace ASTeams.SingleLine.Unity
             OnStateChanged?.Invoke(previous, State);
         }
 
-        /// <summary>
-        /// Unwinds the whole path back to the start, one cell at a time.
-        ///
-        /// Undo is a rewind rather than a single step because a wrong turn is usually
-        /// several moves back, and stepping the path backwards shows the player the route
-        /// they took instead of silently emptying the board.
-        /// </summary>
-        public bool RewindToStart()
+        /// <summary>Steps back exactly one cell, as GDD 3.3 specifies.</summary>
+        public bool Undo()
         {
-            if (session == null || rewind != null || session.State == PathState.Won || session.Length <= 1)
+            if (session == null || rewind != null || !session.Undo())
             {
                 return false;
             }
 
-            rewind = StartCoroutine(RewindRoutine());
+            Refresh();
             return true;
+        }
+
+        /// <summary>
+        /// Unwinds the whole path back to the start, one cell at a time.
+        ///
+        /// Restart rewinds rather than blanking the board because watching the route come
+        /// apart tells the player more about the wrong turn they took than an empty board
+        /// appearing would.
+        /// </summary>
+        public void Restart()
+        {
+            if (session == null || rewind != null || session.State == PathState.Won || session.Length <= 1)
+            {
+                return;
+            }
+
+            rewind = StartCoroutine(RewindRoutine());
         }
 
         private IEnumerator RewindRoutine()
@@ -134,13 +145,15 @@ namespace ASTeams.SingleLine.Unity
         }
 
         /// <summary>
-        /// Clears the path back to the starting cell, not to an empty board.
+        /// Clears the path back to the starting cell at once, with no animation.
         ///
-        /// Every level ships a fixed start, so an empty board is a dead state the player
-        /// has to tap their way out of. Leaving the start drawn means they can carry on
-        /// in the same gesture, which matters when the reset came from dragging onto it.
+        /// This is what touching the start cell does. The finger is already there and the
+        /// gesture is still live, so a rewind animation would fight the drag rather than
+        /// read as feedback. It also leaves the start drawn rather than emptying the
+        /// board: every level ships a fixed start, so an empty board is a dead state the
+        /// player would have to tap their way out of.
         /// </summary>
-        public void Restart()
+        public void ResetToStart()
         {
             if (session == null)
             {
@@ -172,7 +185,7 @@ namespace ASTeams.SingleLine.Unity
             // through every cell to do it would be busywork.
             if (session.Length > 1 && session.Level.HasFixedStart && cell == session.Level.FixedStart)
             {
-                Restart();
+                ResetToStart();
                 return;
             }
 
