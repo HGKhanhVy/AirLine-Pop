@@ -38,6 +38,9 @@ namespace ASTeams.SingleLine.Unity
         [Tooltip("Share of the usable height the board should fill. GDD 9.2 asks for 0.55 to 0.70.")]
         [SerializeField, Range(0.3f, 0.95f)] private float boardHeightFraction = 0.62f;
 
+        [Tooltip("Largest a single cell may appear, as a share of screen width. Stops small boards blowing up.")]
+        [SerializeField, Range(0.08f, 0.40f)] private float maxCellWidthFraction = 0.2f;
+
         public Sprite CellSprite => cellSprite;
 
         public Color Background => background;
@@ -68,5 +71,7 @@ namespace ASTeams.SingleLine.Unity
         public float BoardMargin => boardMargin;
 
         public float BoardHeightFraction => boardHeightFraction;
+
+        public float MaxCellWidthFraction => maxCellWidthFraction;
     }
 }

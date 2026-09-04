@@ -25,3 +25,5 @@ MonoBehaviour:
   cellSpacing: 0.12
   pathWidth: 0.3
   boardMargin: 0.15
+  boardHeightFraction: 0.62
+  maxCellWidthFraction: 0.18

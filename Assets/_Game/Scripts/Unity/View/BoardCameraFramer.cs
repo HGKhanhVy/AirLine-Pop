@@ -75,7 +75,14 @@ namespace ASTeams.SingleLine.Unity
             float margin = theme.BoardMargin * theme.CellPitch;
             float fromWidth = (framedSize.x * 0.5f + margin) / Mathf.Max(0.01f, boardCamera.aspect);
 
-            float size = Mathf.Max(fromHeight, fromWidth);
+            // A four by four board asked to fill the width ends up with cells twice the
+            // size of a ten by ten one, which reads as a different game rather than an
+            // easier level. Capping how large one cell may appear keeps a cell roughly the
+            // same size everywhere; on big boards the cap never binds.
+            float maxCell = Mathf.Clamp(theme.MaxCellWidthFraction, 0.05f, 1f);
+            float fromCellCap = theme.CellPitch / (2f * Mathf.Max(0.01f, boardCamera.aspect) * maxCell);
+
+            float size = Mathf.Max(Mathf.Max(fromHeight, fromWidth), fromCellCap);
             boardCamera.orthographicSize = size;
 
             // Centre the board between the reserved bars rather than on the screen, or a
