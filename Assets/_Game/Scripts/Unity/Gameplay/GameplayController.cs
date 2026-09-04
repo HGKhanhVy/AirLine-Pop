@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using ASTeams.SingleLine.Core;
 using UnityEngine;
 
@@ -18,11 +19,18 @@ namespace ASTeams.SingleLine.Unity
         [SerializeField] private PathView pathView;
         [SerializeField] private BoardInput boardInput;
         [SerializeField] private BoardCameraFramer cameraFramer;
+        [SerializeField] private BoardFeedback boardFeedback;
 
         private PathSession session;
 
+        // Reused so a move never allocates; a board holds at most ninety cells.
+        private readonly List<int> scratchCells = new List<int>(96);
+
         /// <summary>Raised as (previous, current) so a UI layer can react without polling.</summary>
         public event Action<PathState, PathState> OnStateChanged;
+
+        /// <summary>Raised whenever the drawn path changes length, for progress readouts.</summary>
+        public event Action OnPathChanged;
 
         public LevelData Level => session?.Level;
 
@@ -54,6 +62,7 @@ namespace ASTeams.SingleLine.Unity
             session = new PathSession(level);
             session.OnStateChanged += HandleSessionStateChanged;
 
+            boardFeedback.Stop();
             boardView.Build(level);
             cameraFramer.Frame(boardView.WorldSize);
             pathView.Clear();
@@ -81,6 +90,7 @@ namespace ASTeams.SingleLine.Unity
                 return;
             }
 
+            boardFeedback.Stop();
             session.Restart();
             boardInput.AcceptsInput = true;
             Refresh();
@@ -107,9 +117,48 @@ namespace ASTeams.SingleLine.Unity
             if (current == PathState.Won)
             {
                 boardInput.AcceptsInput = false;
+                boardFeedback.PlayWin(CollectPath());
+            }
+            else if (current == PathState.Stuck)
+            {
+                // Being stuck is not a loss: nothing is reset, the board just points at
+                // what is still uncovered so the player can undo their way out.
+                boardFeedback.PlayStuck(CollectUncovered());
+            }
+            else if (previous == PathState.Stuck || previous == PathState.Won)
+            {
+                boardFeedback.Stop();
             }
 
             OnStateChanged?.Invoke(previous, current);
+        }
+
+        private List<int> CollectUncovered()
+        {
+            scratchCells.Clear();
+            LevelData level = session.Level;
+
+            for (int index = 0; index < level.Grid.CellCount; index++)
+            {
+                if (level.IsActive(index) && !session.IsVisited(index))
+                {
+                    scratchCells.Add(index);
+                }
+            }
+
+            return scratchCells;
+        }
+
+        private List<int> CollectPath()
+        {
+            scratchCells.Clear();
+
+            for (int step = 0; step < session.Length; step++)
+            {
+                scratchCells.Add(session.GetCell(step));
+            }
+
+            return scratchCells;
         }
 
         /// <summary>
@@ -140,6 +189,7 @@ namespace ASTeams.SingleLine.Unity
 
             pathView.Rebuild(session);
             pathView.SetColor(ColorForState(session.State));
+            OnPathChanged?.Invoke();
         }
 
         private Color ColorForState(PathState state)

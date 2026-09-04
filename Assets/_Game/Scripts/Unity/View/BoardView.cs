@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using ASTeams.SingleLine.Core;
 using UnityEngine;
 
@@ -30,6 +31,9 @@ namespace ASTeams.SingleLine.Unity
 
         /// <summary>Distance between neighbouring cell centres, in world units.</summary>
         public float CellPitch => theme.CellPitch;
+
+        /// <summary>Squares currently drawn, in no particular order.</summary>
+        public IReadOnlyList<CellView> ActiveCells => pool.Live;
 
         private void Awake()
         {
@@ -107,6 +111,12 @@ namespace ASTeams.SingleLine.Unity
             {
                 view.SetColor(color);
             }
+        }
+
+        /// <summary>The square standing for a cell, or null when the cell is a hole.</summary>
+        public CellView GetCellView(int index)
+        {
+            return GetView(index);
         }
 
         public Vector3 GetCellWorldPosition(int index)

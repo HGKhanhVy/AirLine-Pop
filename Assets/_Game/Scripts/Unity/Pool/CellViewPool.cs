@@ -25,6 +25,9 @@ namespace ASTeams.SingleLine.Unity
 
         public int LiveCount => live.Count;
 
+        /// <summary>Squares currently on the board, for effects that sweep over them.</summary>
+        public IReadOnlyList<CellView> Live => live;
+
         public int IdleCount => idle.Count;
 
         public CellViewPool(Transform parent)

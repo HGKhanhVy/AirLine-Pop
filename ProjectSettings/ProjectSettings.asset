@@ -60,10 +60,10 @@ PlayerSettings:
   androidShowActivityIndicatorOnLoading: -1
   iosUseCustomAppBackgroundBehavior: 0
   allowedAutorotateToPortrait: 1
-  allowedAutorotateToPortraitUpsideDown: 1
-  allowedAutorotateToLandscapeRight: 1
-  allowedAutorotateToLandscapeLeft: 1
-  useOSAutorotation: 1
+  allowedAutorotateToPortraitUpsideDown: 0
+  allowedAutorotateToLandscapeRight: 0
+  allowedAutorotateToLandscapeLeft: 0
+  useOSAutorotation: 0
   use32BitDisplayBuffer: 1
   preserveFramebufferAlpha: 0
   disableDepthAndStencilBuffers: 0
@@ -835,24 +835,25 @@ PlayerSettings:
   webGLCloseOnQuit: 0
   webWasm2023: 0
   scriptingDefineSymbols:
-    Android: VS_ATT;NEWTONSOFT;DOTWEEN;MOREMOUNTAINS_NICEVIBRATIONS_INSTALLED;ODIN_INSPECTOR;ODIN_INSPECTOR_3;ODIN_INSPECTOR_3_1;ODIN_INSPECTOR_3_2;ODIN_INSPECTOR_3_3
-    EmbeddedLinux: DOTWEEN
-    GameCoreScarlett: DOTWEEN
-    GameCoreXboxOne: DOTWEEN
-    Kepler: DOTWEEN
-    LinuxHeadlessSimulation: DOTWEEN
-    Nintendo Switch: DOTWEEN
-    Nintendo Switch 2: DOTWEEN
-    PS4: DOTWEEN
-    PS5: DOTWEEN
-    QNX: DOTWEEN
-    Standalone: DOTWEEN;ODIN_INSPECTOR;ODIN_INSPECTOR_3;ODIN_INSPECTOR_3_1;ODIN_INSPECTOR_3_2;ODIN_INSPECTOR_3_3
-    VisionOS: DOTWEEN
-    WebGL: DOTWEEN
-    Windows Store Apps: DOTWEEN
-    XboxOne: DOTWEEN
-    iPhone: NEWTONSOFT;DOTWEEN
-    tvOS: DOTWEEN
+    Android: VS_ATT;NEWTONSOFT;DOTWEEN;MOREMOUNTAINS_NICEVIBRATIONS_INSTALLED;ODIN_INSPECTOR;ODIN_INSPECTOR_3;ODIN_INSPECTOR_3_1;ODIN_INSPECTOR_3_2;ODIN_INSPECTOR_3_3;UNITY_MCP_READY;UNITY_MCP_DEPS_3
+    EmbeddedLinux: DOTWEEN;UNITY_MCP_READY;UNITY_MCP_DEPS_3
+    GameCoreScarlett: DOTWEEN;UNITY_MCP_READY;UNITY_MCP_DEPS_3
+    GameCoreXboxOne: DOTWEEN;UNITY_MCP_READY;UNITY_MCP_DEPS_3
+    Kepler: DOTWEEN;UNITY_MCP_READY;UNITY_MCP_DEPS_3
+    LinuxHeadlessSimulation: DOTWEEN;UNITY_MCP_READY;UNITY_MCP_DEPS_3
+    Nintendo Switch: DOTWEEN;UNITY_MCP_READY;UNITY_MCP_DEPS_3
+    Nintendo Switch 2: DOTWEEN;UNITY_MCP_READY;UNITY_MCP_DEPS_3
+    PS4: DOTWEEN;UNITY_MCP_READY;UNITY_MCP_DEPS_3
+    PS5: DOTWEEN;UNITY_MCP_READY;UNITY_MCP_DEPS_3
+    QNX: DOTWEEN;UNITY_MCP_READY;UNITY_MCP_DEPS_3
+    Server: UNITY_MCP_READY;UNITY_MCP_DEPS_3
+    Standalone: DOTWEEN;ODIN_INSPECTOR;ODIN_INSPECTOR_3;ODIN_INSPECTOR_3_1;ODIN_INSPECTOR_3_2;ODIN_INSPECTOR_3_3;UNITY_MCP_READY;UNITY_MCP_DEPS_3
+    VisionOS: DOTWEEN;UNITY_MCP_READY;UNITY_MCP_DEPS_3
+    WebGL: DOTWEEN;UNITY_MCP_READY;UNITY_MCP_DEPS_3
+    Windows Store Apps: DOTWEEN;UNITY_MCP_READY;UNITY_MCP_DEPS_3
+    XboxOne: DOTWEEN;UNITY_MCP_READY;UNITY_MCP_DEPS_3
+    iPhone: NEWTONSOFT;DOTWEEN;UNITY_MCP_READY;UNITY_MCP_DEPS_3
+    tvOS: DOTWEEN;UNITY_MCP_READY;UNITY_MCP_DEPS_3
   additionalCompilerArguments: {}
   platformArchitecture: {}
   scriptingBackend:

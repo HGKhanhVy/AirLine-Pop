@@ -1,0 +1,150 @@
+using System.Collections.Generic;
+using DG.Tweening;
+using UnityEngine;
+
+namespace ASTeams.SingleLine.Unity
+{
+    /// <summary>
+    /// The board's reactions: a shake and a pulse when the player runs out of moves, and
+    /// a wave along the finished path when they win.
+    ///
+    /// GDD 3.4 is deliberate that being stuck is not a loss. The feedback says so: the
+    /// board wobbles and the cells still to cover pulse once to point at what is left,
+    /// and nothing is reset or taken away.
+    /// </summary>
+    public sealed class BoardFeedback : MonoBehaviour
+    {
+        [SerializeField] private BoardView boardView;
+        [SerializeField] private Transform shakeRoot;
+
+        [Header("Stuck")]
+        [SerializeField, Min(0f)] private float shakeDuration = 0.32f;
+        [SerializeField, Min(0f)] private float shakeStrength = 0.16f;
+        [SerializeField, Min(0)] private int shakeVibrato = 14;
+
+        [Header("Pulse")]
+        [SerializeField, Min(1f)] private float pulseScale = 1.22f;
+        [SerializeField, Min(0.01f)] private float pulseDuration = 0.26f;
+
+        [Header("Win")]
+        [SerializeField, Min(1f)] private float winScale = 1.16f;
+        [SerializeField, Min(0.01f)] private float winStepDelay = 0.02f;
+        [SerializeField, Min(0.01f)] private float winDuration = 0.22f;
+
+        private Sequence running;
+
+        private void Awake()
+        {
+            if (shakeRoot == null)
+            {
+                shakeRoot = boardView != null ? boardView.transform : transform;
+            }
+        }
+
+        private void OnDisable()
+        {
+            Stop();
+        }
+
+        /// <summary>
+        /// Wobbles the board and pulses the cells still to cover. The list is supplied by
+        /// the controller rather than read from the model here, so the view keeps knowing
+        /// nothing about the rules.
+        /// </summary>
+        public void PlayStuck(IReadOnlyList<int> uncoveredCells)
+        {
+            Stop();
+
+            running = DOTween.Sequence();
+            running.Append(shakeRoot.DOShakePosition(shakeDuration, shakeStrength, shakeVibrato, 90f, false, true));
+
+            if (uncoveredCells != null)
+            {
+                for (int i = 0; i < uncoveredCells.Count; i++)
+                {
+                    CellView cell = boardView.GetCellView(uncoveredCells[i]);
+
+                    if (cell != null)
+                    {
+                        running.Join(Pulse(cell.transform, pulseScale, pulseDuration));
+                    }
+                }
+            }
+
+            running.SetUpdate(isIndependentUpdate: true);
+        }
+
+        /// <summary>A short wave along the path, in the order the player drew it.</summary>
+        public void PlayWin(IReadOnlyList<int> pathInOrder)
+        {
+            Stop();
+
+            if (pathInOrder == null || pathInOrder.Count == 0)
+            {
+                return;
+            }
+
+            running = DOTween.Sequence();
+
+            for (int step = 0; step < pathInOrder.Count; step++)
+            {
+                CellView cell = boardView.GetCellView(pathInOrder[step]);
+
+                if (cell == null)
+                {
+                    continue;
+                }
+
+                running.Insert(step * winStepDelay, Pulse(cell.transform, winScale, winDuration));
+            }
+
+            running.SetUpdate(isIndependentUpdate: true);
+        }
+
+        public void Stop()
+        {
+            if (running != null && running.IsActive())
+            {
+                running.Kill();
+            }
+
+            running = null;
+
+            if (shakeRoot != null)
+            {
+                shakeRoot.localPosition = Vector3.zero;
+            }
+
+            ResetCellScales();
+        }
+
+        private static Tween Pulse(Transform target, float scale, float duration)
+        {
+            target.localScale = Vector3.one;
+
+            return target
+                .DOScale(scale, duration * 0.4f)
+                .SetLoops(2, LoopType.Yoyo)
+                .SetEase(Ease.OutQuad);
+        }
+
+        /// <summary>
+        /// Squares are pooled, so one left mid-pulse would be handed to the next level at
+        /// the wrong size.
+        /// </summary>
+        private void ResetCellScales()
+        {
+            if (boardView == null)
+            {
+                return;
+            }
+
+            IReadOnlyList<CellView> cells = boardView.ActiveCells;
+
+            for (int i = 0; i < cells.Count; i++)
+            {
+                cells[i].transform.localScale = Vector3.one;
+            }
+        }
+    }
+}
