@@ -25,8 +25,13 @@ namespace ASTeams.SingleLine.Unity
         [Tooltip("Seconds between cells while the path rewinds. Small enough to read as one motion.")]
         [SerializeField, Min(0f)] private float rewindStepDelay = 0.025f;
 
+        [Tooltip("Search budget for a hint. Kept small so a hint never stalls a frame.")]
+        [SerializeField, Min(1000)] private int hintNodeBudget = 200000;
+
         private PathSession session;
         private Coroutine rewind;
+        private WarnsdorffSolver hintSolver;
+        private int[] hintBuffer;
 
         // Reused so a move never allocates; a board holds at most ninety cells.
         private readonly List<int> scratchCells = new List<int>(96);
@@ -47,6 +52,53 @@ namespace ASTeams.SingleLine.Unity
 
         /// <summary>True while the path is unwinding itself back to the start.</summary>
         public bool IsRewinding => rewind != null;
+
+        /// <summary>
+        /// Turns board input on or off without touching the path, so a screen on top can
+        /// hold the board still while it is open.
+        /// </summary>
+        public void SetInputEnabled(bool enabled)
+        {
+            boardInput.AcceptsInput = enabled && rewind == null && State != PathState.Won;
+        }
+
+        /// <summary>
+        /// Points at the next cell of a way to finish from where the player is now.
+        ///
+        /// It solves the continuation rather than reading the level's stored solution,
+        /// because once the player has taken their own route that stored path is usually
+        /// no longer reachable, and pointing at a cell they cannot get to would be worse
+        /// than saying nothing.
+        /// </summary>
+        public bool ShowHint()
+        {
+            if (session == null || rewind != null || session.State == PathState.Won || session.Length == 0)
+            {
+                return false;
+            }
+
+            if (hintSolver == null)
+            {
+                hintSolver = new WarnsdorffSolver(hintNodeBudget);
+            }
+
+            LevelData level = session.Level;
+
+            if (hintBuffer == null || hintBuffer.Length < level.ActiveCellCount)
+            {
+                hintBuffer = new int[level.ActiveCellCount];
+            }
+
+            CollectPath();
+
+            if (!hintSolver.TryContinue(level, scratchCells, hintBuffer, out int _))
+            {
+                return false;
+            }
+
+            boardFeedback.PlayHint(hintBuffer[session.Length]);
+            return true;
+        }
 
         private void OnEnable()
         {
@@ -75,6 +127,15 @@ namespace ASTeams.SingleLine.Unity
             boardView.Build(level);
             cameraFramer.Frame(boardView.WorldSize);
             pathView.Clear();
+
+            // Hold the starting cell from the outset, the same way a reset leaves it. A
+            // board with nothing drawn has no head to move from, so a hint would have
+            // nothing to answer and the first touch would be a special case.
+            if (level.HasFixedStart)
+            {
+                session.Move(level.FixedStart);
+            }
+
             Refresh();
 
             boardInput.AcceptsInput = true;

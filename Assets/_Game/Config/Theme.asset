@@ -24,4 +24,4 @@ MonoBehaviour:
   cellSize: 1
   cellSpacing: 0.12
   pathWidth: 0.3
-  boardMargin: 0.5
+  boardMargin: 0.15

@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace ASTeams.SingleLine.Core
 {
     /// <summary>
@@ -37,5 +39,18 @@ namespace ASTeams.SingleLine.Core
         /// The start the solution begins at, or <see cref="LevelData.NoCell"/> on failure.
         /// </param>
         bool TrySolveAny(LevelData level, int[] destination, out int length, out int startCell);
+
+        /// <summary>
+        /// Finds a way to finish a level from a path already drawn, which is what a hint
+        /// needs: the question is never "how is this level solved" but "what should I do
+        /// from here", and the two can have different answers once the player has
+        /// committed to a route.
+        /// </summary>
+        /// <param name="pathSoFar">Cells already visited, in the order they were entered.</param>
+        /// <param name="destination">
+        /// Filled with the whole path, the drawn part first, so the next cell to play is
+        /// at index <c>pathSoFar.Count</c>.
+        /// </param>
+        bool TryContinue(LevelData level, IReadOnlyList<int> pathSoFar, int[] destination, out int length);
     }
 }

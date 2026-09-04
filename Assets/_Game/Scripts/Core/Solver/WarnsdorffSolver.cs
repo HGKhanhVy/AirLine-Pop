@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace ASTeams.SingleLine.Core
 {
@@ -132,6 +133,70 @@ namespace ASTeams.SingleLine.Core
             length = 0;
             startCell = LevelData.NoCell;
             return false;
+        }
+
+        public bool TryContinue(LevelData level, IReadOnlyList<int> pathSoFar, int[] destination, out int length)
+        {
+            if (level == null)
+            {
+                throw new ArgumentNullException(nameof(level));
+            }
+
+            if (pathSoFar == null)
+            {
+                throw new ArgumentNullException(nameof(pathSoFar));
+            }
+
+            if (destination == null)
+            {
+                throw new ArgumentNullException(nameof(destination));
+            }
+
+            length = 0;
+            LastNodeCount = 0;
+            LastRunHitBudget = false;
+
+            if (pathSoFar.Count == 0 || level.ActiveCellCount == 0)
+            {
+                return false;
+            }
+
+            if (destination.Length < level.ActiveCellCount)
+            {
+                throw new ArgumentException("Destination is too small for the solution.", nameof(destination));
+            }
+
+            PrepareFor(level);
+
+            // Replay what the player has drawn into the search state, so the search starts
+            // from their position rather than from an empty board.
+            for (int i = 0; i < pathSoFar.Count; i++)
+            {
+                int cell = pathSoFar[i];
+
+                if (!level.IsActive(cell) || visited[cell])
+                {
+                    return false;
+                }
+
+                visited[cell] = true;
+                path[i] = cell;
+            }
+
+            int head = pathSoFar[pathSoFar.Count - 1];
+            bool solved = Search(head, pathSoFar.Count - 1);
+
+            LastNodeCount = nodeCount;
+            LastRunHitBudget = budgetExhausted;
+
+            if (!solved)
+            {
+                return false;
+            }
+
+            length = level.ActiveCellCount;
+            Array.Copy(path, destination, length);
+            return true;
         }
 
         private void PrepareFor(LevelData target)

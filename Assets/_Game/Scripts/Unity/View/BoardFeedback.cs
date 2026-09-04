@@ -26,6 +26,11 @@ namespace ASTeams.SingleLine.Unity
         [SerializeField, Min(1f)] private float pulseScale = 1.22f;
         [SerializeField, Min(0.01f)] private float pulseDuration = 0.26f;
 
+        [Header("Hint")]
+        [SerializeField, Min(1f)] private float hintScale = 1.3f;
+        [SerializeField, Min(0.01f)] private float hintDuration = 0.45f;
+        [SerializeField, Min(1)] private int hintLoops = 3;
+
         [Header("Win")]
         [SerializeField, Min(1f)] private float winScale = 1.16f;
         [SerializeField, Min(0.01f)] private float winStepDelay = 0.02f;
@@ -98,6 +103,29 @@ namespace ASTeams.SingleLine.Unity
                 running.Insert(step * winStepDelay, Pulse(cell.transform, winScale, winDuration));
             }
 
+            running.SetUpdate(isIndependentUpdate: true);
+        }
+
+        /// <summary>
+        /// Draws attention to one cell without playing it. A hint points, it does not
+        /// move: the player still has to make the move themselves.
+        /// </summary>
+        public void PlayHint(int cell)
+        {
+            Stop();
+
+            CellView view = boardView.GetCellView(cell);
+
+            if (view == null)
+            {
+                return;
+            }
+
+            running = DOTween.Sequence();
+            running.Append(view.transform
+                .DOScale(hintScale, hintDuration / (hintLoops * 2f))
+                .SetLoops(hintLoops * 2, LoopType.Yoyo)
+                .SetEase(Ease.InOutSine));
             running.SetUpdate(isIndependentUpdate: true);
         }
 

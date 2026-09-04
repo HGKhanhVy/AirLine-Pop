@@ -23,6 +23,7 @@ namespace ASTeams.SingleLine.Unity
         [SerializeField] private TMP_Text progressLabel;
 
         [Header("Buttons")]
+        [SerializeField] private Button hintButton;
         [SerializeField] private Button undoButton;
         [SerializeField] private Button restartButton;
 
@@ -37,6 +38,7 @@ namespace ASTeams.SingleLine.Unity
             controller.OnStateChanged += HandleStateChanged;
             controller.OnPathChanged += Refresh;
 
+            hintButton.onClick.AddListener(OnHintClicked);
             undoButton.onClick.AddListener(OnUndoClicked);
             restartButton.onClick.AddListener(OnRestartClicked);
 
@@ -48,6 +50,7 @@ namespace ASTeams.SingleLine.Unity
             controller.OnStateChanged -= HandleStateChanged;
             controller.OnPathChanged -= Refresh;
 
+            hintButton.onClick.RemoveListener(OnHintClicked);
             undoButton.onClick.RemoveListener(OnUndoClicked);
             restartButton.onClick.RemoveListener(OnRestartClicked);
         }
@@ -88,6 +91,16 @@ namespace ASTeams.SingleLine.Unity
             bool hasPath = controller.Progress > 1 && controller.State != PathState.Won;
             undoButton.interactable = hasPath && !controller.IsRewinding;
             restartButton.interactable = hasPath && !controller.IsRewinding;
+
+            // A hint works from the very first cell, unlike undo which needs a step to take back.
+            hintButton.interactable = controller.Progress > 0
+                                      && controller.State != PathState.Won
+                                      && !controller.IsRewinding;
+        }
+
+        private void OnHintClicked()
+        {
+            bootstrap.Hint();
         }
 
         private void OnUndoClicked()

@@ -33,7 +33,10 @@ namespace ASTeams.SingleLine.Unity
 
         [Header("Camera")]
         [Tooltip("Board width kept clear of the screen edges, in cells.")]
-        [SerializeField, Min(0f)] private float boardMargin = 1f;
+        [SerializeField, Min(0f)] private float boardMargin = 0.5f;
+
+        [Tooltip("Share of the usable height the board should fill. GDD 9.2 asks for 0.55 to 0.70.")]
+        [SerializeField, Range(0.3f, 0.95f)] private float boardHeightFraction = 0.62f;
 
         public Sprite CellSprite => cellSprite;
 
@@ -63,5 +66,7 @@ namespace ASTeams.SingleLine.Unity
         public float PathWidth => pathWidth;
 
         public float BoardMargin => boardMargin;
+
+        public float BoardHeightFraction => boardHeightFraction;
     }
 }

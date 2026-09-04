@@ -17,6 +17,7 @@ namespace ASTeams.SingleLine.Unity
     public sealed class LevelBootstrap : MonoBehaviour
     {
         [SerializeField] private GameplayController controller;
+        [SerializeField] private HomeScreen homeScreen;
 
         [Tooltip("Level to open on start. Ids are chapter, underscore, slot: ch01_001.")]
         [SerializeField] private string startLevelId = "ch01_001";
@@ -41,6 +42,16 @@ namespace ASTeams.SingleLine.Unity
                 Debug.LogError(
                     "No level " + startLevelId + " under Resources. Run Tools/Single Line/Level Importer first.",
                     this);
+                return;
+            }
+
+            // The board is built and waiting behind the home panel, so Play costs nothing.
+            if (homeScreen != null)
+            {
+                homeScreen.OnPlayRequested += HandlePlayRequested;
+                homeScreen.SetSubtitle(currentLevelId);
+                homeScreen.Show();
+                controller.SetInputEnabled(false);
             }
         }
 
@@ -49,6 +60,11 @@ namespace ASTeams.SingleLine.Unity
             if (controller != null)
             {
                 controller.OnStateChanged -= HandleStateChanged;
+            }
+
+            if (homeScreen != null)
+            {
+                homeScreen.OnPlayRequested -= HandlePlayRequested;
             }
         }
 
@@ -72,6 +88,16 @@ namespace ASTeams.SingleLine.Unity
 
             currentLevelId = levelId;
             controller.Load(level);
+
+            if (homeScreen != null)
+            {
+                homeScreen.SetSubtitle(currentLevelId);
+
+                // Coming back to a level while the home panel is up must not hand control
+                // back to the board behind it.
+                controller.SetInputEnabled(!homeScreen.IsShown);
+            }
+
             return true;
         }
 
@@ -85,6 +111,17 @@ namespace ASTeams.SingleLine.Unity
         public void Undo()
         {
             controller.Undo();
+        }
+
+        /// <summary>Points at a cell that leads to a finish from where the player is.</summary>
+        public bool Hint()
+        {
+            return controller.ShowHint();
+        }
+
+        private void HandlePlayRequested()
+        {
+            controller.SetInputEnabled(true);
         }
 
         public bool LoadNext()
@@ -183,6 +220,11 @@ namespace ASTeams.SingleLine.Unity
             if (keyboard.nKey.wasPressedThisFrame)
             {
                 LoadNext();
+            }
+
+            if (keyboard.hKey.wasPressedThisFrame)
+            {
+                Hint();
             }
         }
     }
