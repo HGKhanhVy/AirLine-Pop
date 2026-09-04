@@ -80,9 +80,10 @@ namespace ASTeams.SingleLine.Unity
             controller.Restart();
         }
 
+        /// <summary>Unwinds the path back to the start rather than stepping back once.</summary>
         public void Undo()
         {
-            controller.Undo();
+            controller.RewindToStart();
         }
 
         public bool LoadNext()

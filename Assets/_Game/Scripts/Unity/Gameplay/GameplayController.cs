@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using ASTeams.SingleLine.Core;
 using UnityEngine;
@@ -21,7 +22,11 @@ namespace ASTeams.SingleLine.Unity
         [SerializeField] private BoardCameraFramer cameraFramer;
         [SerializeField] private BoardFeedback boardFeedback;
 
+        [Tooltip("Seconds between cells while the path rewinds. Small enough to read as one motion.")]
+        [SerializeField, Min(0f)] private float rewindStepDelay = 0.025f;
+
         private PathSession session;
+        private Coroutine rewind;
 
         // Reused so a move never allocates; a board holds at most ninety cells.
         private readonly List<int> scratchCells = new List<int>(96);
@@ -39,6 +44,9 @@ namespace ASTeams.SingleLine.Unity
         public int Progress => session == null ? 0 : session.Length;
 
         public int Target => session == null ? 0 : session.Level.ActiveCellCount;
+
+        /// <summary>True while the path is unwinding itself back to the start.</summary>
+        public bool IsRewinding => rewind != null;
 
         private void OnEnable()
         {
@@ -59,6 +67,7 @@ namespace ASTeams.SingleLine.Unity
 
             PathState previous = State;
 
+            CancelRewind();
             session = new PathSession(level);
             session.OnStateChanged += HandleSessionStateChanged;
 
@@ -72,17 +81,65 @@ namespace ASTeams.SingleLine.Unity
             OnStateChanged?.Invoke(previous, State);
         }
 
-        public bool Undo()
+        /// <summary>
+        /// Unwinds the whole path back to the start, one cell at a time.
+        ///
+        /// Undo is a rewind rather than a single step because a wrong turn is usually
+        /// several moves back, and stepping the path backwards shows the player the route
+        /// they took instead of silently emptying the board.
+        /// </summary>
+        public bool RewindToStart()
         {
-            if (session == null || !session.Undo())
+            if (session == null || rewind != null || session.State == PathState.Won || session.Length <= 1)
             {
                 return false;
             }
 
-            Refresh();
+            rewind = StartCoroutine(RewindRoutine());
             return true;
         }
 
+        private IEnumerator RewindRoutine()
+        {
+            boardInput.AcceptsInput = false;
+            boardFeedback.Stop();
+
+            var wait = new WaitForSecondsRealtime(rewindStepDelay);
+
+            while (session.Length > 1 && session.Undo())
+            {
+                Refresh();
+
+                if (rewindStepDelay > 0f)
+                {
+                    yield return wait;
+                }
+            }
+
+            rewind = null;
+            boardInput.AcceptsInput = true;
+            Refresh();
+        }
+
+        private void CancelRewind()
+        {
+            if (rewind == null)
+            {
+                return;
+            }
+
+            StopCoroutine(rewind);
+            rewind = null;
+            boardInput.AcceptsInput = true;
+        }
+
+        /// <summary>
+        /// Clears the path back to the starting cell, not to an empty board.
+        ///
+        /// Every level ships a fixed start, so an empty board is a dead state the player
+        /// has to tap their way out of. Leaving the start drawn means they can carry on
+        /// in the same gesture, which matters when the reset came from dragging onto it.
+        /// </summary>
         public void Restart()
         {
             if (session == null)
@@ -90,16 +147,32 @@ namespace ASTeams.SingleLine.Unity
                 return;
             }
 
+            CancelRewind();
             boardFeedback.Stop();
             session.Restart();
+
+            if (session.Level.HasFixedStart)
+            {
+                session.Move(session.Level.FixedStart);
+            }
+
             boardInput.AcceptsInput = true;
             Refresh();
         }
 
         private void HandleCellEntered(int cell)
         {
-            if (session == null)
+            if (session == null || rewind != null)
             {
+                return;
+            }
+
+            // Touching the cell the path began from clears it. Retracing all the way back
+            // is the player saying they want to start over, and making them hold the line
+            // through every cell to do it would be busywork.
+            if (session.Length > 1 && session.Level.HasFixedStart && cell == session.Level.FixedStart)
+            {
+                Restart();
                 return;
             }
 

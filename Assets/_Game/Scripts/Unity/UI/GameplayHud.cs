@@ -83,9 +83,11 @@ namespace ASTeams.SingleLine.Unity
                 progressLabel.text = controller.Progress + " / " + controller.Target;
             }
 
-            // Undo is meaningless on an untouched board and on a finished one.
-            undoButton.interactable = controller.Progress > 1 && controller.State != PathState.Won;
-            restartButton.interactable = controller.Progress > 1;
+            // Rewinding is meaningless on an untouched board and on a finished one, and
+            // must not be re-triggered while it is already running.
+            bool hasPath = controller.Progress > 1 && controller.State != PathState.Won;
+            undoButton.interactable = hasPath && !controller.IsRewinding;
+            restartButton.interactable = hasPath;
         }
 
         private void OnUndoClicked()
