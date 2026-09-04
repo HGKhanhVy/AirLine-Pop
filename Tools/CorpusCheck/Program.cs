@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using ASTeams.SingleLine.Core;
+using ASTeams.SingleLine.Data;
 using ASTeams.SingleLine.Import;
 
 namespace CorpusCheck
@@ -13,6 +14,8 @@ namespace CorpusCheck
     // the shipping editor tool will produce.
     internal static class Program
     {
+        private static string exportDirectory;
+
         private const string LevelsRelativePath = @"Assets\_Game\Asset_Resources\Level Data\oneline";
 
         private static string FindLevelsRoot()
@@ -38,6 +41,13 @@ namespace CorpusCheck
         {
             int budget = args.Length > 0 && int.TryParse(args[0], out int b) ? b : WarnsdorffSolver.DefaultNodeBudget;
             string filter = args.Length > 1 ? args[1] : null;
+            int exportIndex = Array.IndexOf(args, "--export");
+            exportDirectory = exportIndex >= 0 && exportIndex + 1 < args.Length ? args[exportIndex + 1] : null;
+
+            if (filter == "--export")
+            {
+                filter = null;
+            }
 
             string root = FindLevelsRoot();
             var parser = new LevelTextParser();
@@ -212,11 +222,26 @@ namespace CorpusCheck
                 .Select(g => g.Representative)
                 .ToList();
 
+            // Every level must carry a checked solution before it can be scored: the
+            // packs without tutorial data ship none at all, and a few ship a broken one.
+            var preparer = new LevelPreparer(new LevelValidator(new WarnsdorffSolver(budget)));
+            var prepareTimer = Stopwatch.StartNew();
+            PreparedPool pool = preparer.Prepare(unique);
+            prepareTimer.Stop();
+
+            Console.WriteLine();
+            Console.WriteLine("Chuan bi kho (" + prepareTimer.ElapsedMilliseconds + " ms):");
+            Console.WriteLine("  Dung duoc       : " + pool.Levels.Count + "/" + unique.Count);
+            Console.WriteLine("  Solver cap moi  : " + pool.SolvedCount + " loi giai");
+            Console.WriteLine("  Va lai loi giai : " + pool.RepairedCount);
+            Console.WriteLine("  Loai bo         : " + pool.DroppedIds.Count +
+                              (pool.DroppedIds.Count > 0 ? "  (" + string.Join(", ", pool.DroppedIds) + ")" : ""));
+
             var scorer = new DifficultyScorer(new WarnsdorffSolver(budget));
             var stopwatch = Stopwatch.StartNew();
-            List<ScoredLevel> scored = scorer.Score(unique);
+            List<ScoredLevel> scored = scorer.Score(pool.Levels);
             stopwatch.Stop();
-            levels = unique;
+            levels = new List<LevelData>(pool.Levels);
 
             Console.WriteLine();
             Console.WriteLine("Cham do kho (" + stopwatch.ElapsedMilliseconds + " ms):");
@@ -323,6 +348,117 @@ namespace CorpusCheck
 
             Console.WriteLine();
             Console.WriteLine("  Tut sau nhat tren toan bo campaign: " + worstDip.ToString("0.0000"));
+
+            ExportAndReload(campaign);
+        }
+
+        /// <summary>
+        /// Writes the campaign the way the editor tool will, then reads it back through
+        /// the shipping repository. Round tripping through real files is the only way to
+        /// know the exported data is actually loadable, and it puts a number on the
+        /// 300 ms board load budget in GDD 15.4.
+        /// </summary>
+        private static void ExportAndReload(Campaign campaign)
+        {
+            string directory = exportDirectory ?? Path.Combine(Path.GetTempPath(), "single-line-export");
+            Directory.CreateDirectory(directory);
+
+            var writeTimer = Stopwatch.StartNew();
+            long totalBytes = 0;
+
+            foreach (Chapter chapter in campaign.Chapters)
+            {
+                string json = LevelJsonSerializer.SerializeChapter(chapter.Id, chapter.Levels);
+                string path = Path.Combine(directory, chapter.Id + ".json");
+                File.WriteAllText(path, json);
+                totalBytes += json.Length;
+            }
+
+            writeTimer.Stop();
+
+            var source = new InMemoryChapterSource();
+
+            foreach (Chapter chapter in campaign.Chapters)
+            {
+                source.Add(chapter.Id, File.ReadAllText(Path.Combine(directory, chapter.Id + ".json")));
+            }
+
+            var repository = new ChapterLevelRepository(source);
+
+            var loadTimer = Stopwatch.StartNew();
+            repository.TryPreloadChapter("ch01");
+            loadTimer.Stop();
+
+            var readTimer = Stopwatch.StartNew();
+            int reloaded = 0;
+
+            foreach (Chapter chapter in campaign.Chapters)
+            {
+                foreach (string id in repository.GetLevelIds(chapter.Id))
+                {
+                    LevelData level = repository.Get(id);
+
+                    if (level.ActiveCellCount > 0)
+                    {
+                        reloaded++;
+                    }
+                }
+            }
+
+            readTimer.Stop();
+
+            Console.WriteLine();
+            Console.WriteLine("Xuat va nap lai:");
+            Console.WriteLine("  Thu muc         : " + directory);
+            Console.WriteLine("  Ghi 10 chapter  : " + writeTimer.ElapsedMilliseconds + " ms, " +
+                              (totalBytes / 1024) + " KB");
+            Console.WriteLine("  Nap 1 chapter   : " + loadTimer.Elapsed.TotalMilliseconds.ToString("0.0") +
+                              " ms  (ngan sach GDD 15.4 la 300 ms)");
+            Console.WriteLine("  Doc lai         : " + reloaded + "/300 level trong " +
+                              readTimer.ElapsedMilliseconds + " ms");
+
+            VerifyRoundTrip(campaign, repository);
+        }
+
+        /// <summary>Replays every reloaded solution through the rules, not just field equality.</summary>
+        private static void VerifyRoundTrip(Campaign campaign, ILevelRepository repository)
+        {
+            int playable = 0;
+            int missingSolution = 0;
+
+            foreach (Chapter chapter in campaign.Chapters)
+            {
+                foreach (LevelData original in chapter.Levels)
+                {
+                    LevelData reloaded = repository.Get(original.Id);
+
+                    if (!reloaded.HasSolution)
+                    {
+                        missingSolution++;
+                        continue;
+                    }
+
+                    var session = new PathSession(reloaded);
+                    bool rejected = false;
+
+                    foreach (int cell in reloaded.Solution)
+                    {
+                        if (session.Move(cell) == MoveResult.Rejected)
+                        {
+                            rejected = true;
+                            break;
+                        }
+                    }
+
+                    if (!rejected && session.State == PathState.Won)
+                    {
+                        playable++;
+                    }
+                }
+            }
+
+            Console.WriteLine("  Giai lai duoc   : " + playable + "/300" +
+                              (missingSolution > 0 ? "  (thieu loi giai: " + missingSolution + ")" : ""));
         }
 
         /// <summary>

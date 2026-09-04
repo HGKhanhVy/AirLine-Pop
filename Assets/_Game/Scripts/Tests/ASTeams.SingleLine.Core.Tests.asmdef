@@ -4,6 +4,7 @@
     "references": [
         "ASTeams.SingleLine.Core",
         "ASTeams.SingleLine.Import",
+        "ASTeams.SingleLine.Data",
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner"
     ],

@@ -13,7 +13,12 @@
   <ItemGroup>
     <Compile Include="..\..\Assets\_Game\Scripts\Core\**\*.cs" />
     <Compile Include="..\..\Assets\_Game\Scripts\Import\**\*.cs" />
+    <Compile Include="..\..\Assets\_Game\Scripts\Data\**\*.cs" />
     <Compile Include="Program.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
 
 </Project>

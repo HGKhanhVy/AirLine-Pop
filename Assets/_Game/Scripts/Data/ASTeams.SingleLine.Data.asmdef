@@ -1,0 +1,18 @@
+{
+    "name": "ASTeams.SingleLine.Data",
+    "rootNamespace": "ASTeams.SingleLine.Data",
+    "references": [
+        "ASTeams.SingleLine.Core"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "Newtonsoft.Json.dll"
+    ],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": true
+}

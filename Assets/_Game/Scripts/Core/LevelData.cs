@@ -148,6 +148,26 @@ namespace ASTeams.SingleLine.Core
                 tags);
         }
 
+        /// <summary>
+        /// Copy of this level carrying a different solution. Source data ships plenty of
+        /// levels with no solution at all and a few with a broken one, and both are
+        /// replaced by a solver result before export rather than shipped as they are.
+        /// </summary>
+        public LevelData WithSolution(int[] newSolution)
+        {
+            return new LevelData(
+                Id,
+                Version,
+                Grid,
+                declaredActiveCells,
+                FixedStart,
+                FixedEnd,
+                newSolution,
+                Difficulty,
+                ThemeId,
+                tags);
+        }
+
         public override string ToString()
         {
             return $"{Id} ({Grid}, {ActiveCellCount} cells)";
