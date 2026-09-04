@@ -142,6 +142,7 @@ namespace CorpusCheck
             Print("Loi parse", parseErrors);
             Print("Loi validate", issues);
             ReportDeduplication(parsedLevels);
+            ReportDifficulty(parsedLevels, budget);
 
             if (failures.Count > 0)
             {
@@ -202,6 +203,99 @@ namespace CorpusCheck
                                   "  can " + need.ToString().PadLeft(3) +
                                   "  du " + (count / (double)need).ToString("0.0") + "x");
             }
+        }
+
+        private static void ReportDifficulty(List<LevelData> levels, int budget)
+        {
+            var scorer = new DifficultyScorer(new WarnsdorffSolver(budget));
+            var stopwatch = Stopwatch.StartNew();
+            List<ScoredLevel> scored = scorer.Score(levels);
+            stopwatch.Stop();
+
+            Console.WriteLine();
+            Console.WriteLine("Cham do kho (" + stopwatch.ElapsedMilliseconds + " ms):");
+
+            for (int band = DifficultyScorer.MinDifficulty; band <= DifficultyScorer.MaxDifficulty; band++)
+            {
+                int currentBand = band;
+                List<ScoredLevel> inBand = scored.Where(s => s.Difficulty == currentBand).ToList();
+
+                if (inBand.Count == 0)
+                {
+                    Console.WriteLine("  " + band.ToString().PadLeft(2) + " |  0");
+                    continue;
+                }
+
+                double meanCells = inBand.Average(s => s.Features.CellCount);
+                double meanGreedy = inBand.Average(s => s.Features.GreedyFailures);
+                string bar = new string('#', (int)Math.Round(inBand.Count / (double)levels.Count * 120));
+
+                Console.WriteLine("  " + band.ToString().PadLeft(2) + " | " +
+                                  inBand.Count.ToString().PadLeft(3) + "  " + bar.PadRight(14) +
+                                  "  o trung binh " + meanCells.ToString("00.0") +
+                                  "  greedy hong " + meanGreedy.ToString("0.0") + "/6");
+            }
+
+            ReportBeginnerCorrelation(scored);
+        }
+
+        /// <summary>
+        /// The beginner pack ships in a hand tuned order, so a scorer that agrees with a
+        /// designer should rank it roughly the same way. Spearman rather than Pearson
+        /// because only the ordering is meaningful.
+        /// </summary>
+        private static void ReportBeginnerCorrelation(List<ScoredLevel> scored)
+        {
+            foreach (string pack in new[] { "beginner", "hard", "medium" })
+            {
+                List<ScoredLevel> inPack = scored
+                    .Where(s => s.Level.Id.StartsWith(pack + "/Level_", StringComparison.Ordinal))
+                    .Select(s => new { Scored = s, Number = int.Parse(s.Level.Id.Substring((pack + "/Level_").Length)) })
+                    .OrderBy(e => e.Number)
+                    .Select(e => e.Scored)
+                    .ToList();
+
+                if (inPack.Count < 3)
+                {
+                    continue;
+                }
+
+                var shipOrder = new double[inPack.Count];
+                var ourScore = new double[inPack.Count];
+
+                for (int i = 0; i < inPack.Count; i++)
+                {
+                    shipOrder[i] = i;
+                    ourScore[i] = inPack[i].RawScore;
+                }
+
+                double rho = Spearman(shipOrder, ourScore);
+                Console.WriteLine("  Tuong quan voi thu tu goc cua pack " + pack.PadRight(9) +
+                                  " : rho = " + rho.ToString("0.000") + "  (" + inPack.Count + " man)");
+            }
+        }
+
+        private static double Spearman(double[] a, double[] b)
+        {
+            double[] ra = DifficultyScorer.PercentileRanks(a);
+            double[] rb = DifficultyScorer.PercentileRanks(b);
+
+            double meanA = ra.Average();
+            double meanB = rb.Average();
+            double covariance = 0;
+            double varianceA = 0;
+            double varianceB = 0;
+
+            for (int i = 0; i < ra.Length; i++)
+            {
+                double da = ra[i] - meanA;
+                double db = rb[i] - meanB;
+                covariance += da * db;
+                varianceA += da * da;
+                varianceB += db * db;
+            }
+
+            return covariance / Math.Sqrt(varianceA * varianceB);
         }
 
         private static void Print<TKey>(string title, Dictionary<TKey, int> counts)
