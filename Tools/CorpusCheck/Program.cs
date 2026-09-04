@@ -56,6 +56,7 @@ namespace CorpusCheck
             var forms = new Dictionary<PayloadForm, int>();
             var issues = new Dictionary<LevelIssueCode, int>();
             var failures = new List<string>();
+            var parsedLevels = new List<LevelData>();
 
             var stopwatch = Stopwatch.StartNew();
 
@@ -89,6 +90,7 @@ namespace CorpusCheck
                     }
 
                     parsed++;
+                    parsedLevels.Add(result.Level);
                     forms.TryGetValue(result.Form, out int formCount);
                     forms[result.Form] = formCount + 1;
 
@@ -139,6 +141,7 @@ namespace CorpusCheck
             Print("Bien the payload", forms);
             Print("Loi parse", parseErrors);
             Print("Loi validate", issues);
+            ReportDeduplication(parsedLevels);
 
             if (failures.Count > 0)
             {
@@ -149,6 +152,55 @@ namespace CorpusCheck
                 {
                     Console.WriteLine("  " + failure);
                 }
+            }
+        }
+
+        private static void ReportDeduplication(List<LevelData> levels)
+        {
+            var deduplicator = new LevelDeduplicator(new BoardCanonicalizer());
+            var stopwatch = Stopwatch.StartNew();
+            List<LevelGroup> groups = deduplicator.Group(levels);
+            stopwatch.Stop();
+
+            int duplicates = levels.Count - groups.Count;
+
+            Console.WriteLine();
+            Console.WriteLine("Khu trung (8 phep doi xung, chi so hinh ban):");
+            Console.WriteLine("  " + levels.Count + " level -> " + groups.Count + " hinh ban doc nhat");
+            Console.WriteLine("  Ban trung bi bo   : " + duplicates);
+            Console.WriteLine("  Nhom co trung lap : " + groups.Count(g => g.HasDuplicates));
+            Console.WriteLine("  Thoi gian         : " + stopwatch.ElapsedMilliseconds + " ms");
+
+            Console.WriteLine();
+            Console.WriteLine("  Ba nhom trung nhieu nhat:");
+
+            foreach (LevelGroup group in groups.OrderByDescending(g => g.Members.Count).Take(3))
+            {
+                Console.WriteLine("    " + group.Members.Count + " ban, giu " + group.Representative.Id +
+                                  "  [" + group.Key.Width + "x" + group.Key.Height + ", " +
+                                  group.Representative.ActiveCellCount + " o]");
+                Console.WriteLine("      " + string.Join(", ", group.Members.Select(m => m.Id)));
+            }
+
+            Console.WriteLine();
+            Console.WriteLine("  Phan bo so o tren " + groups.Count + " hinh ban doc nhat:");
+
+            var bands = new (string Label, int Low, int High, int Need)[]
+            {
+                ("<=12  ", 0, 12, 30),
+                ("13-20 ", 13, 20, 60),
+                ("21-30 ", 21, 30, 90),
+                ("31-45 ", 31, 45, 60),
+                (">45   ", 46, int.MaxValue, 60)
+            };
+
+            foreach ((string label, int low, int high, int need) in bands)
+            {
+                int count = groups.Count(g => g.Representative.ActiveCellCount >= low &&
+                                              g.Representative.ActiveCellCount <= high);
+                Console.WriteLine("    " + label + " co " + count.ToString().PadLeft(4) +
+                                  "  can " + need.ToString().PadLeft(3) +
+                                  "  du " + (count / (double)need).ToString("0.0") + "x");
             }
         }
 
