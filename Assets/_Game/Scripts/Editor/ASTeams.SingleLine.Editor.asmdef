@@ -1,0 +1,20 @@
+{
+    "name": "ASTeams.SingleLine.Editor",
+    "rootNamespace": "ASTeams.SingleLine.Editor",
+    "references": [
+        "ASTeams.SingleLine.Core",
+        "ASTeams.SingleLine.Import",
+        "ASTeams.SingleLine.Data"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
