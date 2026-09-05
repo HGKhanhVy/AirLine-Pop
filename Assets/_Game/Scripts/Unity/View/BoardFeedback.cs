@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
@@ -36,7 +37,16 @@ namespace ASTeams.SingleLine.Unity
         [SerializeField, Min(0.01f)] private float winStepDelay = 0.02f;
         [SerializeField, Min(0.01f)] private float winDuration = 0.22f;
 
+        [Header("Confetti")]
+        [SerializeField] private ConfettiView confetti;
+
         private Sequence running;
+        private Coroutine confettiWave;
+        private WaitForSeconds confettiStep;
+
+        // The controller hands out a list it reuses, so the positions the wave needs are
+        // copied here before the coroutine outlives the call that started it.
+        private readonly List<Vector3> burstPositions = new List<Vector3>(96);
 
         private void Awake()
         {
@@ -44,6 +54,8 @@ namespace ASTeams.SingleLine.Unity
             {
                 shakeRoot = boardView != null ? boardView.transform : transform;
             }
+
+            confettiStep = new WaitForSeconds(winStepDelay);
         }
 
         private void OnDisable()
@@ -90,10 +102,12 @@ namespace ASTeams.SingleLine.Unity
             }
 
             running = DOTween.Sequence();
+            burstPositions.Clear();
 
             for (int step = 0; step < pathInOrder.Count; step++)
             {
-                CellView cell = boardView.GetCellView(pathInOrder[step]);
+                int index = pathInOrder[step];
+                CellView cell = boardView.GetCellView(index);
 
                 if (cell == null)
                 {
@@ -101,9 +115,30 @@ namespace ASTeams.SingleLine.Unity
                 }
 
                 running.Insert(step * winStepDelay, Pulse(cell.transform, winScale, winDuration));
+                burstPositions.Add(boardView.GetCellWorldPosition(index));
             }
 
             running.SetUpdate(isIndependentUpdate: true);
+
+            if (confetti != null && isActiveAndEnabled)
+            {
+                confettiWave = StartCoroutine(ThrowConfetti());
+            }
+        }
+
+        /// <summary>
+        /// Paper off each cell in the order the player drew it, so the celebration runs
+        /// along the path with the wave rather than landing on the board all at once.
+        /// </summary>
+        private IEnumerator ThrowConfetti()
+        {
+            for (int i = 0; i < burstPositions.Count; i++)
+            {
+                confetti.Burst(burstPositions[i]);
+                yield return confettiStep;
+            }
+
+            confettiWave = null;
         }
 
         /// <summary>
@@ -137,6 +172,14 @@ namespace ASTeams.SingleLine.Unity
             }
 
             running = null;
+
+            // Only the throwing stops. Paper already in the air is left to fall, which
+            // reads better than it vanishing mid-flight and costs nothing.
+            if (confettiWave != null)
+            {
+                StopCoroutine(confettiWave);
+                confettiWave = null;
+            }
 
             if (shakeRoot != null)
             {
