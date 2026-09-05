@@ -45,14 +45,26 @@ namespace ASTeams.SingleLine.Unity
                 return;
             }
 
-            // The board is built and waiting behind the home panel, so Play costs nothing.
-            if (homeScreen != null)
+            if (homeScreen == null)
             {
-                homeScreen.OnPlayRequested += HandlePlayRequested;
-                homeScreen.SetSubtitle(currentLevelId);
-                homeScreen.Show();
-                controller.SetInputEnabled(false);
+                return;
             }
+
+            homeScreen.OnPlayRequested += HandlePlayRequested;
+            homeScreen.SetSubtitle(currentLevelId);
+
+            // Arriving from the home scene means Play has already been pressed; showing a
+            // second entry panel here would ask for it twice.
+            if (GameplayEntry.ConsumeImmediateStart())
+            {
+                homeScreen.HideImmediately();
+                controller.SetInputEnabled(true);
+                return;
+            }
+
+            // The board is built and waiting behind the home panel, so Play costs nothing.
+            homeScreen.Show();
+            controller.SetInputEnabled(false);
         }
 
         private void OnDestroy()

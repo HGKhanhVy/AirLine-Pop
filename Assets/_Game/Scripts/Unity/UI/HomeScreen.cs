@@ -77,6 +77,22 @@ namespace ASTeams.SingleLine.Unity
             interactableWhenShown = false;
         }
 
+        /// <summary>
+        /// Hides without the fade. Used when the player already pressed Play in the home
+        /// scene, where fading a panel they never saw would only delay the board.
+        /// </summary>
+        public void HideImmediately()
+        {
+            Hide();
+
+            if (group != null)
+            {
+                group.alpha = 0f;
+                group.blocksRaycasts = false;
+                group.interactable = false;
+            }
+        }
+
         private void HandlePlay()
         {
             Hide();
