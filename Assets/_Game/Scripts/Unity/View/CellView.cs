@@ -16,6 +16,9 @@ namespace ASTeams.SingleLine.Unity
         /// <summary>Board index this square currently stands for.</summary>
         public int CellIndex { get; private set; }
 
+        /// <summary>The colour the square is drawn in, for effects that match a cell.</summary>
+        public Color Color => spriteRenderer.color;
+
         private void Reset()
         {
             spriteRenderer = GetComponent<SpriteRenderer>();
