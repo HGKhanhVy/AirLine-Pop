@@ -26,6 +26,7 @@ namespace ASTeams.SingleLine.Unity
         [SerializeField, Range(0f, 0.4f)] private float bottomReserve = 0.16f;
 
         private Vector2 framedSize;
+        private Vector2Int lastScreen;
 
         private void Reset()
         {
@@ -49,9 +50,23 @@ namespace ASTeams.SingleLine.Unity
             Apply();
         }
 
-        /// <summary>Re-frames when the window changes shape, on a rotate or an editor resize.</summary>
-        private void OnRectTransformDimensionsChange()
+        /// <summary>
+        /// Re-frames when the window changes shape.
+        ///
+        /// Unity raises no event for a resolution or orientation change, and the camera's
+        /// aspect can still be the previous one on the frame a level is framed. Comparing
+        /// two ints costs nothing, and it is what stops a portrait board being framed with
+        /// a landscape aspect and running off both edges. The first Update always applies,
+        /// because the stored size starts at zero.
+        /// </summary>
+        private void Update()
         {
+            if (Screen.width == lastScreen.x && Screen.height == lastScreen.y)
+            {
+                return;
+            }
+
+            lastScreen = new Vector2Int(Screen.width, Screen.height);
             Apply();
         }
 
