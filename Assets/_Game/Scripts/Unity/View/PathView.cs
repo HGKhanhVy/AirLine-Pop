@@ -37,6 +37,7 @@ namespace ASTeams.SingleLine.Unity
             line.textureMode = LineTextureMode.Stretch;
             line.alignment = LineAlignment.View;
             line.material = new Material(Shader.Find("Sprites/Default"));
+            line.sortingOrder = BoardSortingOrder.Path;
             line.positionCount = 0;
         }
 

@@ -18,6 +18,7 @@ namespace ASTeams.SingleLine.Unity
     public sealed class CellDustView : MonoBehaviour
     {
         [SerializeField] private ParticleSystem particles;
+        [SerializeField] private ParticleSystemRenderer particleRenderer;
 
         [Tooltip("Motes thrown from one cell.")]
         [SerializeField, Min(1)] private int motesPerCell = 14;
@@ -31,6 +32,11 @@ namespace ASTeams.SingleLine.Unity
         {
             // The shape module spreads the motes around the point handed in below.
             emitParams.applyShapeToPosition = true;
+
+            if (particleRenderer != null)
+            {
+                particleRenderer.sortingOrder = BoardSortingOrder.Dust;
+            }
         }
 
         /// <summary>Puffs one cell's worth of dust, in that cell's own colour.</summary>

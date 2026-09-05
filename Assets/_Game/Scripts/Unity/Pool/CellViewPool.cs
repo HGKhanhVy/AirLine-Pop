@@ -79,6 +79,7 @@ namespace ASTeams.SingleLine.Unity
 
             var renderer = go.GetComponent<SpriteRenderer>();
             renderer.sharedMaterial = sharedMaterial;
+            renderer.sortingOrder = BoardSortingOrder.Cells;
 
             var view = go.GetComponent<CellView>();
             view.Bind(renderer);
