@@ -6,10 +6,10 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/UXUI/SceenUI/Splash.unity
+    path: Assets/UXUI/Resources/UI/Splash.unity
     guid: 5eb67f10b72b6384185cc34787fd2d64
   - enabled: 1
-    path: Assets/UXUI/SceenUI/Home.unity
+    path: Assets/UXUI/Resources/UI/Home.unity
     guid: 7bdab9498589d934eba018eb3d9929ea
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
