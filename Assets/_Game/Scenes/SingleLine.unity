@@ -175,6 +175,7 @@ MonoBehaviour:
   boardFeedback: {fileID: 199543320}
   rewindStepDelay: 0.025
   hintNodeBudget: 200000
+  hintSteps: 3
 --- !u!114 &218652
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -334,8 +335,9 @@ MonoBehaviour:
   pulseScale: 1.22
   pulseDuration: 0.26
   hintScale: 1.3
-  hintDuration: 0.45
-  hintLoops: 3
+  hintHold: 2.5
+  hintPulse: 0.5
+  hintStagger: 0.12
   winScale: 1.16
   winStepDelay: 0.02
   winDuration: 0.22

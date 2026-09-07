@@ -29,8 +29,15 @@ namespace ASTeams.SingleLine.Unity
 
         [Header("Hint")]
         [SerializeField, Min(1f)] private float hintScale = 1.3f;
-        [SerializeField, Min(0.01f)] private float hintDuration = 0.45f;
-        [SerializeField, Min(1)] private int hintLoops = 3;
+
+        [Tooltip("How long the highlight stays up. GDD 7.1 asks for 2.5 s or until the player moves.")]
+        [SerializeField, Min(0.1f)] private float hintHold = 2.5f;
+
+        [Tooltip("Length of one swell and back.")]
+        [SerializeField, Min(0.05f)] private float hintPulse = 0.5f;
+
+        [Tooltip("Delay between one hinted cell and the next, so they read in order.")]
+        [SerializeField, Min(0f)] private float hintStagger = 0.12f;
 
         [Header("Win")]
         [SerializeField, Min(1f)] private float winScale = 1.16f;
@@ -54,6 +61,9 @@ namespace ASTeams.SingleLine.Unity
         private Tween invalidTween;
         private CellView invalidCell;
         private float invalidAllowedAt;
+
+        private Sequence hintSequence;
+        private readonly List<CellView> hintCells = new List<CellView>(4);
         private Coroutine dustWave;
         private WaitForSeconds dustStep;
 
@@ -212,23 +222,64 @@ namespace ASTeams.SingleLine.Unity
         /// Draws attention to one cell without playing it. A hint points, it does not
         /// move: the player still has to make the move themselves.
         /// </summary>
-        public void PlayHint(int cell)
+        public void PlayHint(IReadOnlyList<int> cells)
         {
-            Stop();
+            StopHint();
 
-            CellView view = boardView.GetCellView(cell);
-
-            if (view == null)
+            if (cells == null || cells.Count == 0)
             {
                 return;
             }
 
-            running = DOTween.Sequence();
-            running.Append(view.transform
-                .DOScale(hintScale, hintDuration / (hintLoops * 2f))
-                .SetLoops(hintLoops * 2, LoopType.Yoyo)
-                .SetEase(Ease.InOutSine));
-            running.SetUpdate(isIndependentUpdate: true);
+            // An even number of yoyo legs, so every cell ends back at its own size even
+            // if the highlight runs its full course.
+            int legs = Mathf.Max(1, Mathf.RoundToInt(hintHold / hintPulse)) * 2;
+            hintSequence = DOTween.Sequence();
+
+            for (int i = 0; i < cells.Count; i++)
+            {
+                CellView view = boardView.GetCellView(cells[i]);
+
+                if (view == null)
+                {
+                    continue;
+                }
+
+                hintCells.Add(view);
+
+                // Staggering them makes the three read as an order to walk rather than as
+                // three separate suggestions.
+                hintSequence.Insert(i * hintStagger, view.transform
+                    .DOScale(hintScale, hintPulse * 0.5f)
+                    .SetLoops(legs, LoopType.Yoyo)
+                    .SetEase(Ease.InOutSine));
+            }
+
+            hintSequence.SetUpdate(isIndependentUpdate: true);
+        }
+
+        /// <summary>
+        /// Drops the highlight. GDD 7.1 ends it the moment the player acts, because a hint
+        /// still pulsing over a path they have moved on from is pointing at the past.
+        /// </summary>
+        public void StopHint()
+        {
+            if (hintSequence != null && hintSequence.IsActive())
+            {
+                hintSequence.Kill();
+            }
+
+            hintSequence = null;
+
+            for (int i = 0; i < hintCells.Count; i++)
+            {
+                if (hintCells[i] != null)
+                {
+                    hintCells[i].transform.localScale = Vector3.one;
+                }
+            }
+
+            hintCells.Clear();
         }
 
         public void Stop()
@@ -240,6 +291,7 @@ namespace ASTeams.SingleLine.Unity
 
             running = null;
 
+            StopHint();
             StopInvalid();
 
             // Only the throwing stops. Dust already in the air is left to fade, which

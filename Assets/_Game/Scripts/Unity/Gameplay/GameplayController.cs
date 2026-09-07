@@ -28,6 +28,9 @@ namespace ASTeams.SingleLine.Unity
         [Tooltip("Search budget for a hint. Kept small so a hint never stalls a frame.")]
         [SerializeField, Min(1000)] private int hintNodeBudget = 200000;
 
+        [Tooltip("Steps a single hint gives away. GDD 7.1 allows 1 to 3.")]
+        [SerializeField, Range(1, 3)] private int hintSteps = 3;
+
         private PathSession session;
         private IHapticService haptics;
         private Coroutine rewind;
@@ -36,6 +39,7 @@ namespace ASTeams.SingleLine.Unity
 
         // Reused so a move never allocates; a board holds at most ninety cells.
         private readonly List<int> scratchCells = new List<int>(96);
+        private readonly List<int> hintCells = new List<int>(3);
 
         /// <summary>Raised as (previous, current) so a UI layer can react without polling.</summary>
         public event Action<PathState, PathState> OnStateChanged;
@@ -101,12 +105,26 @@ namespace ASTeams.SingleLine.Unity
 
             CollectPath();
 
-            if (!hintSolver.TryContinue(level, scratchCells, hintBuffer, out int _))
+            if (!hintSolver.TryContinue(level, scratchCells, hintBuffer, out int solved))
             {
                 return false;
             }
 
-            boardFeedback.PlayHint(hintBuffer[session.Length]);
+            // TryContinue fills the whole route, drawn part included, so the steps still
+            // to take begin where the path currently ends.
+            hintCells.Clear();
+
+            for (int step = session.Length; step < solved && hintCells.Count < hintSteps; step++)
+            {
+                hintCells.Add(hintBuffer[step]);
+            }
+
+            if (hintCells.Count == 0)
+            {
+                return false;
+            }
+
+            boardFeedback.PlayHint(hintCells);
             return true;
         }
 
@@ -263,6 +281,10 @@ namespace ASTeams.SingleLine.Unity
             // Rejection is normal and must change nothing, which is what MOV-06 asks for.
             // It still has to be felt: the nudge lands on the head rather than the cell
             // that was refused, because that cell is often a hole with nothing drawn.
+            // Any move answers the hint, so it stops pointing at a route the player has
+            // already left.
+            boardFeedback.StopHint();
+
             MoveResult result = session.Move(cell);
 
             if (result == MoveResult.Rejected)
