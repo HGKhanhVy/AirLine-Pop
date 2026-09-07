@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using ASTeams.Base;
 using ASTeams.SingleLine.Core;
 using ASTeams.SingleLine.Data;
 using UnityEngine;
@@ -19,6 +20,9 @@ namespace ASTeams.SingleLine.Unity
         [SerializeField] private GameplayController controller;
         [SerializeField] private HomeScreen homeScreen;
 
+        [Tooltip("From the SDK's MANAGERS prefab. Leave empty to play without haptics.")]
+        [SerializeField] private VibrationController vibration;
+
         [Tooltip("Level to open on start. Ids are chapter, underscore, slot: ch01_001.")]
         [SerializeField] private string startLevelId = "ch01_001";
 
@@ -35,6 +39,7 @@ namespace ASTeams.SingleLine.Unity
         private void Start()
         {
             repository = new ChapterLevelRepository(new ResourcesChapterSource());
+            controller.SetHaptics(new SdkHapticService(vibration));
             controller.OnStateChanged += HandleStateChanged;
 
             if (!TryLoad(startLevelId))

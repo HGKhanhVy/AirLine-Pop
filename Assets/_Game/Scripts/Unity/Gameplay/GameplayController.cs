@@ -29,6 +29,7 @@ namespace ASTeams.SingleLine.Unity
         [SerializeField, Min(1000)] private int hintNodeBudget = 200000;
 
         private PathSession session;
+        private IHapticService haptics;
         private Coroutine rewind;
         private WarnsdorffSolver hintSolver;
         private int[] hintBuffer;
@@ -52,6 +53,15 @@ namespace ASTeams.SingleLine.Unity
 
         /// <summary>True while the path is unwinding itself back to the start.</summary>
         public bool IsRewinding => rewind != null;
+
+        /// <summary>
+        /// Hands in the buzzer. Injected rather than looked up, and optional: with nothing
+        /// supplied the game simply plays without haptics.
+        /// </summary>
+        public void SetHaptics(IHapticService service)
+        {
+            haptics = service;
+        }
 
         /// <summary>
         /// Turns board input on or off without touching the path, so a screen on top can
@@ -269,6 +279,10 @@ namespace ASTeams.SingleLine.Unity
             if (result != MoveResult.Backtracked)
             {
                 boardView.PopCell(session.Head);
+
+                // GDD 10 gives haptics to entering a cell and to winning, and to nothing
+                // else. Backtracking and refused moves answer with sound and motion only.
+                haptics?.Play(HapticStrength.Light);
             }
         }
 
@@ -278,6 +292,7 @@ namespace ASTeams.SingleLine.Unity
             {
                 boardInput.AcceptsInput = false;
                 boardFeedback.PlayWin(CollectPath());
+                haptics?.Play(HapticStrength.Medium);
             }
             else if (current == PathState.Stuck)
             {
