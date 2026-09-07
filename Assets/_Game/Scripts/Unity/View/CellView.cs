@@ -27,6 +27,10 @@ namespace ASTeams.SingleLine.Unity
         private float fillDuration;
         private float fillLeft;
 
+        private float popAmount;
+        private float popDuration;
+        private float popLeft;
+
         private void Reset()
         {
             spriteRenderer = GetComponent<SpriteRenderer>();
@@ -47,6 +51,8 @@ namespace ASTeams.SingleLine.Unity
             BaseLocalPosition = localPosition;
             transform.localPosition = localPosition;
             transform.localScale = Vector3.one;
+            fillLeft = 0f;
+            popLeft = 0f;
 
             spriteRenderer.sprite = sprite;
             spriteRenderer.color = color;
@@ -78,25 +84,61 @@ namespace ASTeams.SingleLine.Unity
             fillLeft = duration;
         }
 
-        /// <summary>Advances the fill. Returns false once there is nothing left to do.</summary>
-        public bool AdvanceFill(float deltaTime)
+        /// <summary>
+        /// Swells and settles back, so the square answers the path arriving at it. GDD 10
+        /// calls this the raise half of "fill/raise".
+        /// </summary>
+        public void Pop(float amount, float duration)
         {
-            if (fillLeft <= 0f)
+            if (amount <= 0f || duration <= 0f)
             {
-                return false;
+                return;
             }
 
-            fillLeft -= deltaTime;
+            popAmount = amount;
+            popDuration = duration;
+            popLeft = duration;
+        }
 
-            if (fillLeft <= 0f)
+        /// <summary>Advances fill and pop. Returns false once there is nothing left to do.</summary>
+        public bool Advance(float deltaTime)
+        {
+            bool running = false;
+
+            if (fillLeft > 0f)
             {
-                spriteRenderer.color = fillTo;
-                return false;
+                fillLeft -= deltaTime;
+
+                if (fillLeft <= 0f)
+                {
+                    spriteRenderer.color = fillTo;
+                }
+                else
+                {
+                    float t = 1f - (fillLeft / fillDuration);
+                    spriteRenderer.color = Color.Lerp(fillFrom, fillTo, t * t * (3f - 2f * t));
+                    running = true;
+                }
             }
 
-            float t = 1f - (fillLeft / fillDuration);
-            spriteRenderer.color = Color.Lerp(fillFrom, fillTo, t * t * (3f - 2f * t));
-            return true;
+            if (popLeft > 0f)
+            {
+                popLeft -= deltaTime;
+
+                if (popLeft <= 0f)
+                {
+                    transform.localScale = Vector3.one;
+                }
+                else
+                {
+                    // One half sine: out and straight back, no overshoot to settle.
+                    float t = 1f - (popLeft / popDuration);
+                    transform.localScale = Vector3.one * (1f + popAmount * Mathf.Sin(t * Mathf.PI));
+                    running = true;
+                }
+            }
+
+            return running;
         }
     }
 }

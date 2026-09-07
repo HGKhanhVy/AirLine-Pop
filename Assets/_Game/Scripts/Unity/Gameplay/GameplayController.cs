@@ -253,13 +253,23 @@ namespace ASTeams.SingleLine.Unity
             // Rejection is normal and must change nothing, which is what MOV-06 asks for.
             // It still has to be felt: the nudge lands on the head rather than the cell
             // that was refused, because that cell is often a hole with nothing drawn.
-            if (session.Move(cell) == MoveResult.Rejected)
+            MoveResult result = session.Move(cell);
+
+            if (result == MoveResult.Rejected)
             {
                 boardFeedback.PlayInvalid(session.Head);
                 return;
             }
 
             Refresh();
+
+            // Only a step forward is a new connection. Backtracking recolours cells too,
+            // and a square swelling as the player deletes it would read as the opposite of
+            // what just happened.
+            if (result != MoveResult.Backtracked)
+            {
+                boardView.PopCell(session.Head);
+            }
         }
 
         private void HandleSessionStateChanged(PathState previous, PathState current)

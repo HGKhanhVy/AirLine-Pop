@@ -22,6 +22,13 @@ namespace ASTeams.SingleLine.Unity
         [Tooltip("How long a square takes to take its new colour. GDD 10 asks for 80 to 120 ms.")]
         [SerializeField, Min(0f)] private float fillDuration = 0.1f;
 
+        [Tooltip("How far a square swells when the path reaches it, as a share of its size.")]
+        [SerializeField, Range(0f, 0.5f)] private float popAmount = 0.2f;
+
+        [Tooltip("Kept under the time between two cells at a normal drag, so the swell stays " +
+                 "on the square just joined instead of trailing behind the finger.")]
+        [SerializeField, Min(0.01f)] private float popDuration = 0.14f;
+
         private CellViewPool pool;
 
         // Only the handful of squares mid-fill are ticked, so a ninety cell board costs
@@ -57,7 +64,7 @@ namespace ASTeams.SingleLine.Unity
         {
             for (int i = filling.Count - 1; i >= 0; i--)
             {
-                if (!filling[i].AdvanceFill(Time.deltaTime))
+                if (!filling[i].Advance(Time.deltaTime))
                 {
                     filling.RemoveAt(i);
                 }
@@ -135,8 +142,40 @@ namespace ASTeams.SingleLine.Unity
                 return;
             }
 
-            view.FillTo(ColorFor(index, visited, isHead), fillDuration);
+            Color target = ColorFor(index, visited, isHead);
 
+            // The controller refreshes every square on every move, and all but two of them
+            // keep the colour they already had. Ticking those for nothing would put a
+            // ninety cell board through the fill list on each step.
+            if (view.Color == target)
+            {
+                return;
+            }
+
+            view.FillTo(target, fillDuration);
+            Track(view);
+        }
+
+        /// <summary>
+        /// Makes a square swell once, for the moment the path reaches it. Driven from the
+        /// controller rather than from the colour change, because stepping back onto a
+        /// cell also recolours it and an undo should not read as a new connection.
+        /// </summary>
+        public void PopCell(int index)
+        {
+            CellView view = GetView(index);
+
+            if (view == null)
+            {
+                return;
+            }
+
+            view.Pop(popAmount, popDuration);
+            Track(view);
+        }
+
+        private void Track(CellView view)
+        {
             if (!filling.Contains(view))
             {
                 filling.Add(view);

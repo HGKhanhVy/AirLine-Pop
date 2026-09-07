@@ -20,6 +20,18 @@ namespace ASTeams.SingleLine.Unity
         [Tooltip("How long the newest segment takes to reach the cell it just entered. GDD 10 asks for 80 to 120 ms.")]
         [SerializeField, Min(0.01f)] private float connectDuration = 0.1f;
 
+        [Header("Spark")]
+        [Tooltip("Rides the tip of the newest segment. Leave empty to draw the line without one.")]
+        [SerializeField] private SpriteRenderer spark;
+
+        [SerializeField, Min(0f)] private float sparkSize = 0.85f;
+
+        [Tooltip("How much lighter than the path the spark reads. Near white separates it from the line.")]
+        [SerializeField, Range(0f, 1f)] private float sparkLift = 0.85f;
+
+        [Tooltip("Extra time the spark lingers on the cell after landing, so the arrival is seen.")]
+        [SerializeField, Min(0f)] private float sparkAfterglow = 0.11f;
+
         private Vector3[] points;
 
         // The newest segment grows instead of appearing whole, so the eye can see which
@@ -31,6 +43,8 @@ namespace ASTeams.SingleLine.Unity
         private int growIndex = -1;
         private int previousHead = LevelData.NoCell;
         private int previousLength;
+        private Color sparkColor = Color.white;
+        private float sparkLeft;
 
         private void Reset()
         {
@@ -52,6 +66,20 @@ namespace ASTeams.SingleLine.Unity
             line.material = new Material(Shader.Find("Sprites/Default"));
             line.sortingOrder = BoardSortingOrder.Path;
             line.positionCount = 0;
+
+            if (spark != null)
+            {
+                if (spark.sprite == null)
+                {
+                    spark.sprite = PlaceholderSprite.SoftDot;
+                }
+
+                // Above the line so the pulse reads as light on top of it, still below the
+                // win dust.
+                spark.sortingOrder = BoardSortingOrder.Path + 5;
+                spark.transform.localScale = Vector3.one * sparkSize;
+                spark.enabled = false;
+            }
         }
 
         public void Rebuild(PathSession session)
@@ -107,26 +135,85 @@ namespace ASTeams.SingleLine.Unity
             growTo = points[growIndex];
             grownFor = 0f;
             line.SetPosition(growIndex, growFrom);
+
+            if (spark != null)
+            {
+                sparkColor = Color.Lerp(line.startColor, Color.white, sparkLift);
+                sparkLeft = connectDuration + sparkAfterglow;
+                spark.transform.position = growFrom;
+                spark.transform.localScale = Vector3.one * sparkSize;
+                spark.color = sparkColor;
+                spark.enabled = true;
+            }
         }
 
         private void Update()
         {
-            if (growIndex < 0)
+            if (growIndex >= 0)
+            {
+                grownFor += Time.deltaTime;
+                float t = Mathf.Clamp01(grownFor / connectDuration);
+
+                // Fast out, so the segment leaves the previous cell immediately and only
+                // the last of the travel is soft. Easing the start makes it feel sticky.
+                float eased = 1f - (1f - t) * (1f - t);
+                line.SetPosition(growIndex, Vector3.LerpUnclamped(growFrom, growTo, eased));
+
+                if (t >= 1f)
+                {
+                    growIndex = -1;
+                }
+            }
+
+            AdvanceSpark();
+        }
+
+        /// <summary>
+        /// The spark rides the tip of the segment, then stays on the square it reached
+        /// and swells out as it fades. Cutting it off the instant it arrives left nothing
+        /// to see, which is the whole point of the pulse.
+        /// </summary>
+        private void AdvanceSpark()
+        {
+            if (spark == null || sparkLeft <= 0f)
             {
                 return;
             }
 
-            grownFor += Time.deltaTime;
-            float t = Mathf.Clamp01(grownFor / connectDuration);
+            sparkLeft -= Time.deltaTime;
 
-            // Fast out, so the segment leaves the previous cell immediately and only the
-            // last of the travel is soft. Easing the start instead makes it feel sticky.
-            float eased = 1f - (1f - t) * (1f - t);
-            line.SetPosition(growIndex, Vector3.LerpUnclamped(growFrom, growTo, eased));
-
-            if (t >= 1f)
+            if (sparkLeft <= 0f)
             {
-                growIndex = -1;
+                HideSpark();
+                return;
+            }
+
+            float travel = Mathf.Clamp01(grownFor / connectDuration);
+            float eased = 1f - (1f - travel) * (1f - travel);
+            spark.transform.position = Vector3.LerpUnclamped(growFrom, growTo, eased);
+
+            if (travel < 1f)
+            {
+                // Full brightness on the way over.
+                spark.transform.localScale = Vector3.one * sparkSize;
+                spark.color = sparkColor;
+                return;
+            }
+
+            float glow = sparkAfterglow <= 0f ? 0f : Mathf.Clamp01(sparkLeft / sparkAfterglow);
+            Color colour = sparkColor;
+            colour.a = glow;
+            spark.color = colour;
+            spark.transform.localScale = Vector3.one * sparkSize * (1f + (1f - glow) * 0.6f);
+        }
+
+        private void HideSpark()
+        {
+            sparkLeft = 0f;
+
+            if (spark != null)
+            {
+                spark.enabled = false;
             }
         }
 
@@ -139,6 +226,7 @@ namespace ASTeams.SingleLine.Unity
         public void Clear()
         {
             line.positionCount = 0;
+            HideSpark();
             growIndex = -1;
             previousHead = LevelData.NoCell;
             previousLength = 0;
