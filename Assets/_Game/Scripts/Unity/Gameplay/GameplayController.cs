@@ -251,8 +251,11 @@ namespace ASTeams.SingleLine.Unity
             }
 
             // Rejection is normal and must change nothing, which is what MOV-06 asks for.
+            // It still has to be felt: the nudge lands on the head rather than the cell
+            // that was refused, because that cell is often a hole with nothing drawn.
             if (session.Move(cell) == MoveResult.Rejected)
             {
+                boardFeedback.PlayInvalid(session.Head);
                 return;
             }
 

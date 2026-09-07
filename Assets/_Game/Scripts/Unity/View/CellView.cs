@@ -19,6 +19,9 @@ namespace ASTeams.SingleLine.Unity
         /// <summary>The colour the square is drawn in, for effects that match a cell.</summary>
         public Color Color => spriteRenderer.color;
 
+        /// <summary>Where the square belongs, so a shake has somewhere to return to.</summary>
+        public Vector3 BaseLocalPosition { get; private set; }
+
         private Color fillFrom;
         private Color fillTo;
         private float fillDuration;
@@ -41,6 +44,7 @@ namespace ASTeams.SingleLine.Unity
         public void Place(int cellIndex, Vector3 localPosition, float size, Sprite sprite, Color color)
         {
             CellIndex = cellIndex;
+            BaseLocalPosition = localPosition;
             transform.localPosition = localPosition;
             transform.localScale = Vector3.one;
 

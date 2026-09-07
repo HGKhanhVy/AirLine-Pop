@@ -77,14 +77,28 @@ namespace ASTeams.SingleLine.Unity
 
             Grid grid = level.Grid;
 
-            WorldSize = new Vector2(
-                grid.Width * theme.CellSize + (grid.Width - 1) * theme.CellSpacing,
-                grid.Height * theme.CellSize + (grid.Height - 1) * theme.CellSpacing);
+            if (!TryMeasureActiveCells(out int minRow, out int maxRow, out int minColumn, out int maxColumn))
+            {
+                WorldSize = Vector2.zero;
+                return;
+            }
 
-            // Row 0 is the top row in level data, so y runs downward from the top edge.
+            // GDD 5 measures the board by the cells that exist, not by the grid they sit
+            // in. A level whose holes bunch into one corner would otherwise be pushed off
+            // centre by empty space nobody can see.
+            int usedWidth = maxColumn - minColumn + 1;
+            int usedHeight = maxRow - minRow + 1;
+
+            WorldSize = new Vector2(
+                usedWidth * theme.CellSize + (usedWidth - 1) * theme.CellSpacing,
+                usedHeight * theme.CellSize + (usedHeight - 1) * theme.CellSpacing);
+
+            // Placing the middle of that span on the origin. Row 0 is the top row in level
+            // data, so y runs downward and the sign flips.
+            float pitch = theme.CellPitch;
             originLocal = new Vector3(
-                -WorldSize.x * 0.5f + theme.CellSize * 0.5f,
-                WorldSize.y * 0.5f - theme.CellSize * 0.5f,
+                -(minColumn + maxColumn) * 0.5f * pitch,
+                (minRow + maxRow) * 0.5f * pitch,
                 0f);
 
             if (cellsByIndex == null || cellsByIndex.Length < grid.CellCount)
@@ -186,6 +200,34 @@ namespace ASTeams.SingleLine.Unity
 
             index = candidate;
             return true;
+        }
+
+        /// <summary>The rows and columns actually occupied, or false for an empty board.</summary>
+        private bool TryMeasureActiveCells(out int minRow, out int maxRow, out int minColumn, out int maxColumn)
+        {
+            Grid grid = level.Grid;
+            minRow = int.MaxValue;
+            maxRow = int.MinValue;
+            minColumn = int.MaxValue;
+            maxColumn = int.MinValue;
+
+            for (int index = 0; index < grid.CellCount; index++)
+            {
+                if (!level.IsActive(index))
+                {
+                    continue;
+                }
+
+                int row = index / grid.Width;
+                int column = index % grid.Width;
+
+                minRow = Mathf.Min(minRow, row);
+                maxRow = Mathf.Max(maxRow, row);
+                minColumn = Mathf.Min(minColumn, column);
+                maxColumn = Mathf.Max(maxColumn, column);
+            }
+
+            return maxRow >= minRow;
         }
 
         private CellView GetView(int index)

@@ -189,6 +189,7 @@ MonoBehaviour:
   boardView: {fileID: 199543319}
   boardCamera: {fileID: 298706672}
   samplesPerCell: 3
+  dragThreshold: 8
 --- !u!4 &218653
 Transform:
   m_ObjectHideFlags: 0
@@ -309,6 +310,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   theme: {fileID: 11400000, guid: c7ef0f465b839234587d76f3d8c4d873, type: 2}
   cellRoot: {fileID: 1861544899}
+  fillDuration: 0.1
 --- !u!114 &199543320
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -334,6 +336,9 @@ MonoBehaviour:
   winScale: 1.16
   winStepDelay: 0.02
   winDuration: 0.22
+  invalidShake: 0.014
+  invalidDuration: 0.08
+  invalidCooldown: 0.18
   dust: {fileID: 1645548817}
 --- !u!1 &204271836
 GameObject:
@@ -2012,6 +2017,7 @@ MonoBehaviour:
   theme: {fileID: 11400000, guid: c7ef0f465b839234587d76f3d8c4d873, type: 2}
   line: {fileID: 1390850357}
   boardView: {fileID: 199543319}
+  connectDuration: 0.1
 --- !u!120 &1390850357
 LineRenderer:
   serializedVersion: 2

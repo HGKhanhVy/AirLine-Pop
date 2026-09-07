@@ -37,10 +37,23 @@ namespace ASTeams.SingleLine.Unity
         [SerializeField, Min(0.01f)] private float winStepDelay = 0.02f;
         [SerializeField, Min(0.01f)] private float winDuration = 0.22f;
 
+        [Header("Invalid move")]
+        [Tooltip("How far the square nudges, in cells. A cell is at most 18% of the screen, " +
+                 "so 0.014 peaks near the 2 to 3 px GDD 4 asks for at a 1080p reference.")]
+        [SerializeField, Min(0f)] private float invalidShake = 0.014f;
+
+        [SerializeField, Min(0.01f)] private float invalidDuration = 0.08f;
+
+        [Tooltip("Least time between two nudges, so a finger held against a wall does not buzz.")]
+        [SerializeField, Min(0f)] private float invalidCooldown = 0.18f;
+
         [Header("Win dust")]
         [SerializeField] private CellDustView dust;
 
         private Sequence running;
+        private Tween invalidTween;
+        private CellView invalidCell;
+        private float invalidAllowedAt;
         private Coroutine dustWave;
         private WaitForSeconds dustStep;
 
@@ -146,6 +159,56 @@ namespace ASTeams.SingleLine.Unity
         }
 
         /// <summary>
+        /// A short nudge on the cell the player is standing on when a move is refused.
+        ///
+        /// GDD 4 puts a number on it: 2 to 3 px for 80 ms. Without it a refused move looks
+        /// exactly like a dropped frame, and the player blames the game rather than
+        /// reading the board. Rate limited because a finger held against a wall refuses a
+        /// move every frame, and GDD 4 asks for the error not to be spammed.
+        /// </summary>
+        public void PlayInvalid(int cell)
+        {
+            if (Time.unscaledTime < invalidAllowedAt)
+            {
+                return;
+            }
+
+            CellView view = boardView.GetCellView(cell);
+
+            if (view == null)
+            {
+                return;
+            }
+
+            invalidAllowedAt = Time.unscaledTime + invalidCooldown;
+            StopInvalid();
+
+            invalidCell = view;
+            invalidTween = view.transform
+                .DOShakePosition(invalidDuration, invalidShake, 18, 90f, false, true)
+                .SetUpdate(isIndependentUpdate: true);
+        }
+
+        private void StopInvalid()
+        {
+            if (invalidTween != null && invalidTween.IsActive())
+            {
+                invalidTween.Kill();
+            }
+
+            invalidTween = null;
+
+            // Squares are pooled, so one left nudged aside would be handed to the next
+            // board off centre.
+            if (invalidCell != null)
+            {
+                invalidCell.transform.localPosition = invalidCell.BaseLocalPosition;
+            }
+
+            invalidCell = null;
+        }
+
+        /// <summary>
         /// Draws attention to one cell without playing it. A hint points, it does not
         /// move: the player still has to make the move themselves.
         /// </summary>
@@ -176,6 +239,8 @@ namespace ASTeams.SingleLine.Unity
             }
 
             running = null;
+
+            StopInvalid();
 
             // Only the throwing stops. Dust already in the air is left to fade, which
             // reads better than it vanishing mid-flight and costs nothing.

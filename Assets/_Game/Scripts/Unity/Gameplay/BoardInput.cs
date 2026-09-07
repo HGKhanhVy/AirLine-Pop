@@ -1,6 +1,11 @@
 using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Controls;
+
+// UnityEngine ships a legacy TouchPhase of its own, so the Input System one has to
+// be named explicitly.
+using TouchPhase = UnityEngine.InputSystem.TouchPhase;
 
 namespace ASTeams.SingleLine.Unity
 {
@@ -22,11 +27,20 @@ namespace ASTeams.SingleLine.Unity
         /// <summary>Samples per cell along a drag. Three leaves room for a diagonal cut.</summary>
         [SerializeField, Min(1)] private int samplesPerCell = 3;
 
+        [Tooltip("Movement before a hold counts as a drag. GDD 4 asks for 8 px at a 1080p reference.")]
+        [SerializeField, Min(0f)] private float dragThreshold = 8f;
+
         /// <summary>Used when the camera cannot be measured, such as before the first frame.</summary>
         private const float FallbackPixelsPerCell = 64f;
 
+        /// <summary>Width the drag threshold is quoted against, per GDD 4.</summary>
+        private const float ReferenceWidth = 1080f;
+
+        private const int NoTouch = -1;
+
         private bool wasPressed;
         private Vector2 lastScreenPosition;
+        private int activeTouchId = NoTouch;
 
         /// <summary>Raised for every cell the pointer passes over, in the order it entered them.</summary>
         public event Action<int> OnCellEntered;
@@ -46,15 +60,10 @@ namespace ASTeams.SingleLine.Unity
 
         private void Update()
         {
-            Pointer pointer = Pointer.current;
-
-            if (pointer == null)
+            if (!TryReadOwningPointer(out bool pressed, out Vector2 screen))
             {
                 return;
             }
-
-            bool pressed = pointer.press.isPressed;
-            Vector2 screen = pointer.position.ReadValue();
 
             if (!AcceptsInput)
             {
@@ -70,8 +79,14 @@ namespace ASTeams.SingleLine.Unity
             }
             else if (pressed)
             {
-                SendCellsAlong(lastScreenPosition, screen);
-                lastScreenPosition = screen;
+                // Below the threshold the finger is being held, not dragged. A hand
+                // resting on the seam between two cells would otherwise flicker between
+                // them. Nothing is discarded: the movement accumulates until it counts.
+                if (Vector2.Distance(lastScreenPosition, screen) >= ScaledDragThreshold())
+                {
+                    SendCellsAlong(lastScreenPosition, screen);
+                    lastScreenPosition = screen;
+                }
             }
             else if (wasPressed)
             {
@@ -79,6 +94,112 @@ namespace ASTeams.SingleLine.Unity
             }
 
             wasPressed = pressed;
+        }
+
+        private float ScaledDragThreshold()
+        {
+            return dragThreshold * Mathf.Max(1, Screen.width) / ReferenceWidth;
+        }
+
+        /// <summary>
+        /// Reports the one pointer that owns the board.
+        ///
+        /// GDD 4 requires the touch that starts a drag to keep control until it lifts.
+        /// Reading whichever pointer is newest lets a second finger, or a thumb resting
+        /// on the edge of the screen, take the path over mid stroke and jump it across
+        /// the board. A mouse still drives it when the device has no touchscreen, which
+        /// is what keeps the Editor usable.
+        /// </summary>
+        private bool TryReadOwningPointer(out bool pressed, out Vector2 screen)
+        {
+            Touchscreen touchscreen = Touchscreen.current;
+
+            if (touchscreen != null && (activeTouchId != NoTouch || HasTouchDown(touchscreen)))
+            {
+                return TryReadOwnedTouch(touchscreen, out pressed, out screen);
+            }
+
+            activeTouchId = NoTouch;
+            Pointer pointer = Pointer.current;
+
+            if (pointer == null)
+            {
+                pressed = false;
+                screen = lastScreenPosition;
+                return false;
+            }
+
+            pressed = pointer.press.isPressed;
+            screen = pointer.position.ReadValue();
+            return true;
+        }
+
+        private bool TryReadOwnedTouch(Touchscreen touchscreen, out bool pressed, out Vector2 screen)
+        {
+            pressed = false;
+            screen = lastScreenPosition;
+
+            if (activeTouchId != NoTouch)
+            {
+                foreach (TouchControl touch in touchscreen.touches)
+                {
+                    if (touch.touchId.ReadValue() != activeTouchId)
+                    {
+                        continue;
+                    }
+
+                    screen = touch.position.ReadValue();
+                    pressed = IsDown(touch.phase.ReadValue());
+
+                    if (!pressed)
+                    {
+                        activeTouchId = NoTouch;
+                    }
+
+                    return true;
+                }
+
+                // The finger disappeared without ever reporting a release, which is what
+                // losing focus mid drag looks like. Treat it as lifted; EC-05 wants the
+                // drag cancelled but the path kept, and releasing does exactly that.
+                activeTouchId = NoTouch;
+                return true;
+            }
+
+            foreach (TouchControl touch in touchscreen.touches)
+            {
+                if (touch.phase.ReadValue() != TouchPhase.Began)
+                {
+                    continue;
+                }
+
+                activeTouchId = touch.touchId.ReadValue();
+                screen = touch.position.ReadValue();
+                pressed = true;
+                return true;
+            }
+
+            return true;
+        }
+
+        private static bool HasTouchDown(Touchscreen touchscreen)
+        {
+            foreach (TouchControl touch in touchscreen.touches)
+            {
+                if (IsDown(touch.phase.ReadValue()))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private static bool IsDown(TouchPhase phase)
+        {
+            return phase == TouchPhase.Began
+                || phase == TouchPhase.Moved
+                || phase == TouchPhase.Stationary;
         }
 
         /// <summary>
