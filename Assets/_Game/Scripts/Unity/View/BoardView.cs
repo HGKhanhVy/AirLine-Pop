@@ -19,7 +19,14 @@ namespace ASTeams.SingleLine.Unity
         [SerializeField] private ThemeSO theme;
         [SerializeField] private Transform cellRoot;
 
+        [Tooltip("How long a square takes to take its new colour. GDD 10 asks for 80 to 120 ms.")]
+        [SerializeField, Min(0f)] private float fillDuration = 0.1f;
+
         private CellViewPool pool;
+
+        // Only the handful of squares mid-fill are ticked, so a ninety cell board costs
+        // nothing while the player is not drawing.
+        private readonly List<CellView> filling = new List<CellView>(8);
         private LevelData level;
         private CellView[] cellsByIndex;
         private Vector3 originLocal;
@@ -46,10 +53,22 @@ namespace ASTeams.SingleLine.Unity
             pool.Prewarm(64);
         }
 
+        private void Update()
+        {
+            for (int i = filling.Count - 1; i >= 0; i--)
+            {
+                if (!filling[i].AdvanceFill(Time.deltaTime))
+                {
+                    filling.RemoveAt(i);
+                }
+            }
+        }
+
         public void Build(LevelData newLevel)
         {
             level = newLevel;
             pool.ReleaseAll();
+            filling.Clear();
 
             if (level == null)
             {
@@ -97,9 +116,16 @@ namespace ASTeams.SingleLine.Unity
         {
             CellView view = GetView(index);
 
-            if (view != null)
+            if (view == null)
             {
-                view.SetColor(ColorFor(index, visited, isHead));
+                return;
+            }
+
+            view.FillTo(ColorFor(index, visited, isHead), fillDuration);
+
+            if (!filling.Contains(view))
+            {
+                filling.Add(view);
             }
         }
 
