@@ -11,6 +11,12 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/UXUI/Resources/UI/Home.unity
     guid: 7bdab9498589d934eba018eb3d9929ea
+  - enabled: 1
+    path: Assets/UXUI/Resources/UI/Theme.unity
+    guid: 3ad8359b86e5f704bbb0119a3853021a
+  - enabled: 1
+    path: Assets/UXUI/Resources/UI/Settings.unity
+    guid: fb0f9c884a82cee4ca1d83e9ba3ae37a
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0

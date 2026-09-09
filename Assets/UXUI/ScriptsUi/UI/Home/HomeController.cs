@@ -33,11 +33,15 @@ public class HomeController : MonoBehaviour
 
     public void OpenTheme()
     {
-        SceneManager.LoadScene("Theme");
+        UiManager.Instance.ShowTheme();
     }
 
     public void OpenSettings()
     {
-        SceneManager.LoadScene("Settings");
+        UiManager.Instance.ShowSetting();
+    }
+    public void CloseSettings()
+    {
+        UiManager.Instance.HideSetting();
     }
 }
