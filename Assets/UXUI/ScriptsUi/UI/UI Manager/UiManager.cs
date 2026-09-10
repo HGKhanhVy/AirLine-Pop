@@ -1,5 +1,6 @@
 using ASTeams.Base;
 using Sirenix.OdinInspector;
+using Sirenix.OdinInspector.Editor.GettingStarted;
 using UnityEngine;
 
 public class UiManager : MonoBehaviour
@@ -9,6 +10,8 @@ public class UiManager : MonoBehaviour
     public Uibase uiSetting;
     public Uibase uiNoInternet;
     public Uibase uiTheme;
+    public Uibase uiTutorial;
+    public TutorialHand tutorialHand;
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -20,6 +23,7 @@ public class UiManager : MonoBehaviour
         Instance = this;
         DontDestroyOnLoad(gameObject);
     }
+
 
     public void ShowSetting()
     {
@@ -49,8 +53,20 @@ public class UiManager : MonoBehaviour
         uiTheme.Hide();
     }
 
+    public void ShowTutorial()
+    {
+        uiTutorial.Show();
+        tutorialHand.Play();
+    }
+
+    public void HideTutorial()
+    {
+        tutorialHand.StopTutorial();
+        uiTutorial.Hide();
+    }
+
     [Button]
-    private void testShowUiSetting()
+    private void TestShowUiSetting()
     {
         uiSetting.Show();
     }
@@ -59,5 +75,10 @@ public class UiManager : MonoBehaviour
     private void TestShowNoInternet()
     {
         uiNoInternet.Show();
+    }
+    [Button]
+    private void TestShowTutorial()
+    {
+        uiTutorial.Show();
     }
 }
