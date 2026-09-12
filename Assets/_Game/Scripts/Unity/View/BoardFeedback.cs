@@ -57,6 +57,11 @@ namespace ASTeams.SingleLine.Unity
         [Header("Win dust")]
         [SerializeField] private CellDustView dust;
 
+        [Header("Particles")]
+        [Tooltip("Plays the reference game's bursts. Leave empty to run without them.")]
+        [SerializeField] private PooledEffectPlayer effectPlayer;
+
+        private IEffectPlayer effects;
         private Sequence running;
         private Tween invalidTween;
         private CellView invalidCell;
@@ -75,6 +80,8 @@ namespace ASTeams.SingleLine.Unity
 
         private void Awake()
         {
+            effects = effectPlayer;
+
             if (shakeRoot == null)
             {
                 shakeRoot = boardView != null ? boardView.transform : transform;
@@ -147,6 +154,14 @@ namespace ASTeams.SingleLine.Unity
 
             running.SetUpdate(isIndependentUpdate: false);
 
+            if (burstPositions.Count > 0)
+            {
+                // One burst for the whole board rather than one per square: the dust wave
+                // already runs along the path, and ninety confetti bursts would bury it.
+                effects?.Play(GameplayEffect.PathCompleted,
+                    burstPositions[burstPositions.Count - 1], burstColors[burstColors.Count - 1]);
+            }
+
             if (dust != null && isActiveAndEnabled)
             {
                 dustWave = StartCoroutine(ScatterDust());
@@ -194,6 +209,7 @@ namespace ASTeams.SingleLine.Unity
             StopInvalid();
 
             invalidCell = view;
+            effects?.Play(GameplayEffect.CellRejected, boardView.GetCellWorldPosition(cell), view.Color);
             invalidTween = view.transform
                 .DOShakePosition(invalidDuration, invalidShake, 18, 90f, false, true)
                 .SetUpdate(isIndependentUpdate: false);

@@ -21,10 +21,14 @@ namespace ASTeams.SingleLine.Unity
         [SerializeField] private CellView cellPrefab;
         [SerializeField, Min(1)] private int poolCapacity = 100;
 
+        [Tooltip("Plays the board's particles. Leave empty to run the board without them.")]
+        [SerializeField] private PooledEffectPlayer effectPlayer;
+
         [Tooltip("How long a square takes to take its new colour. GDD 10 asks for 80 to 120 ms.")]
         [SerializeField, Min(0f)] private float fillDuration = 0.1f;
 
         private CellViewPool pool;
+        private IEffectPlayer effects;
 
         // Only the handful of squares mid-fill are ticked, so a ninety cell board costs
         // nothing while the player is not drawing.
@@ -51,6 +55,7 @@ namespace ASTeams.SingleLine.Unity
                 cellRoot = transform;
             }
 
+            effects = effectPlayer;
             pool = new CellViewPool(new PrefabCellViewFactory(cellPrefab, cellRoot));
             pool.Prewarm(poolCapacity);
         }
@@ -71,6 +76,7 @@ namespace ASTeams.SingleLine.Unity
             level = newLevel;
             pool.ReleaseAll();
             filling.Clear();
+            effects?.StopAll();
 
             if (level == null)
             {
@@ -167,6 +173,7 @@ namespace ASTeams.SingleLine.Unity
             }
 
             view.PlayConnect();
+            effects?.Play(GameplayEffect.CellConnected, GetCellWorldPosition(index), view.Color);
             Track(view);
         }
         public void SetStartCue(bool isVisible)
@@ -186,6 +193,7 @@ namespace ASTeams.SingleLine.Unity
             if (isVisible)
             {
                 view.ShowStartCue(theme.StartDot, theme.StartHalo);
+                effects?.Play(GameplayEffect.StartCue, GetCellWorldPosition(level.FixedStart), theme.Start);
                 Track(view);
             }
             else
