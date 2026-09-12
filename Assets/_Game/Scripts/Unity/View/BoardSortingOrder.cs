@@ -9,13 +9,20 @@ namespace ASTeams.SingleLine.Unity
     /// deliberate, and it is the sort of ordering bug that only shows on a device.
     ///
     /// Gaps of ten leave room to slide something between two layers without renumbering.
+    ///
+    /// A cell is no longer one sprite. The square reuses the reference block art, whose
+    /// own children already sort from 0 to 10 among themselves, so the path has to start
+    /// above that whole range or it flickers in and out of the block faces.
     /// </summary>
     public static class BoardSortingOrder
     {
         public const int Cells = 0;
 
-        public const int Path = 10;
+        /// <summary>Highest order used inside the cell prefab's own art.</summary>
+        public const int CellArtCeiling = 10;
 
-        public const int Dust = 20;
+        public const int Path = 20;
+
+        public const int Dust = 30;
     }
 }

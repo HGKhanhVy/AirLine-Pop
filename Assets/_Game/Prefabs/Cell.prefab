@@ -58,6 +58,10 @@ MonoBehaviour:
   startPulseAlpha: 0.24
   idleReminderDelay: 3
   idleAnimationInterval: 4
+  connectDuration: 0.14
+  connectPressDepth: 0.12
+  connectPopHeight: 0.14
+  connectPressShare: 0.3
 --- !u!1 &2918404663837964229
 GameObject:
   m_ObjectHideFlags: 0

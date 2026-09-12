@@ -24,13 +24,6 @@ namespace ASTeams.SingleLine.Unity
         [Tooltip("How long a square takes to take its new colour. GDD 10 asks for 80 to 120 ms.")]
         [SerializeField, Min(0f)] private float fillDuration = 0.1f;
 
-        [Tooltip("How far a square swells when the path reaches it, as a share of its size.")]
-        [SerializeField, Range(0f, 0.5f)] private float popAmount = 0.2f;
-
-        [Tooltip("Kept under the time between two cells at a normal drag, so the swell stays " +
-                 "on the square just joined instead of trailing behind the finger.")]
-        [SerializeField, Min(0.01f)] private float popDuration = 0.14f;
-
         private CellViewPool pool;
 
         // Only the handful of squares mid-fill are ticked, so a ninety cell board costs
@@ -159,9 +152,10 @@ namespace ASTeams.SingleLine.Unity
         }
 
         /// <summary>
-        /// Makes a square swell once, for the moment the path reaches it. Driven from the
-        /// controller rather than from the colour change, because stepping back onto a
-        /// cell also recolours it and an undo should not read as a new connection.
+        /// Presses a square down and lets it bounce back, for the moment the path reaches
+        /// it. Driven from the controller rather than from the colour change, because
+        /// stepping back onto a cell also recolours it and an undo should not read as a
+        /// new connection. The feel itself is tuned on the cell prefab.
         /// </summary>
         public void PopCell(int index)
         {
@@ -172,7 +166,7 @@ namespace ASTeams.SingleLine.Unity
                 return;
             }
 
-            view.Pop(popAmount, popDuration);
+            view.PlayConnect();
             Track(view);
         }
         public void SetStartCue(bool isVisible)
@@ -191,7 +185,7 @@ namespace ASTeams.SingleLine.Unity
 
             if (isVisible)
             {
-                view.ShowStartCue();
+                view.ShowStartCue(theme.StartDot, theme.StartHalo);
                 Track(view);
             }
             else

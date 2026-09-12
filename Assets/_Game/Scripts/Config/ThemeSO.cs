@@ -26,6 +26,13 @@ namespace ASTeams.SingleLine.Unity
         [SerializeField] private Color won = new Color(0.29f, 0.72f, 0.44f);
         [SerializeField] private Color stuck = new Color(0.85f, 0.22f, 0.25f);
 
+        [Header("Start cue")]
+        [Tooltip("The dot in the middle of the start block.")]
+        [SerializeField] private Color startDot = Color.white;
+
+        [Tooltip("The ring that keeps swelling out of the dot. Alpha is driven by the cell, not read from here.")]
+        [SerializeField] private Color startHalo = new Color(0.78f, 0.80f, 0.84f);
+
         [Header("Layout")]
         [SerializeField, Min(0.1f)] private float cellSize = 1f;
         [SerializeField, Min(0f)] private float cellSpacing = 0.12f;
@@ -58,6 +65,10 @@ namespace ASTeams.SingleLine.Unity
         public Color Won => won;
 
         public Color Stuck => stuck;
+
+        public Color StartDot => startDot;
+
+        public Color StartHalo => startHalo;
 
         public float CellSize => cellSize;
 

@@ -5326,8 +5326,6 @@ MonoBehaviour:
   cellPrefab: {fileID: 558483796533426618, guid: 4eb777606de3ed74dbc981b013a4ce06, type: 3}
   poolCapacity: 100
   fillDuration: 0.1
-  popAmount: 0.2
-  popDuration: 0.14
 --- !u!114 &8889330386574363939
 MonoBehaviour:
   m_ObjectHideFlags: 0
