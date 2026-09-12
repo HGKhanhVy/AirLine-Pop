@@ -176,3 +176,26 @@ Các hạng mục không được phép chặn APK Core:
 - Gameplay object/effect thường xuyên được pool; không runtime lookup trong hot path.
 - Không có compile error, missing script/reference hoặc Console error thuộc code game.
 - APK Android cài đặt, mở và hoàn thành smoke test trên thiết bị/emulator.
+
+## Kết quả thực hiện 13/09/2026 (đợt feedback họp)
+
+### Đã xong trong repo
+
+- **Thứ tự level theo resources.** Thêm `SourceOrderAssembler` + `AllBoardsSelector`; campaign giữ nguyên thứ tự pack nguồn thay vì rải lại theo đường cong độ khó. Thứ tự pack mặc định trong `LevelPackOrder.Default`: `beginner → medium → hard → mediumold → expertold → masterold → beginner 1 → beginner222`, nên 300 level đang phát hành là `beginner/Level_1..100` rồi `medium/Level_1..200`. Đã xuất lại `ch01..ch10`, replay 300/300, level đầu đúng là `beginner/Level_1` (board 3x1).
+- **LevelConfig tổng.** `Assets/_Game/Config/SingleLineLevelConfig.asset` liệt kê đủ 300 level, mỗi level là một `SingleLineLevelSO` trong `Assets/_Game/Config/Levels/`. Menu `Tools/Single Line/Rebuild Level Config` dựng lại từ chapter json. `LevelBootstrap` đọc thứ tự qua `ILevelCatalog` và giao quyền sở hữu số level cho `LevelService` của template.
+- **Chấm trắng + vòng xám.** Màu chấm và màu vòng lấy từ `ThemeSO` (`startDot`, `startHalo`) thay vì hard-code trắng. Rung nhắc sau 3 giây vẫn chạy clip `StartIdle` gốc.
+- **Palette theo game mẫu.** Nền đen, khối `#4A5462`, ô bắt đầu đỏ `#DE3B3B`, đường kẻ cam sáng `#FF8A5C` tách hẳn khỏi màu khối. Nhãn level đổi sang dạng `LEVEL {số}`.
+- **Cảm giác nối khối.** `CellView.PlayConnect()` nhấn xuống rồi nảy lên (lấy hình dạng từ `TutorialFillSquareSelection`, rút ngắn còn 140 ms cho kịp tốc độ vuốt). Thứ tự vẽ của đường kẻ được nâng lên trên toàn bộ art trong prefab ô.
+- **Particle theo đối tượng.** `PooledEffectPlayer` + `EffectPool`, pool sẵn, không `Instantiate`/`Destroy` khi đang chơi. Bốn nhóm: nối ô, bước sai, thắng màn, cue ô bắt đầu. Thắng màn đã gán `ConfettiBlastRed`.
+- **Event channel.** Thêm `OnHintStarted` và ba lệnh `RequestUndo/RequestRestart/RequestHint`, nên UI không cần tham chiếu nào vào gameplay.
+
+### Còn phải làm trong Unity Editor
+
+1. `Tools/Single Line/Extract Block Effects` — tách `effect_jump`, `effect_dust`, `glow` khỏi `OneLineBlock.prefab` thành prefab riêng và gán vào `PooledEffectPlayer`. Ba slot này đang để trống nên tạm thời không phát gì.
+2. Kiểm tra scale của `ConfettiBlastRed` so với board; particle này của asset gốc, có thể phải chỉnh `startSize`.
+3. Chuyển `Cell.prefab` thành Prefab Variant của `OneLineBlock.prefab`. Hiện `Cell.prefab` đang là bản copy thủ công phần visual; đổi sang variant phải làm trong Editor vì cấu trúc file variant khác hẳn.
+4. Bật lại Unity MCP (đổi port) rồi chạy EditMode tests và một lượt play thử.
+
+### Giả định cần Producer xác nhận
+
+Câu 5 và 6 trong `PROJECT_CONTEXT.md` vẫn chưa có câu trả lời. Thứ tự pack ở trên là lựa chọn mặc định, đổi bằng một dòng trong `LevelPackOrder.Default` rồi chạy lại importer. Ba file nguồn không giải được đã bị loại và ghi trong báo cáo import: `beginner/Level_38`, `masterold/Level_22`, `medium/Level_191`.
