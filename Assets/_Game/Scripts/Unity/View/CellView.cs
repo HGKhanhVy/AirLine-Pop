@@ -2,19 +2,23 @@ using UnityEngine;
 
 namespace ASTeams.SingleLine.Unity
 {
-    [RequireComponent(typeof(SpriteRenderer))]
     public sealed class CellView : MonoBehaviour
     {
         [SerializeField] private SpriteRenderer spriteRenderer;
+        [SerializeField] private Transform visualSizeRoot;
+        [SerializeField] private Animator blockAnimator;
+        [SerializeField] private Transform animatedInner;
         [SerializeField] private SpriteRenderer startDotRenderer;
         [SerializeField] private SpriteRenderer startPulseRenderer;
+        [SerializeField] private bool useConfiguredSprite;
+        [SerializeField, Min(0.01f)] private float sourceVisualSize = 0.9f;
         [SerializeField, Min(0.1f)] private float startPulseDuration = 1.1f;
         [SerializeField, Min(1f)] private float startPulseScale = 2.2f;
         [SerializeField, Range(0f, 1f)] private float startPulseAlpha = 0.24f;
         [SerializeField, Min(0f)] private float idleReminderDelay = 3f;
-        [SerializeField, Min(0f)] private float idleShakeStrength = 0.035f;
-        [SerializeField, Min(0.1f)] private float idleShakeDuration = 0.45f;
-        [SerializeField, Min(0.1f)] private float idleShakeInterval = 1.6f;
+        [SerializeField, Min(0.1f)] private float idleAnimationInterval = 4f;
+
+        private static readonly int StartIdleState = Animator.StringToHash("StartIdle");
 
         public int CellIndex { get; private set; }
 
@@ -31,10 +35,26 @@ namespace ASTeams.SingleLine.Unity
         private float popLeft;
         private bool isStartCueVisible;
         private float cueElapsed;
+        private float nextIdleAnimationTime;
+        private Vector3 startDotBaseScale;
+        private Vector3 startPulseBaseScale;
 
-        private void Reset()
+        private void Awake()
         {
-            spriteRenderer = GetComponent<SpriteRenderer>();
+            if (startDotRenderer != null)
+            {
+                startDotBaseScale = startDotRenderer.transform.localScale;
+            }
+
+            if (startPulseRenderer != null)
+            {
+                startPulseBaseScale = startPulseRenderer.transform.localScale;
+            }
+
+            if (blockAnimator != null)
+            {
+                blockAnimator.enabled = false;
+            }
         }
 
         public void Bind(SpriteRenderer renderer)
@@ -52,10 +72,23 @@ namespace ASTeams.SingleLine.Unity
             popLeft = 0f;
             HideStartCue();
 
-            spriteRenderer.sprite = sprite;
+            if (useConfiguredSprite && sprite != null)
+            {
+                spriteRenderer.sprite = sprite;
+            }
+
             spriteRenderer.color = color;
-            spriteRenderer.drawMode = SpriteDrawMode.Sliced;
-            spriteRenderer.size = new Vector2(size, size);
+
+            if (visualSizeRoot != null)
+            {
+                float scale = size / sourceVisualSize;
+                visualSizeRoot.localScale = new Vector3(scale, scale, 1f);
+            }
+            else
+            {
+                spriteRenderer.drawMode = SpriteDrawMode.Sliced;
+                spriteRenderer.size = new Vector2(size, size);
+            }
         }
 
         public void SetColor(Color color)
@@ -99,10 +132,16 @@ namespace ASTeams.SingleLine.Unity
 
             isStartCueVisible = true;
             cueElapsed = 0f;
+            nextIdleAnimationTime = idleReminderDelay;
             transform.localPosition = BaseLocalPosition;
             startDotRenderer.enabled = true;
             startDotRenderer.color = Color.white;
             startPulseRenderer.enabled = true;
+
+            if (blockAnimator != null)
+            {
+                blockAnimator.enabled = false;
+            }
         }
 
         public void HideStartCue()
@@ -114,12 +153,23 @@ namespace ASTeams.SingleLine.Unity
             if (startDotRenderer != null)
             {
                 startDotRenderer.enabled = false;
+                startDotRenderer.transform.localScale = startDotBaseScale;
             }
 
             if (startPulseRenderer != null)
             {
                 startPulseRenderer.enabled = false;
-                startPulseRenderer.transform.localScale = Vector3.one;
+                startPulseRenderer.transform.localScale = startPulseBaseScale;
+            }
+
+            if (blockAnimator != null)
+            {
+                blockAnimator.enabled = false;
+            }
+
+            if (animatedInner != null)
+            {
+                animatedInner.localRotation = Quaternion.identity;
             }
         }
 
@@ -176,27 +226,17 @@ namespace ASTeams.SingleLine.Unity
                 : Mathf.Repeat(cueElapsed, startPulseDuration) / startPulseDuration;
             float scale = Mathf.Lerp(1f, startPulseScale, pulseT);
             float alpha = startPulseAlpha * (1f - pulseT);
-            startPulseRenderer.transform.localScale = Vector3.one * scale;
+            startPulseRenderer.transform.localScale = startPulseBaseScale * scale;
             startPulseRenderer.color = new Color(1f, 1f, 1f, alpha);
 
-            if (cueElapsed < idleReminderDelay || idleShakeDuration <= 0f)
+            if (blockAnimator == null || cueElapsed < nextIdleAnimationTime)
             {
-                transform.localPosition = BaseLocalPosition;
                 return;
             }
 
-            float reminderTime = cueElapsed - idleReminderDelay;
-            float cycle = Mathf.Repeat(reminderTime, idleShakeInterval);
-
-            if (cycle >= idleShakeDuration)
-            {
-                transform.localPosition = BaseLocalPosition;
-                return;
-            }
-
-            float envelope = Mathf.Sin(cycle / idleShakeDuration * Mathf.PI);
-            float offset = Mathf.Sin(cycle * 42f) * idleShakeStrength * envelope;
-            transform.localPosition = BaseLocalPosition + Vector3.right * offset;
+            blockAnimator.enabled = true;
+            blockAnimator.Play(StartIdleState, 0, 0f);
+            nextIdleAnimationTime = cueElapsed + idleAnimationInterval;
         }
     }
 }
