@@ -5448,6 +5448,8 @@ MonoBehaviour:
   controller: {fileID: 490432196145728844}
   eventChannel: {fileID: 11400000, guid: 7f6b6f31b313d014cb64b5732166e4d2, type: 2}
   gameStateService: {fileID: 0}
+  levelConfig: {fileID: 11400000, guid: da175ddc371ebbe2a5e8c953fac630bd, type: 2}
+  levelService: {fileID: 0}
   vibration: {fileID: 0}
   fallbackLevelNumber: 1
   delayAfterWin: 0.9

@@ -171,6 +171,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: LevelService
       objectReference: {fileID: 0}
+    - target: {fileID: 9068073064364695949, guid: 63dfd7b17c121c849ac975ec98f15a9d, type: 3}
+      propertyPath: levelConfig
+      value: 
+      objectReference: {fileID: 11400000, guid: da175ddc371ebbe2a5e8c953fac630bd, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -546,6 +550,10 @@ PrefabInstance:
       propertyPath: gameStateService
       value: 
       objectReference: {fileID: 1591018322}
+    - target: {fileID: 9012579929334294763, guid: 852ad357637e34b48b3a56cdefc316c7, type: 3}
+      propertyPath: levelService
+      value: 
+      objectReference: {fileID: 179250736}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
