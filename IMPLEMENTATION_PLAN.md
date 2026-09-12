@@ -21,19 +21,19 @@
 
 | ID | Tên nhiệm vụ | Trạng thái | Người phụ trách | Hạn chót | Ưu tiên | Kết quả bắt buộc |
 |---|---|---|---|---|---|---|
-| T00 | Chốt baseline và tách thay đổi hiện tại | Đang thực hiện | Core Gameplay (Vee) | 11/09 | Cao | Xác định file thuộc từng task, compile sạch trước khi chuyển scene, không ghi đè thay đổi của team |
-| T01 | Chuẩn hóa và kiểm định 300 level | Đang thực hiện | Core Gameplay (Vee) | 11/09 | Cao | Level 1–300 theo đúng thứ tự Resources; toàn bộ ID, connectivity, start/end và solution hợp lệ |
-| T02 | Đóng gói gameplay thành prefab composition | Chưa bắt đầu | Core Gameplay (Vee) | 11/09 | Cao | Board, input, camera framing, feedback và bootstrap được gom thành prefab có dependency Inspector rõ ràng |
-| T03 | Tạo Event Channel cho giao tiếp UI | Chưa bắt đầu | Core Gameplay (Vee) | 11/09 | Cao | UI có thể đăng ký level loaded, progress changed, stuck, hint, win và gameplay state mà không tham chiếu controller cụ thể |
-| T04 | Chuyển gameplay vào scene template `Gameplay` | Chưa bắt đầu | Core Gameplay (Vee) | 11/09 | Cao | Scene template giữ Managers/services; gameplay prefab hoạt động trong scene; không còn phụ thuộc scene `SingleLine` trong build flow |
-| T05 | Tích hợp tiến trình với `UserProfileController` | Chưa bắt đầu | Core Gameplay (Vee) | 12/09 | Cao | Mở game đọc level đã lưu; thắng cập nhật level tiếp theo và gọi save; level 300 xử lý an toàn; không lưu trạng thái board |
-| T06 | Nối state gameplay với service win/lose của `_SDK` | Chưa bắt đầu | Core Gameplay (Vee) | 12/09 | Cao | Win báo `GameStateService`; Stuck không tự thua theo GDD; pause/resume chặn input đúng; UI popup nhận state qua SDK/event |
-| T07 | Hoàn thiện prefab block và phản hồi theo GDD | Chưa bắt đầu | Core Gameplay (Vee) | 12/09 | Cao | Dùng `OneLineBlock`/asset có sẵn; line khác màu block; nối ô có nhấn–nảy; ô đầu có chấm trắng và pulse; idle 3 giây rung nhắc |
-| T08 | Nối audio, haptic và particle presentation | Chưa bắt đầu | Core Gameplay (Vee) | 12/09 | Trung bình | Audio gọi qua `AudioController`/config; haptic đúng sự kiện; particle đúng prefab/đối tượng và được pool; UI particle để UI teammate sở hữu |
-| T09 | Kiểm tra responsive và Safe Area | Chưa bắt đầu | Core Gameplay + UI teammate | 12/09 | Cao | Board không che HUD/control ở 720×1280, 1080×1920, 1080×2400 và 4:3; safe area vẫn đúng sau chuyển scene |
-| T10 | Kiểm thử gameplay và tích hợp scene | Chưa bắt đầu | Core Gameplay (Vee) | 12/09 | Cao | EditMode tests pass; smoke test PlayMode; vuốt nhanh không bỏ ô; undo/restart deterministic; chuyển liên tiếp nhiều level không reload scene |
-| T11 | Chuẩn hóa Android và tạo APK kiểm thử | Chưa bắt đầu | Core Gameplay (Vee) | 12/09 | Cao | Build Settings đúng flow; product/package/version được cấu hình; APK cài và mở được; Loading → Gameplay → win → level kế tiếp hoạt động |
-| T12 | Bàn giao hợp đồng event cho UI | Chưa bắt đầu | Core Gameplay + UI teammate | 12/09 | Cao | Có tài liệu event/payload, prefab/asset cần kéo Inspector và checklist scene để UI tích hợp không sửa Core |
+| T00 | Chốt baseline và tách thay đổi hiện tại | Hoàn thành | Core Gameplay (Vee) | 11/09 | Cao | Xác định file thuộc từng task, compile sạch trước khi chuyển scene, không ghi đè thay đổi của team |
+| T01 | Chuẩn hóa và kiểm định 300 level | Hoàn thành | Core Gameplay (Vee) | 11/09 | Cao | Level 1–300 theo đúng thứ tự Resources; toàn bộ ID, connectivity, start/end và solution hợp lệ |
+| T02 | Đóng gói gameplay thành prefab composition | Hoàn thành | Core Gameplay (Vee) | 11/09 | Cao | Board, input, camera framing, feedback và bootstrap được gom thành prefab có dependency Inspector rõ ràng |
+| T03 | Tạo Event Channel cho giao tiếp UI | Hoàn thành | Core Gameplay (Vee) | 11/09 | Cao | UI có thể đăng ký level loaded, progress changed, stuck, hint, win và gameplay state mà không tham chiếu controller cụ thể |
+| T04 | Chuyển gameplay vào scene template `Gameplay` | Hoàn thành | Core Gameplay (Vee) | 11/09 | Cao | Scene template giữ Managers/services; gameplay prefab hoạt động trong scene; không còn phụ thuộc scene `SingleLine` trong build flow |
+| T05 | Tích hợp tiến trình với `UserProfileController` | Hoàn thành | Core Gameplay (Vee) | 12/09 | Cao | Mở game đọc level đã lưu; thắng cập nhật level tiếp theo và gọi save; level 300 xử lý an toàn; không lưu trạng thái board |
+| T06 | Nối state gameplay với service win/lose của `_SDK` | Hoàn thành | Core Gameplay (Vee) | 12/09 | Cao | Win báo `GameStateService`; Stuck không tự thua theo GDD; pause/resume chặn input đúng; UI popup nhận state qua SDK/event |
+| T07 | Hoàn thiện prefab block và phản hồi theo GDD | Hoàn thành Core | Core Gameplay (Vee) | 12/09 | Cao | Dùng `OneLineBlock`/asset có sẵn; line khác màu block; nối ô có nhấn–nảy; ô đầu có chấm trắng và pulse; idle 3 giây rung nhắc |
+| T08 | Nối audio, haptic và particle presentation | Hoàn thành Core | Core Gameplay (Vee) | 12/09 | Trung bình | Audio gọi qua `AudioController`/config; haptic đúng sự kiện; particle đúng prefab/đối tượng và được pool; UI particle để UI teammate sở hữu |
+| T09 | Kiểm tra responsive và Safe Area | Core xong; chờ UI | Core Gameplay + UI teammate | 12/09 | Cao | Board không che HUD/control ở 720×1280, 1080×1920, 1080×2400 và 4:3; safe area vẫn đúng sau chuyển scene |
+| T10 | Kiểm thử gameplay và tích hợp scene | Hoàn thành | Core Gameplay (Vee) | 12/09 | Cao | EditMode tests pass; smoke test PlayMode; vuốt nhanh không bỏ ô; undo/restart deterministic; chuyển liên tiếp nhiều level không reload scene |
+| T11 | Chuẩn hóa Android và tạo APK kiểm thử | APK xong; chờ thiết bị/app ID | Core Gameplay (Vee) | 12/09 | Cao | Build Settings đúng flow; product/package/version được cấu hình; APK cài và mở được; Loading → Gameplay → win → level kế tiếp hoạt động |
+| T12 | Bàn giao hợp đồng event cho UI | Hoàn thành | Core Gameplay + UI teammate | 12/09 | Cao | Có tài liệu event/payload, prefab/asset cần kéo Inspector và checklist scene để UI tích hợp không sửa Core |
 
 ## Thứ tự triển khai
 
@@ -117,6 +117,19 @@ Tiêu chí thoát mốc: APK mở từ flow đầu, chơi và lưu tiến trình
 
 Event Channel chỉ truyền dữ liệu gameplay. Popup, label, particle UI và animation UI do subscriber của UI quyết định.
 
+## Kết quả thực hiện 12/09/2026
+
+- Đã đóng gói gameplay thành `SingleLineGameplay.prefab` và đặt trong scene template `Gameplay`; Build Settings chỉ còn `Loading -> Gameplay`.
+- Đã tạo `GameplayEventChannelSO` và tài liệu payload để UI đăng ký mà không phụ thuộc trực tiếp vào controller.
+- Đã đọc/lưu level qua adapter `UserProfileController`, clamp trong miền 1–300, tự chuyển level bằng pool mà không reload scene.
+- Đã hoàn thiện kéo liên tục, backtrack, cảnh báo bước sai, stuck có thể phục hồi, hint, win, chấm trắng/pulse ở ô đầu và rung nhắc sau 3 giây.
+- Audio đi qua `AudioController`; haptic đi qua SDK; particle gameplay hiện là object sống cùng prefab nên không phát sinh `Instantiate/Destroy` trong steady state. `ParticleImage` được giữ cho UI teammate.
+- `Crystal.SafeArea` vẫn được gắn trên `Canvas - 0/safe`; board dùng camera framer theo bounds. Phần duyệt hình ảnh ở bốn tỉ lệ màn hình còn chờ UI teammate ký duyệt.
+- Unity EditMode: 198/198 test pass. Smoke đã xác nhận `Loading -> Gameplay`, board nhận input và solver hoàn thành level với state `Won`.
+- Corpus nguồn: 1.059 file, 834 board duy nhất, 831 board dùng được; campaign xuất 10 chapter/300 level và replay 300/300. Ba board nguồn không giải được bị loại trước khi assemble campaign.
+- Android APK build thành công tại `Builds/SingleLine-development.apk` (280,44 MB), SHA-256 `A4303CF63B4372792E0DE7F9415126C019791CB073A9D6EB892C9EA50241F15E`.
+- Chưa thể cài APK vì `adb devices` không có thiết bị/emulator. Product name, application identifier và version vẫn dùng giá trị template vì team chưa cung cấp giá trị phát hành.
+- Prefab `Cell` chuyên dụng được dùng cho board để giữ cấu trúc pool và dependency Inspector gọn; hành vi/visual cue được đối chiếu từ `OneLineBlock`, nhưng không nhúng trực tiếp prefab resource lớn đó.
 ## Kế hoạch commit
 
 Các commit dự kiến, có thể tách nhỏ hơn nếu diff lớn:
