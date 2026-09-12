@@ -13,7 +13,7 @@ namespace ASTeams.Base.Gameplay
     /// Drag-drop reusable service. Disable => no register/start/tick.
     public abstract class GameplayServiceBehaviour : MonoBehaviour, IGameplayService
     {
-        public bool IsEnabled => gameObject.activeSelf;
+        public bool IsEnabled => isActiveAndEnabled;
 
         public virtual void OnRegister(GameplayServices services) { }
         public virtual void OnStart() { }
