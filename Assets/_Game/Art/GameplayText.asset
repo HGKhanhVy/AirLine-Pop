@@ -19,3 +19,5 @@ MonoBehaviour:
     Text: Undo {0} steps
   - Key: gameplay.progress
     Text: '{0} / {1}'
+  - Key: gameplay.level
+    Text: LEVEL {0}

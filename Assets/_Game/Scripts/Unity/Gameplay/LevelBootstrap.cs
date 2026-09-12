@@ -62,6 +62,7 @@ namespace ASTeams.SingleLine.Unity
             controller.SetHintService(new ContinuationHintService(new WarnsdorffSolverFactory()));
             controller.OnStateChanged += HandleStateChanged;
 
+            Subscribe();
             levelCatalog = CreateCatalog();
             progressStore = CreateProgressStore();
 
@@ -130,6 +131,47 @@ namespace ASTeams.SingleLine.Unity
             {
                 controller.OnStateChanged -= HandleStateChanged;
             }
+
+            Unsubscribe();
+        }
+
+        /// <summary>
+        /// Listening for the three things a screen can ask the board to do. A button
+        /// anywhere in the project can raise these on the channel asset, so the UI needs
+        /// no reference into gameplay and neither scene has to be rewired when it lands.
+        /// </summary>
+        private void Subscribe()
+        {
+            if (eventChannel == null)
+            {
+                return;
+            }
+
+            eventChannel.OnUndoRequested += Undo;
+            eventChannel.OnRestartRequested += Restart;
+            eventChannel.OnHintRequested += HandleHintRequested;
+        }
+
+        private void Unsubscribe()
+        {
+            if (eventChannel == null)
+            {
+                return;
+            }
+
+            eventChannel.OnUndoRequested -= Undo;
+            eventChannel.OnRestartRequested -= Restart;
+            eventChannel.OnHintRequested -= HandleHintRequested;
+        }
+
+        /// <summary>
+        /// The hint runs as a task the caller may await. A channel request has nobody to
+        /// await it, so the result is reported through the channel instead and the task
+        /// is deliberately left unobserved.
+        /// </summary>
+        private void HandleHintRequested()
+        {
+            _ = HintAsync();
         }
 
         public bool TryLoad(string levelId)

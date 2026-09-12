@@ -1649,6 +1649,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bootstrap: {fileID: 218650}
   controller: {fileID: 218651}
+  eventChannel: {fileID: 11400000, guid: 7f6b6f31b313d014cb64b5732166e4d2, type: 2}
   levelLabel: {fileID: 1721118120}
   progressLabel: {fileID: 1675730566}
   hintButton: {fileID: 204271837}

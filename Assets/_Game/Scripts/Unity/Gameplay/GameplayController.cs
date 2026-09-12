@@ -113,6 +113,7 @@ namespace ASTeams.SingleLine.Unity
             var request = new CancellationTokenSource();
             hintRequest = request;
             OnHintChanged?.Invoke();
+            eventChannel?.RaiseHintStarted();
 
             try
             {

@@ -19,6 +19,9 @@ namespace ASTeams.SingleLine.Unity
         [SerializeField] private LevelBootstrap bootstrap;
         [SerializeField] private GameplayController controller;
 
+        [Tooltip("Buttons ask the board through this asset, so nothing here holds the board itself.")]
+        [SerializeField] private GameplayEventChannelSO eventChannel;
+
         [Header("Readouts")]
         [SerializeField] private TMP_Text levelLabel;
         [SerializeField] private TMP_Text progressLabel;
@@ -60,7 +63,7 @@ namespace ASTeams.SingleLine.Unity
             controller.OnHintReady += HandleHintReady;
             controller.OnHintChanged += Refresh;
 
-            hintButton.onClick.AddListener(OnHintClickedAsync);
+            hintButton.onClick.AddListener(OnHintClicked);
             undoButton.onClick.AddListener(OnUndoClicked);
             restartButton.onClick.AddListener(OnRestartClicked);
 
@@ -75,7 +78,7 @@ namespace ASTeams.SingleLine.Unity
             controller.OnHintReady -= HandleHintReady;
             controller.OnHintChanged -= Refresh;
 
-            hintButton.onClick.RemoveListener(OnHintClickedAsync);
+            hintButton.onClick.RemoveListener(OnHintClicked);
             undoButton.onClick.RemoveListener(OnUndoClicked);
             restartButton.onClick.RemoveListener(OnRestartClicked);
         }
@@ -101,7 +104,11 @@ namespace ASTeams.SingleLine.Unity
         {
             if (levelLabel != null)
             {
-                levelLabel.text = bootstrap == null ? string.Empty : bootstrap.CurrentLevelId;
+                // The player counts levels, not chapter slots, so the label reads the
+                // campaign number the save file also holds.
+                levelLabel.SetText(
+                    textCatalog == null ? "{0}" : textCatalog.Get("gameplay.level"),
+                    bootstrap == null ? 0 : bootstrap.CurrentLevelNumber);
             }
 
             if (progressLabel != null && textCatalog != null)
@@ -139,19 +146,19 @@ namespace ASTeams.SingleLine.Unity
             Refresh();
         }
 
-        private async void OnHintClickedAsync()
+        private void OnHintClicked()
         {
-            await bootstrap.HintAsync();
+            eventChannel?.RequestHint();
         }
 
         private void OnUndoClicked()
         {
-            bootstrap.Undo();
+            eventChannel?.RequestUndo();
         }
 
         private void OnRestartClicked()
         {
-            bootstrap.Restart();
+            eventChannel?.RequestRestart();
         }
     }
 }
