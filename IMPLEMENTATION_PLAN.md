@@ -127,7 +127,7 @@ Event Channel chỉ truyền dữ liệu gameplay. Popup, label, particle UI và
 - `Crystal.SafeArea` vẫn được gắn trên `Canvas - 0/safe`; board dùng camera framer theo bounds. Phần duyệt hình ảnh ở bốn tỉ lệ màn hình còn chờ UI teammate ký duyệt.
 - Unity EditMode: 198/198 test pass. Smoke đã xác nhận `Loading -> Gameplay`, board nhận input và solver hoàn thành level với state `Won`.
 - Corpus nguồn: 1.059 file, 834 board duy nhất, 831 board dùng được; campaign xuất 10 chapter/300 level và replay 300/300. Ba board nguồn không giải được bị loại trước khi assemble campaign.
-- Android APK build thành công tại `Builds/SingleLine-development.apk` (280,44 MB), SHA-256 `A4303CF63B4372792E0DE7F9415126C019791CB073A9D6EB892C9EA50241F15E`.
+- Android APK build thành công tại `Builds/SingleLine-development.apk` (393,51 MB), SHA-256 `1E10201830069049E25F24E7C81584A97D2AFBEBB43D5C1F7AC463BE1AA05226`.
 - Chưa thể cài APK vì `adb devices` không có thiết bị/emulator. Product name, application identifier và version vẫn dùng giá trị template vì team chưa cung cấp giá trị phát hành.
 - Prefab `Cell` chuyên dụng được dùng cho board để giữ cấu trúc pool và dependency Inspector gọn; hành vi/visual cue được đối chiếu từ `OneLineBlock`, nhưng không nhúng trực tiếp prefab resource lớn đó.
 ## Kế hoạch commit
