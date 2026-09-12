@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using UnityEngine;
 
 namespace ASTeams.SingleLine.Unity
@@ -71,7 +72,7 @@ namespace ASTeams.SingleLine.Unity
             }
 
             texture.SetPixels32(pixels);
-            texture.Apply(updateMipmaps: false, makeNoLongerReadable: true);
+            texture.Apply(updateMipmaps: false, makeNoLongerReadable: false);
 
             return Sprite.Create(
                 texture,
@@ -102,7 +103,7 @@ namespace ASTeams.SingleLine.Unity
             }
 
             texture.SetPixels32(pixels);
-            texture.Apply(updateMipmaps: false, makeNoLongerReadable: true);
+            texture.Apply(updateMipmaps: false, makeNoLongerReadable: false);
 
             // A sliced border lets one small texture stretch to any cell size without the
             // corners smearing.
@@ -127,3 +128,4 @@ namespace ASTeams.SingleLine.Unity
         }
     }
 }
+#endif

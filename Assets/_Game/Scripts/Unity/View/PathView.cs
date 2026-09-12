@@ -16,6 +16,7 @@ namespace ASTeams.SingleLine.Unity
         [SerializeField] private ThemeSO theme;
         [SerializeField] private LineRenderer line;
         [SerializeField] private BoardView boardView;
+        [SerializeField] private Material sharedMaterial;
 
         [Tooltip("How long the newest segment takes to reach the cell it just entered. GDD 10 asks for 80 to 120 ms.")]
         [SerializeField, Min(0.01f)] private float connectDuration = 0.1f;
@@ -53,27 +54,17 @@ namespace ASTeams.SingleLine.Unity
 
         private void Awake()
         {
-            if (line == null)
-            {
-                line = GetComponent<LineRenderer>();
-            }
-
             line.useWorldSpace = true;
             line.numCornerVertices = 4;
             line.numCapVertices = 4;
             line.textureMode = LineTextureMode.Stretch;
             line.alignment = LineAlignment.View;
-            line.material = new Material(Shader.Find("Sprites/Default"));
+            line.sharedMaterial = sharedMaterial;
             line.sortingOrder = BoardSortingOrder.Path;
             line.positionCount = 0;
 
             if (spark != null)
             {
-                if (spark.sprite == null)
-                {
-                    spark.sprite = PlaceholderSprite.SoftDot;
-                }
-
                 // Above the line so the pulse reads as light on top of it, still below the
                 // win dust.
                 spark.sortingOrder = BoardSortingOrder.Path + 5;
@@ -82,17 +73,22 @@ namespace ASTeams.SingleLine.Unity
             }
         }
 
+        public void Prepare(int cellCount)
+        {
+            if (points == null || points.Length < cellCount)
+            {
+                points = new Vector3[cellCount];
+            }
+
+            Clear();
+        }
+
         public void Rebuild(PathSession session)
         {
             if (session == null || session.Length == 0)
             {
                 line.positionCount = 0;
                 return;
-            }
-
-            if (points == null || points.Length < session.Length)
-            {
-                points = new Vector3[session.Level.ActiveCellCount];
             }
 
             for (int step = 0; step < session.Length; step++)

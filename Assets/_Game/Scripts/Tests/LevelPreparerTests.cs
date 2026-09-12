@@ -68,6 +68,20 @@ namespace ASTeams.SingleLine.Core.Tests
         }
 
         [Test]
+        public void RepeatedSourceCellIsRemovedBeforeExport()
+        {
+            var level = new LevelData("duplicate", 1, new Grid(3, 1), new[] { 0, 1, 2, 0 },
+                fixedStart: 0, solution: new[] { 0, 1, 2 }, tags: new[] { "tutorial" });
+            PreparedPool pool = CreatePreparer().Prepare(new[] { level });
+            LevelData prepared = pool.Levels[0];
+            Assert.That(prepared.DeclaredActiveCells, Is.EqualTo(new[] { 0, 1, 2 }));
+            Assert.That(prepared.Tags, Is.EqualTo(level.Tags));
+            Assert.That(prepared.FixedStart, Is.EqualTo(0));
+            Assert.That(pool.RepairedCount, Is.EqualTo(1));
+            AssertSolutionPlays(prepared);
+        }
+
+        [Test]
         public void AnUnsolvableLevelIsDroppedAndNamed()
         {
             // A plus shape has four arms and only two path ends, so it cannot be covered.

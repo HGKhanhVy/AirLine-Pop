@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace ASTeams.SingleLine.Unity
 {
@@ -14,14 +13,7 @@ namespace ASTeams.SingleLine.Unity
     {
         private readonly Stack<CellView> idle = new Stack<CellView>(64);
         private readonly List<CellView> live = new List<CellView>(64);
-        private readonly Transform parent;
-
-        /// <summary>
-        /// One unlit material shared by every square. The project renders through URP 2D,
-        /// where the default sprite material reacts to lights; the board is flat colour by
-        /// design, so it opts out rather than depending on a light existing in the scene.
-        /// </summary>
-        private Material sharedMaterial;
+        private readonly ICellViewFactory factory;
 
         public int LiveCount => live.Count;
 
@@ -30,14 +22,14 @@ namespace ASTeams.SingleLine.Unity
 
         public int IdleCount => idle.Count;
 
-        public CellViewPool(Transform parent)
+        public CellViewPool(ICellViewFactory factory)
         {
-            this.parent = parent;
+            this.factory = factory;
         }
 
         public CellView Acquire()
         {
-            CellView view = idle.Count > 0 ? idle.Pop() : Create();
+            CellView view = idle.Count > 0 ? idle.Pop() : factory.Create();
             view.gameObject.SetActive(true);
             live.Add(view);
             return view;
@@ -61,29 +53,11 @@ namespace ASTeams.SingleLine.Unity
         {
             while (idle.Count < count)
             {
-                CellView view = Create();
+                CellView view = factory.Create();
                 view.gameObject.SetActive(false);
                 idle.Push(view);
             }
         }
 
-        private CellView Create()
-        {
-            if (sharedMaterial == null)
-            {
-                sharedMaterial = new Material(Shader.Find("Sprites/Default"));
-            }
-
-            var go = new GameObject("Cell", typeof(SpriteRenderer), typeof(CellView));
-            go.transform.SetParent(parent, worldPositionStays: false);
-
-            var renderer = go.GetComponent<SpriteRenderer>();
-            renderer.sharedMaterial = sharedMaterial;
-            renderer.sortingOrder = BoardSortingOrder.Cells;
-
-            var view = go.GetComponent<CellView>();
-            view.Bind(renderer);
-            return view;
-        }
     }
 }

@@ -63,12 +63,19 @@ namespace ASTeams.SingleLine.Import
                 for (int slot = 0; slot < layout.LevelsPerChapter; slot++)
                 {
                     double target = layout.GetTarget(chapterIndex, slot);
-                    int pick = FindNearest(sorted, used, target, recentSizes, respectVariety: true);
+                    int minCells = placed < layout.OnboardingLevelCount ? layout.OnboardingMinCells : 1;
+                    int maxCells = placed < layout.OnboardingLevelCount ? layout.OnboardingMaxCells : int.MaxValue;
+                    int pick = FindNearest(sorted, used, target, recentSizes, true, minCells, maxCells);
 
                     if (pick < 0)
                     {
-                        pick = FindNearest(sorted, used, target, recentSizes, respectVariety: false);
+                        pick = FindNearest(sorted, used, target, recentSizes, false, minCells, maxCells);
                         relaxed++;
+                    }
+
+                    if (pick < 0)
+                    {
+                        throw new ArgumentException("Not enough onboarding levels within the configured cell limits.", nameof(pool));
                     }
 
                     used[pick] = true;
@@ -99,7 +106,9 @@ namespace ASTeams.SingleLine.Import
             bool[] used,
             double target,
             List<string> recentSizes,
-            bool respectVariety)
+            bool respectVariety,
+            int minCells,
+            int maxCells)
         {
             int centre = LowerBound(sorted, target);
             int left = centre - 1;
@@ -128,7 +137,8 @@ namespace ASTeams.SingleLine.Import
 
                 int index = takeRight ? right++ : left--;
 
-                if (used[index])
+                if (used[index] || sorted[index].Level.ActiveCellCount < minCells ||
+                    sorted[index].Level.ActiveCellCount > maxCells)
                 {
                     continue;
                 }

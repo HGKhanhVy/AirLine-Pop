@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace ASTeams.SingleLine.Core
 {
@@ -22,6 +23,7 @@ namespace ASTeams.SingleLine.Core
         public const int DefaultNodeBudget = 2_000_000;
 
         private readonly int nodeBudget;
+        private readonly CancellationToken cancellationToken;
 
         private LevelData level;
         private bool[] visited;
@@ -32,7 +34,7 @@ namespace ASTeams.SingleLine.Core
         private int[] floodStamp;
         private int floodGeneration;
         private long nodeCount;
-        private bool budgetExhausted;
+        private bool isBudgetExhausted;
 
         /// <summary>Nodes expanded by the most recent search, for profiling level difficulty.</summary>
         public long LastNodeCount { get; private set; }
@@ -43,7 +45,7 @@ namespace ASTeams.SingleLine.Core
         /// </summary>
         public bool LastRunHitBudget { get; private set; }
 
-        public WarnsdorffSolver(int nodeBudget = DefaultNodeBudget)
+        public WarnsdorffSolver(int nodeBudget = DefaultNodeBudget, CancellationToken cancellationToken = default)
         {
             if (nodeBudget <= 0)
             {
@@ -51,6 +53,7 @@ namespace ASTeams.SingleLine.Core
             }
 
             this.nodeBudget = nodeBudget;
+            this.cancellationToken = cancellationToken;
         }
 
         public bool TrySolve(LevelData level, int startCell, int[] destination, out int length)
@@ -85,7 +88,7 @@ namespace ASTeams.SingleLine.Core
             bool solved = Search(startCell, 0);
 
             LastNodeCount = nodeCount;
-            LastRunHitBudget = budgetExhausted;
+            LastRunHitBudget = isBudgetExhausted;
 
             if (!solved)
             {
@@ -156,7 +159,8 @@ namespace ASTeams.SingleLine.Core
             LastNodeCount = 0;
             LastRunHitBudget = false;
 
-            if (pathSoFar.Count == 0 || level.ActiveCellCount == 0)
+            if (pathSoFar.Count == 0 || pathSoFar.Count > level.ActiveCellCount ||
+                !PathRules.CanStart(level, pathSoFar[0]))
             {
                 return false;
             }
@@ -168,26 +172,21 @@ namespace ASTeams.SingleLine.Core
 
             PrepareFor(level);
 
-            // Replay what the player has drawn into the search state, so the search starts
-            // from their position rather than from an empty board.
+            if (!PathSequenceValidator.IsValid(level, pathSoFar, visited))
+            {
+                return false;
+            }
+
             for (int i = 0; i < pathSoFar.Count; i++)
             {
-                int cell = pathSoFar[i];
-
-                if (!level.IsActive(cell) || visited[cell])
-                {
-                    return false;
-                }
-
-                visited[cell] = true;
-                path[i] = cell;
+                path[i] = pathSoFar[i];
             }
 
             int head = pathSoFar[pathSoFar.Count - 1];
             bool solved = Search(head, pathSoFar.Count - 1);
 
             LastNodeCount = nodeCount;
-            LastRunHitBudget = budgetExhausted;
+            LastRunHitBudget = isBudgetExhausted;
 
             if (!solved)
             {
@@ -203,7 +202,7 @@ namespace ASTeams.SingleLine.Core
         {
             level = target;
             nodeCount = 0;
-            budgetExhausted = false;
+            isBudgetExhausted = false;
 
             int cellCount = target.Grid.CellCount;
 
@@ -232,11 +231,12 @@ namespace ASTeams.SingleLine.Core
 
         private bool Search(int current, int depth)
         {
+            cancellationToken.ThrowIfCancellationRequested();
             nodeCount++;
 
             if (nodeCount > nodeBudget)
             {
-                budgetExhausted = true;
+                isBudgetExhausted = true;
                 return false;
             }
 
@@ -271,7 +271,7 @@ namespace ASTeams.SingleLine.Core
 
                 visited[next] = false;
 
-                if (budgetExhausted)
+                if (isBudgetExhausted)
                 {
                     return false;
                 }

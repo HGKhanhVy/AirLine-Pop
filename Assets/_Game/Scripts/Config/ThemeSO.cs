@@ -13,7 +13,7 @@ namespace ASTeams.SingleLine.Unity
     public sealed class ThemeSO : ScriptableObject
     {
         [Header("Sprites")]
-        [Tooltip("Leave empty to fall back to a plain generated square while art is missing.")]
+        [Tooltip("Assign the board cell sprite from the project assets.")]
         [SerializeField] private Sprite cellSprite;
 
         [Header("Colours")]

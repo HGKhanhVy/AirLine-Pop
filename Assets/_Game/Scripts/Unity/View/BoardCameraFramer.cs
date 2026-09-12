@@ -35,11 +35,6 @@ namespace ASTeams.SingleLine.Unity
 
         private void Awake()
         {
-            if (boardCamera == null)
-            {
-                boardCamera = GetComponent<Camera>();
-            }
-
             boardCamera.orthographic = true;
             boardCamera.backgroundColor = theme.Background;
         }

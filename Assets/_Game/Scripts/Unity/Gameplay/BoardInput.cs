@@ -38,7 +38,7 @@ namespace ASTeams.SingleLine.Unity
 
         private const int NoTouch = -1;
 
-        private bool wasPressed;
+        private bool isPointerPreviouslyPressed;
         private Vector2 lastScreenPosition;
         private int activeTouchId = NoTouch;
 
@@ -50,14 +50,6 @@ namespace ASTeams.SingleLine.Unity
         /// <summary>Set false while a level is resolving so stray input cannot disturb it.</summary>
         public bool AcceptsInput { get; set; } = true;
 
-        private void Awake()
-        {
-            if (boardCamera == null)
-            {
-                boardCamera = Camera.main;
-            }
-        }
-
         private void Update()
         {
             if (!TryReadOwningPointer(out bool pressed, out Vector2 screen))
@@ -67,12 +59,12 @@ namespace ASTeams.SingleLine.Unity
 
             if (!AcceptsInput)
             {
-                wasPressed = pressed;
+                isPointerPreviouslyPressed = pressed;
                 lastScreenPosition = screen;
                 return;
             }
 
-            if (pressed && !wasPressed)
+            if (pressed && !isPointerPreviouslyPressed)
             {
                 lastScreenPosition = screen;
                 SendCellAt(screen);
@@ -88,12 +80,12 @@ namespace ASTeams.SingleLine.Unity
                     lastScreenPosition = screen;
                 }
             }
-            else if (wasPressed)
+            else if (isPointerPreviouslyPressed)
             {
                 OnPressReleased?.Invoke();
             }
 
-            wasPressed = pressed;
+            isPointerPreviouslyPressed = pressed;
         }
 
         private float ScaledDragThreshold()

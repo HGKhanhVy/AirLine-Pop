@@ -7,25 +7,6 @@ namespace ASTeams.SingleLine.Core.Tests
 {
     public sealed class ChapterLevelRepositoryTests
     {
-        /// <summary>Counts reads so the caching behaviour can be observed rather than assumed.</summary>
-        private sealed class CountingSource : IChapterSource
-        {
-            private readonly InMemoryChapterSource inner = new InMemoryChapterSource();
-
-            public int ReadCount { get; private set; }
-
-            public void Add(string chapterId, string json)
-            {
-                inner.Add(chapterId, json);
-            }
-
-            public bool TryReadChapter(string chapterId, out string json)
-            {
-                ReadCount++;
-                return inner.TryReadChapter(chapterId, out json);
-            }
-        }
-
         private static string ChapterJson(string chapterId, int levelCount)
         {
             var levels = new List<LevelData>(levelCount);

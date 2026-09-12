@@ -113,7 +113,7 @@ namespace ASTeams.SingleLine.Unity
                 }
             }
 
-            running.SetUpdate(isIndependentUpdate: true);
+            running.SetUpdate(isIndependentUpdate: false);
         }
 
         /// <summary>A short wave along the path, in the order the player drew it.</summary>
@@ -145,7 +145,7 @@ namespace ASTeams.SingleLine.Unity
                 burstColors.Add(cell.Color);
             }
 
-            running.SetUpdate(isIndependentUpdate: true);
+            running.SetUpdate(isIndependentUpdate: false);
 
             if (dust != null && isActiveAndEnabled)
             {
@@ -178,7 +178,7 @@ namespace ASTeams.SingleLine.Unity
         /// </summary>
         public void PlayInvalid(int cell)
         {
-            if (Time.unscaledTime < invalidAllowedAt)
+            if (Time.time < invalidAllowedAt)
             {
                 return;
             }
@@ -190,13 +190,13 @@ namespace ASTeams.SingleLine.Unity
                 return;
             }
 
-            invalidAllowedAt = Time.unscaledTime + invalidCooldown;
+            invalidAllowedAt = Time.time + invalidCooldown;
             StopInvalid();
 
             invalidCell = view;
             invalidTween = view.transform
                 .DOShakePosition(invalidDuration, invalidShake, 18, 90f, false, true)
-                .SetUpdate(isIndependentUpdate: true);
+                .SetUpdate(isIndependentUpdate: false);
         }
 
         private void StopInvalid()
@@ -249,13 +249,15 @@ namespace ASTeams.SingleLine.Unity
 
                 // Staggering them makes the three read as an order to walk rather than as
                 // three separate suggestions.
-                hintSequence.Insert(i * hintStagger, view.transform
-                    .DOScale(hintScale, hintPulse * 0.5f)
+                float delay = Mathf.Min(i * hintStagger, hintHold * 0.5f);
+                hintSequence.Insert(delay, view.transform
+                    .DOScale(hintScale, (hintHold - delay) / legs)
                     .SetLoops(legs, LoopType.Yoyo)
                     .SetEase(Ease.InOutSine));
             }
 
-            hintSequence.SetUpdate(isIndependentUpdate: true);
+            hintSequence.SetUpdate(isIndependentUpdate: false);
+            hintSequence.OnComplete(StopHint);
         }
 
         /// <summary>

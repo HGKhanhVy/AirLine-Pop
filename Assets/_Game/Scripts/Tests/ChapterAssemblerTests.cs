@@ -21,8 +21,8 @@ namespace ASTeams.SingleLine.Core.Tests
             {
                 double score = count == 1 ? 0 : i / (double)(count - 1);
                 int width = sizes[i % sizes.Length];
-                LevelData level = LevelSamples.CreateFullBoard(width, 3);
-                var features = new LevelFeatures(width * 3, 2.5, 100, i % 7, true);
+                LevelData level = LevelSamples.CreateFullBoard(width, 1);
+                var features = new LevelFeatures(width, 2.5, 100, i % 7, true);
 
                 pool.Add(new ScoredLevel(
                     level.WithIdentity("src_" + i.ToString("0000"), 1),
@@ -79,6 +79,36 @@ namespace ASTeams.SingleLine.Core.Tests
             {
                 Assert.AreEqual(30, chapter.LevelCount, chapter.Id);
             }
+        }
+
+        [Test]
+        public void OnboardingLimitsCannotBeRelaxedByDifficultyOrVariety()
+        {
+            List<ScoredLevel> pool = CreatePool(400);
+            for (int i = 0; i < 40; i++)
+            {
+                LevelData large = LevelSamples.CreateFullBoard(4, 4);
+                pool[i] = new ScoredLevel(large, new LevelFeatures(16, 2.5, 100, 0, true), i / 400.0, 1);
+            }
+
+            Campaign campaign = new ChapterAssembler().Assemble(pool);
+            for (int i = 0; i < 10; i++)
+            {
+                Assert.That(campaign.Chapters[0].Levels[i].ActiveCellCount, Is.InRange(3, 10));
+            }
+        }
+
+        [Test]
+        public void MissingSmallBoardsRejectsCampaignInsteadOfShippingHardOnboarding()
+        {
+            var pool = new List<ScoredLevel>();
+            for (int i = 0; i < 300; i++)
+            {
+                pool.Add(new ScoredLevel(LevelSamples.CreateFullBoard(4, 4),
+                    new LevelFeatures(16, 2.5, 100, 0, true), i / 300.0, 1));
+            }
+
+            Assert.Throws<System.ArgumentException>(() => new ChapterAssembler().Assemble(pool));
         }
 
         [Test]

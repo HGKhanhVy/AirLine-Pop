@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using ASTeams.SingleLine.Core;
 using UnityEngine;
 
@@ -21,6 +23,7 @@ namespace ASTeams.SingleLine.Unity
         [SerializeField] private BoardInput boardInput;
         [SerializeField] private BoardCameraFramer cameraFramer;
         [SerializeField] private BoardFeedback boardFeedback;
+        [SerializeField] private GameplayEventChannelSO eventChannel;
 
         [Tooltip("Seconds between cells while the path rewinds. Small enough to read as one motion.")]
         [SerializeField, Min(0f)] private float rewindStepDelay = 0.025f;
@@ -31,15 +34,22 @@ namespace ASTeams.SingleLine.Unity
         [Tooltip("Steps a single hint gives away. GDD 7.1 allows 1 to 3.")]
         [SerializeField, Range(1, 3)] private int hintSteps = 3;
 
+        [Tooltip("Total worker search time before falling back to the stored solution.")]
+        [SerializeField, Min(1)] private int hintTimeBudgetMilliseconds = 100;
+
         private PathSession session;
         private IHapticService haptics;
         private Coroutine rewind;
-        private WarnsdorffSolver hintSolver;
-        private int[] hintBuffer;
+        private WaitForSeconds rewindWait;
+        private IHintService hintService;
+        private CancellationTokenSource hintRequest;
 
         // Reused so a move never allocates; a board holds at most ninety cells.
         private readonly List<int> scratchCells = new List<int>(96);
-        private readonly List<int> hintCells = new List<int>(3);
+
+        public bool IsHintPending => hintRequest != null;
+        public event Action<HintResult> OnHintReady;
+        public event Action OnHintChanged;
 
         /// <summary>Raised as (previous, current) so a UI layer can react without polling.</summary>
         public event Action<PathState, PathState> OnStateChanged;
@@ -58,6 +68,11 @@ namespace ASTeams.SingleLine.Unity
         /// <summary>True while the path is unwinding itself back to the start.</summary>
         public bool IsRewinding => rewind != null;
 
+        private void Awake()
+        {
+            rewindWait = new WaitForSeconds(rewindStepDelay);
+        }
+
         /// <summary>
         /// Hands in the buzzer. Injected rather than looked up, and optional: with nothing
         /// supplied the game simply plays without haptics.
@@ -73,61 +88,101 @@ namespace ASTeams.SingleLine.Unity
         /// </summary>
         public void SetInputEnabled(bool enabled)
         {
+            if (!enabled)
+            {
+                CancelHint();
+            }
+
             boardInput.AcceptsInput = enabled && rewind == null && State != PathState.Won;
         }
 
-        /// <summary>
-        /// Points at the next cell of a way to finish from where the player is now.
-        ///
-        /// It solves the continuation rather than reading the level's stored solution,
-        /// because once the player has taken their own route that stored path is usually
-        /// no longer reachable, and pointing at a cell they cannot get to would be worse
-        /// than saying nothing.
-        /// </summary>
-        public bool ShowHint()
+        public void SetHintService(IHintService service)
         {
-            if (session == null || rewind != null || session.State == PathState.Won || session.Length == 0)
-            {
-                return false;
-            }
-
-            if (hintSolver == null)
-            {
-                hintSolver = new WarnsdorffSolver(hintNodeBudget);
-            }
-
-            LevelData level = session.Level;
-
-            if (hintBuffer == null || hintBuffer.Length < level.ActiveCellCount)
-            {
-                hintBuffer = new int[level.ActiveCellCount];
-            }
-
-            CollectPath();
-
-            if (!hintSolver.TryContinue(level, scratchCells, hintBuffer, out int solved))
-            {
-                return false;
-            }
-
-            // TryContinue fills the whole route, drawn part included, so the steps still
-            // to take begin where the path currently ends.
-            hintCells.Clear();
-
-            for (int step = session.Length; step < solved && hintCells.Count < hintSteps; step++)
-            {
-                hintCells.Add(hintBuffer[step]);
-            }
-
-            if (hintCells.Count == 0)
-            {
-                return false;
-            }
-
-            boardFeedback.PlayHint(hintCells);
-            return true;
+            CancelHint();
+            hintService = service;
         }
 
+        public async Task<bool> ShowHintAsync()
+        {
+            if (session == null || IsHintPending || hintService == null || rewind != null ||
+                session.State == PathState.Won || session.Length == 0 || !isActiveAndEnabled)
+            {
+                return false;
+            }
+
+            var request = new CancellationTokenSource();
+            hintRequest = request;
+            OnHintChanged?.Invoke();
+
+            try
+            {
+                HintResult result = await hintService.FindHintAsync(session.Level, CollectPath(),
+                    hintSteps, hintNodeBudget, hintTimeBudgetMilliseconds, request.Token);
+                if (request.IsCancellationRequested || !ReferenceEquals(hintRequest, request))
+                {
+                    return false;
+                }
+
+                boardFeedback.PlayHint(result.Steps);
+                OnHintReady?.Invoke(result);
+                eventChannel?.RaiseHintResolved(result);
+                return !result.NeedsRestart && result.Steps.Count > 0;
+            }
+            catch (OperationCanceledException)
+            {
+                return false;
+            }
+            catch (Exception exception)
+            {
+                if (!request.IsCancellationRequested)
+                {
+                    Debug.LogException(exception, this);
+                    OnHintReady?.Invoke(HintResult.RestartRequired);
+                    eventChannel?.RaiseHintResolved(HintResult.RestartRequired);
+                }
+
+                return false;
+            }
+            finally
+            {
+                if (ReferenceEquals(hintRequest, request))
+                {
+                    hintRequest = null;
+                    OnHintChanged?.Invoke();
+                }
+
+                request.Dispose();
+            }
+        }
+
+        private void CancelHint()
+        {
+            if (hintRequest != null)
+            {
+                hintRequest.Cancel();
+                hintRequest = null;
+            }
+
+            boardFeedback.StopHint();
+            OnHintReady?.Invoke(null);
+            OnHintChanged?.Invoke();
+        }
+
+        private void OnApplicationPause(bool paused)
+        {
+            if (paused)
+            {
+                CancelHint();
+            }
+        }
+
+        private void OnApplicationFocus(bool hasFocus)
+        {
+            if (!hasFocus)
+            {
+                CancelHint();
+            }
+        }
         private void OnEnable()
         {
             boardInput.OnCellEntered += HandleCellEntered;
@@ -136,6 +191,8 @@ namespace ASTeams.SingleLine.Unity
         private void OnDisable()
         {
             boardInput.OnCellEntered -= HandleCellEntered;
+            CancelHint();
+            CancelRewind();
         }
 
         public void Load(LevelData level)
@@ -143,6 +200,12 @@ namespace ASTeams.SingleLine.Unity
             if (level == null)
             {
                 throw new ArgumentNullException(nameof(level));
+            }
+
+            CancelHint();
+            if (session != null)
+            {
+                session.OnStateChanged -= HandleSessionStateChanged;
             }
 
             PathState previous = State;
@@ -154,7 +217,7 @@ namespace ASTeams.SingleLine.Unity
             boardFeedback.Stop();
             boardView.Build(level);
             cameraFramer.Frame(boardView.WorldSize);
-            pathView.Clear();
+            pathView.Prepare(level.ActiveCellCount);
 
             // Hold the starting cell from the outset, the same way a reset leaves it. A
             // board with nothing drawn has no head to move from, so a hint would have
@@ -173,6 +236,7 @@ namespace ASTeams.SingleLine.Unity
         /// <summary>Steps back exactly one cell, as GDD 3.3 specifies.</summary>
         public bool Undo()
         {
+            CancelHint();
             if (session == null || rewind != null || !session.Undo())
             {
                 return false;
@@ -196,6 +260,19 @@ namespace ASTeams.SingleLine.Unity
                 return;
             }
 
+            CancelHint();
+            if (rewindStepDelay <= 0f)
+            {
+                boardFeedback.Stop();
+                while (session.Length > 1)
+                {
+                    session.Undo();
+                }
+
+                Refresh();
+                return;
+            }
+
             rewind = StartCoroutine(RewindRoutine());
         }
 
@@ -204,15 +281,13 @@ namespace ASTeams.SingleLine.Unity
             boardInput.AcceptsInput = false;
             boardFeedback.Stop();
 
-            var wait = new WaitForSecondsRealtime(rewindStepDelay);
-
             while (session.Length > 1 && session.Undo())
             {
                 Refresh();
 
                 if (rewindStepDelay > 0f)
                 {
-                    yield return wait;
+                    yield return rewindWait;
                 }
             }
 
@@ -233,35 +308,6 @@ namespace ASTeams.SingleLine.Unity
             boardInput.AcceptsInput = true;
         }
 
-        /// <summary>
-        /// Clears the path back to the starting cell at once, with no animation.
-        ///
-        /// This is what touching the start cell does. The finger is already there and the
-        /// gesture is still live, so a rewind animation would fight the drag rather than
-        /// read as feedback. It also leaves the start drawn rather than emptying the
-        /// board: every level ships a fixed start, so an empty board is a dead state the
-        /// player would have to tap their way out of.
-        /// </summary>
-        public void ResetToStart()
-        {
-            if (session == null)
-            {
-                return;
-            }
-
-            CancelRewind();
-            boardFeedback.Stop();
-            session.Restart();
-
-            if (session.Level.HasFixedStart)
-            {
-                session.Move(session.Level.FixedStart);
-            }
-
-            boardInput.AcceptsInput = true;
-            Refresh();
-        }
-
         private void HandleCellEntered(int cell)
         {
             if (session == null || rewind != null)
@@ -269,12 +315,10 @@ namespace ASTeams.SingleLine.Unity
                 return;
             }
 
-            // Touching the cell the path began from clears it. Retracing all the way back
-            // is the player saying they want to start over, and making them hold the line
-            // through every cell to do it would be busywork.
-            if (session.Length > 1 && session.Level.HasFixedStart && cell == session.Level.FixedStart)
+            // The start gesture shares the same rewind as the Restart button.
+            if (session.Length > 1 && cell == session.GetCell(0))
             {
-                ResetToStart();
+                Restart();
                 return;
             }
 
@@ -283,13 +327,14 @@ namespace ASTeams.SingleLine.Unity
             // that was refused, because that cell is often a hole with nothing drawn.
             // Any move answers the hint, so it stops pointing at a route the player has
             // already left.
-            boardFeedback.StopHint();
+            CancelHint();
 
             MoveResult result = session.Move(cell);
 
             if (result == MoveResult.Rejected)
             {
                 boardFeedback.PlayInvalid(session.Head);
+                eventChannel?.RaiseInvalidMove(session.Head);
                 return;
             }
 
@@ -328,6 +373,7 @@ namespace ASTeams.SingleLine.Unity
             }
 
             OnStateChanged?.Invoke(previous, current);
+            eventChannel?.RaiseStateChanged(previous, current);
         }
 
         private List<int> CollectUncovered()
@@ -386,7 +432,9 @@ namespace ASTeams.SingleLine.Unity
 
             pathView.Rebuild(session);
             pathView.SetColor(ColorForState(session.State));
+            boardView.SetStartCue(session.Length <= 1 && session.State != PathState.Won);
             OnPathChanged?.Invoke();
+            eventChannel?.RaiseProgressChanged(session.Length, session.Level.ActiveCellCount);
         }
 
         private Color ColorForState(PathState state)

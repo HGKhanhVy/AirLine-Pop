@@ -37,7 +37,7 @@ namespace ASTeams.SingleLine.Import
 
             for (int i = 0; i < levels.Count; i++)
             {
-                LevelData level = levels[i];
+                LevelData level = NormalizeActiveCells(levels[i]);
                 LevelValidationResult result = validator.Validate(level);
 
                 // The validator hands back the stored solution when it checked out, and a
@@ -64,6 +64,11 @@ namespace ASTeams.SingleLine.Import
                     continue;
                 }
 
+                if (!ReferenceEquals(level, levels[i]))
+                {
+                    repaired++;
+                }
+
                 kept.Add(level);
             }
 
@@ -77,6 +82,41 @@ namespace ASTeams.SingleLine.Import
             for (int i = 0; i < source.Count; i++)
             {
                 copy[i] = source[i];
+            }
+
+            return copy;
+        }
+
+        private static LevelData NormalizeActiveCells(LevelData level)
+        {
+            if (level.DeclaredActiveCells.Count == level.ActiveCellCount)
+            {
+                return level;
+            }
+
+            var cells = new int[level.ActiveCellCount];
+            var seen = new bool[level.Grid.CellCount];
+            int count = 0;
+            for (int i = 0; i < level.DeclaredActiveCells.Count; i++)
+            {
+                int cell = level.DeclaredActiveCells[i];
+                if (!seen[cell])
+                {
+                    seen[cell] = true;
+                    cells[count++] = cell;
+                }
+            }
+
+            return new LevelData(level.Id, level.Version, level.Grid, cells, level.FixedStart,
+                level.FixedEnd, ToArray(level.Solution), level.Difficulty, level.ThemeId, CopyTags(level.Tags));
+        }
+
+        private static string[] CopyTags(IReadOnlyList<string> tags)
+        {
+            var copy = new string[tags.Count];
+            for (int i = 0; i < tags.Count; i++)
+            {
+                copy[i] = tags[i];
             }
 
             return copy;

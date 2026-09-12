@@ -1,4 +1,4 @@
-﻿using Cysharp.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using ASTeams.Base.Ads;
 using ASTeams.Base.Analytics;
 using ASTeams.Base.Data;
@@ -25,6 +25,8 @@ namespace ASTeams.Base
 
         private bool isInited;
 
+        public bool IsInitialized => isInited;
+
         public override void Init()
         {
             base.Init();
@@ -36,7 +38,7 @@ namespace ASTeams.Base
         // ===============================
         private async UniTask SyncInit()
         {
-            await UniTask.Delay(100);
+            await UniTask.DelayFrame(1);
             // Load local user profile
             UserProfileController.Instance.LoadUserProfile(null);
 

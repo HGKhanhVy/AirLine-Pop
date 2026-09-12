@@ -1,9 +1,7 @@
 using ASTeams.Base.Analytics;
 using Newtonsoft.Json.Linq;
-using NUnit.Framework;
 using System;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -575,13 +573,13 @@ namespace ASTeams.Base.Data
             UserProfileController.Instance.AddCoin(-10000);
         }
 
-        [MenuItem("Test/User Data/Life/Add Live #1")]
+        [UnityEditor.MenuItem("Test/User Data/Life/Add Live #1")]
         private static void Add1Life()
         {
             UserProfileController.Instance.AddLife(1);
         }
 
-        [MenuItem("Test/User Data/Life/Use Live #2")]
+        [UnityEditor.MenuItem("Test/User Data/Life/Use Live #2")]
         private static void Sub1Life()
         {
             UserProfileController.Instance.UseLife();

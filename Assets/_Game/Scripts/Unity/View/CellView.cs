@@ -2,44 +2,41 @@ using UnityEngine;
 
 namespace ASTeams.SingleLine.Unity
 {
-    /// <summary>
-    /// One square on the board. Owns nothing but its own appearance: which cell it stands
-    /// for and what state it is in are told to it by <see cref="BoardView"/>.
-    ///
-    /// The renderer is resolved once when the pool builds the object, never in a loop.
-    /// </summary>
     [RequireComponent(typeof(SpriteRenderer))]
     public sealed class CellView : MonoBehaviour
     {
         [SerializeField] private SpriteRenderer spriteRenderer;
+        [SerializeField] private SpriteRenderer startDotRenderer;
+        [SerializeField] private SpriteRenderer startPulseRenderer;
+        [SerializeField, Min(0.1f)] private float startPulseDuration = 1.1f;
+        [SerializeField, Min(1f)] private float startPulseScale = 2.2f;
+        [SerializeField, Range(0f, 1f)] private float startPulseAlpha = 0.24f;
+        [SerializeField, Min(0f)] private float idleReminderDelay = 3f;
+        [SerializeField, Min(0f)] private float idleShakeStrength = 0.035f;
+        [SerializeField, Min(0.1f)] private float idleShakeDuration = 0.45f;
+        [SerializeField, Min(0.1f)] private float idleShakeInterval = 1.6f;
 
-        /// <summary>Board index this square currently stands for.</summary>
         public int CellIndex { get; private set; }
 
-        /// <summary>The colour the square is drawn in, for effects that match a cell.</summary>
         public Color Color => spriteRenderer.color;
 
-        /// <summary>Where the square belongs, so a shake has somewhere to return to.</summary>
         public Vector3 BaseLocalPosition { get; private set; }
 
         private Color fillFrom;
         private Color fillTo;
         private float fillDuration;
         private float fillLeft;
-
         private float popAmount;
         private float popDuration;
         private float popLeft;
+        private bool isStartCueVisible;
+        private float cueElapsed;
 
         private void Reset()
         {
             spriteRenderer = GetComponent<SpriteRenderer>();
         }
 
-        /// <summary>
-        /// Called once by the pool when the object is created, so nothing has to look the
-        /// renderer up again for the lifetime of the object.
-        /// </summary>
         public void Bind(SpriteRenderer renderer)
         {
             spriteRenderer = renderer;
@@ -53,6 +50,7 @@ namespace ASTeams.SingleLine.Unity
             transform.localScale = Vector3.one;
             fillLeft = 0f;
             popLeft = 0f;
+            HideStartCue();
 
             spriteRenderer.sprite = sprite;
             spriteRenderer.color = color;
@@ -66,10 +64,6 @@ namespace ASTeams.SingleLine.Unity
             spriteRenderer.color = color;
         }
 
-        /// <summary>
-        /// Eases into a colour instead of snapping to it, so a square fills as the path
-        /// reaches it rather than lighting up before the line has arrived.
-        /// </summary>
         public void FillTo(Color color, float duration)
         {
             if (duration <= 0f)
@@ -84,10 +78,6 @@ namespace ASTeams.SingleLine.Unity
             fillLeft = duration;
         }
 
-        /// <summary>
-        /// Swells and settles back, so the square answers the path arriving at it. GDD 10
-        /// calls this the raise half of "fill/raise".
-        /// </summary>
         public void Pop(float amount, float duration)
         {
             if (amount <= 0f || duration <= 0f)
@@ -100,10 +90,42 @@ namespace ASTeams.SingleLine.Unity
             popLeft = duration;
         }
 
-        /// <summary>Advances fill and pop. Returns false once there is nothing left to do.</summary>
+        public void ShowStartCue()
+        {
+            if (startDotRenderer == null || startPulseRenderer == null)
+            {
+                return;
+            }
+
+            isStartCueVisible = true;
+            cueElapsed = 0f;
+            transform.localPosition = BaseLocalPosition;
+            startDotRenderer.enabled = true;
+            startDotRenderer.color = Color.white;
+            startPulseRenderer.enabled = true;
+        }
+
+        public void HideStartCue()
+        {
+            isStartCueVisible = false;
+            cueElapsed = 0f;
+            transform.localPosition = BaseLocalPosition;
+
+            if (startDotRenderer != null)
+            {
+                startDotRenderer.enabled = false;
+            }
+
+            if (startPulseRenderer != null)
+            {
+                startPulseRenderer.enabled = false;
+                startPulseRenderer.transform.localScale = Vector3.one;
+            }
+        }
+
         public bool Advance(float deltaTime)
         {
-            bool running = false;
+            bool running = isStartCueVisible;
 
             if (fillLeft > 0f)
             {
@@ -131,14 +153,50 @@ namespace ASTeams.SingleLine.Unity
                 }
                 else
                 {
-                    // One half sine: out and straight back, no overshoot to settle.
                     float t = 1f - (popLeft / popDuration);
                     transform.localScale = Vector3.one * (1f + popAmount * Mathf.Sin(t * Mathf.PI));
                     running = true;
                 }
             }
 
+            if (isStartCueVisible)
+            {
+                AdvanceStartCue(deltaTime);
+            }
+
             return running;
+        }
+
+        private void AdvanceStartCue(float deltaTime)
+        {
+            cueElapsed += deltaTime;
+
+            float pulseT = startPulseDuration <= 0f
+                ? 0f
+                : Mathf.Repeat(cueElapsed, startPulseDuration) / startPulseDuration;
+            float scale = Mathf.Lerp(1f, startPulseScale, pulseT);
+            float alpha = startPulseAlpha * (1f - pulseT);
+            startPulseRenderer.transform.localScale = Vector3.one * scale;
+            startPulseRenderer.color = new Color(1f, 1f, 1f, alpha);
+
+            if (cueElapsed < idleReminderDelay || idleShakeDuration <= 0f)
+            {
+                transform.localPosition = BaseLocalPosition;
+                return;
+            }
+
+            float reminderTime = cueElapsed - idleReminderDelay;
+            float cycle = Mathf.Repeat(reminderTime, idleShakeInterval);
+
+            if (cycle >= idleShakeDuration)
+            {
+                transform.localPosition = BaseLocalPosition;
+                return;
+            }
+
+            float envelope = Mathf.Sin(cycle / idleShakeDuration * Mathf.PI);
+            float offset = Mathf.Sin(cycle * 42f) * idleShakeStrength * envelope;
+            transform.localPosition = BaseLocalPosition + Vector3.right * offset;
         }
     }
 }

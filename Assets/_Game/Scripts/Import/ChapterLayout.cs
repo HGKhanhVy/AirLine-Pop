@@ -25,7 +25,7 @@ namespace ASTeams.SingleLine.Import
         };
 
         /// <summary>The MVP campaign of GDD 18.1: ten chapters of thirty.</summary>
-        public static readonly ChapterLayout Default = new ChapterLayout(10, 30, 0.2, DefaultRhythm);
+        public static readonly ChapterLayout Default = new ChapterLayout(10, 30, 0.2, DefaultRhythm, 10, 3, 10);
 
         private readonly double[] rhythm;
         private readonly double lowestTrend;
@@ -43,8 +43,12 @@ namespace ASTeams.SingleLine.Import
         public double Overlap { get; }
 
         public int TotalLevels => ChapterCount * LevelsPerChapter;
+        public int OnboardingLevelCount { get; }
+        public int OnboardingMinCells { get; }
+        public int OnboardingMaxCells { get; }
 
-        public ChapterLayout(int chapterCount, int levelsPerChapter, double overlap, double[] rhythm)
+        public ChapterLayout(int chapterCount, int levelsPerChapter, double overlap, double[] rhythm,
+            int onboardingLevelCount = 0, int onboardingMinCells = 3, int onboardingMaxCells = 10)
         {
             if (chapterCount <= 0)
             {
@@ -63,6 +67,15 @@ namespace ASTeams.SingleLine.Import
 
             ChapterCount = chapterCount;
             LevelsPerChapter = levelsPerChapter;
+            if (onboardingLevelCount < 0 || onboardingLevelCount > chapterCount * levelsPerChapter ||
+                onboardingMinCells < 1 || onboardingMaxCells < onboardingMinCells)
+            {
+                throw new ArgumentOutOfRangeException(nameof(onboardingLevelCount));
+            }
+
+            OnboardingLevelCount = onboardingLevelCount;
+            OnboardingMinCells = onboardingMinCells;
+            OnboardingMaxCells = onboardingMaxCells;
             Overlap = overlap;
             this.rhythm = rhythm;
 

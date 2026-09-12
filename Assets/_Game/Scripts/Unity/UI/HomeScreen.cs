@@ -1,4 +1,5 @@
 using System;
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -21,40 +22,57 @@ namespace ASTeams.SingleLine.Unity
         [SerializeField, Min(0.01f)] private float fadeDuration = 0.22f;
 
         private float target = 1f;
-        private bool interactableWhenShown = true;
+        private Tweener fade;
 
         /// <summary>Raised when the player asks to start.</summary>
         public event Action OnPlayRequested;
 
         public bool IsShown { get; private set; } = true;
 
+        private void EnsureFade()
+        {
+            if (fade != null && fade.IsActive())
+            {
+                return;
+            }
+
+            fade = group.DOFade(group.alpha, fadeDuration).SetEase(Ease.Linear)
+                .SetUpdate(true).SetAutoKill(false).Pause().OnUpdate(UpdateInteraction);
+        }
+
         private void OnEnable()
         {
+            EnsureFade();
             playButton.onClick.AddListener(HandlePlay);
+            FadeTo(target);
         }
 
         private void OnDisable()
         {
             playButton.onClick.RemoveListener(HandlePlay);
+            fade?.Pause();
         }
 
-        private void Update()
+        private void OnDestroy()
         {
-            if (group == null)
-            {
-                return;
-            }
-
-            float speed = 1f / Mathf.Max(0.01f, fadeDuration);
-            group.alpha = Mathf.MoveTowards(group.alpha, target, speed * Time.unscaledDeltaTime);
-
-            // Blocking raycasts only while visible keeps a faded panel from swallowing
-            // drags meant for the board.
-            bool visible = group.alpha > 0.01f;
-            group.blocksRaycasts = visible && interactableWhenShown;
-            group.interactable = visible && interactableWhenShown;
+            fade?.Kill();
         }
 
+        private void FadeTo(float alpha)
+        {
+            EnsureFade();
+            target = alpha;
+            float duration = Mathf.Max(0.01f, Mathf.Abs(group.alpha - target) * fadeDuration);
+            fade.ChangeEndValue(target, duration, true).Restart();
+            UpdateInteraction();
+        }
+
+        private void UpdateInteraction()
+        {
+            bool isVisible = group.alpha > 0.01f;
+            group.blocksRaycasts = isVisible && IsShown;
+            group.interactable = isVisible && IsShown;
+        }
         public void SetSubtitle(string text)
         {
             if (subtitleLabel != null)
@@ -66,15 +84,13 @@ namespace ASTeams.SingleLine.Unity
         public void Show()
         {
             IsShown = true;
-            target = 1f;
-            interactableWhenShown = true;
+            FadeTo(1f);
         }
 
         public void Hide()
         {
             IsShown = false;
-            target = 0f;
-            interactableWhenShown = false;
+            FadeTo(0f);
         }
 
         /// <summary>
@@ -84,6 +100,7 @@ namespace ASTeams.SingleLine.Unity
         public void HideImmediately()
         {
             Hide();
+            fade.Pause();
 
             if (group != null)
             {

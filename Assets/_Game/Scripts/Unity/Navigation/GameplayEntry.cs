@@ -10,19 +10,19 @@ namespace ASTeams.SingleLine.Unity
     /// </summary>
     public static class GameplayEntry
     {
-        private static bool startsImmediately;
+        private static bool shouldStartImmediately;
 
         /// <summary>Asks the gameplay scene to skip its entry panel and play at once.</summary>
         public static void RequestImmediateStart()
         {
-            startsImmediately = true;
+            shouldStartImmediately = true;
         }
 
         /// <summary>Reads the pending request and clears it.</summary>
         public static bool ConsumeImmediateStart()
         {
-            bool requested = startsImmediately;
-            startsImmediately = false;
+            bool requested = shouldStartImmediately;
+            shouldStartImmediately = false;
             return requested;
         }
     }

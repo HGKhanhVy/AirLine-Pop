@@ -1,4 +1,4 @@
-﻿using ASTeams.Base.Data;
+using ASTeams.Base.Data;
 using ASTeams.Base;
 using System.Collections.Generic;
 using System;
@@ -119,6 +119,11 @@ namespace ASTeams.Base
 
         public void PlaySound(SoundName soundName)
         {
+            if (assets == null || soundSources.Count == 0)
+            {
+                return;
+            }
+
             var soundAsset = assets.GetSound(soundName);
             if (soundAsset == null || soundAsset.clip == null) return;
 

@@ -18,6 +18,8 @@ namespace ASTeams.SingleLine.Unity
     {
         [SerializeField] private ThemeSO theme;
         [SerializeField] private Transform cellRoot;
+        [SerializeField] private CellView cellPrefab;
+        [SerializeField, Min(1)] private int poolCapacity = 100;
 
         [Tooltip("How long a square takes to take its new colour. GDD 10 asks for 80 to 120 ms.")]
         [SerializeField, Min(0f)] private float fillDuration = 0.1f;
@@ -33,7 +35,7 @@ namespace ASTeams.SingleLine.Unity
 
         // Only the handful of squares mid-fill are ticked, so a ninety cell board costs
         // nothing while the player is not drawing.
-        private readonly List<CellView> filling = new List<CellView>(8);
+        private readonly List<CellView> filling = new List<CellView>(100);
         private LevelData level;
         private CellView[] cellsByIndex;
         private Vector3 originLocal;
@@ -56,8 +58,8 @@ namespace ASTeams.SingleLine.Unity
                 cellRoot = transform;
             }
 
-            pool = new CellViewPool(cellRoot);
-            pool.Prewarm(64);
+            pool = new CellViewPool(new PrefabCellViewFactory(cellPrefab, cellRoot));
+            pool.Prewarm(poolCapacity);
         }
 
         private void Update()
@@ -118,7 +120,7 @@ namespace ASTeams.SingleLine.Unity
                 cellsByIndex[i] = null;
             }
 
-            Sprite sprite = theme.CellSprite != null ? theme.CellSprite : PlaceholderSprite.RoundedSquare;
+            Sprite sprite = theme.CellSprite;
 
             for (int index = 0; index < grid.CellCount; index++)
             {
@@ -172,6 +174,30 @@ namespace ASTeams.SingleLine.Unity
 
             view.Pop(popAmount, popDuration);
             Track(view);
+        }
+        public void SetStartCue(bool isVisible)
+        {
+            if (level == null || !level.HasFixedStart)
+            {
+                return;
+            }
+
+            CellView view = GetView(level.FixedStart);
+
+            if (view == null)
+            {
+                return;
+            }
+
+            if (isVisible)
+            {
+                view.ShowStartCue();
+                Track(view);
+            }
+            else
+            {
+                view.HideStartCue();
+            }
         }
 
         private void Track(CellView view)

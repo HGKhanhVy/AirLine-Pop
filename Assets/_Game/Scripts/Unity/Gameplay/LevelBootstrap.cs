@@ -1,75 +1,79 @@
-using System.Collections.Generic;
+using System.Collections;
+using System.Threading.Tasks;
 using ASTeams.Base;
+using ASTeams.Base.Data;
+using ASTeams.Base.Gameplay;
 using ASTeams.SingleLine.Core;
 using ASTeams.SingleLine.Data;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 namespace ASTeams.SingleLine.Unity
 {
     /// <summary>
-    /// Composition root for the gameplay scene: builds the repository, hands the
-    /// controller a level, and moves on when one is won.
-    ///
-    /// This is the only place that knows a concrete <see cref="IChapterSource"/> exists.
-    /// Everything else takes <see cref="ILevelRepository"/>, which is what keeps the
-    /// placeholder level data replaceable without touching gameplay.
+    /// Composition root for Single Line gameplay. It owns repository and progression
+    /// adapters, while rules remain inside the tested core classes.
     /// </summary>
     public sealed class LevelBootstrap : MonoBehaviour
     {
         [SerializeField] private GameplayController controller;
-        [SerializeField] private HomeScreen homeScreen;
+        [SerializeField] private GameplayEventChannelSO eventChannel;
+        [SerializeField] private GameStateService gameStateService;
 
-        [Tooltip("From the SDK's MANAGERS prefab. Leave empty to play without haptics.")]
+        [Tooltip("From the persistent MANAGERS prefab. Leave empty to play without haptics.")]
         [SerializeField] private VibrationController vibration;
 
-        [Tooltip("Level to open on start. Ids are chapter, underscore, slot: ch01_001.")]
-        [SerializeField] private string startLevelId = "ch01_001";
+        [Tooltip("Used only when UserProfileController is unavailable in an isolated Editor run.")]
+        [SerializeField, Range(1, CampaignLevelAddress.MaxLevelNumber)]
+        private int fallbackLevelNumber = 1;
 
         [Tooltip("Seconds to admire a finished board before the next one opens.")]
         [SerializeField, Min(0f)] private float delayAfterWin = 0.9f;
 
         private ILevelRepository repository;
+        private ILevelSequence levelSequence;
+        private ILevelProgressStore progressStore;
         private string currentLevelId;
-        private float advanceAt;
-        private bool waitingToAdvance;
+        private int currentLevelNumber;
+        private Coroutine advanceRoutine;
+        private WaitForSeconds advanceDelay;
 
         public string CurrentLevelId => currentLevelId;
+
+        public int CurrentLevelNumber => currentLevelNumber;
 
         private void Start()
         {
             repository = new ChapterLevelRepository(new ResourcesChapterSource());
-            controller.SetHaptics(new SdkHapticService(vibration));
+            levelSequence = new ChapterLevelSequence(repository);
+            advanceDelay = new WaitForSeconds(delayAfterWin);
+
+            VibrationController hapticController = vibration != null
+                ? vibration
+                : VibrationController.Instance;
+            controller.SetHaptics(hapticController == null ? null : new SdkHapticService(hapticController));
+            controller.SetHintService(new ContinuationHintService(new WarnsdorffSolverFactory()));
             controller.OnStateChanged += HandleStateChanged;
 
-            if (!TryLoad(startLevelId))
+            UserProfileController profile = UserProfileController.Instance;
+            progressStore = profile == null
+                ? new SessionLevelProgressStore(fallbackLevelNumber)
+                : new UserProfileLevelProgressStore(profile);
+
+            int savedLevel = Mathf.Clamp(progressStore.CurrentLevelNumber, 1,
+                CampaignLevelAddress.MaxLevelNumber);
+
+            if (savedLevel != progressStore.CurrentLevelNumber)
+            {
+                progressStore.SaveCurrentLevel(savedLevel);
+            }
+
+            if (!TryLoadLevelNumber(savedLevel))
             {
                 Debug.LogError(
-                    "No level " + startLevelId + " under Resources. Run Tools/Single Line/Level Importer first.",
+                    "No level " + CampaignLevelAddress.ToLevelId(savedLevel) +
+                    " under Resources. Run Tools/Single Line/Level Importer first.",
                     this);
-                return;
             }
-
-            if (homeScreen == null)
-            {
-                return;
-            }
-
-            homeScreen.OnPlayRequested += HandlePlayRequested;
-            homeScreen.SetSubtitle(currentLevelId);
-
-            // Arriving from the home scene means Play has already been pressed; showing a
-            // second entry panel here would ask for it twice.
-            if (GameplayEntry.ConsumeImmediateStart())
-            {
-                homeScreen.HideImmediately();
-                controller.SetInputEnabled(true);
-                return;
-            }
-
-            // The board is built and waiting behind the home panel, so Play costs nothing.
-            homeScreen.Show();
-            controller.SetInputEnabled(false);
         }
 
         private void OnDestroy()
@@ -78,22 +82,6 @@ namespace ASTeams.SingleLine.Unity
             {
                 controller.OnStateChanged -= HandleStateChanged;
             }
-
-            if (homeScreen != null)
-            {
-                homeScreen.OnPlayRequested -= HandlePlayRequested;
-            }
-        }
-
-        private void Update()
-        {
-            if (waitingToAdvance && Time.unscaledTime >= advanceAt)
-            {
-                waitingToAdvance = false;
-                LoadNext();
-            }
-
-            ReadPrototypeKeys();
         }
 
         public bool TryLoad(string levelId)
@@ -103,47 +91,45 @@ namespace ASTeams.SingleLine.Unity
                 return false;
             }
 
+            CancelAdvance();
             currentLevelId = levelId;
-            controller.Load(level);
 
-            if (homeScreen != null)
+            if (!CampaignLevelAddress.TryGetLevelNumber(levelId, out currentLevelNumber))
             {
-                homeScreen.SetSubtitle(currentLevelId);
-
-                // Coming back to a level while the home panel is up must not hand control
-                // back to the board behind it.
-                controller.SetInputEnabled(!homeScreen.IsShown);
+                currentLevelNumber = 1;
             }
 
+            controller.Load(level);
+            gameStateService?.ResetToPlaying();
+            eventChannel?.RaiseLevelLoaded(currentLevelNumber, currentLevelId, level.Difficulty,
+                level.ActiveCellCount);
             return true;
         }
 
-        /// <summary>Rewinds the path back to the start, one cell at a time.</summary>
+        public bool TryLoadLevelNumber(int levelNumber)
+        {
+            int clamped = Mathf.Clamp(levelNumber, 1, CampaignLevelAddress.MaxLevelNumber);
+            return TryLoad(CampaignLevelAddress.ToLevelId(clamped));
+        }
+
         public void Restart()
         {
             controller.Restart();
         }
 
-        /// <summary>Steps back one cell.</summary>
         public void Undo()
         {
             controller.Undo();
         }
 
-        /// <summary>Points at a cell that leads to a finish from where the player is.</summary>
-        public bool Hint()
+        public Task<bool> HintAsync()
         {
-            return controller.ShowHint();
-        }
-
-        private void HandlePlayRequested()
-        {
-            controller.SetInputEnabled(true);
+            return controller.ShowHintAsync();
         }
 
         public bool LoadNext()
         {
-            string next = FindNextLevelId(currentLevelId);
+            string next = levelSequence.GetNext(currentLevelId);
             return next != null && TryLoad(next);
         }
 
@@ -154,95 +140,47 @@ namespace ASTeams.SingleLine.Unity
                 return;
             }
 
-            waitingToAdvance = true;
-            advanceAt = Time.unscaledTime + delayAfterWin;
-        }
+            int completedLevel = currentLevelNumber;
+            string completedLevelId = currentLevelId;
+            int savedNextLevel = Mathf.Min(CampaignLevelAddress.MaxLevelNumber, completedLevel + 1);
 
-        /// <summary>
-        /// The next slot in the chapter, or the first slot of the next chapter. Returns
-        /// null at the end of the campaign.
-        ///
-        /// Walking the repository rather than assuming thirty levels a chapter means a
-        /// re-import with a different layout still navigates correctly. Progression proper
-        /// belongs to a service later; this is enough to play through.
-        /// </summary>
-        private string FindNextLevelId(string levelId)
-        {
-            string chapterId = ChapterLevelRepository.GetChapterId(levelId);
-
-            if (chapterId == null)
+            if (progressStore != null && progressStore.CurrentLevelNumber < savedNextLevel)
             {
-                return null;
+                progressStore.SaveCurrentLevel(savedNextLevel);
             }
 
-            IReadOnlyList<string> ids = repository.GetLevelIds(chapterId);
+            eventChannel?.RaiseLevelWon(completedLevel, completedLevelId);
+            gameStateService?.Win();
 
-            for (int i = 0; i < ids.Count; i++)
+            CancelAdvance();
+
+            if (completedLevel < CampaignLevelAddress.MaxLevelNumber)
             {
-                if (ids[i] != levelId)
-                {
-                    continue;
-                }
-
-                if (i + 1 < ids.Count)
-                {
-                    return ids[i + 1];
-                }
-
-                string nextChapter = NextChapterId(chapterId);
-                IReadOnlyList<string> nextIds = nextChapter == null
-                    ? null
-                    : repository.GetLevelIds(nextChapter);
-
-                return nextIds == null || nextIds.Count == 0 ? null : nextIds[0];
+                advanceRoutine = StartCoroutine(AdvanceRoutine());
             }
-
-            return null;
         }
 
-        private static string NextChapterId(string chapterId)
+        private IEnumerator AdvanceRoutine()
         {
-            if (!chapterId.StartsWith("ch", System.StringComparison.Ordinal) ||
-                !int.TryParse(chapterId.Substring(2), out int number))
-            {
-                return null;
-            }
-
-            return "ch" + (number + 1).ToString("00");
+            yield return advanceDelay;
+            advanceRoutine = null;
+            LoadNext();
         }
 
-        /// <summary>
-        /// Keyboard shortcuts so the prototype is playable before any UI exists. These go
-        /// away once the real buttons land.
-        /// </summary>
-        private void ReadPrototypeKeys()
+        private void CancelAdvance()
         {
-            Keyboard keyboard = Keyboard.current;
-
-            if (keyboard == null)
+            if (advanceRoutine == null)
             {
                 return;
             }
 
-            if (keyboard.zKey.wasPressedThisFrame)
-            {
-                Undo();
-            }
+            StopCoroutine(advanceRoutine);
+            advanceRoutine = null;
+        }
 
-            if (keyboard.rKey.wasPressedThisFrame)
-            {
-                Restart();
-            }
-
-            if (keyboard.nKey.wasPressedThisFrame)
-            {
-                LoadNext();
-            }
-
-            if (keyboard.hKey.wasPressedThisFrame)
-            {
-                Hint();
-            }
+        private void OnDisable()
+        {
+            CancelAdvance();
         }
     }
 }

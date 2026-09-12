@@ -18,9 +18,15 @@ namespace ASTeams.Base
 
         private void Start()
         {
-            GameManager.Instance.OnInited.AddListener(OnInited);
+            GameManager gameManager = GameManager.Instance;
+            gameManager.OnInited.AddListener(OnInited);
             progressBar.fillAmount = 0;
             progressBar.DOFillAmount(1, duration);
+
+            if (gameManager.IsInitialized)
+            {
+                OnInited();
+            }
         }
 
         private void OnDestroy()
