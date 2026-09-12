@@ -15,7 +15,10 @@ namespace CorpusCheck
     /// than performing it: how the scorer compares against the reference game's own
     /// ordering, and how faithfully the campaign tracks its designed curve.
     ///
-    /// Usage: CorpusCheck [nodeBudget] [--export folder]
+    /// Usage: CorpusCheck [nodeBudget] [--export folder] [--curve]
+    ///
+    /// The campaign ships in source order. Pass --curve to build the generated ordering
+    /// instead, which is only useful for comparing the two.
     /// </summary>
     internal static class Program
     {
@@ -32,11 +35,20 @@ namespace CorpusCheck
                 ? args[exportIndex + 1]
                 : null;
 
+            CampaignMode mode = Array.IndexOf(args, "--curve") >= 0
+                ? CampaignMode.DifficultyCurve
+                : CampaignMode.SourceOrder;
+
             List<RawLevelFile> files = ReadSourceFiles(FindLevelsRoot());
             Console.WriteLine("Doc " + files.Count + " file.");
+            Console.WriteLine("Che do: " + (mode == CampaignMode.SourceOrder
+                ? "thu tu goc theo resources"
+                : "duong cong do kho"));
 
             var timer = Stopwatch.StartNew();
-            ImportReport report = new LevelImportPipeline(ChapterLayout.Default, budget).Run(files);
+            ImportReport report = LevelImportPipeline
+                .Create(mode, ChapterLayout.Default, budget, LevelPackOrder.Default)
+                .Run(files);
             timer.Stop();
 
             PrintPipeline(report, timer.ElapsedMilliseconds);

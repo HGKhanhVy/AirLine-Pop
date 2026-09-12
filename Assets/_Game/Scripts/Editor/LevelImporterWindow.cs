@@ -25,6 +25,7 @@ namespace ASTeams.SingleLine.Editor
         private string sourceFolder = LevelSourceReader.DefaultSourceFolder;
         private string outputFolder = CampaignExporter.DefaultOutputFolder;
         private int solverNodeBudget = WarnsdorffSolver.DefaultNodeBudget;
+        private CampaignMode campaignMode = CampaignMode.SourceOrder;
 
         private ImportReport report;
         private ExportResult lastExport;
@@ -96,6 +97,13 @@ namespace ASTeams.SingleLine.Editor
                 new GUIContent("Solver budget", "Nodes the solver may expand per level before giving up."),
                 solverNodeBudget);
 
+            campaignMode = (CampaignMode)EditorGUILayout.EnumPopup(
+                new GUIContent(
+                    "Order",
+                    "Source order ships the reference packs as they are numbered, which is what release uses. " +
+                    "Difficulty curve rebuilds the run and is for comparison only."),
+                campaignMode);
+
             if (solverNodeBudget < 1000)
             {
                 solverNodeBudget = 1000;
@@ -159,7 +167,8 @@ namespace ASTeams.SingleLine.Editor
                 return;
             }
 
-            var pipeline = new LevelImportPipeline(ChapterLayout.Default, solverNodeBudget);
+            LevelImportPipeline pipeline = LevelImportPipeline.Create(
+                campaignMode, ChapterLayout.Default, solverNodeBudget, LevelPackOrder.Default);
 
             try
             {
@@ -182,7 +191,9 @@ namespace ASTeams.SingleLine.Editor
         {
             Row("Files read", report.FileCount.ToString());
             Row("Parsed", report.Parsed.Count.ToString());
-            Row("Unique boards", report.UniqueBoardCount + "  (" + report.DuplicateCount + " duplicates dropped)");
+            Row("Unique boards", report.Groups == null
+                ? "not collapsed  (source order keeps duplicates)"
+                : report.UniqueBoardCount + "  (" + report.DuplicateCount + " duplicates dropped)");
             Row("Usable after checks", report.Pool.Levels.Count.ToString());
             Row("Solutions solved fresh", report.Pool.SolvedCount.ToString());
             Row("Solutions repaired", report.Pool.RepairedCount.ToString());

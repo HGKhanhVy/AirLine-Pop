@@ -16,8 +16,9 @@ namespace ASTeams.SingleLine.Import
     /// </summary>
     public sealed class LevelImportPipeline
     {
-        private readonly ChapterLayout layout;
         private readonly int solverNodeBudget;
+        private readonly IBoardSelector selector;
+        private readonly ICampaignAssembler assembler;
 
         public LevelImportPipeline()
             : this(ChapterLayout.Default, WarnsdorffSolver.DefaultNodeBudget)
@@ -25,9 +26,36 @@ namespace ASTeams.SingleLine.Import
         }
 
         public LevelImportPipeline(ChapterLayout layout, int solverNodeBudget)
+            : this(solverNodeBudget, new UniqueBoardSelector(), new ChapterAssembler(layout))
         {
-            this.layout = layout;
+        }
+
+        public LevelImportPipeline(int solverNodeBudget, IBoardSelector selector, ICampaignAssembler assembler)
+        {
             this.solverNodeBudget = solverNodeBudget;
+            this.selector = selector ?? throw new ArgumentNullException(nameof(selector));
+            this.assembler = assembler ?? throw new ArgumentNullException(nameof(assembler));
+        }
+
+        /// <summary>
+        /// The pairing of selector and assembler is not free: source order must keep the
+        /// duplicates a curve has to drop. Both callers, the editor window and the command
+        /// line tool, come through here so neither can pair them wrongly.
+        /// </summary>
+        public static LevelImportPipeline Create(
+            CampaignMode mode,
+            ChapterLayout layout,
+            int solverNodeBudget,
+            LevelPackOrder packOrder = null)
+        {
+            if (mode == CampaignMode.DifficultyCurve)
+            {
+                return new LevelImportPipeline(
+                    solverNodeBudget, new UniqueBoardSelector(), new ChapterAssembler(layout));
+            }
+
+            return new LevelImportPipeline(
+                solverNodeBudget, new AllBoardsSelector(), new SourceOrderAssembler(layout, packOrder));
         }
 
         /// <summary>
@@ -49,22 +77,13 @@ namespace ASTeams.SingleLine.Import
             List<LevelData> parsed = Parse(ordered, report);
             report.Parsed = parsed;
 
-            Report(onProgress, "Collapsing duplicate boards", 0.25f);
-            var deduplicator = new LevelDeduplicator(new BoardCanonicalizer());
-            IReadOnlyList<LevelGroup> groups = deduplicator.Group(parsed);
-            report.Groups = groups;
-
-            var representatives = new List<LevelData>(groups.Count);
-
-            for (int i = 0; i < groups.Count; i++)
-            {
-                representatives.Add(groups[i].Representative);
-            }
+            Report(onProgress, "Choosing boards", 0.25f);
+            IReadOnlyList<LevelData> selected = selector.Select(parsed, report);
 
             Report(onProgress, "Checking and repairing solutions", 0.35f);
             var prepareTimer = Stopwatch.StartNew();
             var preparer = new LevelPreparer(new LevelValidator(new WarnsdorffSolver(solverNodeBudget)));
-            PreparedPool pool = preparer.Prepare(representatives);
+            PreparedPool pool = preparer.Prepare(selected);
             prepareTimer.Stop();
             report.Pool = pool;
             report.PrepareMilliseconds = prepareTimer.ElapsedMilliseconds;
@@ -82,7 +101,7 @@ namespace ASTeams.SingleLine.Import
 
             try
             {
-                report.Campaign = new ChapterAssembler(layout).Assemble(scored);
+                report.Campaign = assembler.Assemble(scored);
             }
             catch (ArgumentException e)
             {

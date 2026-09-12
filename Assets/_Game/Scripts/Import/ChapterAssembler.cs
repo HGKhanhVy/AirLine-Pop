@@ -16,7 +16,7 @@ namespace ASTeams.SingleLine.Import
     /// The whole pass is deterministic. Level ids must not move between builds or saved
     /// progress would point at different puzzles.
     /// </summary>
-    public sealed class ChapterAssembler
+    public sealed class ChapterAssembler : ICampaignAssembler
     {
         /// <summary>Beyond this many identical board sizes in a row the campaign reads as padding.</summary>
         private const int MaxSameSizeRun = 3;
