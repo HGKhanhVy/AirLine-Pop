@@ -383,19 +383,25 @@ namespace ASTeams.SingleLine.Unity
                 0f);
         }
 
+        /// <summary>
+        /// The start square is asked about first, and keeps its own colour for the whole
+        /// level. The reference game marks it that way, and the board opens with the head
+        /// already sitting on it: letting the head win would paint the opening square in
+        /// the pale head tint instead of the saturated one the start is supposed to have.
+        /// </summary>
         private Color ColorFor(int index, bool visited, bool head)
         {
+            if (level.HasFixedStart && level.FixedStart == index)
+            {
+                return palette.Start;
+            }
+
             if (head)
             {
                 return palette.Head;
             }
 
-            if (visited)
-            {
-                return palette.Visited;
-            }
-
-            return level.HasFixedStart && level.FixedStart == index ? palette.Start : palette.Cell;
+            return visited ? palette.Visited : palette.Cell;
         }
     }
 }
