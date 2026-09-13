@@ -189,12 +189,39 @@ Các hạng mục không được phép chặn APK Core:
 - **Particle theo đối tượng.** `PooledEffectPlayer` + `EffectPool`, pool sẵn, không `Instantiate`/`Destroy` khi đang chơi. Bốn nhóm: nối ô, bước sai, thắng màn, cue ô bắt đầu. Thắng màn đã gán `ConfettiBlastRed`.
 - **Event channel.** Thêm `OnHintStarted` và ba lệnh `RequestUndo/RequestRestart/RequestHint`, nên UI không cần tham chiếu nào vào gameplay.
 
-### Còn phải làm trong Unity Editor
+### Đã kiểm trong Unity Editor
 
-1. `Tools/Single Line/Extract Block Effects` — tách `effect_jump`, `effect_dust`, `glow` khỏi `OneLineBlock.prefab` thành prefab riêng và gán vào `PooledEffectPlayer`. Ba slot này đang để trống nên tạm thời không phát gì.
-2. Kiểm tra scale của `ConfettiBlastRed` so với board; particle này của asset gốc, có thể phải chỉnh `startSize`.
-3. Chuyển `Cell.prefab` thành Prefab Variant của `OneLineBlock.prefab`. Hiện `Cell.prefab` đang là bản copy thủ công phần visual; đổi sang variant phải làm trong Editor vì cấu trúc file variant khác hẳn.
-4. Bật lại Unity MCP (đổi port) rồi chạy EditMode tests và một lượt play thử.
+- Chạy `Tools/Single Line/Extract Block Effects`: tách 4 prefab `FX_*` từ `OneLineBlock` và gán vào `PooledEffectPlayer`.
+- Chạy `Tools/Single Line/Rebuild Level Config`: 300 level. Asset sinh tay trước đó khớp đúng với bản Unity ghi ra, `git diff` rỗng.
+- EditMode tests: 208/208 pass.
+- Play thử `Loading -> Gameplay` ở 1080x1920: chấm trắng, vòng xám tỏa (đo được scale 2.68, alpha 0.18), clip `StartIdle` chạy đúng nhịp 3 giây rồi lặp 4 giây, đường kẻ cam tách hẳn màu khối, thắng màn chuyển vàng, tự sang màn kế. Pool particle không rò: sau khi hiệu ứng chạy xong `playing=0 particles=0`.
+
+Hai thứ chỉ lộ ra khi chạy thật, đã sửa:
+
+1. `ConfettiBlastRed` là hiệu ứng có hướng, lúc thắng phun một vệt sang phải. Đổi sang `effect_jump_success` của chính block mẫu.
+2. `effect_jump` thực ra là vụ nổ 17 hệ hạt (`ExplosionRoundFire`, `FireBall`, `Ring`, `Glow`), bắn mỗi ~100 ms khi vuốt thì thành nhấp nháy vòng trắng to bằng ô. Đổi sang `effect_collect_star` (7 hạt, size 0.5). Thêm knob `scale` cho từng binding vì art gốc nằm trong block có scale riêng.
+
+### Còn phải làm
+
+1. Chuyển `Cell.prefab` thành Prefab Variant của `OneLineBlock.prefab` — **đề nghị không làm**, xem mục dưới.
+2. Nhóm hạt của `effect_collect_star` bay chếch lên phải và nhạt dần về xám; nếu muốn bám màu ô thì phải sửa Color over Lifetime trong prefab `FX_effect_collect_star`.
+
+### Vì sao không nên biến Cell thành Prefab Variant
+
+| | GameObject | ParticleSystem | dòng YAML |
+|---|---:|---:|---:|
+| `OneLineBlock.prefab` | 66 | 40 | 95.805 |
+| `Cell.prefab` | 18 | 0 | 1.634 |
+
+Pool 100 ô sẽ thành 6.600 GameObject và 4.000 ParticleSystem sống cùng lúc, kèm Canvas, Text Legacy, BoxCollider2D nhân lên 100 lần — trái mục 1 và 2 của `CLAUDE.md`.
+
+Lợi ích thật của variant là art sửa bản gốc thì lan sang. Đã kiểm: cả 6 sprite trong `Cell.prefab` đều trỏ đúng asset mà `OneLineBlock` dùng, animator cũng dùng chung `TutorialFillSquareAnimations.controller`, nên sửa file art vẫn lan sang bình thường. Chỉ đổi cấu trúc hierarchy mới không lan.
+
+### Bẫy môi trường
+
+`EditorApplication.update` + `Step()` là cách duy nhất chạy được play mode khi Editor mất focus, nhưng nếu callback ném exception thì Unity **không tự gỡ đăng ký**: nó ném lại mỗi tick và nghẽn luôn plugin MCP, phải recompile mới thoát. Luôn resolve object trong `Main()`, bọc thân callback trong try/catch và gỡ callback ở nhánh lỗi.
+
+Cũng đừng đo `ParticleSystem.particleCount` từ editor tick — đọc ra 0 kể cả với hiệu ứng đang chạy thật. Muốn biết hiệu ứng có bắn hay không thì nhìn ảnh Game View.
 
 ### Giả định cần Producer xác nhận
 
