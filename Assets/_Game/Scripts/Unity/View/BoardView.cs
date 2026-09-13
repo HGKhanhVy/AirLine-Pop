@@ -24,6 +24,9 @@ namespace ASTeams.SingleLine.Unity
         [Tooltip("Plays the board's particles. Leave empty to run the board without them.")]
         [SerializeField] private PooledEffectPlayer effectPlayer;
 
+        [Tooltip("How long the path may sit still before the square it stopped on starts bouncing.")]
+        [SerializeField, Min(0f)] private float headCueDelay = 0.35f;
+
         [Tooltip("How long a square takes to take its new colour. GDD 10 asks for 80 to 120 ms.")]
         [SerializeField, Min(0f)] private float fillDuration = 0.1f;
 
@@ -31,6 +34,7 @@ namespace ASTeams.SingleLine.Unity
         private IEffectPlayer effects;
         private BoardPalette palette;
         private int headCell = LevelData.NoCell;
+        private float headCueAt;
 
         // Only the handful of squares mid-fill are ticked, so a ninety cell board costs
         // nothing while the player is not drawing.
@@ -73,12 +77,34 @@ namespace ASTeams.SingleLine.Unity
                 }
             }
 
+            AdvanceHeadCue();
         }
 
         /// <summary>
-        /// Moves the block's own end marker to the square the path stops on. The marker is
-        /// part of the reference art and simply rides the head; nothing is timed or faded
-        /// here beyond the ring's own breathing.
+        /// Keeps the stopped square beating. One float compare per frame when there is
+        /// nothing to do, and the beats run back to back so it reads as a bounce rather
+        /// than a blink.
+        /// </summary>
+        private void AdvanceHeadCue()
+        {
+            if (headCell == LevelData.NoCell || Time.time < headCueAt)
+            {
+                return;
+            }
+
+            CellView view = GetView(headCell);
+            headCueAt = Time.time + CellView.HeadCueLength;
+
+            if (view != null)
+            {
+                view.PlayHeadCue();
+            }
+        }
+
+        /// <summary>
+        /// Names the square the path stops on and keeps its beat going. The beats run back
+        /// to back so the square reads as bouncing; a short wait first means a player still
+        /// drawing never sees it, only one who has actually stopped.
         /// </summary>
         public void SetHeadCue(int cellIndex, bool isEnabled)
         {
@@ -93,17 +119,11 @@ namespace ASTeams.SingleLine.Unity
 
             if (previous != null)
             {
-                previous.HideEndMarker();
+                previous.StopHeadCue();
             }
 
             headCell = wanted;
-            CellView current = GetView(headCell);
-
-            if (current != null)
-            {
-                current.ShowEndMarker(palette.Path);
-                Track(current);
-            }
+            headCueAt = Time.time + headCueDelay;
         }
 
         /// <summary>
