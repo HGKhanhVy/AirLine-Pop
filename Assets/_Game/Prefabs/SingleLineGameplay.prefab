@@ -5393,6 +5393,8 @@ MonoBehaviour:
   cellPrefab: {fileID: 558483796533426618, guid: 4eb777606de3ed74dbc981b013a4ce06, type: 3}
   poolCapacity: 100
   effectPlayer: {fileID: 7412008451236500013}
+  headIdleDelay: 1.2
+  headIdleInterval: 1.6
   fillDuration: 0.1
 --- !u!114 &8889330386574363939
 MonoBehaviour:

@@ -434,6 +434,10 @@ namespace ASTeams.SingleLine.Unity
             pathView.Rebuild(session);
             pathView.SetColor(ColorForState(session.State));
             boardView.SetStartCue(session.Length <= 1 && session.State != PathState.Won);
+
+            // The start square already has a cue of its own, so the head only takes over
+            // once the player has drawn at least one step and the board is still theirs.
+            boardView.SetHeadCue(head, session.Length > 1 && session.State == PathState.Drawing);
             OnPathChanged?.Invoke();
             eventChannel?.RaiseProgressChanged(session.Length, session.Level.ActiveCellCount);
         }

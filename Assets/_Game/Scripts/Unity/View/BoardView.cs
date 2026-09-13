@@ -24,11 +24,21 @@ namespace ASTeams.SingleLine.Unity
         [Tooltip("Plays the board's particles. Leave empty to run the board without them.")]
         [SerializeField] private PooledEffectPlayer effectPlayer;
 
+        [Header("Head cue")]
+        [Tooltip("How long the path may sit still before the square it stopped on lights up.")]
+        [SerializeField, Min(0.1f)] private float headIdleDelay = 1.2f;
+
+        [Tooltip("Gap between one reminder and the next while the player keeps waiting.")]
+        [SerializeField, Min(0.2f)] private float headIdleInterval = 1.6f;
+
         [Tooltip("How long a square takes to take its new colour. GDD 10 asks for 80 to 120 ms.")]
         [SerializeField, Min(0f)] private float fillDuration = 0.1f;
 
         private CellViewPool pool;
         private IEffectPlayer effects;
+        private int headCell = LevelData.NoCell;
+        private bool isHeadCueEnabled;
+        private float headCueAt;
 
         // Only the handful of squares mid-fill are ticked, so a ninety cell board costs
         // nothing while the player is not drawing.
@@ -69,6 +79,48 @@ namespace ASTeams.SingleLine.Unity
                     filling.RemoveAt(i);
                 }
             }
+
+            AdvanceHeadCue();
+        }
+
+        /// <summary>
+        /// Lights up the square the path stopped on once the player has been still for a
+        /// moment, then keeps reminding them. Two float compares per frame while drawing,
+        /// nothing at all otherwise.
+        /// </summary>
+        private void AdvanceHeadCue()
+        {
+            if (!isHeadCueEnabled || Time.time < headCueAt)
+            {
+                return;
+            }
+
+            CellView view = GetView(headCell);
+            headCueAt = Time.time + headIdleInterval;
+
+            if (view != null)
+            {
+                view.PlayHeadCue();
+            }
+        }
+
+        /// <summary>
+        /// Names the square the path currently ends on. Moving the head restarts the wait,
+        /// so the cue only ever fires at a player who has actually stopped.
+        /// </summary>
+        public void SetHeadCue(int cellIndex, bool isEnabled)
+        {
+            if (headCell != cellIndex)
+            {
+                headCell = cellIndex;
+                headCueAt = Time.time + headIdleDelay;
+            }
+            else if (!isHeadCueEnabled && isEnabled)
+            {
+                headCueAt = Time.time + headIdleDelay;
+            }
+
+            isHeadCueEnabled = isEnabled;
         }
 
         public void Build(LevelData newLevel)
@@ -77,6 +129,8 @@ namespace ASTeams.SingleLine.Unity
             pool.ReleaseAll();
             filling.Clear();
             effects?.StopAll();
+            headCell = LevelData.NoCell;
+            isHeadCueEnabled = false;
 
             if (level == null)
             {

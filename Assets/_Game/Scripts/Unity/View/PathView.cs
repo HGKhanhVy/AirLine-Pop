@@ -60,14 +60,14 @@ namespace ASTeams.SingleLine.Unity
             line.textureMode = LineTextureMode.Stretch;
             line.alignment = LineAlignment.View;
             line.sharedMaterial = sharedMaterial;
-            line.sortingOrder = BoardSortingOrder.Path;
+            line.sortingOrder = BoardSortingOrder.Connector;
             line.positionCount = 0;
 
             if (spark != null)
             {
-                // Above the line so the pulse reads as light on top of it, still below the
-                // win dust.
-                spark.sortingOrder = BoardSortingOrder.Path + 5;
+                // Above the squares, unlike the connector: the spark is the light at the
+                // player's fingertip and has to stay visible as it crosses a square.
+                spark.sortingOrder = BoardSortingOrder.Spark;
                 spark.transform.localScale = Vector3.one * sparkSize;
                 spark.enabled = false;
             }

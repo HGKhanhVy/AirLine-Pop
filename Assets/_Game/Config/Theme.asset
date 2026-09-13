@@ -18,7 +18,7 @@ MonoBehaviour:
   visited: {r: 0.788, g: 0.2, b: 0.2, a: 1}
   head: {r: 0.941, g: 0.29, b: 0.259, a: 1}
   start: {r: 0.871, g: 0.231, b: 0.231, a: 1}
-  path: {r: 1, g: 0.541, b: 0.361, a: 1}
+  path: {r: 0.737, g: 0.075, b: 0.141, a: 1}
   won: {r: 1, g: 0.761, b: 0.302, a: 1}
   stuck: {r: 1, g: 0.42, b: 0.42, a: 1}
   startDot: {r: 1, g: 1, b: 1, a: 1}

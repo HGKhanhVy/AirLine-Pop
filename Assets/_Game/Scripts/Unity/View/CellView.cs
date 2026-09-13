@@ -34,6 +34,11 @@ namespace ASTeams.SingleLine.Unity
 
         private static readonly int StartIdleState = Animator.StringToHash("StartIdle");
 
+        // The reference game's own "this block is selected" beat: the light under the face
+        // flares from 0.12 to 0.8 alpha and fades out while the face squashes and springs
+        // back. Reused as it is, which is why the cell keeps the block's child names.
+        private static readonly int SelectionState = Animator.StringToHash("TutorialFillSquareSelection");
+
         public int CellIndex { get; private set; }
 
         public Color Color => spriteRenderer.color;
@@ -84,6 +89,7 @@ namespace ASTeams.SingleLine.Unity
             fillLeft = 0f;
             connectLeft = 0f;
             HideStartCue();
+            ResetAnimatedVisual();
 
             if (useConfiguredSprite && sprite != null)
             {
@@ -241,6 +247,41 @@ namespace ASTeams.SingleLine.Unity
             }
 
             return running;
+        }
+
+        /// <summary>
+        /// The beat played on the square the path has stopped on: it lights up and shakes,
+        /// so a player who pauses can see where they left off. Driven from the board rather
+        /// than timed here, because which square is the head changes as the path grows.
+        /// </summary>
+        public void PlayHeadCue()
+        {
+            if (blockAnimator == null)
+            {
+                return;
+            }
+
+            blockAnimator.enabled = true;
+            blockAnimator.Play(SelectionState, 0, 0f);
+        }
+
+        /// <summary>
+        /// Puts back whatever a half finished clip left behind. A square can be released to
+        /// the pool mid flare, and the next level would then open with a lit square in a
+        /// place nothing is happening. Evaluating the clip's last frame costs one update and
+        /// needs no second copy of the values it touches.
+        /// </summary>
+        private void ResetAnimatedVisual()
+        {
+            if (blockAnimator == null)
+            {
+                return;
+            }
+
+            blockAnimator.enabled = true;
+            blockAnimator.Play(SelectionState, 0, 1f);
+            blockAnimator.Update(0f);
+            blockAnimator.enabled = false;
         }
 
         /// <summary>
