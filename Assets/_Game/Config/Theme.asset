@@ -27,13 +27,13 @@ MonoBehaviour:
   startTone: {x: 0.85, y: 0.88}
   visitedTone: {x: 0.73, y: 0.87}
   headTone: {x: 0.42, y: 0.98}
-  pathTone: {x: 0.72, y: 0.99}
+  pathTone: {x: 0.62, y: 0.95}
   wonTone: {x: 0.35, y: 1}
   startDot: {r: 1, g: 1, b: 1, a: 1}
   startHalo: {r: 0.78, g: 0.8, b: 0.84, a: 1}
   cellSize: 1
   cellSpacing: 0.12
-  pathWidth: 0.45
+  pathWidth: 0.4
   boardMargin: 0.15
   boardHeightFraction: 0.62
   maxCellWidthFraction: 0.18

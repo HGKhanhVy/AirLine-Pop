@@ -21,6 +21,13 @@ namespace ASTeams.SingleLine.Unity
         /// <summary>The pipe joining the squares, drawn across their faces.</summary>
         public const int Connector = 15;
 
+        /// <summary>
+        /// The start and end dots. They sit above the pipe: the pipe runs through the
+        /// middle of a square and would otherwise bury the very marks that say where the
+        /// path begins and where it has stopped.
+        /// </summary>
+        public const int Marker = 18;
+
         /// <summary>The light riding the head of the path, above the pipe.</summary>
         public const int Spark = 20;
 

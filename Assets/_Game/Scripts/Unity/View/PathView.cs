@@ -55,8 +55,11 @@ namespace ASTeams.SingleLine.Unity
         private void Awake()
         {
             line.useWorldSpace = true;
-            line.numCornerVertices = 4;
-            line.numCapVertices = 4;
+
+            // Ten a corner and ten a cap, the same as the Line the reference block ships
+            // with. Four left visible facets on every turn of the path.
+            line.numCornerVertices = 10;
+            line.numCapVertices = 10;
             line.textureMode = LineTextureMode.Stretch;
             line.alignment = LineAlignment.View;
             line.sharedMaterial = sharedMaterial;

@@ -10,6 +10,16 @@ namespace ASTeams.SingleLine.Unity
         [SerializeField] private Transform animatedInner;
         [SerializeField] private SpriteRenderer startDotRenderer;
         [SerializeField] private SpriteRenderer startPulseRenderer;
+
+        [Tooltip("The block's own end marker, Fill/EndBlockDot. Shown on the square the " +
+                 "path currently stops on.")]
+        [SerializeField] private GameObject endMarker;
+
+        [Tooltip("The dot inside that marker.")]
+        [SerializeField] private SpriteRenderer endDotRenderer;
+
+        [Tooltip("The ring inside that marker, so it can breathe the way the start one does.")]
+        [SerializeField] private SpriteRenderer endPulseRenderer;
         [SerializeField] private bool useConfiguredSprite;
         [SerializeField, Min(0.01f)] private float sourceVisualSize = 0.9f;
         [SerializeField, Min(0.1f)] private float startPulseDuration = 1.1f;
@@ -34,11 +44,6 @@ namespace ASTeams.SingleLine.Unity
 
         private static readonly int StartIdleState = Animator.StringToHash("StartIdle");
 
-        // The reference game's own "this block is selected" beat: the light under the face
-        // flares from 0.12 to 0.8 alpha and fades out while the face squashes and springs
-        // back. Reused as it is, which is why the cell keeps the block's child names.
-        private static readonly int SelectionState = Animator.StringToHash("TutorialFillSquareSelection");
-
         public int CellIndex { get; private set; }
 
         public Color Color => spriteRenderer.color;
@@ -56,6 +61,9 @@ namespace ASTeams.SingleLine.Unity
         private Vector3 startDotBaseScale;
         private Vector3 startPulseBaseScale;
         private Color startHaloColor = Color.white;
+        private Vector3 endPulseBaseScale;
+        private bool isEndMarkerVisible;
+        private float endCueElapsed;
 
         private void Awake()
         {
@@ -69,9 +77,36 @@ namespace ASTeams.SingleLine.Unity
                 startPulseBaseScale = startPulseRenderer.transform.localScale;
             }
 
+            if (endPulseRenderer != null)
+            {
+                endPulseBaseScale = endPulseRenderer.transform.localScale;
+            }
+
+            if (endMarker != null)
+            {
+                endMarker.SetActive(false);
+            }
+
+            // The block art numbers its own children from 0 to 10, which leaves every dot
+            // under the path. The marks saying where the path starts and where it stopped
+            // have to stay readable, so they move above it here rather than by editing the
+            // shared art.
+            LiftAboveConnector(startDotRenderer);
+            LiftAboveConnector(startPulseRenderer);
+            LiftAboveConnector(endDotRenderer);
+            LiftAboveConnector(endPulseRenderer);
+
             if (blockAnimator != null)
             {
                 blockAnimator.enabled = false;
+            }
+        }
+
+        private static void LiftAboveConnector(SpriteRenderer renderer)
+        {
+            if (renderer != null)
+            {
+                renderer.sortingOrder = BoardSortingOrder.Marker;
             }
         }
 
@@ -88,7 +123,8 @@ namespace ASTeams.SingleLine.Unity
             transform.localScale = Vector3.one;
             fillLeft = 0f;
             connectLeft = 0f;
-            HideStartCue();
+            ClearStartMarker();
+            HideEndMarker();
             ResetAnimatedVisual();
 
             if (useConfiguredSprite && sprite != null)
@@ -176,6 +212,11 @@ namespace ASTeams.SingleLine.Unity
             }
         }
 
+        /// <summary>
+        /// Stops the waiting cue but leaves the dot where it is. In the reference game the
+        /// start square wears its dot for the whole level; only the ring and the reminder
+        /// shake belong to the moment before the player has touched anything.
+        /// </summary>
         public void HideStartCue()
         {
             isStartCueVisible = false;
@@ -184,7 +225,6 @@ namespace ASTeams.SingleLine.Unity
 
             if (startDotRenderer != null)
             {
-                startDotRenderer.enabled = false;
                 startDotRenderer.transform.localScale = startDotBaseScale;
             }
 
@@ -202,6 +242,17 @@ namespace ASTeams.SingleLine.Unity
             if (animatedInner != null)
             {
                 animatedInner.localRotation = Quaternion.identity;
+            }
+        }
+
+        /// <summary>Takes the dot away too, for a square going back to the pool.</summary>
+        public void ClearStartMarker()
+        {
+            HideStartCue();
+
+            if (startDotRenderer != null)
+            {
+                startDotRenderer.enabled = false;
             }
         }
 
@@ -246,23 +297,54 @@ namespace ASTeams.SingleLine.Unity
                 AdvanceStartCue(deltaTime);
             }
 
+            if (isEndMarkerVisible)
+            {
+                AdvanceEndMarker(deltaTime);
+                running = true;
+            }
+
             return running;
         }
 
         /// <summary>
-        /// The beat played on the square the path has stopped on: it lights up and shakes,
-        /// so a player who pauses can see where they left off. Driven from the board rather
-        /// than timed here, because which square is the head changes as the path grows.
+        /// Marks the square the path stops on, using the block's own end marker: the same
+        /// dot and ring the start square wears, which the art ships switched off. Nothing
+        /// here is invented; the ring only breathes, the way the start one does.
         /// </summary>
-        public void PlayHeadCue()
+        public void ShowEndMarker(Color haloColor)
         {
-            if (blockAnimator == null)
+            if (endMarker == null)
             {
                 return;
             }
 
-            blockAnimator.enabled = true;
-            blockAnimator.Play(SelectionState, 0, 0f);
+            if (!isEndMarkerVisible)
+            {
+                endCueElapsed = 0f;
+                endMarker.SetActive(true);
+                isEndMarkerVisible = true;
+            }
+
+            if (endPulseRenderer != null)
+            {
+                endPulseRenderer.color = haloColor;
+            }
+        }
+
+        public void HideEndMarker()
+        {
+            if (endMarker == null || !isEndMarkerVisible)
+            {
+                return;
+            }
+
+            isEndMarkerVisible = false;
+            endMarker.SetActive(false);
+
+            if (endPulseRenderer != null)
+            {
+                endPulseRenderer.transform.localScale = endPulseBaseScale;
+            }
         }
 
         /// <summary>
@@ -307,6 +389,26 @@ namespace ASTeams.SingleLine.Unity
             float ease = 1f - (1f - r) * (1f - r);
             float settled = Mathf.Lerp(1f - connectPressDepth, 1f, ease);
             return settled + connectPopHeight * Mathf.Sin(r * Mathf.PI);
+        }
+
+        /// <summary>Breathes the end marker's ring on the same rhythm as the start one.</summary>
+        private void AdvanceEndMarker(float deltaTime)
+        {
+            if (endPulseRenderer == null)
+            {
+                return;
+            }
+
+            endCueElapsed += deltaTime;
+
+            float t = startPulseDuration <= 0f
+                ? 0f
+                : Mathf.Repeat(endCueElapsed, startPulseDuration) / startPulseDuration;
+            float scale = Mathf.Lerp(1f, startPulseScale, t);
+            float alpha = startPulseAlpha * (1f - t);
+            endPulseRenderer.transform.localScale = endPulseBaseScale * scale;
+            Color halo = endPulseRenderer.color;
+            endPulseRenderer.color = new Color(halo.r, halo.g, halo.b, alpha);
         }
 
         private void AdvanceStartCue(float deltaTime)

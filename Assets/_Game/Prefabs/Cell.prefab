@@ -51,6 +51,9 @@ MonoBehaviour:
   animatedInner: {fileID: 2921090556763031983}
   startDotRenderer: {fileID: 3059332338238582196}
   startPulseRenderer: {fileID: 3059285818567129376}
+  endMarker: {fileID: 2918693931446455078}
+  endDotRenderer: {fileID: 3059700954382752089}
+  endPulseRenderer: {fileID: 3059803168656891185}
   useConfiguredSprite: 0
   sourceVisualSize: 0.8979282
   startPulseDuration: 1.1
