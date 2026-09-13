@@ -46,6 +46,11 @@ namespace ASTeams.SingleLine.Unity
         [SerializeField] private Vector2 pathTone = new Vector2(0.72f, 0.99f);
         [SerializeField] private Vector2 wonTone = new Vector2(0.35f, 1f);
 
+        [Tooltip("How solid the drawn line is over the squares it crosses. The line " +
+                 "material adds light rather than painting over it, so this is the only " +
+                 "knob that makes the pipe read softer without changing its colour.")]
+        [SerializeField, Range(0.2f, 1f)] private float pathAlpha = 0.78f;
+
         [Header("Start cue")]
         [Tooltip("The dot in the middle of the start block.")]
         [SerializeField] private Color startDot = Color.white;
@@ -99,7 +104,7 @@ namespace ASTeams.SingleLine.Unity
         {
             if (!usesLevelHue)
             {
-                return new BoardPalette(cell, start, visited, head, path, won, stuck);
+                return new BoardPalette(cell, start, visited, head, Fade(path), won, stuck);
             }
 
             float hue = Mathf.Repeat(firstLevelHue + (levelNumber - 1) * hueStepPerLevel, 360f) / 360f;
@@ -109,9 +114,16 @@ namespace ASTeams.SingleLine.Unity
                 FromHue(hue, startTone),
                 FromHue(hue, visitedTone),
                 FromHue(hue, headTone),
-                FromHue(hue, pathTone),
+                Fade(FromHue(hue, pathTone)),
                 FromHue(hue, wonTone),
                 stuck);
+        }
+
+        /// <summary>Softens the drawn line so it sits on the squares instead of burning over them.</summary>
+        private Color Fade(Color colour)
+        {
+            colour.a = pathAlpha;
+            return colour;
         }
 
         private static Color FromHue(float hue, Vector2 tone)
