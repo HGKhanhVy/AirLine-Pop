@@ -36,6 +36,7 @@ namespace ASTeams.SingleLine.Unity
 
         private CellViewPool pool;
         private IEffectPlayer effects;
+        private BoardPalette palette;
         private int headCell = LevelData.NoCell;
         private bool isHeadCueEnabled;
         private float headCueAt;
@@ -66,6 +67,7 @@ namespace ASTeams.SingleLine.Unity
             }
 
             effects = effectPlayer;
+            palette = theme.GetPalette(1);
             pool = new CellViewPool(new PrefabCellViewFactory(cellPrefab, cellRoot));
             pool.Prewarm(poolCapacity);
         }
@@ -122,6 +124,18 @@ namespace ASTeams.SingleLine.Unity
 
             isHeadCueEnabled = isEnabled;
         }
+
+        /// <summary>
+        /// The colours this level is drawn with. Set before <see cref="Build"/>, since
+        /// every square takes its colour as it is placed.
+        /// </summary>
+        public void SetPalette(BoardPalette newPalette)
+        {
+            palette = newPalette;
+        }
+
+        /// <summary>The colours in use, so the path and the feedback match the squares.</summary>
+        public BoardPalette Palette => palette;
 
         public void Build(LevelData newLevel)
         {
@@ -247,7 +261,7 @@ namespace ASTeams.SingleLine.Unity
             if (isVisible)
             {
                 view.ShowStartCue(theme.StartDot, theme.StartHalo);
-                effects?.Play(GameplayEffect.StartCue, GetCellWorldPosition(level.FixedStart), theme.Start);
+                effects?.Play(GameplayEffect.StartCue, GetCellWorldPosition(level.FixedStart), palette.Start);
                 Track(view);
             }
             else
@@ -373,15 +387,15 @@ namespace ASTeams.SingleLine.Unity
         {
             if (head)
             {
-                return theme.Head;
+                return palette.Head;
             }
 
             if (visited)
             {
-                return theme.Visited;
+                return palette.Visited;
             }
 
-            return level.HasFixedStart && level.FixedStart == index ? theme.Start : theme.Cell;
+            return level.HasFixedStart && level.FixedStart == index ? palette.Start : palette.Cell;
         }
     }
 }

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using ASTeams.SingleLine.Core;
+using ASTeams.SingleLine.Data;
 using UnityEngine;
 
 namespace ASTeams.SingleLine.Unity
@@ -214,6 +215,16 @@ namespace ASTeams.SingleLine.Unity
             CancelRewind();
             session = new PathSession(level);
             session.OnStateChanged += HandleSessionStateChanged;
+
+            // Each level has its own hue in the reference game, so the palette is settled
+            // before a single square is placed. The number comes from the id rather than
+            // from a second argument, so nothing calling Load has to know about colour.
+            if (!CampaignLevelAddress.TryGetLevelNumber(level.Id, out int levelNumber))
+            {
+                levelNumber = 1;
+            }
+
+            boardView.SetPalette(theme.GetPalette(levelNumber));
 
             boardFeedback.Stop();
             boardView.Build(level);
@@ -444,16 +455,18 @@ namespace ASTeams.SingleLine.Unity
 
         private Color ColorForState(PathState state)
         {
+            BoardPalette palette = boardView.Palette;
+
             switch (state)
             {
                 case PathState.Won:
-                    return theme.Won;
+                    return palette.Won;
 
                 case PathState.Stuck:
-                    return theme.Stuck;
+                    return palette.Stuck;
 
                 default:
-                    return theme.Path;
+                    return palette.Path;
             }
         }
     }

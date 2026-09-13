@@ -26,6 +26,26 @@ namespace ASTeams.SingleLine.Unity
         [SerializeField] private Color won = new Color(0.29f, 0.72f, 0.44f);
         [SerializeField] private Color stuck = new Color(0.85f, 0.22f, 0.25f);
 
+        [Header("Level hue")]
+        [Tooltip("Derive the board colours from a hue that moves on with every level, the " +
+                 "way the reference game does. Turn off to use the fixed colours above.")]
+        [SerializeField] private bool usesLevelHue = true;
+
+        [Tooltip("Hue of level 1, in degrees. Measured off the reference game: 65 is the " +
+                 "yellow green it opens on.")]
+        [SerializeField, Range(0f, 360f)] private float firstLevelHue = 65f;
+
+        [Tooltip("How far the hue turns per level. 22 degrees takes about sixteen levels " +
+                 "to come back around, which is the rhythm the reference plays at.")]
+        [SerializeField, Range(1f, 90f)] private float hueStepPerLevel = 22f;
+
+        [Tooltip("Saturation and value of each role, sampled from the reference game.")]
+        [SerializeField] private Vector2 startTone = new Vector2(0.82f, 0.82f);
+        [SerializeField] private Vector2 visitedTone = new Vector2(0.73f, 0.87f);
+        [SerializeField] private Vector2 headTone = new Vector2(0.42f, 0.98f);
+        [SerializeField] private Vector2 pathTone = new Vector2(0.72f, 0.99f);
+        [SerializeField] private Vector2 wonTone = new Vector2(0.35f, 1f);
+
         [Header("Start cue")]
         [Tooltip("The dot in the middle of the start block.")]
         [SerializeField] private Color startDot = Color.white;
@@ -69,6 +89,35 @@ namespace ASTeams.SingleLine.Unity
         public Color StartDot => startDot;
 
         public Color StartHalo => startHalo;
+
+        /// <summary>
+        /// The colours for one level. Unvisited squares and the two warning states keep
+        /// the values set above: a square nobody has touched reads the same on every
+        /// level, and a warning that blended into the level's own hue would not warn.
+        /// </summary>
+        public BoardPalette GetPalette(int levelNumber)
+        {
+            if (!usesLevelHue)
+            {
+                return new BoardPalette(cell, start, visited, head, path, won, stuck);
+            }
+
+            float hue = Mathf.Repeat(firstLevelHue + (levelNumber - 1) * hueStepPerLevel, 360f) / 360f;
+
+            return new BoardPalette(
+                cell,
+                FromHue(hue, startTone),
+                FromHue(hue, visitedTone),
+                FromHue(hue, headTone),
+                FromHue(hue, pathTone),
+                FromHue(hue, wonTone),
+                stuck);
+        }
+
+        private static Color FromHue(float hue, Vector2 tone)
+        {
+            return Color.HSVToRGB(hue, tone.x, tone.y);
+        }
 
         public float CellSize => cellSize;
 

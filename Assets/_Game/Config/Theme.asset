@@ -13,19 +13,27 @@ MonoBehaviour:
   m_Name: Theme
   m_EditorClassIdentifier: 
   cellSprite: {fileID: 21300000, guid: 3106d55e00064814ea81ad8dc5b39b47, type: 3}
-  background: {r: 0, g: 0, b: 0, a: 1}
-  cell: {r: 0.29, g: 0.329, b: 0.384, a: 1}
+  background: {r: 0, g: 0.0157, b: 0.059, a: 1}
+  cell: {r: 0.169, g: 0.173, b: 0.192, a: 1}
   visited: {r: 0.788, g: 0.2, b: 0.2, a: 1}
   head: {r: 0.941, g: 0.29, b: 0.259, a: 1}
   start: {r: 0.871, g: 0.231, b: 0.231, a: 1}
   path: {r: 0.737, g: 0.075, b: 0.141, a: 1}
   won: {r: 1, g: 0.761, b: 0.302, a: 1}
   stuck: {r: 1, g: 0.42, b: 0.42, a: 1}
+  usesLevelHue: 1
+  firstLevelHue: 65
+  hueStepPerLevel: 22
+  startTone: {x: 0.82, y: 0.82}
+  visitedTone: {x: 0.73, y: 0.87}
+  headTone: {x: 0.42, y: 0.98}
+  pathTone: {x: 0.72, y: 0.99}
+  wonTone: {x: 0.35, y: 1}
   startDot: {r: 1, g: 1, b: 1, a: 1}
   startHalo: {r: 0.78, g: 0.8, b: 0.84, a: 1}
   cellSize: 1
   cellSpacing: 0.12
-  pathWidth: 0.3
+  pathWidth: 0.45
   boardMargin: 0.15
   boardHeightFraction: 0.62
   maxCellWidthFraction: 0.18
