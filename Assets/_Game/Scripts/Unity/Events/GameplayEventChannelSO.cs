@@ -35,6 +35,19 @@ namespace ASTeams.SingleLine.Unity
         /// </summary>
         public event Action<int, long> OnCoinsAwarded;
 
+        /// <summary>
+        /// What the player owns now. Raised when a level opens and again after every
+        /// award, so a coin label never has to read the save file to know where to start.
+        /// </summary>
+        public event Action<long> OnCoinBalanceChanged;
+
+        /// <summary>
+        /// True while the board is rewinding itself after Restart. Undo and Restart have
+        /// to be dead for that stretch, and a screen with no reference into gameplay has
+        /// no other way to know.
+        /// </summary>
+        public event Action<bool> OnRewindChanged;
+
         /// <summary>Asks the board to take back one step.</summary>
         public event Action OnUndoRequested;
 
@@ -49,6 +62,14 @@ namespace ASTeams.SingleLine.Unity
         /// Continue button when the board is set not to advance on its own.
         /// </summary>
         public event Action OnNextLevelRequested;
+
+        /// <summary>
+        /// Asks the board to say again where it stands. A screen that opens after the
+        /// level did missed every event that described it; rather than keep a copy of the
+        /// state on this asset, which would make it a save file, the board simply repeats
+        /// itself on request.
+        /// </summary>
+        public event Action OnSnapshotRequested;
 
         public void RaiseLevelLoaded(int levelNumber, string levelId, int difficulty, int totalCells)
         {
@@ -90,6 +111,16 @@ namespace ASTeams.SingleLine.Unity
             OnCoinsAwarded?.Invoke(amount, balance);
         }
 
+        public void RaiseCoinBalanceChanged(long balance)
+        {
+            OnCoinBalanceChanged?.Invoke(balance);
+        }
+
+        public void RaiseRewindChanged(bool isRewinding)
+        {
+            OnRewindChanged?.Invoke(isRewinding);
+        }
+
         public void RequestUndo()
         {
             OnUndoRequested?.Invoke();
@@ -108,6 +139,11 @@ namespace ASTeams.SingleLine.Unity
         public void RequestNextLevel()
         {
             OnNextLevelRequested?.Invoke();
+        }
+
+        public void RequestSnapshot()
+        {
+            OnSnapshotRequested?.Invoke();
         }
     }
 }

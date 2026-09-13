@@ -286,6 +286,7 @@ namespace ASTeams.SingleLine.Unity
             }
 
             rewind = StartCoroutine(RewindRoutine());
+            eventChannel?.RaiseRewindChanged(true);
         }
 
         private IEnumerator RewindRoutine()
@@ -305,6 +306,7 @@ namespace ASTeams.SingleLine.Unity
 
             rewind = null;
             boardInput.AcceptsInput = true;
+            eventChannel?.RaiseRewindChanged(false);
             Refresh();
         }
 
@@ -318,6 +320,7 @@ namespace ASTeams.SingleLine.Unity
             StopCoroutine(rewind);
             rewind = null;
             boardInput.AcceptsInput = true;
+            eventChannel?.RaiseRewindChanged(false);
         }
 
         private void HandleCellEntered(int cell)

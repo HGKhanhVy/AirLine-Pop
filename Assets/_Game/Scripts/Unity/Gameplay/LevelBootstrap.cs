@@ -166,6 +166,7 @@ namespace ASTeams.SingleLine.Unity
             eventChannel.OnRestartRequested += Restart;
             eventChannel.OnHintRequested += HandleHintRequested;
             eventChannel.OnNextLevelRequested += HandleNextLevelRequested;
+            eventChannel.OnSnapshotRequested += PublishSnapshot;
         }
 
         private void Unsubscribe()
@@ -179,6 +180,7 @@ namespace ASTeams.SingleLine.Unity
             eventChannel.OnRestartRequested -= Restart;
             eventChannel.OnHintRequested -= HandleHintRequested;
             eventChannel.OnNextLevelRequested -= HandleNextLevelRequested;
+            eventChannel.OnSnapshotRequested -= PublishSnapshot;
         }
 
         /// <summary>
@@ -223,6 +225,7 @@ namespace ASTeams.SingleLine.Unity
             if (granted > 0)
             {
                 eventChannel?.RaiseCoinsAwarded(granted, rewardService.Balance);
+                PublishBalance();
             }
         }
 
@@ -245,7 +248,45 @@ namespace ASTeams.SingleLine.Unity
             gameStateService?.ResetToPlaying();
             eventChannel?.RaiseLevelLoaded(currentLevelNumber, currentLevelId, level.Difficulty,
                 level.ActiveCellCount);
+
+            // A fresh board already stands on its start square, so the count starts at one.
+            // Without this a label would read zero until the player's first move.
+            eventChannel?.RaiseProgressChanged(controller.Progress, controller.Target);
+            PublishBalance();
             return true;
+        }
+
+        /// <summary>
+        /// Says again everything a screen would have heard had it been listening when the
+        /// level opened. Nothing is stored to answer this; the board reads its own state.
+        /// </summary>
+        private void PublishSnapshot()
+        {
+            if (eventChannel == null)
+            {
+                return;
+            }
+
+            LevelData level = controller.Level;
+
+            if (level != null)
+            {
+                eventChannel.RaiseLevelLoaded(currentLevelNumber, currentLevelId, level.Difficulty,
+                    level.ActiveCellCount);
+                eventChannel.RaiseProgressChanged(controller.Progress, controller.Target);
+                eventChannel.RaiseStateChanged(controller.State, controller.State);
+            }
+
+            eventChannel.RaiseRewindChanged(controller.IsRewinding);
+            PublishBalance();
+        }
+
+        private void PublishBalance()
+        {
+            if (eventChannel != null && rewardService != null)
+            {
+                eventChannel.RaiseCoinBalanceChanged(rewardService.Balance);
+            }
         }
 
         public bool TryLoadLevelNumber(int levelNumber)
