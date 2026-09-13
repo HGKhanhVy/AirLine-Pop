@@ -5517,8 +5517,10 @@ MonoBehaviour:
   gameStateService: {fileID: 0}
   levelConfig: {fileID: 11400000, guid: da175ddc371ebbe2a5e8c953fac630bd, type: 2}
   levelService: {fileID: 0}
+  resultHandler: {fileID: 0}
   vibration: {fileID: 0}
   fallbackLevelNumber: 1
+  advancesAutomatically: 1
   delayAfterWin: 0.9
 --- !u!114 &1808359818743480302
 MonoBehaviour:

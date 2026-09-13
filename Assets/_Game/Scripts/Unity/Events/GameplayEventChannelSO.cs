@@ -29,6 +29,12 @@ namespace ASTeams.SingleLine.Unity
         public event Action<HintResult> OnHintResolved;
         public event Action<int, string> OnLevelWon;
 
+        /// <summary>
+        /// Coins paid for finishing a level, with the balance they landed in. Already
+        /// saved by the time this fires, so a screen may animate at its own pace.
+        /// </summary>
+        public event Action<int, long> OnCoinsAwarded;
+
         /// <summary>Asks the board to take back one step.</summary>
         public event Action OnUndoRequested;
 
@@ -37,6 +43,12 @@ namespace ASTeams.SingleLine.Unity
 
         /// <summary>Asks the board for a hint.</summary>
         public event Action OnHintRequested;
+
+        /// <summary>
+        /// Asks the board to open the next level. A win screen raises this from its
+        /// Continue button when the board is set not to advance on its own.
+        /// </summary>
+        public event Action OnNextLevelRequested;
 
         public void RaiseLevelLoaded(int levelNumber, string levelId, int difficulty, int totalCells)
         {
@@ -73,6 +85,11 @@ namespace ASTeams.SingleLine.Unity
             OnLevelWon?.Invoke(levelNumber, levelId);
         }
 
+        public void RaiseCoinsAwarded(int amount, long balance)
+        {
+            OnCoinsAwarded?.Invoke(amount, balance);
+        }
+
         public void RequestUndo()
         {
             OnUndoRequested?.Invoke();
@@ -86,6 +103,11 @@ namespace ASTeams.SingleLine.Unity
         public void RequestHint()
         {
             OnHintRequested?.Invoke();
+        }
+
+        public void RequestNextLevel()
+        {
+            OnNextLevelRequested?.Invoke();
         }
     }
 }

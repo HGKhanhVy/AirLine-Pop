@@ -554,6 +554,10 @@ PrefabInstance:
       propertyPath: levelService
       value: 
       objectReference: {fileID: 179250736}
+    - target: {fileID: 9012579929334294763, guid: 852ad357637e34b48b3a56cdefc316c7, type: 3}
+      propertyPath: resultHandler
+      value: 
+      objectReference: {fileID: 2179427401396754943}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

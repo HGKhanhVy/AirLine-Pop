@@ -6,6 +6,7 @@ using ASTeams.Base.Gameplay;
 using ASTeams.Base.Level;
 using ASTeams.SingleLine.Core;
 using ASTeams.SingleLine.Data;
+using ASTeams.Template;
 using UnityEngine;
 
 namespace ASTeams.SingleLine.Unity
@@ -28,6 +29,10 @@ namespace ASTeams.SingleLine.Unity
                  "level number gameplay is on.")]
         [SerializeField] private LevelService levelService;
 
+        [Tooltip("From the Gameplay scene services. Only needed so the reward is not paid " +
+                 "twice when the template's own win flow is switched on.")]
+        [SerializeField] private GameResultHandleService resultHandler;
+
         [Tooltip("From the persistent MANAGERS prefab. Leave empty to play without haptics.")]
         [SerializeField] private VibrationController vibration;
 
@@ -35,12 +40,17 @@ namespace ASTeams.SingleLine.Unity
         [SerializeField, Range(1, CampaignLevelAddress.MaxLevelNumber)]
         private int fallbackLevelNumber = 1;
 
+        [Tooltip("Open the next level on its own after a win. Turn this off when a win " +
+                 "screen owns the moment; it then raises RequestNextLevel on the channel.")]
+        [SerializeField] private bool advancesAutomatically = true;
+
         [Tooltip("Seconds to admire a finished board before the next one opens.")]
         [SerializeField, Min(0f)] private float delayAfterWin = 0.9f;
 
         private ILevelRepository repository;
         private ILevelProgressStore progressStore;
         private ILevelCatalog levelCatalog;
+        private ILevelRewardService rewardService;
         private string currentLevelId;
         private int currentLevelNumber;
         private Coroutine advanceRoutine;
@@ -65,6 +75,7 @@ namespace ASTeams.SingleLine.Unity
             Subscribe();
             levelCatalog = CreateCatalog();
             progressStore = CreateProgressStore();
+            rewardService = CreateRewardService();
 
             int savedLevel = Mathf.Clamp(progressStore.CurrentLevelNumber, 1, LastLevelNumber);
 
@@ -150,6 +161,7 @@ namespace ASTeams.SingleLine.Unity
             eventChannel.OnUndoRequested += Undo;
             eventChannel.OnRestartRequested += Restart;
             eventChannel.OnHintRequested += HandleHintRequested;
+            eventChannel.OnNextLevelRequested += HandleNextLevelRequested;
         }
 
         private void Unsubscribe()
@@ -162,6 +174,7 @@ namespace ASTeams.SingleLine.Unity
             eventChannel.OnUndoRequested -= Undo;
             eventChannel.OnRestartRequested -= Restart;
             eventChannel.OnHintRequested -= HandleHintRequested;
+            eventChannel.OnNextLevelRequested -= HandleNextLevelRequested;
         }
 
         /// <summary>
@@ -172,6 +185,41 @@ namespace ASTeams.SingleLine.Unity
         private void HandleHintRequested()
         {
             _ = HintAsync();
+        }
+
+        /// <summary>
+        /// A win screen's Continue button. Cancels any pending automatic advance first, so
+        /// pressing Continue during the delay opens the next level once, not twice.
+        /// </summary>
+        private void HandleNextLevelRequested()
+        {
+            CancelAdvance();
+            LoadNext();
+        }
+
+        /// <summary>
+        /// Nothing is paid when no profile is loaded, which is the case for a scene opened
+        /// on its own; the board still plays, it just has no economy behind it.
+        /// </summary>
+        private ILevelRewardService CreateRewardService()
+        {
+            UserProfileController profile = UserProfileController.Instance;
+            return profile == null ? null : new ProfileLevelRewardService(profile, resultHandler);
+        }
+
+        private void AwardLevelReward()
+        {
+            if (rewardService == null)
+            {
+                return;
+            }
+
+            int granted = rewardService.AwardLevelReward();
+
+            if (granted > 0)
+            {
+                eventChannel?.RaiseCoinsAwarded(granted, rewardService.Balance);
+            }
         }
 
         public bool TryLoad(string levelId)
@@ -243,6 +291,12 @@ namespace ASTeams.SingleLine.Unity
             string completedLevelId = currentLevelId;
             int savedNextLevel = Mathf.Min(LastLevelNumber, completedLevel + 1);
 
+            // A finished level is a checkpoint, so both halves of it are written now:
+            // the coins first, then the position. Paying after the state change rather
+            // than after an animation means a player who kills the app on the win screen
+            // still keeps what they earned.
+            AwardLevelReward();
+
             if (progressStore != null && progressStore.CurrentLevelNumber < savedNextLevel)
             {
                 progressStore.SaveCurrentLevel(savedNextLevel);
@@ -253,7 +307,7 @@ namespace ASTeams.SingleLine.Unity
 
             CancelAdvance();
 
-            if (completedLevel < LastLevelNumber)
+            if (advancesAutomatically && completedLevel < LastLevelNumber)
             {
                 advanceRoutine = StartCoroutine(AdvanceRoutine());
             }
