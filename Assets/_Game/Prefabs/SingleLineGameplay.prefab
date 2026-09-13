@@ -5765,6 +5765,7 @@ GameObject:
   - component: {fileID: 9012579929334294763}
   - component: {fileID: 1808359818743480302}
   - component: {fileID: 5369164027905730817}
+  - component: {fileID: 4891353049534945424}
   m_Layer: 0
   m_Name: Game
   m_TagString: Untagged
@@ -5846,7 +5847,7 @@ MonoBehaviour:
   resultHandler: {fileID: 0}
   vibration: {fileID: 0}
   fallbackLevelNumber: 1
-  advancesAutomatically: 1
+  advancesAutomatically: 0
   delayAfterWin: 0.9
 --- !u!114 &1808359818743480302
 MonoBehaviour:
@@ -5874,3 +5875,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   eventChannel: {fileID: 11400000, guid: 7f6b6f31b313d014cb64b5732166e4d2, type: 2}
+--- !u!114 &4891353049534945424
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9161449699214583546}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9ccc2c3e71530e45ad55a97b9f8a9ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  eventChannel: {fileID: 11400000, guid: 7f6b6f31b313d014cb64b5732166e4d2, type: 2}
+  showDelay: 0.9
