@@ -44,6 +44,10 @@ namespace ASTeams.SingleLine.Unity
 
         private static readonly int SelectionState = Animator.StringToHash("TutorialFillSquareSelection");
 
+        // Fades the goal marker in from nothing and pops it: alpha 0 to 1 in 0.08 s, scale
+        // 0.38 to 0.6 and back. The reference plays it the moment a level is finished.
+        private static readonly int StarState = Animator.StringToHash("TutorialFillSquareStar");
+
         public int CellIndex { get; private set; }
 
         public Color Color => spriteRenderer.color;
@@ -56,6 +60,7 @@ namespace ASTeams.SingleLine.Unity
         private float fillLeft;
         private float connectLeft;
         private bool isStartCueVisible;
+        private bool isGoalRevealing;
         private float cueElapsed;
         private float nextIdleAnimationTime;
         private Vector3 startDotBaseScale;
@@ -316,40 +321,27 @@ namespace ASTeams.SingleLine.Unity
         }
 
         /// <summary>
-        /// Shows the star this level has to finish on. It is the block's own marker, left
-        /// switched off by the art, and it simply sits there: the square underneath still
-        /// changes colour as the path arrives, which is what says the goal has been met.
+        /// Reveals the star on the square that finished the level. The marker and the clip
+        /// that brings it in are both the reference block's own, left switched off until
+        /// the path is actually complete.
         /// </summary>
-        public void ShowGoalMarker(Color tint)
+        public void PlayGoalReveal()
         {
-            if (goalMarker == null)
+            if (goalMarker == null || blockAnimator == null)
             {
                 return;
             }
 
             goalMarker.SetActive(true);
-            Tint(goalStarRenderer, tint);
-
-            // The marker ships with a filled disc behind the star. Both in one colour turns
-            // the star into a plain circle, and the reference shows a star, so the disc is
-            // left out and the star carries the mark on its own.
-            if (goalHaloRenderer != null)
-            {
-                goalHaloRenderer.enabled = false;
-            }
-        }
-
-        /// <summary>Recolours a marker part without touching the alpha the art chose.</summary>
-        private static void Tint(SpriteRenderer renderer, Color tint)
-        {
-            if (renderer != null)
-            {
-                renderer.color = new Color(tint.r, tint.g, tint.b, renderer.color.a);
-            }
+            blockAnimator.enabled = true;
+            blockAnimator.Play(StarState, 0, 0f);
+            isGoalRevealing = true;
         }
 
         public void HideGoalMarker()
         {
+            isGoalRevealing = false;
+
             if (goalMarker != null)
             {
                 goalMarker.SetActive(false);
@@ -366,6 +358,14 @@ namespace ASTeams.SingleLine.Unity
 
         public void StopHeadCue()
         {
+            // The winning square starts its star on the same frame the path stops being
+            // drawn. Resetting the animator here would cut the pop off before its first
+            // frame, so the square that just won keeps its clip.
+            if (isGoalRevealing)
+            {
+                return;
+            }
+
             ResetAnimatedVisual();
         }
 

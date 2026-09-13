@@ -102,6 +102,21 @@ namespace ASTeams.SingleLine.Unity
         }
 
         /// <summary>
+        /// Puts the star on the square that finished the level. Called once, on the win,
+        /// so the mark reads as the reward for a complete path rather than a hint that was
+        /// there all along.
+        /// </summary>
+        public void RevealGoal(int cellIndex)
+        {
+            CellView view = GetView(cellIndex);
+
+            if (view != null)
+            {
+                view.PlayGoalReveal();
+            }
+        }
+
+        /// <summary>
         /// Names the square the path stops on and keeps its beat going. The beats run back
         /// to back so the square reads as bouncing; a short wait first means a player still
         /// drawing never sees it, only one who has actually stopped.
@@ -199,13 +214,6 @@ namespace ASTeams.SingleLine.Unity
                 CellView view = pool.Acquire();
                 view.Place(index, GetCellLocalPosition(index), theme.CellSize, sprite, ColorFor(index, visited: false, head: false));
                 cellsByIndex[index] = view;
-
-                if (level.HasFixedEnd && level.FixedEnd == index)
-                {
-                    // Pale and neutral while the square is still cold, the way the
-                    // reference marks it; the square's own colour says the rest.
-                    view.ShowGoalMarker(theme.StartHalo);
-                }
             }
         }
 

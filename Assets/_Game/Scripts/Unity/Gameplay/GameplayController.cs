@@ -370,6 +370,7 @@ namespace ASTeams.SingleLine.Unity
             if (current == PathState.Won)
             {
                 boardInput.AcceptsInput = false;
+                boardView.RevealGoal(session.Head);
                 boardFeedback.PlayWin(CollectPath());
                 haptics?.Play(HapticStrength.Medium);
             }
