@@ -25,6 +25,11 @@ namespace ASTeams.SingleLine.Unity
         [Tooltip("Tint the burst with the colour of what it came from, when the prefab allows it.")]
         [SerializeField] private bool isTinted = true;
 
+        [Tooltip("Resizes the whole burst. The reference art was authored inside a block " +
+                 "that carried its own scale, so a lifted effect usually needs one number " +
+                 "here rather than an edit to the art.")]
+        [SerializeField, Min(0.01f)] private float scale = 1f;
+
         public GameplayEffect Effect => effect;
 
         public ParticleSystem Prefab => prefab;
@@ -32,5 +37,7 @@ namespace ASTeams.SingleLine.Unity
         public int Capacity => capacity;
 
         public bool IsTinted => isTinted;
+
+        public float Scale => scale;
     }
 }

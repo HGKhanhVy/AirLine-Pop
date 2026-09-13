@@ -43,7 +43,7 @@ namespace ASTeams.SingleLine.Unity
                 }
 
                 pools.Add(binding.Effect, new EffectPool(
-                    binding.Prefab, effectRoot, binding.Capacity, binding.IsTinted));
+                    binding.Prefab, effectRoot, binding.Capacity, binding.IsTinted, binding.Scale));
             }
         }
 

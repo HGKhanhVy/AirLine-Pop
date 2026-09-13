@@ -17,7 +17,7 @@ namespace ASTeams.SingleLine.Unity
         private readonly bool isTinted;
         private int next;
 
-        public EffectPool(ParticleSystem prefab, Transform parent, int capacity, bool isTinted)
+        public EffectPool(ParticleSystem prefab, Transform parent, int capacity, bool isTinted, float scale)
         {
             this.isTinted = isTinted;
             instances = new List<ParticleSystem>(capacity);
@@ -25,6 +25,7 @@ namespace ASTeams.SingleLine.Unity
             for (int i = 0; i < capacity; i++)
             {
                 ParticleSystem instance = Object.Instantiate(prefab, parent);
+                instance.transform.localScale *= scale;
                 instance.gameObject.SetActive(true);
                 instance.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
                 instances.Add(instance);

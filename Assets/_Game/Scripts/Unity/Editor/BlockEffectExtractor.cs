@@ -33,20 +33,29 @@ namespace ASTeams.SingleLine.Unity.EditorTools
         /// </summary>
         private static readonly KeyValuePair<GameplayEffect, string>[] Mapping =
         {
-            new KeyValuePair<GameplayEffect, string>(GameplayEffect.CellConnected, "effect_jump"),
+            new KeyValuePair<GameplayEffect, string>(GameplayEffect.CellConnected, "effect_collect_star"),
             new KeyValuePair<GameplayEffect, string>(GameplayEffect.CellRejected, "effect_dust"),
+            new KeyValuePair<GameplayEffect, string>(GameplayEffect.PathCompleted, "effect_jump_success"),
             new KeyValuePair<GameplayEffect, string>(GameplayEffect.StartCue, "glow")
         };
 
         [MenuItem("Tools/Single Line/Extract Block Effects")]
-        public static void Extract()
+        public static void ExtractFromMenu()
+        {
+            EditorUtility.DisplayDialog("Single Line", Extract(), "OK");
+        }
+
+        /// <summary>
+        /// Does the work and returns what happened. Kept apart from the menu item so a
+        /// batch run or an automated check can call it without a modal dialog appearing.
+        /// </summary>
+        public static string Extract()
         {
             var source = AssetDatabase.LoadAssetAtPath<GameObject>(SourcePrefab);
 
             if (source == null)
             {
-                EditorUtility.DisplayDialog("Single Line", "Cannot find " + SourcePrefab, "OK");
-                return;
+                return "Cannot find " + SourcePrefab;
             }
 
             if (!Directory.Exists(OutputFolder))
@@ -99,7 +108,7 @@ namespace ASTeams.SingleLine.Unity.EditorTools
                 report += "\nNot found: " + string.Join(", ", missing);
             }
 
-            EditorUtility.DisplayDialog("Single Line", report, "OK");
+            return report;
         }
 
         private static ParticleSystem SaveAsPrefab(GameObject child, string name)
