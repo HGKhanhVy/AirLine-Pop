@@ -1,5 +1,4 @@
 using ASTeams.SingleLine.Core;
-using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -7,24 +6,30 @@ using UnityEngine.UI;
 namespace ASTeams.SingleLine.Unity
 {
     /// <summary>
-    /// The gameplay screen furniture: which level this is, how much of it is covered, and
-    /// the two things a player reaches for when a path goes wrong.
+    /// The gameplay screen furniture: which level this is, how much of it is covered, what
+    /// the player owns, and the three things they reach for when a path goes wrong.
     ///
-    /// The UI never touches the rules. It reads what the controller reports and calls the
-    /// two public actions the controller exposes, so nothing here can put the board into a
-    /// state the core would not allow.
+    /// It holds no reference into gameplay at all. Everything it shows arrives on the
+    /// event channel and everything it does leaves on the same asset as a request, which
+    /// is the contract the UI side is built against. That also means this file is the
+    /// worked example: a screen that needs more than this needs another event, not a
+    /// reference to the board.
+    ///
+    /// Because a screen can be enabled long after the level opened, it asks the board to
+    /// repeat itself on enable rather than assuming it heard the opening events.
     /// </summary>
     public sealed class GameplayHud : MonoBehaviour
     {
-        [SerializeField] private LevelBootstrap bootstrap;
-        [SerializeField] private GameplayController controller;
-
-        [Tooltip("Buttons ask the board through this asset, so nothing here holds the board itself.")]
+        [Tooltip("The one asset gameplay publishes on. Nothing else is needed.")]
         [SerializeField] private GameplayEventChannelSO eventChannel;
+
+        [Tooltip("Optional. Without it the labels fall back to plain formats.")]
+        [SerializeField] private TextCatalogSO textCatalog;
 
         [Header("Readouts")]
         [SerializeField] private TMP_Text levelLabel;
         [SerializeField] private TMP_Text progressLabel;
+        [SerializeField] private TMP_Text coinLabel;
 
         [Header("Buttons")]
         [SerializeField] private Button hintButton;
@@ -35,115 +40,164 @@ namespace ASTeams.SingleLine.Unity
         [SerializeField] private CanvasGroup stuckBanner;
         [SerializeField, Min(0.01f)] private float bannerFadeSpeed = 4f;
 
-        private float bannerTarget;
+        private ITextCatalog texts;
+        private int levelNumber;
+        private int visitedCells;
+        private int totalCells;
+        private PathState state = PathState.Ready;
+        private bool isRewinding;
+        private bool isHintPending;
         private HintResult hintResult;
-        private ITextCatalog textCatalog;
-        private Tweener bannerFade;
+        private float bannerAlpha;
+        private float bannerTarget;
 
-        public void Initialize(ITextCatalog catalog)
+        private void Awake()
         {
-            textCatalog = catalog;
-            Refresh();
-        }
-
-        private void EnsureBannerFade()
-        {
-            if (stuckBanner != null && (bannerFade == null || !bannerFade.IsActive()))
-            {
-                bannerFade = stuckBanner.DOFade(stuckBanner.alpha, 1f)
-                    .SetEase(Ease.Linear).SetUpdate(true).SetAutoKill(false).Pause();
-            }
+            texts = textCatalog == null ? null : new TextCatalog(textCatalog.Entries);
         }
 
         private void OnEnable()
         {
-            EnsureBannerFade();
-            controller.OnStateChanged += HandleStateChanged;
-            controller.OnPathChanged += Refresh;
-            controller.OnHintReady += HandleHintReady;
-            controller.OnHintChanged += Refresh;
+            if (eventChannel == null)
+            {
+                return;
+            }
 
-            hintButton.onClick.AddListener(OnHintClicked);
-            undoButton.onClick.AddListener(OnUndoClicked);
-            restartButton.onClick.AddListener(OnRestartClicked);
+            eventChannel.OnLevelLoaded += HandleLevelLoaded;
+            eventChannel.OnProgressChanged += HandleProgressChanged;
+            eventChannel.OnStateChanged += HandleStateChanged;
+            eventChannel.OnHintStarted += HandleHintStarted;
+            eventChannel.OnHintResolved += HandleHintResolved;
+            eventChannel.OnRewindChanged += HandleRewindChanged;
+            eventChannel.OnCoinBalanceChanged += HandleCoinBalanceChanged;
 
-            HandleStateChanged(controller.State, controller.State);
+            AddListener(hintButton, OnHintClicked);
+            AddListener(undoButton, OnUndoClicked);
+            AddListener(restartButton, OnRestartClicked);
+
+            // Catches up with a board that opened before this screen did.
+            eventChannel.RequestSnapshot();
+            Refresh();
         }
 
         private void OnDisable()
         {
-            bannerFade?.Pause();
-            controller.OnStateChanged -= HandleStateChanged;
-            controller.OnPathChanged -= Refresh;
-            controller.OnHintReady -= HandleHintReady;
-            controller.OnHintChanged -= Refresh;
+            if (eventChannel == null)
+            {
+                return;
+            }
 
-            hintButton.onClick.RemoveListener(OnHintClicked);
-            undoButton.onClick.RemoveListener(OnUndoClicked);
-            restartButton.onClick.RemoveListener(OnRestartClicked);
+            eventChannel.OnLevelLoaded -= HandleLevelLoaded;
+            eventChannel.OnProgressChanged -= HandleProgressChanged;
+            eventChannel.OnStateChanged -= HandleStateChanged;
+            eventChannel.OnHintStarted -= HandleHintStarted;
+            eventChannel.OnHintResolved -= HandleHintResolved;
+            eventChannel.OnRewindChanged -= HandleRewindChanged;
+            eventChannel.OnCoinBalanceChanged -= HandleCoinBalanceChanged;
+
+            RemoveListener(hintButton, OnHintClicked);
+            RemoveListener(undoButton, OnUndoClicked);
+            RemoveListener(restartButton, OnRestartClicked);
         }
 
-        private void OnDestroy()
+        private void Update()
         {
-            bannerFade?.Kill();
+            if (stuckBanner == null || Mathf.Approximately(bannerAlpha, bannerTarget))
+            {
+                return;
+            }
+
+            bannerAlpha = Mathf.MoveTowards(bannerAlpha, bannerTarget, bannerFadeSpeed * Time.deltaTime);
+            stuckBanner.alpha = bannerAlpha;
+        }
+
+        private void HandleLevelLoaded(int number, string levelId, int difficulty, int cells)
+        {
+            levelNumber = number;
+            totalCells = cells;
+            visitedCells = 0;
+            hintResult = null;
+            isHintPending = false;
+            Refresh();
+        }
+
+        private void HandleProgressChanged(int visited, int total)
+        {
+            visitedCells = visited;
+            totalCells = total;
+            Refresh();
         }
 
         private void HandleStateChanged(PathState previous, PathState current)
         {
+            state = current;
             bannerTarget = current == PathState.Stuck ? 1f : 0f;
-            if (bannerFade != null)
-            {
-                float duration = Mathf.Max(0.01f, Mathf.Abs(stuckBanner.alpha - bannerTarget) / bannerFadeSpeed);
-                bannerFade.ChangeEndValue(bannerTarget, duration, true).Restart();
-            }
-
             Refresh();
+        }
+
+        private void HandleHintStarted()
+        {
+            isHintPending = true;
+            Refresh();
+        }
+
+        private void HandleHintResolved(HintResult result)
+        {
+            isHintPending = false;
+            hintResult = result;
+            Refresh();
+        }
+
+        private void HandleRewindChanged(bool rewinding)
+        {
+            isRewinding = rewinding;
+            Refresh();
+        }
+
+        private void HandleCoinBalanceChanged(long balance)
+        {
+            if (coinLabel != null)
+            {
+                coinLabel.SetText("{0}", balance);
+            }
         }
 
         private void Refresh()
         {
             if (levelLabel != null)
             {
-                // The player counts levels, not chapter slots, so the label reads the
-                // campaign number the save file also holds.
-                levelLabel.SetText(
-                    textCatalog == null ? "{0}" : textCatalog.Get("gameplay.level"),
-                    bootstrap == null ? 0 : bootstrap.CurrentLevelNumber);
+                levelLabel.SetText(Format("gameplay.level", "LEVEL {0}"), levelNumber);
             }
 
-            if (progressLabel != null && textCatalog != null)
+            if (progressLabel != null)
             {
                 if (hintResult != null && hintResult.NeedsRestart)
                 {
-                    progressLabel.SetText(textCatalog.Get("gameplay.hint.restart"));
+                    progressLabel.SetText(Format("gameplay.hint.restart", "Try Restart"));
                 }
                 else if (hintResult != null && hintResult.BacktrackCount > 0)
                 {
-                    progressLabel.SetText(textCatalog.Get("gameplay.hint.undo"), hintResult.BacktrackCount);
+                    progressLabel.SetText(Format("gameplay.hint.undo", "Undo {0} steps"), hintResult.BacktrackCount);
                 }
                 else
                 {
-                    progressLabel.SetText(textCatalog.Get("gameplay.progress"), controller.Progress, controller.Target);
+                    progressLabel.SetText(Format("gameplay.progress", "{0} / {1}"), visitedCells, totalCells);
                 }
             }
 
-            // Both are meaningless on an untouched board and on a finished one, and
-            // neither may fire while the path is already rewinding.
-            bool hasPath = controller.Progress > 1 && controller.State != PathState.Won;
-            undoButton.interactable = hasPath && !controller.IsRewinding;
-            restartButton.interactable = hasPath && !controller.IsRewinding;
+            // Both are meaningless on an untouched board and on a finished one, and neither
+            // may fire while the path is already rewinding.
+            bool hasPath = visitedCells > 1 && state != PathState.Won;
+            SetInteractable(undoButton, hasPath && !isRewinding);
+            SetInteractable(restartButton, hasPath && !isRewinding);
 
             // A hint works from the very first cell, unlike undo which needs a step to take back.
-            hintButton.interactable = controller.Progress > 0
-                                      && controller.State != PathState.Won
-                                      && !controller.IsRewinding
-                                      && !controller.IsHintPending;
+            SetInteractable(hintButton, visitedCells > 0 && state != PathState.Won && !isRewinding && !isHintPending);
         }
 
-        private void HandleHintReady(HintResult result)
+        private string Format(string key, string fallback)
         {
-            hintResult = result;
-            Refresh();
+            return texts == null ? fallback : texts.Get(key);
         }
 
         private void OnHintClicked()
@@ -159,6 +213,30 @@ namespace ASTeams.SingleLine.Unity
         private void OnRestartClicked()
         {
             eventChannel?.RequestRestart();
+        }
+
+        private static void AddListener(Button button, UnityEngine.Events.UnityAction action)
+        {
+            if (button != null)
+            {
+                button.onClick.AddListener(action);
+            }
+        }
+
+        private static void RemoveListener(Button button, UnityEngine.Events.UnityAction action)
+        {
+            if (button != null)
+            {
+                button.onClick.RemoveListener(action);
+            }
+        }
+
+        private static void SetInteractable(Button button, bool value)
+        {
+            if (button != null)
+            {
+                button.interactable = value;
+            }
         }
     }
 }
