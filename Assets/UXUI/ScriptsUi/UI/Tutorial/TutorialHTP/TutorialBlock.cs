@@ -62,6 +62,8 @@ public class TutorialBlock : MonoBehaviour
             // Reset scale
             ResetScale();
         }
+
+     
     }
 
 

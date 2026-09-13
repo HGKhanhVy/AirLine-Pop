@@ -44,9 +44,9 @@ public class HomeController : MonoBehaviour
     {
         UiManager.Instance.HideSetting();
     }
-    
+
     public void OpenTutorial()
     {
-        UiManager.Instance.ShowTutorial();
+        UiManager.Instance.ShowTutorialHTP();
     }
 }

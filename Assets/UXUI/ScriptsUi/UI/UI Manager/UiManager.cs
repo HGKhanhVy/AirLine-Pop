@@ -12,6 +12,8 @@ public class UiManager : MonoBehaviour
     public Uibase uiTheme;
     public Uibase uiTutorial;
     public TutorialHand tutorialHand;
+    public TutorialUndoCanvas uiTutorialUndo;
+    [SerializeField] private TutorialHandUndo tutorialHandUndo;
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -52,19 +54,31 @@ public class UiManager : MonoBehaviour
     {
         uiTheme.Hide();
     }
-
-    public void ShowTutorial()
+    public void ShowTutorialUndo()
     {
+        uiTutorial.Hide();
+        uiTutorialUndo.Show();
+
+        tutorialHandUndo.Play();
+    }
+    public void HideTutorialUndo()
+    {
+        uiTutorialUndo.Hide();
+    }
+    public void ShowTutorialHTP()
+    {
+        uiTutorialUndo.Hide();
         uiTutorial.Show();
         tutorialHand.Play();
     }
 
-    public void HideTutorial()
+    public void HideTutorialhtp()
     {
         tutorialHand.StopTutorial();
         uiTutorial.Hide();
     }
 
+    
     [Button]
     private void TestShowUiSetting()
     {
@@ -81,4 +95,6 @@ public class UiManager : MonoBehaviour
     {
         uiTutorial.Show();
     }
+
+
 }
