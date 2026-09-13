@@ -34,7 +34,6 @@
         34
       ],
       "fixedStart": 5,
-      "fixedEnd": 12,
       "solution": [
         5,
         4,
@@ -94,7 +93,6 @@
         33
       ],
       "fixedStart": 4,
-      "fixedEnd": 23,
       "solution": [
         4,
         10,
@@ -155,7 +153,6 @@
         28
       ],
       "fixedStart": 0,
-      "fixedEnd": 2,
       "solution": [
         0,
         6,
@@ -183,7 +180,7 @@
         3,
         2
       ],
-      "difficulty": 3
+      "difficulty": 4
     },
     {
       "id": "ch07_004",
@@ -223,7 +220,6 @@
         22
       ],
       "fixedStart": 22,
-      "fixedEnd": 11,
       "solution": [
         22,
         23,
@@ -256,7 +252,7 @@
         17,
         11
       ],
-      "difficulty": 9
+      "difficulty": 6
     },
     {
       "id": "ch07_005",
@@ -291,7 +287,6 @@
         29
       ],
       "fixedStart": 6,
-      "fixedEnd": 29,
       "solution": [
         6,
         0,
@@ -354,7 +349,6 @@
         29
       ],
       "fixedStart": 27,
-      "fixedEnd": 3,
       "solution": [
         27,
         26,
@@ -382,7 +376,7 @@
         4,
         3
       ],
-      "difficulty": 3
+      "difficulty": 4
     },
     {
       "id": "ch07_007",
@@ -417,7 +411,6 @@
         29
       ],
       "fixedStart": 28,
-      "fixedEnd": 4,
       "solution": [
         28,
         29,
@@ -480,7 +473,6 @@
         28
       ],
       "fixedStart": 0,
-      "fixedEnd": 2,
       "solution": [
         0,
         6,
@@ -549,7 +541,6 @@
         7
       ],
       "fixedStart": 7,
-      "fixedEnd": 28,
       "solution": [
         7,
         1,
@@ -583,7 +574,7 @@
         34,
         28
       ],
-      "difficulty": 8
+      "difficulty": 9
     },
     {
       "id": "ch07_010",
@@ -618,7 +609,6 @@
         29
       ],
       "fixedStart": 3,
-      "fixedEnd": 29,
       "solution": [
         3,
         2,
@@ -681,7 +671,6 @@
         26
       ],
       "fixedStart": 26,
-      "fixedEnd": 24,
       "solution": [
         26,
         20,
@@ -709,7 +698,7 @@
         25,
         24
       ],
-      "difficulty": 8
+      "difficulty": 9
     },
     {
       "id": "ch07_012",
@@ -744,7 +733,6 @@
         29
       ],
       "fixedStart": 16,
-      "fixedEnd": 24,
       "solution": [
         16,
         22,
@@ -807,7 +795,6 @@
         29
       ],
       "fixedStart": 10,
-      "fixedEnd": 6,
       "solution": [
         10,
         4,
@@ -870,7 +857,6 @@
         29
       ],
       "fixedStart": 24,
-      "fixedEnd": 0,
       "solution": [
         24,
         18,
@@ -933,7 +919,6 @@
         28
       ],
       "fixedStart": 15,
-      "fixedEnd": 17,
       "solution": [
         15,
         21,
@@ -996,7 +981,6 @@
         29
       ],
       "fixedStart": 17,
-      "fixedEnd": 3,
       "solution": [
         17,
         11,
@@ -1024,7 +1008,7 @@
         9,
         3
       ],
-      "difficulty": 3
+      "difficulty": 4
     },
     {
       "id": "ch07_017",
@@ -1059,7 +1043,6 @@
         28
       ],
       "fixedStart": 15,
-      "fixedEnd": 17,
       "solution": [
         15,
         21,
@@ -1122,7 +1105,6 @@
         29
       ],
       "fixedStart": 24,
-      "fixedEnd": 0,
       "solution": [
         24,
         25,
@@ -1185,7 +1167,6 @@
         29
       ],
       "fixedStart": 17,
-      "fixedEnd": 3,
       "solution": [
         17,
         11,
@@ -1213,7 +1194,7 @@
         9,
         3
       ],
-      "difficulty": 3
+      "difficulty": 4
     },
     {
       "id": "ch07_020",
@@ -1242,7 +1223,6 @@
         28
       ],
       "fixedStart": 24,
-      "fixedEnd": 23,
       "solution": [
         24,
         18,
@@ -1293,7 +1273,6 @@
         29
       ],
       "fixedStart": 3,
-      "fixedEnd": 29,
       "solution": [
         3,
         2,
@@ -1344,7 +1323,6 @@
         29
       ],
       "fixedStart": 28,
-      "fixedEnd": 9,
       "solution": [
         28,
         29,
@@ -1394,7 +1372,6 @@
         23
       ],
       "fixedStart": 6,
-      "fixedEnd": 19,
       "solution": [
         6,
         7,
@@ -1415,7 +1392,7 @@
         18,
         19
       ],
-      "difficulty": 2
+      "difficulty": 3
     },
     {
       "id": "ch07_024",
@@ -1447,7 +1424,6 @@
         34
       ],
       "fixedStart": 10,
-      "fixedEnd": 28,
       "solution": [
         10,
         11,
@@ -1504,7 +1480,6 @@
         29
       ],
       "fixedStart": 18,
-      "fixedEnd": 5,
       "solution": [
         18,
         13,
@@ -1563,7 +1538,6 @@
         29
       ],
       "fixedStart": 24,
-      "fixedEnd": 6,
       "solution": [
         24,
         18,
@@ -1590,7 +1564,7 @@
         0,
         6
       ],
-      "difficulty": 7
+      "difficulty": 2
     },
     {
       "id": "ch07_027",
@@ -1620,7 +1594,6 @@
         29
       ],
       "fixedStart": 24,
-      "fixedEnd": 5,
       "solution": [
         24,
         25,
@@ -1677,7 +1650,6 @@
         34
       ],
       "fixedStart": 16,
-      "fixedEnd": 1,
       "solution": [
         16,
         15,
@@ -1704,7 +1676,7 @@
         8,
         1
       ],
-      "difficulty": 2
+      "difficulty": 3
     },
     {
       "id": "ch07_029",
@@ -1734,7 +1706,6 @@
         31
       ],
       "fixedStart": 0,
-      "fixedEnd": 5,
       "solution": [
         0,
         6,
@@ -1795,7 +1766,6 @@
         34
       ],
       "fixedStart": 10,
-      "fixedEnd": 1,
       "solution": [
         10,
         17,
@@ -1826,7 +1796,7 @@
         2,
         1
       ],
-      "difficulty": 9
+      "difficulty": 5
     }
   ]
 }

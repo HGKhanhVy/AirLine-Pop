@@ -61,7 +61,11 @@ namespace ASTeams.SingleLine.Import
             int start = ExtractStart(levelValues, payloadStart, payloadCount, form);
 
             int[] solution = null;
-            int end = LevelData.NoCell;
+
+            // No level pins where the path must finish. Covering every square is the whole
+            // rule, so the author's own finish stays a suggestion: any complete walk wins,
+            // and the star lands on whichever square the player actually ended on.
+            const int end = LevelData.NoCell;
             bool hasTutorial = false;
             bool startDisagreed = false;
 
@@ -81,12 +85,6 @@ namespace ASTeams.SingleLine.Import
                     // different but equally valid walk over the same cells.
                     startDisagreed = start != LevelData.NoCell && start != solution[0];
                     start = solution[0];
-
-                    // Where the author's own walk finishes is the level's goal square. Only
-                    // a shipped tutorial says that; a solution the solver had to invent ends
-                    // wherever its search happened to land, and pinning the goal there would
-                    // impose a rule nobody designed.
-                    end = solution[solution.Length - 1];
                 }
             }
 
