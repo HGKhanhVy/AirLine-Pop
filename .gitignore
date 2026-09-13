@@ -125,3 +125,7 @@ InitTestScene*.unity*
 /.agents/
 /.codex/
 /.codex-mcp-init.json
+
+# Tai lieu noi bo o thu muc goc, giu tren may chu khong day len GitHub.
+# Tai lieu di kem package trong Assets/ van theo repo nhu cu.
+/*.md
