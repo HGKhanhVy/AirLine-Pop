@@ -199,6 +199,13 @@ namespace ASTeams.SingleLine.Unity
                 CellView view = pool.Acquire();
                 view.Place(index, GetCellLocalPosition(index), theme.CellSize, sprite, ColorFor(index, visited: false, head: false));
                 cellsByIndex[index] = view;
+
+                if (level.HasFixedEnd && level.FixedEnd == index)
+                {
+                    // Pale and neutral while the square is still cold, the way the
+                    // reference marks it; the square's own colour says the rest.
+                    view.ShowGoalMarker(theme.StartHalo);
+                }
             }
         }
 

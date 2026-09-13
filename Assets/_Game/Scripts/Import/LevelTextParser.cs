@@ -61,6 +61,7 @@ namespace ASTeams.SingleLine.Import
             int start = ExtractStart(levelValues, payloadStart, payloadCount, form);
 
             int[] solution = null;
+            int end = LevelData.NoCell;
             bool hasTutorial = false;
             bool startDisagreed = false;
 
@@ -80,6 +81,12 @@ namespace ASTeams.SingleLine.Import
                     // different but equally valid walk over the same cells.
                     startDisagreed = start != LevelData.NoCell && start != solution[0];
                     start = solution[0];
+
+                    // Where the author's own walk finishes is the level's goal square. Only
+                    // a shipped tutorial says that; a solution the solver had to invent ends
+                    // wherever its search happened to land, and pinning the goal there would
+                    // impose a rule nobody designed.
+                    end = solution[solution.Length - 1];
                 }
             }
 
@@ -87,7 +94,7 @@ namespace ASTeams.SingleLine.Import
 
             try
             {
-                level = new LevelData(levelId, 1, new Grid(width, height), activeCells, start, LevelData.NoCell, solution);
+                level = new LevelData(levelId, 1, new Grid(width, height), activeCells, start, end, solution);
             }
             catch (ArgumentOutOfRangeException)
             {

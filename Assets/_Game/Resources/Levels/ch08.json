@@ -30,6 +30,7 @@
         27
       ],
       "fixedStart": 1,
+      "fixedEnd": 12,
       "solution": [
         1,
         7,
@@ -52,7 +53,7 @@
         18,
         12
       ],
-      "difficulty": 1
+      "difficulty": 2
     },
     {
       "id": "ch08_002",
@@ -88,6 +89,7 @@
         35
       ],
       "fixedStart": 5,
+      "fixedEnd": 0,
       "solution": [
         5,
         11,
@@ -147,6 +149,7 @@
         34
       ],
       "fixedStart": 3,
+      "fixedEnd": 9,
       "solution": [
         3,
         10,
@@ -170,7 +173,7 @@
         16,
         9
       ],
-      "difficulty": 3
+      "difficulty": 2
     },
     {
       "id": "ch08_004",
@@ -213,6 +216,7 @@
         48
       ],
       "fixedStart": 42,
+      "fixedEnd": 44,
       "solution": [
         42,
         43,
@@ -248,7 +252,7 @@
         45,
         44
       ],
-      "difficulty": 4
+      "difficulty": 10
     },
     {
       "id": "ch08_005",
@@ -285,6 +289,7 @@
         38
       ],
       "fixedStart": 38,
+      "fixedEnd": 6,
       "solution": [
         38,
         31,
@@ -314,7 +319,7 @@
         13,
         6
       ],
-      "difficulty": 4
+      "difficulty": 8
     },
     {
       "id": "ch08_006",
@@ -348,6 +353,7 @@
         27
       ],
       "fixedStart": 24,
+      "fixedEnd": 9,
       "solution": [
         24,
         23,
@@ -403,6 +409,7 @@
         23
       ],
       "fixedStart": 4,
+      "fixedEnd": 0,
       "solution": [
         4,
         3,
@@ -460,6 +467,7 @@
         33
       ],
       "fixedStart": 14,
+      "fixedEnd": 1,
       "solution": [
         14,
         13,
@@ -525,6 +533,7 @@
         47
       ],
       "fixedStart": 35,
+      "fixedEnd": 37,
       "solution": [
         35,
         36,
@@ -554,7 +563,7 @@
         38,
         37
       ],
-      "difficulty": 8
+      "difficulty": 9
     },
     {
       "id": "ch08_010",
@@ -590,6 +599,7 @@
         35
       ],
       "fixedStart": 30,
+      "fixedEnd": 35,
       "solution": [
         30,
         31,
@@ -654,6 +664,7 @@
         33
       ],
       "fixedStart": 5,
+      "fixedEnd": 28,
       "solution": [
         5,
         4,
@@ -682,7 +693,7 @@
         27,
         28
       ],
-      "difficulty": 5
+      "difficulty": 4
     },
     {
       "id": "ch08_012",
@@ -718,6 +729,7 @@
         29
       ],
       "fixedStart": 0,
+      "fixedEnd": 5,
       "solution": [
         0,
         1,
@@ -746,7 +758,7 @@
         4,
         5
       ],
-      "difficulty": 3
+      "difficulty": 9
     },
     {
       "id": "ch08_013",
@@ -781,6 +793,7 @@
         29
       ],
       "fixedStart": 11,
+      "fixedEnd": 29,
       "solution": [
         11,
         16,
@@ -838,6 +851,7 @@
         29
       ],
       "fixedStart": 29,
+      "fixedEnd": 0,
       "solution": [
         29,
         28,
@@ -860,7 +874,7 @@
         5,
         0
       ],
-      "difficulty": 2
+      "difficulty": 4
     },
     {
       "id": "ch08_015",
@@ -892,6 +906,7 @@
         28
       ],
       "fixedStart": 19,
+      "fixedEnd": 28,
       "solution": [
         19,
         14,
@@ -953,6 +968,7 @@
         41
       ],
       "fixedStart": 14,
+      "fixedEnd": 4,
       "solution": [
         14,
         21,
@@ -1019,6 +1035,7 @@
         0
       ],
       "fixedStart": 0,
+      "fixedEnd": 6,
       "solution": [
         0,
         1,
@@ -1083,6 +1100,7 @@
         35
       ],
       "fixedStart": 5,
+      "fixedEnd": 10,
       "solution": [
         5,
         11,
@@ -1110,7 +1128,7 @@
         9,
         10
       ],
-      "difficulty": 3
+      "difficulty": 2
     },
     {
       "id": "ch08_019",
@@ -1144,6 +1162,7 @@
         35
       ],
       "fixedStart": 0,
+      "fixedEnd": 5,
       "solution": [
         0,
         6,
@@ -1203,6 +1222,7 @@
         28
       ],
       "fixedStart": 5,
+      "fixedEnd": 3,
       "solution": [
         5,
         11,
@@ -1264,6 +1284,7 @@
         29
       ],
       "fixedStart": 24,
+      "fixedEnd": 15,
       "solution": [
         24,
         18,
@@ -1292,7 +1313,7 @@
         9,
         15
       ],
-      "difficulty": 5
+      "difficulty": 4
     },
     {
       "id": "ch08_022",
@@ -1328,6 +1349,7 @@
         29
       ],
       "fixedStart": 24,
+      "fixedEnd": 15,
       "solution": [
         24,
         18,
@@ -1356,7 +1378,7 @@
         9,
         15
       ],
-      "difficulty": 5
+      "difficulty": 4
     },
     {
       "id": "ch08_023",
@@ -1386,6 +1408,7 @@
         24
       ],
       "fixedStart": 18,
+      "fixedEnd": 1,
       "solution": [
         18,
         17,
@@ -1437,6 +1460,7 @@
         22
       ],
       "fixedStart": 22,
+      "fixedEnd": 0,
       "solution": [
         22,
         21,
@@ -1485,6 +1509,7 @@
         23
       ],
       "fixedStart": 0,
+      "fixedEnd": 4,
       "solution": [
         0,
         5,
@@ -1504,7 +1529,7 @@
         9,
         4
       ],
-      "difficulty": 2
+      "difficulty": 1
     },
     {
       "id": "ch08_026",
@@ -1533,6 +1558,7 @@
         23
       ],
       "fixedStart": 4,
+      "fixedEnd": 2,
       "solution": [
         4,
         3,
@@ -1554,7 +1580,7 @@
         1,
         2
       ],
-      "difficulty": 1
+      "difficulty": 5
     },
     {
       "id": "ch08_027",
@@ -1583,6 +1609,7 @@
         24
       ],
       "fixedStart": 0,
+      "fixedEnd": 10,
       "solution": [
         0,
         5,
@@ -1604,7 +1631,7 @@
         15,
         10
       ],
-      "difficulty": 1
+      "difficulty": 5
     },
     {
       "id": "ch08_028",
@@ -1632,6 +1659,7 @@
         24
       ],
       "fixedStart": 11,
+      "fixedEnd": 4,
       "solution": [
         11,
         16,
@@ -1652,7 +1680,7 @@
         9,
         4
       ],
-      "difficulty": 1
+      "difficulty": 4
     },
     {
       "id": "ch08_029",
@@ -1683,6 +1711,7 @@
         29
       ],
       "fixedStart": 0,
+      "fixedEnd": 4,
       "solution": [
         0,
         5,
@@ -1737,6 +1766,7 @@
         28
       ],
       "fixedStart": 21,
+      "fixedEnd": 1,
       "solution": [
         21,
         22,

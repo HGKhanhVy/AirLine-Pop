@@ -10,6 +10,14 @@ namespace ASTeams.SingleLine.Unity
         [SerializeField] private Transform animatedInner;
         [SerializeField] private SpriteRenderer startDotRenderer;
         [SerializeField] private SpriteRenderer startPulseRenderer;
+
+        [Tooltip("The block's own goal marker, Fill/EndBlockDot: the star this level has " +
+                 "to finish on. Shipped switched off.")]
+        [SerializeField] private GameObject goalMarker;
+
+        [SerializeField] private SpriteRenderer goalStarRenderer;
+
+        [SerializeField] private SpriteRenderer goalHaloRenderer;
         [SerializeField] private bool useConfiguredSprite;
         [SerializeField, Min(0.01f)] private float sourceVisualSize = 0.9f;
         [SerializeField, Min(0.1f)] private float startPulseDuration = 1.1f;
@@ -70,8 +78,21 @@ namespace ASTeams.SingleLine.Unity
             // under the path. The marks saying where the path starts and where it stopped
             // have to stay readable, so they move above it here rather than by editing the
             // shared art.
+            if (goalMarker != null)
+            {
+                goalMarker.SetActive(false);
+            }
+
             LiftAboveConnector(startDotRenderer);
             LiftAboveConnector(startPulseRenderer);
+            LiftAboveConnector(goalHaloRenderer);
+
+            // The star has to clear its own ring, not just the path: sharing one order
+            // leaves which of the two wins up to draw order, and the ring buried it.
+            if (goalStarRenderer != null)
+            {
+                goalStarRenderer.sortingOrder = BoardSortingOrder.Marker + 1;
+            }
 
             if (blockAnimator != null)
             {
@@ -101,6 +122,7 @@ namespace ASTeams.SingleLine.Unity
             fillLeft = 0f;
             connectLeft = 0f;
             ClearStartMarker();
+            HideGoalMarker();
             ResetAnimatedVisual();
 
             if (useConfiguredSprite && sprite != null)
@@ -291,6 +313,52 @@ namespace ASTeams.SingleLine.Unity
 
             blockAnimator.enabled = true;
             blockAnimator.Play(SelectionState, 0, 0f);
+        }
+
+        /// <summary>
+        /// Shows the star this level has to finish on. It is the block's own marker, left
+        /// switched off by the art, and it simply sits there: the square underneath still
+        /// changes colour as the path arrives, which is what says the goal has been met.
+        /// </summary>
+        public void ShowGoalMarker(Color tint)
+        {
+            if (goalMarker == null)
+            {
+                return;
+            }
+
+            goalMarker.SetActive(true);
+            Tint(goalStarRenderer, tint);
+
+            // The marker ships with a filled disc behind the star. Both in one colour turns
+            // the star into a plain circle, and the reference shows a star, so the disc is
+            // left out and the star carries the mark on its own.
+            if (goalHaloRenderer != null)
+            {
+                goalHaloRenderer.enabled = false;
+            }
+        }
+
+        /// <summary>Recolours a marker part without touching the alpha the art chose.</summary>
+        private static void Tint(SpriteRenderer renderer, Color tint)
+        {
+            if (renderer != null)
+            {
+                renderer.color = new Color(tint.r, tint.g, tint.b, renderer.color.a);
+            }
+        }
+
+        public void HideGoalMarker()
+        {
+            if (goalMarker != null)
+            {
+                goalMarker.SetActive(false);
+            }
+
+            if (goalHaloRenderer != null)
+            {
+                goalHaloRenderer.enabled = true;
+            }
         }
 
         /// <summary>Length of that beat, so the board knows when to play the next one.</summary>
