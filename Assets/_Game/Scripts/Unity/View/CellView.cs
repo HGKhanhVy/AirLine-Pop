@@ -268,8 +268,14 @@ namespace ASTeams.SingleLine.Unity
         /// <summary>
         /// Puts back whatever a half finished clip left behind. A square can be released to
         /// the pool mid flare, and the next level would then open with a lit square in a
-        /// place nothing is happening. Evaluating the clip's last frame costs one update and
-        /// needs no second copy of the values it touches.
+        /// place nothing is happening.
+        ///
+        /// The resting pose is the idle clip's first frame, not the flare's last one. Both
+        /// look the same on the parts the flare animates, but the states write defaults, so
+        /// sampling the idle clip also restores what it does *not* touch: the faint light
+        /// under the face, which the flare ends on zero. Sampling the flare instead left
+        /// every square unlit until its first idle beat three seconds later, and the square
+        /// then appeared to switch on by itself.
         /// </summary>
         private void ResetAnimatedVisual()
         {
@@ -279,7 +285,7 @@ namespace ASTeams.SingleLine.Unity
             }
 
             blockAnimator.enabled = true;
-            blockAnimator.Play(SelectionState, 0, 1f);
+            blockAnimator.Play(StartIdleState, 0, 0f);
             blockAnimator.Update(0f);
             blockAnimator.enabled = false;
         }
