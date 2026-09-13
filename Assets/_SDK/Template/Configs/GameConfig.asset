@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09babbae9a41ee4478493606d2cb9e36, type: 3}
   m_Name: GameConfig
   m_EditorClassIdentifier: Assembly-CSharp::ASTeams.Base.GameConfig
-  levelReward: 40
+  levelReward: 10
   levelRevice: 160
   refillLifeTime: 1800
   maxLife: 5

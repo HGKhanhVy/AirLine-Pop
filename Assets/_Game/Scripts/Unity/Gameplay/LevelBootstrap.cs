@@ -47,6 +47,10 @@ namespace ASTeams.SingleLine.Unity
         [Tooltip("Seconds to admire a finished board before the next one opens.")]
         [SerializeField, Min(0f)] private float delayAfterWin = 0.9f;
 
+        [Tooltip("Paid on top of the level reward the first time a level is finished. " +
+                 "GDD 8.1 puts it at 20 coins; the base reward lives in the team's GameConfig.")]
+        [SerializeField, Min(0)] private int firstClearBonus = 20;
+
         private ILevelRepository repository;
         private ILevelProgressStore progressStore;
         private ILevelCatalog levelCatalog;
@@ -204,17 +208,17 @@ namespace ASTeams.SingleLine.Unity
         private ILevelRewardService CreateRewardService()
         {
             UserProfileController profile = UserProfileController.Instance;
-            return profile == null ? null : new ProfileLevelRewardService(profile, resultHandler);
+            return profile == null ? null : new ProfileLevelRewardService(profile, resultHandler, firstClearBonus);
         }
 
-        private void AwardLevelReward()
+        private void AwardLevelReward(bool isFirstClear)
         {
             if (rewardService == null)
             {
                 return;
             }
 
-            int granted = rewardService.AwardLevelReward();
+            int granted = rewardService.AwardLevelReward(isFirstClear);
 
             if (granted > 0)
             {
@@ -295,9 +299,13 @@ namespace ASTeams.SingleLine.Unity
             // the coins first, then the position. Paying after the state change rather
             // than after an animation means a player who kills the app on the win screen
             // still keeps what they earned.
-            AwardLevelReward();
+            // Finishing the furthest level the save has reached is a first clear. Replaying
+            // an earlier one moves the save nowhere, which is the same test.
+            bool isFirstClear = progressStore == null || progressStore.CurrentLevelNumber < savedNextLevel;
 
-            if (progressStore != null && progressStore.CurrentLevelNumber < savedNextLevel)
+            AwardLevelReward(isFirstClear);
+
+            if (progressStore != null && isFirstClear)
             {
                 progressStore.SaveCurrentLevel(savedNextLevel);
             }

@@ -21,19 +21,23 @@ namespace ASTeams.SingleLine.Unity
     {
         private readonly UserProfileController profile;
         private readonly GameResultHandleService resultHandler;
+        private readonly int firstClearBonus;
 
-        public ProfileLevelRewardService(UserProfileController profile, GameResultHandleService resultHandler)
+        public ProfileLevelRewardService(UserProfileController profile, GameResultHandleService resultHandler, int firstClearBonus)
         {
             this.profile = profile ?? throw new ArgumentNullException(nameof(profile));
             this.resultHandler = resultHandler;
+            this.firstClearBonus = firstClearBonus < 0 ? 0 : firstClearBonus;
         }
 
         // The profile exposes no coin property, only the data object it saves.
         public long Balance => profile.userData == null ? 0 : profile.userData.coin;
 
-        public int AwardLevelReward()
+        public int AwardLevelReward(bool isFirstClear)
         {
-            int reward = RewardPerLevel;
+            // GDD 8.1: every win pays, and the first time a level is finished pays a bonus
+            // on top. Replaying a level already beaten pays the base only.
+            int reward = RewardPerLevel + (isFirstClear ? firstClearBonus : 0);
 
             if (reward <= 0)
             {
