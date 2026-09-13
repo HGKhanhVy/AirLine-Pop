@@ -22,12 +22,14 @@ public class LoadingManager : MonoBehaviour
 
     private AsyncOperation loadingOperation;
 
+   
     private void Start()
     {
         PlayerPrefs.DeleteKey("HasAcceptedConsent");
         PlayerPrefs.Save();
         StartCoroutine(LoadScene());
     }
+    
 
     private IEnumerator LoadScene()
     {
