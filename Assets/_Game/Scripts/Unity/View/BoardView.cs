@@ -258,9 +258,35 @@ namespace ASTeams.SingleLine.Unity
             }
 
             view.PlayConnect();
-            effects?.Play(GameplayEffect.CellConnected, GetCellWorldPosition(index), view.Color);
+
+            // The burst is tinted from the palette, not from the square: the square is a
+            // tenth of a second into fading towards its new colour when this fires, so
+            // reading its colour here would paint the burst the shade it is leaving. The
+            // start square's burst is tinted the same way, and the two have to match.
+            effects?.Play(GameplayEffect.CellConnected, GetCellWorldPosition(index), palette.Head);
             Track(view);
         }
+        /// <summary>
+        /// Presses a square the way a real move does, and nothing else.
+        ///
+        /// The hint drags through squares to show what playing them would feel like, so it
+        /// wants the press and the flare a connection gives. What it must not have is the
+        /// burst: a preview throwing the same particles as a real connection would read as
+        /// the move having been made, and the player would stop reaching for it.
+        /// </summary>
+        public void PreviewCell(int index)
+        {
+            CellView view = GetView(index);
+
+            if (view == null)
+            {
+                return;
+            }
+
+            view.PlayConnect();
+            Track(view);
+        }
+
         public void SetStartCue(bool isVisible)
         {
             if (level == null || !level.HasFixedStart)
