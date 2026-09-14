@@ -36,8 +36,6 @@ namespace ASTeams.SingleLine.Unity
                  "number and the coins tell the same story.")]
         [SerializeField] private TMP_Text coinTotalText;
 
-        [Tooltip("Asks the board for the next level, so this screen holds no gameplay reference.")]
-        [SerializeField] private GameplayEventChannelSO eventChannel;
 
         [SerializeField, Min(0f)] private float afterCollectDelay = 0.15f;
 
@@ -197,7 +195,7 @@ namespace ASTeams.SingleLine.Unity
 
             isClosing = true;
             Hide();
-            eventChannel?.RequestNextLevel();
+            GameplayEvents.RequestNextLevel();
         }
 
         /// <summary>

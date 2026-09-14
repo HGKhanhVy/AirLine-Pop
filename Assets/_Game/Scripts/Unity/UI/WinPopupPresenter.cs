@@ -14,8 +14,6 @@ namespace ASTeams.SingleLine.Unity
     /// </summary>
     public sealed class WinPopupPresenter : MonoBehaviour
     {
-        [SerializeField] private GameplayEventChannelSO eventChannel;
-
         [Tooltip("How long the board keeps the celebration before the screen opens. " +
                  "GDD 10 gives the win wave 0.8 to 1.2 seconds.")]
         [SerializeField, Min(0f)] private float showDelay = 0.9f;
@@ -30,22 +28,14 @@ namespace ASTeams.SingleLine.Unity
 
         private void OnEnable()
         {
-            if (eventChannel == null)
-            {
-                return;
-            }
-
-            eventChannel.OnCoinsAwarded += HandleCoinsAwarded;
-            eventChannel.OnLevelWon += HandleLevelWon;
+            GameplayEvents.OnCoinsAwarded += HandleCoinsAwarded;
+            GameplayEvents.OnLevelWon += HandleLevelWon;
         }
 
         private void OnDisable()
         {
-            if (eventChannel != null)
-            {
-                eventChannel.OnCoinsAwarded -= HandleCoinsAwarded;
-                eventChannel.OnLevelWon -= HandleLevelWon;
-            }
+            GameplayEvents.OnCoinsAwarded -= HandleCoinsAwarded;
+            GameplayEvents.OnLevelWon -= HandleLevelWon;
 
             if (pending != null)
             {

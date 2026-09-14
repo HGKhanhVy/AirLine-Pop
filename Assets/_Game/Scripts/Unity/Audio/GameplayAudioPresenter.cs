@@ -6,8 +6,6 @@ namespace ASTeams.SingleLine.Unity
 {
     public sealed class GameplayAudioPresenter : MonoBehaviour
     {
-        [SerializeField] private GameplayEventChannelSO eventChannel;
-
         [Tooltip("One tone per step, in rising order. GDD 11 asks the step sound to climb " +
                  "with the path so a long line builds; the reference game ships the ladder " +
                  "and this plays it rung by rung. Empty falls back to the single step sound.")]
@@ -20,29 +18,19 @@ namespace ASTeams.SingleLine.Unity
 
         private void OnEnable()
         {
-            if (eventChannel == null)
-            {
-                return;
-            }
-
             audioController = AudioController.Instance;
-            eventChannel.OnLevelLoaded += HandleLevelLoaded;
-            eventChannel.OnProgressChanged += HandleProgressChanged;
-            eventChannel.OnInvalidMove += HandleInvalidMove;
-            eventChannel.OnStateChanged += HandleStateChanged;
+            GameplayEvents.OnLevelLoaded += HandleLevelLoaded;
+            GameplayEvents.OnProgressChanged += HandleProgressChanged;
+            GameplayEvents.OnInvalidMove += HandleInvalidMove;
+            GameplayEvents.OnStateChanged += HandleStateChanged;
         }
 
         private void OnDisable()
         {
-            if (eventChannel == null)
-            {
-                return;
-            }
-
-            eventChannel.OnLevelLoaded -= HandleLevelLoaded;
-            eventChannel.OnProgressChanged -= HandleProgressChanged;
-            eventChannel.OnInvalidMove -= HandleInvalidMove;
-            eventChannel.OnStateChanged -= HandleStateChanged;
+            GameplayEvents.OnLevelLoaded -= HandleLevelLoaded;
+            GameplayEvents.OnProgressChanged -= HandleProgressChanged;
+            GameplayEvents.OnInvalidMove -= HandleInvalidMove;
+            GameplayEvents.OnStateChanged -= HandleStateChanged;
         }
 
         private void HandleLevelLoaded(int levelNumber, string levelId, int difficulty, int totalCells)

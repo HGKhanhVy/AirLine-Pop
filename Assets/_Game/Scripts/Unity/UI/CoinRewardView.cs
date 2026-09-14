@@ -15,9 +15,6 @@ namespace ASTeams.SingleLine.Unity
     /// </summary>
     public sealed class CoinRewardView : MonoBehaviour
     {
-        [Tooltip("Raises OnCoinsAwarded once the coins are already saved.")]
-        [SerializeField] private GameplayEventChannelSO eventChannel;
-
         [SerializeField] private TMP_Text label;
 
         [Tooltip("The board camera, so the number can be parked above the board whatever " +
@@ -55,18 +52,12 @@ namespace ASTeams.SingleLine.Unity
 
         private void OnEnable()
         {
-            if (eventChannel != null)
-            {
-                eventChannel.OnCoinsAwarded += HandleCoinsAwarded;
-            }
+            GameplayEvents.OnCoinsAwarded += HandleCoinsAwarded;
         }
 
         private void OnDisable()
         {
-            if (eventChannel != null)
-            {
-                eventChannel.OnCoinsAwarded -= HandleCoinsAwarded;
-            }
+            GameplayEvents.OnCoinsAwarded -= HandleCoinsAwarded;
         }
 
         private void HandleCoinsAwarded(int amount, long balance)

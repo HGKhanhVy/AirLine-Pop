@@ -18,7 +18,6 @@ namespace ASTeams.SingleLine.Unity
     public sealed class LevelBootstrap : MonoBehaviour
     {
         [SerializeField] private GameplayController controller;
-        [SerializeField] private GameplayEventChannelSO eventChannel;
         [SerializeField] private GameStateService gameStateService;
 
         [Tooltip("The one config that lists every level. Leave empty to fall back on the " +
@@ -157,30 +156,20 @@ namespace ASTeams.SingleLine.Unity
         /// </summary>
         private void Subscribe()
         {
-            if (eventChannel == null)
-            {
-                return;
-            }
-
-            eventChannel.OnUndoRequested += Undo;
-            eventChannel.OnRestartRequested += Restart;
-            eventChannel.OnHintRequested += HandleHintRequested;
-            eventChannel.OnNextLevelRequested += HandleNextLevelRequested;
-            eventChannel.OnSnapshotRequested += PublishSnapshot;
+            GameplayEvents.OnUndoRequested += Undo;
+            GameplayEvents.OnRestartRequested += Restart;
+            GameplayEvents.OnHintRequested += HandleHintRequested;
+            GameplayEvents.OnNextLevelRequested += HandleNextLevelRequested;
+            GameplayEvents.OnSnapshotRequested += PublishSnapshot;
         }
 
         private void Unsubscribe()
         {
-            if (eventChannel == null)
-            {
-                return;
-            }
-
-            eventChannel.OnUndoRequested -= Undo;
-            eventChannel.OnRestartRequested -= Restart;
-            eventChannel.OnHintRequested -= HandleHintRequested;
-            eventChannel.OnNextLevelRequested -= HandleNextLevelRequested;
-            eventChannel.OnSnapshotRequested -= PublishSnapshot;
+            GameplayEvents.OnUndoRequested -= Undo;
+            GameplayEvents.OnRestartRequested -= Restart;
+            GameplayEvents.OnHintRequested -= HandleHintRequested;
+            GameplayEvents.OnNextLevelRequested -= HandleNextLevelRequested;
+            GameplayEvents.OnSnapshotRequested -= PublishSnapshot;
         }
 
         /// <summary>
@@ -224,7 +213,7 @@ namespace ASTeams.SingleLine.Unity
 
             if (granted > 0)
             {
-                eventChannel?.RaiseCoinsAwarded(granted, rewardService.Balance);
+                GameplayEvents.RaiseCoinsAwarded(granted, rewardService.Balance);
                 PublishBalance();
             }
         }
@@ -246,12 +235,12 @@ namespace ASTeams.SingleLine.Unity
 
             controller.Load(level);
             gameStateService?.ResetToPlaying();
-            eventChannel?.RaiseLevelLoaded(currentLevelNumber, currentLevelId, level.Difficulty,
+            GameplayEvents.RaiseLevelLoaded(currentLevelNumber, currentLevelId, level.Difficulty,
                 level.ActiveCellCount);
 
             // A fresh board already stands on its start square, so the count starts at one.
             // Without this a label would read zero until the player's first move.
-            eventChannel?.RaiseProgressChanged(controller.Progress, controller.Target);
+            GameplayEvents.RaiseProgressChanged(controller.Progress, controller.Target);
             PublishBalance();
             return true;
         }
@@ -262,30 +251,25 @@ namespace ASTeams.SingleLine.Unity
         /// </summary>
         private void PublishSnapshot()
         {
-            if (eventChannel == null)
-            {
-                return;
-            }
-
             LevelData level = controller.Level;
 
             if (level != null)
             {
-                eventChannel.RaiseLevelLoaded(currentLevelNumber, currentLevelId, level.Difficulty,
+                GameplayEvents.RaiseLevelLoaded(currentLevelNumber, currentLevelId, level.Difficulty,
                     level.ActiveCellCount);
-                eventChannel.RaiseProgressChanged(controller.Progress, controller.Target);
-                eventChannel.RaiseStateChanged(controller.State, controller.State);
+                GameplayEvents.RaiseProgressChanged(controller.Progress, controller.Target);
+                GameplayEvents.RaiseStateChanged(controller.State, controller.State);
             }
 
-            eventChannel.RaiseRewindChanged(controller.IsRewinding);
+            GameplayEvents.RaiseRewindChanged(controller.IsRewinding);
             PublishBalance();
         }
 
         private void PublishBalance()
         {
-            if (eventChannel != null && rewardService != null)
+            if (rewardService != null)
             {
-                eventChannel.RaiseCoinBalanceChanged(rewardService.Balance);
+                GameplayEvents.RaiseCoinBalanceChanged(rewardService.Balance);
             }
         }
 
@@ -351,7 +335,7 @@ namespace ASTeams.SingleLine.Unity
                 progressStore.SaveCurrentLevel(savedNextLevel);
             }
 
-            eventChannel?.RaiseLevelWon(completedLevel, completedLevelId);
+            GameplayEvents.RaiseLevelWon(completedLevel, completedLevelId);
             gameStateService?.Win();
 
             CancelAdvance();

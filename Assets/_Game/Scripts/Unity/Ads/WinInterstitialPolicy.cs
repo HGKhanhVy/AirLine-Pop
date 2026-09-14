@@ -16,8 +16,6 @@ namespace ASTeams.SingleLine.Unity
     /// </summary>
     public sealed class WinInterstitialPolicy : MonoBehaviour
     {
-        [SerializeField] private GameplayEventChannelSO eventChannel;
-
         [Tooltip("No ad while the player is still this early in the campaign. GDD 12.2 asks for five.")]
         [SerializeField, Min(0)] private int quietLevels = 5;
 
@@ -32,24 +30,14 @@ namespace ASTeams.SingleLine.Unity
 
         private void OnEnable()
         {
-            if (eventChannel == null)
-            {
-                return;
-            }
-
-            eventChannel.OnLevelWon += HandleLevelWon;
-            eventChannel.OnNextLevelRequested += HandleNextLevelRequested;
+            GameplayEvents.OnLevelWon += HandleLevelWon;
+            GameplayEvents.OnNextLevelRequested += HandleNextLevelRequested;
         }
 
         private void OnDisable()
         {
-            if (eventChannel == null)
-            {
-                return;
-            }
-
-            eventChannel.OnLevelWon -= HandleLevelWon;
-            eventChannel.OnNextLevelRequested -= HandleNextLevelRequested;
+            GameplayEvents.OnLevelWon -= HandleLevelWon;
+            GameplayEvents.OnNextLevelRequested -= HandleNextLevelRequested;
         }
 
         private void HandleLevelWon(int levelNumber, string levelId)

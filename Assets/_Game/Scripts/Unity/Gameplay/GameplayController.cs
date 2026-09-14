@@ -24,7 +24,6 @@ namespace ASTeams.SingleLine.Unity
         [SerializeField] private BoardInput boardInput;
         [SerializeField] private BoardCameraFramer cameraFramer;
         [SerializeField] private BoardFeedback boardFeedback;
-        [SerializeField] private GameplayEventChannelSO eventChannel;
 
         [Tooltip("Seconds between cells while the path rewinds. Small enough to read as one motion.")]
         [SerializeField, Min(0f)] private float rewindStepDelay = 0.025f;
@@ -114,7 +113,7 @@ namespace ASTeams.SingleLine.Unity
             var request = new CancellationTokenSource();
             hintRequest = request;
             OnHintChanged?.Invoke();
-            eventChannel?.RaiseHintStarted();
+            GameplayEvents.RaiseHintStarted();
 
             try
             {
@@ -127,7 +126,7 @@ namespace ASTeams.SingleLine.Unity
 
                 boardFeedback.PlayHint(result.Steps);
                 OnHintReady?.Invoke(result);
-                eventChannel?.RaiseHintResolved(result);
+                GameplayEvents.RaiseHintResolved(result);
                 return !result.NeedsRestart && result.Steps.Count > 0;
             }
             catch (OperationCanceledException)
@@ -140,7 +139,7 @@ namespace ASTeams.SingleLine.Unity
                 {
                     Debug.LogException(exception, this);
                     OnHintReady?.Invoke(HintResult.RestartRequired);
-                    eventChannel?.RaiseHintResolved(HintResult.RestartRequired);
+                    GameplayEvents.RaiseHintResolved(HintResult.RestartRequired);
                 }
 
                 return false;
@@ -286,7 +285,7 @@ namespace ASTeams.SingleLine.Unity
             }
 
             rewind = StartCoroutine(RewindRoutine());
-            eventChannel?.RaiseRewindChanged(true);
+            GameplayEvents.RaiseRewindChanged(true);
         }
 
         private IEnumerator RewindRoutine()
@@ -306,7 +305,7 @@ namespace ASTeams.SingleLine.Unity
 
             rewind = null;
             boardInput.AcceptsInput = true;
-            eventChannel?.RaiseRewindChanged(false);
+            GameplayEvents.RaiseRewindChanged(false);
             Refresh();
         }
 
@@ -320,7 +319,7 @@ namespace ASTeams.SingleLine.Unity
             StopCoroutine(rewind);
             rewind = null;
             boardInput.AcceptsInput = true;
-            eventChannel?.RaiseRewindChanged(false);
+            GameplayEvents.RaiseRewindChanged(false);
         }
 
         private void HandleCellEntered(int cell)
@@ -349,7 +348,7 @@ namespace ASTeams.SingleLine.Unity
             if (result == MoveResult.Rejected)
             {
                 boardFeedback.PlayInvalid(session.Head);
-                eventChannel?.RaiseInvalidMove(session.Head);
+                GameplayEvents.RaiseInvalidMove(session.Head);
                 return;
             }
 
@@ -389,7 +388,7 @@ namespace ASTeams.SingleLine.Unity
             }
 
             OnStateChanged?.Invoke(previous, current);
-            eventChannel?.RaiseStateChanged(previous, current);
+            GameplayEvents.RaiseStateChanged(previous, current);
         }
 
         private List<int> CollectUncovered()
@@ -454,7 +453,7 @@ namespace ASTeams.SingleLine.Unity
             // once the player has drawn at least one step and the board is still theirs.
             boardView.SetHeadCue(head, session.Length > 1 && session.State == PathState.Drawing);
             OnPathChanged?.Invoke();
-            eventChannel?.RaiseProgressChanged(session.Length, session.Level.ActiveCellCount);
+            GameplayEvents.RaiseProgressChanged(session.Length, session.Level.ActiveCellCount);
         }
 
         private Color ColorForState(PathState state)

@@ -20,9 +20,6 @@ namespace ASTeams.SingleLine.Unity
     /// </summary>
     public sealed class GameplayHud : MonoBehaviour
     {
-        [Tooltip("The one asset gameplay publishes on. Nothing else is needed.")]
-        [SerializeField] private GameplayEventChannelSO eventChannel;
-
         [Tooltip("Optional. Without it the labels fall back to plain formats.")]
         [SerializeField] private TextCatalogSO textCatalog;
 
@@ -58,42 +55,32 @@ namespace ASTeams.SingleLine.Unity
 
         private void OnEnable()
         {
-            if (eventChannel == null)
-            {
-                return;
-            }
-
-            eventChannel.OnLevelLoaded += HandleLevelLoaded;
-            eventChannel.OnProgressChanged += HandleProgressChanged;
-            eventChannel.OnStateChanged += HandleStateChanged;
-            eventChannel.OnHintStarted += HandleHintStarted;
-            eventChannel.OnHintResolved += HandleHintResolved;
-            eventChannel.OnRewindChanged += HandleRewindChanged;
-            eventChannel.OnCoinBalanceChanged += HandleCoinBalanceChanged;
+            GameplayEvents.OnLevelLoaded += HandleLevelLoaded;
+            GameplayEvents.OnProgressChanged += HandleProgressChanged;
+            GameplayEvents.OnStateChanged += HandleStateChanged;
+            GameplayEvents.OnHintStarted += HandleHintStarted;
+            GameplayEvents.OnHintResolved += HandleHintResolved;
+            GameplayEvents.OnRewindChanged += HandleRewindChanged;
+            GameplayEvents.OnCoinBalanceChanged += HandleCoinBalanceChanged;
 
             AddListener(hintButton, OnHintClicked);
             AddListener(undoButton, OnUndoClicked);
             AddListener(restartButton, OnRestartClicked);
 
             // Catches up with a board that opened before this screen did.
-            eventChannel.RequestSnapshot();
+            GameplayEvents.RequestSnapshot();
             Refresh();
         }
 
         private void OnDisable()
         {
-            if (eventChannel == null)
-            {
-                return;
-            }
-
-            eventChannel.OnLevelLoaded -= HandleLevelLoaded;
-            eventChannel.OnProgressChanged -= HandleProgressChanged;
-            eventChannel.OnStateChanged -= HandleStateChanged;
-            eventChannel.OnHintStarted -= HandleHintStarted;
-            eventChannel.OnHintResolved -= HandleHintResolved;
-            eventChannel.OnRewindChanged -= HandleRewindChanged;
-            eventChannel.OnCoinBalanceChanged -= HandleCoinBalanceChanged;
+            GameplayEvents.OnLevelLoaded -= HandleLevelLoaded;
+            GameplayEvents.OnProgressChanged -= HandleProgressChanged;
+            GameplayEvents.OnStateChanged -= HandleStateChanged;
+            GameplayEvents.OnHintStarted -= HandleHintStarted;
+            GameplayEvents.OnHintResolved -= HandleHintResolved;
+            GameplayEvents.OnRewindChanged -= HandleRewindChanged;
+            GameplayEvents.OnCoinBalanceChanged -= HandleCoinBalanceChanged;
 
             RemoveListener(hintButton, OnHintClicked);
             RemoveListener(undoButton, OnUndoClicked);
@@ -202,17 +189,17 @@ namespace ASTeams.SingleLine.Unity
 
         private void OnHintClicked()
         {
-            eventChannel?.RequestHint();
+            GameplayEvents.RequestHint();
         }
 
         private void OnUndoClicked()
         {
-            eventChannel?.RequestUndo();
+            GameplayEvents.RequestUndo();
         }
 
         private void OnRestartClicked()
         {
-            eventChannel?.RequestRestart();
+            GameplayEvents.RequestRestart();
         }
 
         private static void AddListener(Button button, UnityEngine.Events.UnityAction action)
