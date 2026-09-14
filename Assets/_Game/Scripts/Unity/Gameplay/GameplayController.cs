@@ -378,9 +378,9 @@ namespace ASTeams.SingleLine.Unity
             }
             else if (current == PathState.Stuck)
             {
-                // Being stuck is not a loss: nothing is reset, the board just points at
-                // what is still uncovered so the player can undo their way out.
-                boardFeedback.PlayStuck(CollectUncovered());
+                // Being stuck is not a loss: nothing is reset, the view just says so and
+                // the player undoes their way out.
+                boardFeedback.PlayStuck();
             }
             else if (previous == PathState.Stuck || previous == PathState.Won)
             {
@@ -389,22 +389,6 @@ namespace ASTeams.SingleLine.Unity
 
             OnStateChanged?.Invoke(previous, current);
             GameplayEvents.RaiseStateChanged(previous, current);
-        }
-
-        private List<int> CollectUncovered()
-        {
-            scratchCells.Clear();
-            LevelData level = session.Level;
-
-            for (int index = 0; index < level.Grid.CellCount; index++)
-            {
-                if (level.IsActive(index) && !session.IsVisited(index))
-                {
-                    scratchCells.Add(index);
-                }
-            }
-
-            return scratchCells;
         }
 
         private List<int> CollectPath()

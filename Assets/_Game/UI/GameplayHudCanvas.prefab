@@ -958,6 +958,81 @@ CanvasGroup:
   m_Interactable: 0
   m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0
+--- !u!1 &6304741278627332144
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7733883144177781810}
+  - component: {fileID: 5170484903790418664}
+  - component: {fileID: 8017060709702937467}
+  m_Layer: 0
+  m_Name: Stuck Border
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &7733883144177781810
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6304741278627332144}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6663739798256760903}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &5170484903790418664
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6304741278627332144}
+  m_CullTransparentMesh: 1
+--- !u!114 &8017060709702937467
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6304741278627332144}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
+  m_RaycastTarget: 0
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: aa08651fff0b52f42844a4636238bf3b, type: 2}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
 --- !u!1 &6582798456092748458
 GameObject:
   m_ObjectHideFlags: 0
@@ -1350,6 +1425,7 @@ GameObject:
   - component: {fileID: 7488729284272073505}
   - component: {fileID: 1685298402005908477}
   - component: {fileID: 4396757825577946192}
+  - component: {fileID: 7362988928706420195}
   m_Layer: 0
   m_Name: GameplayHudCanvas
   m_TagString: Untagged
@@ -1369,6 +1445,7 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 7733883144177781810}
   - {fileID: 7345181807807516561}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1452,7 +1529,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc2beac8e7224704b944d3b8dc364270, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  eventChannel: {fileID: 11400000, guid: 7f6b6f31b313d014cb64b5732166e4d2, type: 2}
   textCatalog: {fileID: 11400000, guid: 4b3ea0c3c0bf7ca459efa0b28708cd25, type: 2}
   levelLabel: {fileID: 9143924458001197806}
   progressLabel: {fileID: 7606530429786761456}
@@ -1462,6 +1538,22 @@ MonoBehaviour:
   restartButton: {fileID: 8203754119236171151}
   stuckBanner: {fileID: 5013096775944409483}
   bannerFadeSpeed: 4
+--- !u!114 &7362988928706420195
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7730204668061724177}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c8e4bba640a3b394aaee497e656e4e4a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  border: {fileID: 8017060709702937467}
+  peakAlpha: 0.5
+  riseDuration: 0.12
+  fallDuration: 0.45
 --- !u!1 &7830561223132934772
 GameObject:
   m_ObjectHideFlags: 0

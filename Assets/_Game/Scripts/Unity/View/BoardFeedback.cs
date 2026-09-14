@@ -26,10 +26,6 @@ namespace ASTeams.SingleLine.Unity
         [SerializeField, Min(0f)] private float shakeStrength = 0.16f;
         [SerializeField, Min(0)] private int shakeVibrato = 14;
 
-        [Header("Pulse")]
-        [SerializeField, Min(1f)] private float pulseScale = 1.22f;
-        [SerializeField, Min(0.01f)] private float pulseDuration = 0.26f;
-
         [Header("Hint")]
         [Tooltip("How far a hinted square swells. Large enough to find, small enough not " +
                  "to look like the board is breathing.")]
@@ -101,11 +97,11 @@ namespace ASTeams.SingleLine.Unity
         }
 
         /// <summary>
-        /// Wobbles the board and pulses the cells still to cover. The list is supplied by
-        /// the controller rather than read from the model here, so the view keeps knowing
-        /// nothing about the rules.
+        /// Knocks the camera when the path walks into a dead end. Nothing on the board
+        /// moves: the squares still to cover used to pulse as well, and between that and
+        /// the knock the moment read as two separate alarms.
         /// </summary>
-        public void PlayStuck(IReadOnlyList<int> uncoveredCells)
+        public void PlayStuck()
         {
             Stop();
 
@@ -120,19 +116,6 @@ namespace ASTeams.SingleLine.Unity
                 running.Append(cameraShakeTarget
                     .DOShakePosition(shakeDuration, shakeStrength, shakeVibrato, 90f, false, true)
                     .OnKill(RestoreCamera));
-            }
-
-            if (uncoveredCells != null)
-            {
-                for (int i = 0; i < uncoveredCells.Count; i++)
-                {
-                    CellView cell = boardView.GetCellView(uncoveredCells[i]);
-
-                    if (cell != null)
-                    {
-                        running.Join(Pulse(cell.transform, pulseScale, pulseDuration));
-                    }
-                }
             }
 
             running.SetUpdate(isIndependentUpdate: false);
