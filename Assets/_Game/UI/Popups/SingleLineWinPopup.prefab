@@ -460,6 +460,7 @@ MonoBehaviour:
   continueButton: {fileID: 5327555402532423656}
   coinSpawner: {fileID: 3396618441234099800}
   coinFlyStart: {fileID: 1632355992568703292}
+  coinTotalText: {fileID: 1766705437199177773}
   eventChannel: {fileID: 11400000, guid: 7f6b6f31b313d014cb64b5732166e4d2, type: 2}
   afterCollectDelay: 0.15
 --- !u!1 &2882230877764586627
@@ -11851,6 +11852,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 3671366923720936759, guid: 7032abb480e87c14dac362e9a3d5020b, type: 3}
   m_PrefabInstance: {fileID: 4055610147191243315}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1766705437199177773 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2363530866439739934, guid: 7032abb480e87c14dac362e9a3d5020b, type: 3}
+  m_PrefabInstance: {fileID: 4055610147191243315}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &3396618441234099800 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1687545328665980011, guid: 7032abb480e87c14dac362e9a3d5020b, type: 3}

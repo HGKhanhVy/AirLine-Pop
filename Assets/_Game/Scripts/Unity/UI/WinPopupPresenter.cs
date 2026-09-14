@@ -25,6 +25,7 @@ namespace ASTeams.SingleLine.Unity
         [SerializeField, Min(0f)] private float skippableAfter = 0.4f;
 
         private int lastReward;
+        private long lastBalance;
         private Coroutine pending;
 
         private void OnEnable()
@@ -60,6 +61,7 @@ namespace ASTeams.SingleLine.Unity
         private void HandleCoinsAwarded(int amount, long balance)
         {
             lastReward = amount;
+            lastBalance = balance;
         }
 
         private void HandleLevelWon(int levelNumber, string levelId)
@@ -104,7 +106,7 @@ namespace ASTeams.SingleLine.Unity
                 yield break;
             }
 
-            popup.Present(levelNumber, lastReward);
+            popup.Present(levelNumber, lastReward, lastBalance);
             lastReward = 0;
         }
 

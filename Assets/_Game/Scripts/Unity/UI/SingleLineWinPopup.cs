@@ -32,21 +32,33 @@ namespace ASTeams.SingleLine.Unity
         [Tooltip("Where the coins fly from. Falls back to the reward label.")]
         [SerializeField] private RectTransform coinFlyStart;
 
+        [Tooltip("The running total the coins fly into. It counts up as they land, so the " +
+                 "number and the coins tell the same story.")]
+        [SerializeField] private TMP_Text coinTotalText;
+
         [Tooltip("Asks the board for the next level, so this screen holds no gameplay reference.")]
         [SerializeField] private GameplayEventChannelSO eventChannel;
 
         [SerializeField, Min(0f)] private float afterCollectDelay = 0.15f;
 
         private int reward;
+        private long balance;
+        private long shownTotal;
         private bool isClosing;
         private bool isCollecting;
 
         /// <summary>Fills the screen in and opens it. The caller owns when that happens.</summary>
-        public void Present(int levelNumber, int coinReward)
+        public void Present(int levelNumber, int coinReward, long coinBalance)
         {
             reward = coinReward;
+            balance = coinBalance;
             isClosing = false;
             isCollecting = false;
+
+            // The coins are already in the profile, so the header would open on the final
+            // number. Wind it back to what the player had, and let the flight add them.
+            shownTotal = coinBalance - coinReward;
+            ShowTotal(shownTotal);
 
             if (levelText != null)
             {
@@ -134,7 +146,7 @@ namespace ASTeams.SingleLine.Unity
             if (reward > 0 && coinSpawner != null)
             {
                 bool arrived = false;
-                coinSpawner.CollectCoinsFromUI(StartInSpawnerSpace(), reward, null, () => arrived = true);
+                coinSpawner.CollectCoinsFromUI(StartInSpawnerSpace(), reward, AddToTotal, () => arrived = true);
 
                 // The burst is on unscaled time, so this waits the same way.
                 float guard = 0f;
@@ -152,7 +164,28 @@ namespace ASTeams.SingleLine.Unity
             }
 
             isCollecting = false;
+            ShowTotal(balance);
             Continue();
+        }
+
+        /// <summary>One landed coin is worth a share of the reward, so the number climbs with them.</summary>
+        private void AddToTotal(int amount)
+        {
+            if (amount <= 0)
+            {
+                return;
+            }
+
+            shownTotal = System.Math.Min(balance, shownTotal + amount);
+            ShowTotal(shownTotal);
+        }
+
+        private void ShowTotal(long value)
+        {
+            if (coinTotalText != null)
+            {
+                coinTotalText.SetText("{0}", value);
+            }
         }
 
         private void Continue()
