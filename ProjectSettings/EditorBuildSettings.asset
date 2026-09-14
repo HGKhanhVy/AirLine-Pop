@@ -6,17 +6,17 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/UXUI/Resources/UI/Splash.unity
-    guid: 5eb67f10b72b6384185cc34787fd2d64
+    path: Assets/_SDK/Template/Scenes/Loading.unity
+    guid: cd3025a50554a30449c6a26dbbacdf0b
   - enabled: 1
     path: Assets/UXUI/Resources/UI/Home.unity
     guid: 7bdab9498589d934eba018eb3d9929ea
   - enabled: 1
-    path: Assets/_SDK/Template/Scenes/Loading.unity
-    guid: cd3025a50554a30449c6a26dbbacdf0b
-  - enabled: 1
     path: Assets/_SDK/Template/Scenes/Gameplay.unity
     guid: e58129f58868f4144aa279c40da023fd
+  - enabled: 1
+    path: Assets/UXUI/Resources/UI/Splash.unity
+    guid: 5eb67f10b72b6384185cc34787fd2d64
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0

@@ -9,10 +9,10 @@ public class HomeController : MonoBehaviour
     private const int LevelsPerChapter = 30;
 
     /// <summary>
-    /// Play goes through the loading screen, which shows the logo while the board is
-    /// brought up and then opens Gameplay itself.
+    /// Straight to the board. The loading screen has already run before this one, and the
+    /// managers it started are still alive.
     /// </summary>
-    private const string GameplayBootScene = "Loading";
+    private const string GameplayScene = "Gameplay";
 
     [Header("UI")]
     public TMP_Text levelText;
@@ -59,7 +59,7 @@ public class HomeController : MonoBehaviour
 
     public void Play()
     {
-        SceneManager.LoadScene(GameplayBootScene);
+        SceneManager.LoadScene(GameplayScene);
     }
 
     public void OpenTheme()
