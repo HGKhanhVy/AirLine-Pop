@@ -28,7 +28,9 @@ namespace ASTeams.SingleLine.Unity
         [SerializeField, Min(0.01f)] private float pulseDuration = 0.26f;
 
         [Header("Hint")]
-        [SerializeField, Min(1f)] private float hintScale = 1.3f;
+        [Tooltip("How far a hinted square swells. Large enough to find, small enough not " +
+                 "to look like the board is breathing.")]
+        [SerializeField, Min(1f)] private float hintScale = 1.12f;
 
         [Tooltip("How long the highlight stays up. GDD 7.1 asks for 2.5 s or until the player moves.")]
         [SerializeField, Min(0.1f)] private float hintHold = 2.5f;
@@ -36,18 +38,25 @@ namespace ASTeams.SingleLine.Unity
         [Tooltip("Length of one swell and back.")]
         [SerializeField, Min(0.05f)] private float hintPulse = 0.5f;
 
-        [Tooltip("Delay between one hinted cell and the next, so they read in order.")]
-        [SerializeField, Min(0f)] private float hintStagger = 0.12f;
+        [Tooltip("Delay between one hinted cell and the next. Zero keeps the three on one " +
+                 "rhythm; staggering them made each pulse at its own rate and read as noise.")]
+        [SerializeField, Min(0f)] private float hintStagger;
 
         [Header("Win")]
         [SerializeField, Min(1f)] private float winScale = 1.16f;
-        [SerializeField, Min(0.01f)] private float winStepDelay = 0.02f;
+        [Tooltip("Gap between one square swelling and the next. GDD 10 gives the whole " +
+                 "wave 0.8 to 1.2 s, and the dust rides the same step so the two agree.")]
+        [SerializeField, Min(0.01f)] private float winStepDelay = 0.05f;
         [SerializeField, Min(0.01f)] private float winDuration = 0.22f;
 
         [Header("Invalid move")]
-        [Tooltip("How far the square nudges, in cells. A cell is at most 18% of the screen, " +
-                 "so 0.014 peaks near the 2 to 3 px GDD 4 asks for at a 1080p reference.")]
-        [SerializeField, Min(0f)] private float invalidShake = 0.014f;
+        [Tooltip("The camera to knock. Refusing a move reads better as the whole view " +
+                 "flinching than as one square wobbling on a still board.")]
+        [SerializeField] private Transform invalidShakeTarget;
+
+        [Tooltip("How far the camera is knocked, in world units. A cell is one unit, so " +
+                 "this stays well under a tenth of a cell.")]
+        [SerializeField, Min(0f)] private float invalidShake = 0.06f;
 
         [SerializeField, Min(0.01f)] private float invalidDuration = 0.08f;
 
@@ -64,7 +73,7 @@ namespace ASTeams.SingleLine.Unity
         private IEffectPlayer effects;
         private Sequence running;
         private Tween invalidTween;
-        private CellView invalidCell;
+        private Vector3 invalidShakeBase;
         private float invalidAllowedAt;
 
         private Sequence hintSequence;
@@ -208,11 +217,28 @@ namespace ASTeams.SingleLine.Unity
             invalidAllowedAt = Time.time + invalidCooldown;
             StopInvalid();
 
-            invalidCell = view;
             effects?.Play(GameplayEffect.CellRejected, boardView.GetCellWorldPosition(cell), view.Color);
-            invalidTween = view.transform
+
+            if (invalidShakeTarget == null)
+            {
+                return;
+            }
+
+            // The camera is framed once per level rather than every frame, so it is safe to
+            // move here as long as it is put back exactly where it was.
+            invalidShakeBase = invalidShakeTarget.localPosition;
+            invalidTween = invalidShakeTarget
                 .DOShakePosition(invalidDuration, invalidShake, 18, 90f, false, true)
-                .SetUpdate(isIndependentUpdate: false);
+                .SetUpdate(isIndependentUpdate: false)
+                .OnKill(RestoreShakeTarget);
+        }
+
+        private void RestoreShakeTarget()
+        {
+            if (invalidShakeTarget != null)
+            {
+                invalidShakeTarget.localPosition = invalidShakeBase;
+            }
         }
 
         private void StopInvalid()
@@ -223,15 +249,7 @@ namespace ASTeams.SingleLine.Unity
             }
 
             invalidTween = null;
-
-            // Squares are pooled, so one left nudged aside would be handed to the next
-            // board off centre.
-            if (invalidCell != null)
-            {
-                invalidCell.transform.localPosition = invalidCell.BaseLocalPosition;
-            }
-
-            invalidCell = null;
+            RestoreShakeTarget();
         }
 
         /// <summary>
@@ -248,8 +266,10 @@ namespace ASTeams.SingleLine.Unity
             }
 
             // An even number of yoyo legs, so every cell ends back at its own size even
-            // if the highlight runs its full course.
+            // if the highlight runs its full course. Every cell uses the same leg length,
+            // which is what keeps the group on one rhythm however it is staggered.
             int legs = Mathf.Max(1, Mathf.RoundToInt(hintHold / hintPulse)) * 2;
+            float legDuration = hintPulse * 0.5f;
             hintSequence = DOTween.Sequence();
 
             for (int i = 0; i < cells.Count; i++)
@@ -267,7 +287,7 @@ namespace ASTeams.SingleLine.Unity
                 // three separate suggestions.
                 float delay = Mathf.Min(i * hintStagger, hintHold * 0.5f);
                 hintSequence.Insert(delay, view.transform
-                    .DOScale(hintScale, (hintHold - delay) / legs)
+                    .DOScale(hintScale, legDuration)
                     .SetLoops(legs, LoopType.Yoyo)
                     .SetEase(Ease.InOutSine));
             }

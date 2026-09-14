@@ -24,8 +24,12 @@ namespace ASTeams.SingleLine.Unity
         [Tooltip("Plays the board's particles. Leave empty to run the board without them.")]
         [SerializeField] private PooledEffectPlayer effectPlayer;
 
-        [Tooltip("How long the path may sit still before the square it stopped on starts bouncing.")]
-        [SerializeField, Min(0f)] private float headCueDelay = 0.35f;
+        [Tooltip("Quiet time before the square the player stopped on nudges itself. The " +
+                 "start square waits the same three seconds before its own idle.")]
+        [SerializeField, Min(0f)] private float headCueDelay = 3f;
+
+        [Tooltip("Gap between two nudges. One idle clip is four seconds long.")]
+        [SerializeField, Min(0.5f)] private float headIdleInterval = 4f;
 
         [Tooltip("How long a square takes to take its new colour. GDD 10 asks for 80 to 120 ms.")]
         [SerializeField, Min(0f)] private float fillDuration = 0.1f;
@@ -81,9 +85,8 @@ namespace ASTeams.SingleLine.Unity
         }
 
         /// <summary>
-        /// Keeps the stopped square beating. One float compare per frame when there is
-        /// nothing to do, and the beats run back to back so it reads as a bounce rather
-        /// than a blink.
+        /// Nudges the square the player stopped on, now and again rather than on a beat.
+        /// One float compare per frame when there is nothing to do.
         /// </summary>
         private void AdvanceHeadCue()
         {
@@ -93,11 +96,11 @@ namespace ASTeams.SingleLine.Unity
             }
 
             CellView view = GetView(headCell);
-            headCueAt = Time.time + CellView.HeadCueLength;
+            headCueAt = Time.time + Mathf.Max(headIdleInterval, CellView.IdleNudgeLength);
 
             if (view != null)
             {
-                view.PlayHeadCue();
+                view.PlayIdleNudge();
             }
         }
 
@@ -117,9 +120,8 @@ namespace ASTeams.SingleLine.Unity
         }
 
         /// <summary>
-        /// Names the square the path stops on and keeps its beat going. The beats run back
-        /// to back so the square reads as bouncing; a short wait first means a player still
-        /// drawing never sees it, only one who has actually stopped.
+        /// Names the square the path stops on. The wait before the first nudge means a
+        /// player still drawing never sees it, only one who has actually stopped.
         /// </summary>
         public void SetHeadCue(int cellIndex, bool isEnabled)
         {

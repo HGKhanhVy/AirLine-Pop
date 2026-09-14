@@ -42,8 +42,6 @@ namespace ASTeams.SingleLine.Unity
 
         private static readonly int StartIdleState = Animator.StringToHash("StartIdle");
 
-        private static readonly int SelectionState = Animator.StringToHash("TutorialFillSquareSelection");
-
         // Fades the goal marker in from nothing and pops it: alpha 0 to 1 in 0.08 s, scale
         // 0.38 to 0.6 and back. The reference plays it the moment a level is finished.
         private static readonly int StarState = Animator.StringToHash("TutorialFillSquareStar");
@@ -304,20 +302,22 @@ namespace ASTeams.SingleLine.Unity
         }
 
         /// <summary>
-        /// One beat of the square the path is standing on: the face dips, springs past its
-        /// size and the light under it flares. This is the reference block's own selection
-        /// clip, played as it was authored; the board replays it back to back so a player
-        /// who has stopped sees the square bouncing rather than blinking once.
+        /// The nudge a square gives when the player has stopped on it: the same idle the
+        /// start square plays, run once.
+        ///
+        /// It used to be the selection clip played back to back, which read as a square
+        /// bouncing on the spot and flaring its light over and over. One idle now and
+        /// again is what the reference does, and it says "your turn" without shouting.
         /// </summary>
-        public void PlayHeadCue()
+        public void PlayIdleNudge()
         {
-            if (blockAnimator == null)
+            if (blockAnimator == null || isGoalRevealing)
             {
                 return;
             }
 
             blockAnimator.enabled = true;
-            blockAnimator.Play(SelectionState, 0, 0f);
+            blockAnimator.Play(StartIdleState, 0, 0f);
         }
 
         /// <summary>
@@ -353,8 +353,8 @@ namespace ASTeams.SingleLine.Unity
             }
         }
 
-        /// <summary>Length of that beat, so the board knows when to play the next one.</summary>
-        public const float HeadCueLength = 0.6166667f;
+        /// <summary>Length of the idle clip, so the board knows when it may nudge again.</summary>
+        public const float IdleNudgeLength = 4f;
 
         public void StopHeadCue()
         {
