@@ -2091,7 +2091,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4f34893392306cd42a8a8fcfe8c0af46, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nextSceneName: Home
+  nextSceneName: Gameplay
   loadingIcon: {fileID: 2012396632}
   loadingFrames:
   - {fileID: 1289102963, guid: 75a5ac1b6c64a844494057dfb9a46858, type: 3}
@@ -2128,6 +2128,7 @@ MonoBehaviour:
   progressBar: {fileID: 0}
   progressText: {fileID: 0}
   consentPanel: {fileID: 796745221}
+  minimumSeconds: 1.5
 --- !u!4 &309906337
 Transform:
   m_ObjectHideFlags: 0
