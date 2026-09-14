@@ -16,7 +16,10 @@ namespace ASTeams.SingleLine.Unity
     public sealed class BoardFeedback : MonoBehaviour
     {
         [SerializeField] private BoardView boardView;
-        [SerializeField] private Transform shakeRoot;
+
+        [Tooltip("The camera to knock when the path runs into a dead end. Knocking the " +
+                 "whole view reads better than wobbling the board inside a still frame.")]
+        [SerializeField] private Transform cameraShakeTarget;
 
         [Header("Stuck")]
         [SerializeField, Min(0f)] private float shakeDuration = 0.32f;
@@ -50,13 +53,9 @@ namespace ASTeams.SingleLine.Unity
         [SerializeField, Min(0.01f)] private float winDuration = 0.22f;
 
         [Header("Invalid move")]
-        [Tooltip("The camera to knock. Refusing a move reads better as the whole view " +
-                 "flinching than as one square wobbling on a still board.")]
-        [SerializeField] private Transform invalidShakeTarget;
-
-        [Tooltip("How far the camera is knocked, in world units. A cell is one unit, so " +
-                 "this stays well under a tenth of a cell.")]
-        [SerializeField, Min(0f)] private float invalidShake = 0.06f;
+        [Tooltip("How far the square nudges, in cells. A cell is at most 18% of the screen, " +
+                 "so 0.014 peaks near the 2 to 3 px GDD 4 asks for at a 1080p reference.")]
+        [SerializeField, Min(0f)] private float invalidShake = 0.014f;
 
         [SerializeField, Min(0.01f)] private float invalidDuration = 0.08f;
 
@@ -73,7 +72,8 @@ namespace ASTeams.SingleLine.Unity
         private IEffectPlayer effects;
         private Sequence running;
         private Tween invalidTween;
-        private Vector3 invalidShakeBase;
+        private CellView invalidCell;
+        private Vector3 cameraShakeBase;
         private bool isShakingCamera;
         private float invalidAllowedAt;
 
@@ -91,11 +91,6 @@ namespace ASTeams.SingleLine.Unity
         private void Awake()
         {
             effects = effectPlayer;
-
-            if (shakeRoot == null)
-            {
-                shakeRoot = boardView != null ? boardView.transform : transform;
-            }
 
             dustStep = new WaitForSeconds(winStepDelay);
         }
@@ -115,7 +110,17 @@ namespace ASTeams.SingleLine.Unity
             Stop();
 
             running = DOTween.Sequence();
-            running.Append(shakeRoot.DOShakePosition(shakeDuration, shakeStrength, shakeVibrato, 90f, false, true));
+
+            if (cameraShakeTarget != null)
+            {
+                // The camera is framed once per level rather than every frame, so it is
+                // safe to move here as long as it is put back exactly where it was.
+                cameraShakeBase = cameraShakeTarget.localPosition;
+                isShakingCamera = true;
+                running.Append(cameraShakeTarget
+                    .DOShakePosition(shakeDuration, shakeStrength, shakeVibrato, 90f, false, true)
+                    .OnKill(RestoreCamera));
+            }
 
             if (uncoveredCells != null)
             {
@@ -218,21 +223,11 @@ namespace ASTeams.SingleLine.Unity
             invalidAllowedAt = Time.time + invalidCooldown;
             StopInvalid();
 
+            invalidCell = view;
             effects?.Play(GameplayEffect.CellRejected, boardView.GetCellWorldPosition(cell), view.Color);
-
-            if (invalidShakeTarget == null)
-            {
-                return;
-            }
-
-            // The camera is framed once per level rather than every frame, so it is safe to
-            // move here as long as it is put back exactly where it was.
-            invalidShakeBase = invalidShakeTarget.localPosition;
-            isShakingCamera = true;
-            invalidTween = invalidShakeTarget
+            invalidTween = view.transform
                 .DOShakePosition(invalidDuration, invalidShake, 18, 90f, false, true)
-                .SetUpdate(isIndependentUpdate: false)
-                .OnKill(RestoreShakeTarget);
+                .SetUpdate(isIndependentUpdate: false);
         }
 
         /// <summary>
@@ -240,14 +235,14 @@ namespace ASTeams.SingleLine.Unity
         /// captured when a shake starts, so restoring without one would move the camera to
         /// an unset position and take the whole board off screen with it.
         /// </summary>
-        private void RestoreShakeTarget()
+        private void RestoreCamera()
         {
-            if (!isShakingCamera || invalidShakeTarget == null)
+            if (!isShakingCamera || cameraShakeTarget == null)
             {
                 return;
             }
 
-            invalidShakeTarget.localPosition = invalidShakeBase;
+            cameraShakeTarget.localPosition = cameraShakeBase;
             isShakingCamera = false;
         }
 
@@ -259,7 +254,15 @@ namespace ASTeams.SingleLine.Unity
             }
 
             invalidTween = null;
-            RestoreShakeTarget();
+
+            // Squares are pooled, so one left nudged aside would be handed to the next
+            // board off centre.
+            if (invalidCell != null)
+            {
+                invalidCell.transform.localPosition = invalidCell.BaseLocalPosition;
+            }
+
+            invalidCell = null;
         }
 
         /// <summary>
@@ -350,10 +353,7 @@ namespace ASTeams.SingleLine.Unity
                 dustWave = null;
             }
 
-            if (shakeRoot != null)
-            {
-                shakeRoot.localPosition = Vector3.zero;
-            }
+            RestoreCamera();
 
             ResetCellScales();
         }

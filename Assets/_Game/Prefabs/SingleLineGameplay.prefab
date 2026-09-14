@@ -551,7 +551,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08863b0c7f0fd2a46a921d97af82c22b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  eventChannel: {fileID: 11400000, guid: 7f6b6f31b313d014cb64b5732166e4d2, type: 2}
   label: {fileID: 3850798646401692122}
   boardCamera: {fileID: 6419412443081546969}
   viewportHeight: 0.87
@@ -5734,7 +5733,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   boardView: {fileID: 4911348639305648421}
-  shakeRoot: {fileID: 2749185590520753590}
+  cameraShakeTarget: {fileID: 7445547180879825063}
   shakeDuration: 0.32
   shakeStrength: 0.16
   shakeVibrato: 14
@@ -5747,8 +5746,7 @@ MonoBehaviour:
   winScale: 1.16
   winStepDelay: 0.05
   winDuration: 0.22
-  invalidShakeTarget: {fileID: 7445547180879825063}
-  invalidShake: 0.06
+  invalidShake: 0.014
   invalidDuration: 0.08
   invalidCooldown: 0.18
   dust: {fileID: 4468489046037610583}
@@ -5825,7 +5823,6 @@ MonoBehaviour:
   boardInput: {fileID: 6893007312400293912}
   cameraFramer: {fileID: 8655697660292259197}
   boardFeedback: {fileID: 8889330386574363939}
-  eventChannel: {fileID: 11400000, guid: 7f6b6f31b313d014cb64b5732166e4d2, type: 2}
   rewindStepDelay: 0.025
   hintNodeBudget: 200000
   hintSteps: 3
@@ -5843,7 +5840,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   controller: {fileID: 490432196145728844}
-  eventChannel: {fileID: 11400000, guid: 7f6b6f31b313d014cb64b5732166e4d2, type: 2}
   gameStateService: {fileID: 0}
   levelConfig: {fileID: 11400000, guid: da175ddc371ebbe2a5e8c953fac630bd, type: 2}
   levelService: {fileID: 0}
@@ -5878,7 +5874,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f576bed2e4689344c9b8514a3ed4521b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  eventChannel: {fileID: 11400000, guid: 7f6b6f31b313d014cb64b5732166e4d2, type: 2}
   stepTones:
   - {fileID: 8300000, guid: c1324443f222ce34ebcd1ac304af6603, type: 3}
   - {fileID: 8300000, guid: 3048bd72db334874ab3a71e268b4879b, type: 3}
@@ -5917,7 +5912,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c9ccc2c3e71530e45ad55a97b9f8a9ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  eventChannel: {fileID: 11400000, guid: 7f6b6f31b313d014cb64b5732166e4d2, type: 2}
   showDelay: 0.9
   skippableAfter: 0.4
 --- !u!114 &2544141247327577434
@@ -5932,7 +5926,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b52110758f99ce041818de7b85569fd7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  eventChannel: {fileID: 11400000, guid: 7f6b6f31b313d014cb64b5732166e4d2, type: 2}
   quietLevels: 5
   quietSeconds: 600
   levelsPerBreak: 3
