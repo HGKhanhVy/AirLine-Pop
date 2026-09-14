@@ -14,14 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp:ASTeams.Base:SoundAssetConfigs
   musics:
   - soundName: -1
-    clip: {fileID: 8300000, guid: fba6b6e39de59de4d8ed2436dfa0ee9f, type: 3}
+    clip: {fileID: 8300000, guid: 8f41b86f09ee7cd45a5662ead2ede12e, type: 3}
     volume: 0.2
   sounds:
   - soundName: 1
-    clip: {fileID: 8300000, guid: e61007d4746494542b0a788757ee2791, type: 3}
+    clip: {fileID: 8300000, guid: 4fb3189ee65b2e448b2cedddb540aed4, type: 3}
     volume: 1
   - soundName: 2
-    clip: {fileID: 8300000, guid: 1888dc44f0125d2418bfc3947e6b7f40, type: 3}
+    clip: {fileID: 8300000, guid: a88493d2c8b6e574b99f5e82fcdfb265, type: 3}
     volume: 1
   - soundName: 21
     clip: {fileID: 8300000, guid: 214e7f01b13aefa4f8a1e3137816d73b, type: 3}
@@ -54,59 +54,59 @@ MonoBehaviour:
     clip: {fileID: 8300000, guid: b17142556c119814ab4909b768963741, type: 3}
     volume: 1
   - soundName: 16
-    clip: {fileID: 8300000, guid: a0e0f14eaa4061e4b92bb122f964c4c9, type: 3}
+    clip: {fileID: 8300000, guid: cf0b38c9894a0e849869b7274e16d296, type: 3}
     volume: 0.4
   - soundName: 6
-    clip: {fileID: 8300000, guid: e23ff7473b38a9d4f982211a576e66a5, type: 3}
+    clip: {fileID: 8300000, guid: 91d81480462c956408818099c211fbfc, type: 3}
     volume: 0.3
   - soundName: 5
-    clip: {fileID: 8300000, guid: 3b9f10540767dd64aba83db53a97dcd6, type: 3}
+    clip: {fileID: 8300000, guid: 47d9da953764bf24d8f102f586c01f7d, type: 3}
     volume: 1
   - soundName: 4
-    clip: {fileID: 8300000, guid: 77b91471d5af3c940bf1670397b0dd80, type: 3}
+    clip: {fileID: 8300000, guid: 1a57160c8efc8f84f9273b5a10ff3301, type: 3}
     volume: 1
   - soundName: 7
-    clip: {fileID: 8300000, guid: e7fa471224e5bac419c44c7e5b2d4186, type: 3}
+    clip: {fileID: 8300000, guid: 1dc8e7b36b2fb424ca7fb4785f99a32b, type: 3}
     volume: 0.2
   - soundName: 8
     clip: {fileID: 8300000, guid: c512ac6b5727200489f1dc44c702ab38, type: 3}
     volume: 1
   - soundName: 9
-    clip: {fileID: 8300000, guid: 716ffd75f73a81a45aa4f4fd47536fb5, type: 3}
+    clip: {fileID: 0}
     volume: 1
   - soundName: 10
-    clip: {fileID: 8300000, guid: c1cb0b46bc7f58640932fbd415e2c338, type: 3}
+    clip: {fileID: 8300000, guid: 441dc771f544a834bb51e0a5273961f6, type: 3}
     volume: 1
   - soundName: 11
-    clip: {fileID: 8300000, guid: 742a6a9dbc129a6478d1928ea5ec8e86, type: 3}
+    clip: {fileID: 8300000, guid: acfdb062009a94f41a788563a9bda9c5, type: 3}
     volume: 1
   - soundName: 12
-    clip: {fileID: 8300000, guid: 9cd9bfac4c8ab0c458c8ced9a7a7e21b, type: 3}
+    clip: {fileID: 8300000, guid: 2f8defa5b7bbb404ab4cab1e6ff9f77e, type: 3}
     volume: 1
   - soundName: 13
     clip: {fileID: 8300000, guid: 794fb14ddc697f840a2fcce2322d4fa1, type: 3}
     volume: 1
   - soundName: 14
-    clip: {fileID: 8300000, guid: c8a782e867f667740af73c0b6d36b736, type: 3}
+    clip: {fileID: 0}
     volume: 1
   - soundName: 15
-    clip: {fileID: 8300000, guid: 7ee6ee5d1cb3ea34ca5236d497c6913f, type: 3}
+    clip: {fileID: 8300000, guid: bb67ce3c8f13f4745a64d56e051d82a2, type: 3}
     volume: 0.4
   - soundName: 20
     clip: {fileID: 8300000, guid: 3204faf46fecc834289966e90b2b0e27, type: 3}
     volume: 1
   - soundName: 3
-    clip: {fileID: 8300000, guid: b9e07752cc2692348ae2c3e13458a5b2, type: 3}
+    clip: {fileID: 8300000, guid: 925d0519879f5be4c9f7bcdf68deba4b, type: 3}
     volume: 0.3
   - soundName: 18
-    clip: {fileID: 8300000, guid: 69a547100f329ce44b25fd063ccd402d, type: 3}
+    clip: {fileID: 8300000, guid: 1f6a73fdf8f0fcd46a700e4acbf525c0, type: 3}
     volume: 0.5
   - soundName: 19
-    clip: {fileID: 8300000, guid: a8bb4706e2ace034b86629146a32b1c4, type: 3}
+    clip: {fileID: 8300000, guid: a8ba7a506ef7eb64982abb5e87b7cabb, type: 3}
     volume: 1
   - soundName: 17
-    clip: {fileID: 8300000, guid: 2211ca9780dea1d48b6a586a6ca2590b, type: 3}
+    clip: {fileID: 8300000, guid: 96451839bda0bcd4a8f126ba7b29d2cb, type: 3}
     volume: 0.8
   - soundName: 0
-    clip: {fileID: 8300000, guid: 6cf0f9b6f74fc194888c7ec5e607ee7b, type: 3}
+    clip: {fileID: 8300000, guid: 231e65dbe8f3826489301ee8249b7682, type: 3}
     volume: 1
