@@ -74,6 +74,7 @@ namespace ASTeams.SingleLine.Unity
         private Sequence running;
         private Tween invalidTween;
         private Vector3 invalidShakeBase;
+        private bool isShakingCamera;
         private float invalidAllowedAt;
 
         private Sequence hintSequence;
@@ -227,18 +228,27 @@ namespace ASTeams.SingleLine.Unity
             // The camera is framed once per level rather than every frame, so it is safe to
             // move here as long as it is put back exactly where it was.
             invalidShakeBase = invalidShakeTarget.localPosition;
+            isShakingCamera = true;
             invalidTween = invalidShakeTarget
                 .DOShakePosition(invalidDuration, invalidShake, 18, 90f, false, true)
                 .SetUpdate(isIndependentUpdate: false)
                 .OnKill(RestoreShakeTarget);
         }
 
+        /// <summary>
+        /// Puts the camera back where the shake picked it up, and only then. The base is
+        /// captured when a shake starts, so restoring without one would move the camera to
+        /// an unset position and take the whole board off screen with it.
+        /// </summary>
         private void RestoreShakeTarget()
         {
-            if (invalidShakeTarget != null)
+            if (!isShakingCamera || invalidShakeTarget == null)
             {
-                invalidShakeTarget.localPosition = invalidShakeBase;
+                return;
             }
+
+            invalidShakeTarget.localPosition = invalidShakeBase;
+            isShakingCamera = false;
         }
 
         private void StopInvalid()
