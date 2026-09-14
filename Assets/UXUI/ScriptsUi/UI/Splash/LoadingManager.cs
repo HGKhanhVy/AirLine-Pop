@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using ASTeams.SingleLine.Unity;
+using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using TMPro;
@@ -82,8 +83,11 @@ public class LoadingManager : MonoBehaviour
 
     private void CheckConsent()
     {
-        bool hasAccepted =
-            PlayerPrefs.GetInt("HasAcceptedConsent", 0) == 1;
+        // This is the game's only boot screen, so the values a new save needs are settled
+        // here; the template does the same work inside a loading scene this game skips.
+        FirstRunProfile.Seed();
+
+        bool hasAccepted = FirstRunProfile.HasConsent();
 
         if (hasAccepted)
         {
@@ -99,8 +103,7 @@ public class LoadingManager : MonoBehaviour
 
     public void AcceptConsent()
     {
-        PlayerPrefs.SetInt("HasAcceptedConsent", 1);
-        PlayerPrefs.Save();
+        FirstRunProfile.AcceptConsent();
 
         consentPanel.SetActive(false);
 
