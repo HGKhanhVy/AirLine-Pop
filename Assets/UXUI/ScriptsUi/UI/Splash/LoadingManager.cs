@@ -25,11 +25,11 @@ public class LoadingManager : MonoBehaviour
    
     private void Start()
     {
-        PlayerPrefs.DeleteKey("HasAcceptedConsent");
-        PlayerPrefs.Save();
+        // The consent answer is kept: GDD 12.3 asks once and remembers. Clearing the key
+        // here made the panel appear on every launch, which is a debug aid, not the flow.
         StartCoroutine(LoadScene());
     }
-    
+
 
     private IEnumerator LoadScene()
     {
