@@ -21,7 +21,14 @@ public class LoadingManager : MonoBehaviour
     [Header("Consent")]
     public GameObject consentPanel;
 
+    [Header("Timing")]
+    [Tooltip("Least time the logo stays on screen. Home loads in a fraction of a second, " +
+             "so without this the splash flashes past and the player never sees it.")]
+    [Min(0f)]
+    public float minimumSeconds = 1.5f;
+
     private AsyncOperation loadingOperation;
+    private float startedAt;
 
    
     private void Start()
@@ -34,6 +41,8 @@ public class LoadingManager : MonoBehaviour
 
     private IEnumerator LoadScene()
     {
+        startedAt = Time.realtimeSinceStartup;
+
         loadingOperation =
             SceneManager.LoadSceneAsync(nextSceneName);
 
@@ -41,9 +50,16 @@ public class LoadingManager : MonoBehaviour
 
         while (!loadingOperation.isDone)
         {
-            float progress = Mathf.Clamp01(
+            float loaded = Mathf.Clamp01(
                 loadingOperation.progress / 0.9f
             );
+
+            // The bar follows whichever is further behind, the real load or the minimum
+            // time, so it always reads as filling rather than sitting full and waiting.
+            float shown = minimumSeconds <= 0f
+                ? 1f
+                : Mathf.Clamp01((Time.realtimeSinceStartup - startedAt) / minimumSeconds);
+            float progress = Mathf.Min(loaded, shown);
 
             // Loading icon
             if (loadingFrames != null &&
