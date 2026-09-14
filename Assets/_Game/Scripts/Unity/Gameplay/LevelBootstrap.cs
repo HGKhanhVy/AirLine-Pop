@@ -213,8 +213,14 @@ namespace ASTeams.SingleLine.Unity
 
             if (granted > 0)
             {
+                // The coins go into the profile now, so a player who closes the app on the
+                // win screen still keeps what they earned. What is deliberately *not* done
+                // here is announcing the new balance: every coin label would jump to the
+                // final number while the board is still celebrating, before the player has
+                // been shown what they won or touched anything. The win screen raises the
+                // balance as the coins fly into it, which is the moment the player reads
+                // as being paid.
                 GameplayEvents.RaiseCoinsAwarded(granted, rewardService.Balance);
-                PublishBalance();
             }
         }
 

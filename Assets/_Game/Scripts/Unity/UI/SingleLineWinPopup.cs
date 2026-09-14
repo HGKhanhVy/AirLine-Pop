@@ -18,7 +18,11 @@ namespace ASTeams.SingleLine.Unity
     /// So Continue raises the next level request on the channel and the board answers it.
     ///
     /// The coins are already paid and saved by the time this opens, which is what GDD 14
-    /// asks for. The flight is the template's own coin package, played for the feel of it.
+    /// asks for, but nothing on screen says so yet: every coin label still reads the old
+    /// balance. This screen is what pays the player as far as they are concerned, so it
+    /// raises the new balance on the channel as the coins land, and the header behind it
+    /// climbs in step with the number on the panel. The flight is the template's own coin
+    /// package, played for the feel of it.
     /// </summary>
     public sealed class SingleLineWinPopup : UIBasePopup
     {
@@ -39,6 +43,17 @@ namespace ASTeams.SingleLine.Unity
 
         [SerializeField, Min(0f)] private float afterCollectDelay = 0.15f;
 
+        [Tooltip("One chime per coin as it lands.")]
+        [SerializeField] private AudioClip coinClip;
+
+        [Tooltip("The chime plays through its own source so each coin cuts the one before " +
+                 "it. Coins land 30 to 90 ms apart and the chime rings for half a second, " +
+                 "so shared one-shot sources stacked six and eight of them into a wash. " +
+                 "Cut short they read as what they are: separate coins.")]
+        [SerializeField] private AudioSource coinSource;
+
+        [SerializeField, Range(0f, 1f)] private float coinVolume = 0.35f;
+
         private int reward;
         private long balance;
         private long shownTotal;
@@ -53,8 +68,8 @@ namespace ASTeams.SingleLine.Unity
             isClosing = false;
             isCollecting = false;
 
-            // The coins are already in the profile, so the header would open on the final
-            // number. Wind it back to what the player had, and let the flight add them.
+            // The coins are already in the profile, so this would open on the final number.
+            // Start from what the player had, and let the flight add them.
             shownTotal = coinBalance - coinReward;
             ShowTotal(shownTotal);
 
@@ -78,7 +93,10 @@ namespace ASTeams.SingleLine.Unity
 
         public override void Show()
         {
-            AudioController.Instance?.PlaySound(SoundName.UI_LevelComplete);
+            // Only the vibration here. The fanfare that used to play on this line was a
+            // second completion cue: UI_LevelComplete is 1.2 s long and UI_Win starts
+            // 0.67 s into it, so the two ran over each other every win. The board's own
+            // confetti already covers the moment this screen arrives.
             VibrationController.Instance?.PlayMedium();
 
             canvasGroup.alpha = 0f;
@@ -126,7 +144,8 @@ namespace ASTeams.SingleLine.Unity
                 return;
             }
 
-            AudioController.Instance?.PlaySound(SoundName.UI_ClaimReward);
+            // No sound on the press itself. What the player is waiting to hear is the
+            // coins, and a cue on the button only got in front of them.
             VibrationController.Instance?.PlayLight();
 
             if (continueButton != null)
@@ -162,7 +181,10 @@ namespace ASTeams.SingleLine.Unity
             }
 
             isCollecting = false;
+
+            // Whatever the flight managed to count, the player is owed the whole amount.
             ShowTotal(balance);
+            GameplayEvents.RaiseCoinBalanceChanged(balance);
             Continue();
         }
 
@@ -176,6 +198,36 @@ namespace ASTeams.SingleLine.Unity
 
             shownTotal = System.Math.Min(balance, shownTotal + amount);
             ShowTotal(shownTotal);
+
+            PlayCoinChime();
+
+            // Every other coin label climbs with this one. Leaving them behind would have
+            // the header disagree with the panel for as long as the screen is open.
+            GameplayEvents.RaiseCoinBalanceChanged(shownTotal);
+        }
+
+        /// <summary>
+        /// Play, not PlayOneShot: a new coin replaces whatever was still ringing. The mute
+        /// setting has to be honoured here because this source is ours, not the audio
+        /// controller's.
+        /// </summary>
+        private void PlayCoinChime()
+        {
+            if (coinClip == null)
+            {
+                return;
+            }
+
+            if (coinSource == null)
+            {
+                AudioController.Instance?.PlaySound(coinClip, coinVolume);
+                return;
+            }
+
+            bool isMuted = AudioController.Instance != null && AudioController.Instance.IsMuteSound;
+            coinSource.clip = coinClip;
+            coinSource.volume = isMuted ? 0f : coinVolume;
+            coinSource.Play();
         }
 
         private void ShowTotal(long value)
