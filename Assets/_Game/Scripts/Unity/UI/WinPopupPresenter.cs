@@ -14,8 +14,9 @@ namespace ASTeams.SingleLine.Unity
     /// </summary>
     public sealed class WinPopupPresenter : MonoBehaviour
     {
-        [Tooltip("How long the board keeps the celebration before the screen opens. " +
-                 "GDD 10 gives the win wave 0.8 to 1.2 seconds.")]
+        [Tooltip("Least time the board keeps the celebration before the screen opens. " +
+                 "GDD 10 gives the win wave 0.8 to 1.2 seconds. A level long enough that " +
+                 "its wave runs past this holds the screen back until the wave is done.")]
         [SerializeField, Min(0f)] private float showDelay = 0.9f;
 
         [Tooltip("After this much of the celebration a tap opens the screen at once. " +
@@ -24,17 +25,20 @@ namespace ASTeams.SingleLine.Unity
 
         private int lastReward;
         private long lastBalance;
+        private float celebrationSeconds;
         private Coroutine pending;
 
         private void OnEnable()
         {
             GameplayEvents.OnCoinsAwarded += HandleCoinsAwarded;
+            GameplayEvents.OnCelebrationStarted += HandleCelebrationStarted;
             GameplayEvents.OnLevelWon += HandleLevelWon;
         }
 
         private void OnDisable()
         {
             GameplayEvents.OnCoinsAwarded -= HandleCoinsAwarded;
+            GameplayEvents.OnCelebrationStarted -= HandleCelebrationStarted;
             GameplayEvents.OnLevelWon -= HandleLevelWon;
 
             if (pending != null)
@@ -54,6 +58,16 @@ namespace ASTeams.SingleLine.Unity
             lastBalance = balance;
         }
 
+        /// <summary>
+        /// The board says how long its wave will run before the win itself is raised, so
+        /// the number is already in hand when the screen is asked for. Covering a wave
+        /// halfway through would throw away the very thing it is celebrating.
+        /// </summary>
+        private void HandleCelebrationStarted(float seconds)
+        {
+            celebrationSeconds = seconds;
+        }
+
         private void HandleLevelWon(int levelNumber, string levelId)
         {
             if (pending != null)
@@ -67,8 +81,10 @@ namespace ASTeams.SingleLine.Unity
         private IEnumerator ShowAfterCelebration(int levelNumber)
         {
             float waited = 0f;
+            float wait = Mathf.Max(showDelay, celebrationSeconds);
+            celebrationSeconds = 0f;
 
-            while (waited < showDelay)
+            while (waited < wait)
             {
                 waited += Time.deltaTime;
 

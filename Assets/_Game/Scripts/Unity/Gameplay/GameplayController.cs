@@ -124,7 +124,11 @@ namespace ASTeams.SingleLine.Unity
                     return false;
                 }
 
-                boardFeedback.PlayHint(result.Steps);
+                // A hint that asks for undos first does not continue from where the player
+                // is standing, so the drag is given no starting square and begins on the
+                // first one it is pointing at.
+                boardFeedback.PlayHint(result.Steps,
+                    result.BacktrackCount > 0 ? LevelData.NoCell : session.Head);
                 OnHintReady?.Invoke(result);
                 GameplayEvents.RaiseHintResolved(result);
                 return !result.NeedsRestart && result.Steps.Count > 0;

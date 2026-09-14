@@ -33,6 +33,13 @@ namespace ASTeams.SingleLine.Unity
         public static event Action<int, string> OnLevelWon;
 
         /// <summary>
+        /// How long the board is going to celebrate for, raised the moment the wave along
+        /// the path starts. The wave's length depends on how many squares the level has,
+        /// so a screen that waits for it has to be told rather than assume a number.
+        /// </summary>
+        public static event Action<float> OnCelebrationStarted;
+
+        /// <summary>
         /// Coins paid for finishing a level, with the balance they landed in. Already
         /// saved by the time this fires, so a screen may animate at its own pace.
         /// </summary>
@@ -103,6 +110,11 @@ namespace ASTeams.SingleLine.Unity
             OnHintResolved?.Invoke(result);
         }
 
+        public static void RaiseCelebrationStarted(float seconds)
+        {
+            OnCelebrationStarted?.Invoke(seconds);
+        }
+
         public static void RaiseLevelWon(int levelNumber, string levelId)
         {
             OnLevelWon?.Invoke(levelNumber, levelId);
@@ -162,6 +174,7 @@ namespace ASTeams.SingleLine.Unity
             OnHintStarted = null;
             OnHintResolved = null;
             OnLevelWon = null;
+            OnCelebrationStarted = null;
             OnCoinsAwarded = null;
             OnCoinBalanceChanged = null;
             OnRewindChanged = null;

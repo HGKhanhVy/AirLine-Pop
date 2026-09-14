@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using ASTeams.SingleLine.Core;
 using DG.Tweening;
 using UnityEngine;
 
@@ -27,26 +28,45 @@ namespace ASTeams.SingleLine.Unity
         [SerializeField, Min(0)] private int shakeVibrato = 14;
 
         [Header("Hint")]
-        [Tooltip("How far a hinted square swells. Large enough to find, small enough not " +
-                 "to look like the board is breathing.")]
-        [SerializeField, Min(1f)] private float hintScale = 1.12f;
+        [Tooltip("Drags through the hinted squares. Leave empty to run the hint without a " +
+                 "marker; the squares still press in order.")]
+        [SerializeField] private HintGhostView hintGhost;
 
-        [Tooltip("How long the highlight stays up. GDD 7.1 asks for 2.5 s or until the player moves.")]
+        [Tooltip("How long the hint stays up. GDD 7.1 asks for 2.5 s or until the player moves.")]
         [SerializeField, Min(0.1f)] private float hintHold = 2.5f;
 
-        [Tooltip("Length of one swell and back.")]
-        [SerializeField, Min(0.05f)] private float hintPulse = 0.5f;
+        [Tooltip("How long the drag takes to cross one square. This is the speed of the " +
+                 "imaginary finger, so it wants to look like someone playing deliberately " +
+                 "rather than racing.")]
+        [SerializeField, Min(0.05f)] private float hintStepSeconds = 0.22f;
 
-        [Tooltip("Delay between one hinted cell and the next. Zero keeps the three on one " +
-                 "rhythm; staggering them made each pulse at its own rate and read as noise.")]
-        [SerializeField, Min(0f)] private float hintStagger;
+        [Tooltip("Pause between one run and the next, so a repeat reads as the move being " +
+                 "shown again rather than as a loop with no beginning.")]
+        [SerializeField, Min(0f)] private float hintRunGap = 0.35f;
+
+        [SerializeField, Min(0.05f)] private float hintFadeSeconds = 0.15f;
 
         [Header("Win")]
-        [SerializeField, Min(1f)] private float winScale = 1.16f;
-        [Tooltip("Gap between one square swelling and the next. GDD 10 gives the whole " +
-                 "wave 0.8 to 1.2 s, and the dust rides the same step so the two agree.")]
-        [SerializeField, Min(0.01f)] private float winStepDelay = 0.05f;
-        [SerializeField, Min(0.01f)] private float winDuration = 0.22f;
+        [SerializeField, Min(1f)] private float winScale = 1.22f;
+
+        [Tooltip("How long the whole wave should take. The squares share it out between " +
+                 "them, so a short path pops unhurriedly and a long one runs quickly, and " +
+                 "both finish at about the same moment.")]
+        [SerializeField, Min(0.1f)] private float winWaveSeconds = 0.7f;
+
+        [Tooltip("Shortest gap between two squares, so a very long path overruns the window " +
+                 "rather than being sped up into a blur.")]
+        [SerializeField, Min(0.01f)] private float winStepMin = 0.03f;
+
+        [Tooltip("Longest gap between two squares, so a three square level does not dawdle.")]
+        [SerializeField, Min(0.02f)] private float winStepMax = 0.11f;
+
+        [Tooltip("How far into one square's pop the next one sets off. Below 1 they overlap, " +
+                 "which is what makes the wave roll: at 0.25 there are four squares in the " +
+                 "air at any moment, so neighbours sit at four different heights and the " +
+                 "crest reads as a slope. Raising it thins the crest until, at 1, the " +
+                 "squares run strictly one at a time and the wave catches between them.")]
+        [SerializeField, Range(0.15f, 1f)] private float winStepShare = 0.25f;
 
         [Header("Invalid move")]
         [Tooltip("How far the square nudges, in cells. A cell is at most 18% of the screen, " +
@@ -75,8 +95,10 @@ namespace ASTeams.SingleLine.Unity
 
         private Sequence hintSequence;
         private readonly List<CellView> hintCells = new List<CellView>(4);
+        private readonly List<int> hintPath = new List<int>(4);
         private Coroutine dustWave;
         private WaitForSeconds dustStep;
+        private float dustStepSeconds;
 
         // The controller hands out a list it reuses, so what the wave needs is copied here
         // before the coroutine outlives the call that started it. Colours are read now
@@ -87,8 +109,6 @@ namespace ASTeams.SingleLine.Unity
         private void Awake()
         {
             effects = effectPlayer;
-
-            dustStep = new WaitForSeconds(winStepDelay);
         }
 
         private void OnDisable()
@@ -121,7 +141,20 @@ namespace ASTeams.SingleLine.Unity
             running.SetUpdate(isIndependentUpdate: false);
         }
 
-        /// <summary>A short wave along the path, in the order the player drew it.</summary>
+        /// <summary>
+        /// A wave along the path, in the order the player drew it.
+        ///
+        /// Two numbers, not one. The gap between squares sets the rhythm and comes out of
+        /// a fixed budget, because a level here is anywhere from 3 to 69 squares and one
+        /// fixed gap cannot serve both. How long a square takes to swell and settle is
+        /// then a multiple of that gap rather than equal to it, and that is what makes
+        /// this a wave: each square is still on its way down as its neighbour starts up,
+        /// so the crest rolls along the path instead of hopping from square to square.
+        ///
+        /// Tying the two together is what went wrong in both directions before. Equal, and
+        /// the squares pop one at a time like a queue. Gap far shorter than the pop, as it
+        /// first shipped, and four squares swell at once and the board just shivers.
+        /// </summary>
         public void PlayWin(IReadOnlyList<int> pathInOrder)
         {
             Stop();
@@ -135,6 +168,10 @@ namespace ASTeams.SingleLine.Unity
             burstPositions.Clear();
             burstColors.Clear();
 
+            float stepSeconds = Mathf.Clamp(
+                winWaveSeconds / pathInOrder.Count, winStepMin, winStepMax);
+            float pulseSeconds = stepSeconds / winStepShare;
+
             for (int step = 0; step < pathInOrder.Count; step++)
             {
                 int index = pathInOrder[step];
@@ -145,12 +182,20 @@ namespace ASTeams.SingleLine.Unity
                     continue;
                 }
 
-                running.Insert(step * winStepDelay, Pulse(cell.transform, winScale, winDuration));
+                running.Insert(step * stepSeconds, Pulse(cell.transform, winScale, pulseSeconds));
                 burstPositions.Add(boardView.GetCellWorldPosition(index));
                 burstColors.Add(cell.Color);
             }
 
             running.SetUpdate(isIndependentUpdate: false);
+
+            // The win screen has to sit out the whole wave, and only the board knows how
+            // long that is: the last square sets off one gap behind each of the others and
+            // then needs its own pop on top.
+            GameplayEvents.RaiseCelebrationStarted(
+                ((pathInOrder.Count - 1) * stepSeconds) + pulseSeconds);
+
+            SetDustStep(stepSeconds);
 
             if (burstPositions.Count > 0)
             {
@@ -249,10 +294,22 @@ namespace ASTeams.SingleLine.Unity
         }
 
         /// <summary>
-        /// Draws attention to one cell without playing it. A hint points, it does not
-        /// move: the player still has to make the move themselves.
+        /// Plays the hint as somebody playing it: a light drags from square to square in
+        /// the order they are to be walked, and each one presses under it as it lands.
+        ///
+        /// A hint points, it does not move. Nothing here is coloured in and no cell is
+        /// entered; the player still has to make every move themselves. But three squares
+        /// pulsing together only say "these three", leaving the player to work out which
+        /// comes first, and pulsing them in turn still only says "this order". Dragging
+        /// through them says the thing the player actually has to do with their finger.
         /// </summary>
-        public void PlayHint(IReadOnlyList<int> cells)
+        /// <param name="cells">The squares to walk, in order.</param>
+        /// <param name="fromCell">
+        /// Where the drag sets off, normally the square the player is standing on. Pass
+        /// <see cref="LevelData.NoCell"/> when the hint asks for undos first: there is no
+        /// line from the head to its first square, and drawing one would be a lie.
+        /// </param>
+        public void PlayHint(IReadOnlyList<int> cells, int fromCell)
         {
             StopHint();
 
@@ -261,32 +318,70 @@ namespace ASTeams.SingleLine.Unity
                 return;
             }
 
-            // An even number of yoyo legs, so every cell ends back at its own size even
-            // if the highlight runs its full course. Every cell uses the same leg length,
-            // which is what keeps the group on one rhythm however it is staggered.
-            int legs = Mathf.Max(1, Mathf.RoundToInt(hintHold / hintPulse)) * 2;
-            float legDuration = hintPulse * 0.5f;
-            hintSequence = DOTween.Sequence();
+            hintPath.Clear();
+
+            if (fromCell != LevelData.NoCell)
+            {
+                hintPath.Add(fromCell);
+            }
 
             for (int i = 0; i < cells.Count; i++)
             {
+                hintPath.Add(cells[i]);
+
                 CellView view = boardView.GetCellView(cells[i]);
 
-                if (view == null)
+                if (view != null)
                 {
-                    continue;
+                    hintCells.Add(view);
+                }
+            }
+
+            if (hintPath.Count < 2)
+            {
+                return;
+            }
+
+            bool hasGhost = hintGhost != null && hintGhost.IsReady;
+            hintSequence = DOTween.Sequence();
+
+            // Put the light back on the first square at the top of every run, so a repeat
+            // starts where the last one did rather than from wherever it ended.
+            Vector3 origin = boardView.GetCellWorldPosition(hintPath[0]);
+
+            if (hasGhost)
+            {
+                hintSequence.AppendCallback(() => hintGhost.Show(origin, Color.white));
+            }
+
+            for (int i = 1; i < hintPath.Count; i++)
+            {
+                int index = hintPath[i];
+                Vector3 to = boardView.GetCellWorldPosition(index);
+
+                if (hasGhost)
+                {
+                    hintSequence.Append(hintGhost.MoveTo(to, hintStepSeconds));
+                }
+                else
+                {
+                    hintSequence.AppendInterval(hintStepSeconds);
                 }
 
-                hintCells.Add(view);
-
-                // Staggering them makes the three read as an order to walk rather than as
-                // three separate suggestions.
-                float delay = Mathf.Min(i * hintStagger, hintHold * 0.5f);
-                hintSequence.Insert(delay, view.transform
-                    .DOScale(hintScale, legDuration)
-                    .SetLoops(legs, LoopType.Yoyo)
-                    .SetEase(Ease.InOutSine));
+                hintSequence.AppendCallback(() => boardView.PreviewCell(index));
             }
+
+            if (hasGhost)
+            {
+                hintSequence.Append(hintGhost.FadeOut(hintFadeSeconds));
+            }
+
+            hintSequence.AppendInterval(hintRunGap);
+
+            // Whole runs only: cutting one halfway leaves the light stranded between
+            // squares, pointing at nothing.
+            float run = ((hintPath.Count - 1) * hintStepSeconds) + hintFadeSeconds + hintRunGap;
+            hintSequence.SetLoops(Mathf.Max(1, Mathf.RoundToInt(hintHold / run)), LoopType.Restart);
 
             hintSequence.SetUpdate(isIndependentUpdate: false);
             hintSequence.OnComplete(StopHint);
@@ -304,6 +399,7 @@ namespace ASTeams.SingleLine.Unity
             }
 
             hintSequence = null;
+            hintGhost?.Hide();
 
             for (int i = 0; i < hintCells.Count; i++)
             {
@@ -341,14 +437,37 @@ namespace ASTeams.SingleLine.Unity
             ResetCellScales();
         }
 
-        private static Tween Pulse(Transform target, float scale, float duration)
+        /// <summary>
+        /// One square swelling and settling again, in exactly <paramref name="length"/>.
+        /// Both legs come out of that one number so the caller can lay pops end to end and
+        /// trust that they will not run into each other.
+        /// </summary>
+        private static Tween Pulse(Transform target, float scale, float length)
         {
             target.localScale = Vector3.one;
 
+            // Sine in and out, not quad out: a quad leaves a corner where it starts and
+            // another where the yoyo turns, and at this speed those corners are what the
+            // eye reads as the wave stuttering from square to square.
             return target
-                .DOScale(scale, duration * 0.4f)
+                .DOScale(scale, length * 0.5f)
                 .SetLoops(2, LoopType.Yoyo)
-                .SetEase(Ease.OutQuad);
+                .SetEase(Ease.InOutSine);
+        }
+
+        /// <summary>
+        /// The dust rides the same beat as the wave. A new wait is only built when the
+        /// beat actually changes, so replaying a level of the same size allocates nothing.
+        /// </summary>
+        private void SetDustStep(float seconds)
+        {
+            if (dustStep != null && Mathf.Approximately(dustStepSeconds, seconds))
+            {
+                return;
+            }
+
+            dustStepSeconds = seconds;
+            dustStep = new WaitForSeconds(seconds);
         }
 
         /// <summary>
