@@ -9,10 +9,10 @@ public class HomeController : MonoBehaviour
     private const int LevelsPerChapter = 30;
 
     /// <summary>
-    /// Straight to the board. The managers live from the splash screen on, so the
-    /// template's own loading scene would only be a second loading bar over the same work.
+    /// Play goes through the loading screen, which shows the logo while the board is
+    /// brought up and then opens Gameplay itself.
     /// </summary>
-    private const string GameplayScene = "Gameplay";
+    private const string GameplayBootScene = "Loading";
 
     [Header("UI")]
     public TMP_Text levelText;
@@ -59,7 +59,7 @@ public class HomeController : MonoBehaviour
 
     public void Play()
     {
-        SceneManager.LoadScene(GameplayScene);
+        SceneManager.LoadScene(GameplayBootScene);
     }
 
     public void OpenTheme()
