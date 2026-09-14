@@ -1,6 +1,5 @@
 using ASTeams.Base;
 using Sirenix.OdinInspector;
-using Sirenix.OdinInspector.Editor.GettingStarted;
 using UnityEngine;
 
 public class UiManager : MonoBehaviour
