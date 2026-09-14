@@ -27,18 +27,40 @@ namespace ASTeams.SingleLine.Unity
         [SerializeField, Min(0.1f)] private float idleAnimationInterval = 4f;
 
         [Header("Connect")]
-        [Tooltip("How long the press and bounce take. GDD 10 asks for 80 to 120 ms so the " +
-                 "feedback keeps up with a fast drag.")]
-        [SerializeField, Min(0.02f)] private float connectDuration = 0.14f;
+        [Tooltip("How long the press takes. GDD 10 asks for 80 to 120 ms, which measured out " +
+                 "at a single frame on the floor of the press: correct on paper and invisible " +
+                 "in the hand. The press is what the player is supposed to feel, so it is " +
+                 "given long enough to be seen and still clears before the next square.")]
+        [SerializeField, Min(0.02f)] private float connectDuration = 0.26f;
 
         [Tooltip("How far the square sinks under the finger, as a share of its size.")]
-        [SerializeField, Range(0f, 0.4f)] private float connectPressDepth = 0.12f;
+        [SerializeField, Range(0f, 0.4f)] private float connectPressDepth = 0.2f;
 
-        [Tooltip("How far it overshoots on the way back up.")]
-        [SerializeField, Range(0f, 0.4f)] private float connectPopHeight = 0.14f;
+        [Tooltip("How far it overshoots on the way back up. Kept small on purpose: a button " +
+                 "gives one beat, and a taller overshoot reads as a second bounce.")]
+        [SerializeField, Range(0f, 0.4f)] private float connectPopHeight = 0.05f;
 
-        [Tooltip("Share of the move spent sinking. The rest is the bounce back.")]
+        [Tooltip("Share of the move spent sinking. The rest is the way back. Down quickly, " +
+                 "up slowly: that split is what separates a button from a wobble.")]
         [SerializeField, Range(0.1f, 0.6f)] private float connectPressShare = 0.3f;
+
+        [Header("Connect flash")]
+        [Tooltip("Fill/light on the block art. The reference game spreads this white sheet " +
+                 "from the middle of a square out over its whole face the moment the path " +
+                 "lands on it, then takes it away again.")]
+        [SerializeField] private SpriteRenderer connectFlash;
+
+        [SerializeField, Min(0.02f)] private float flashDuration = 0.28f;
+        [SerializeField, Range(0f, 1f)] private float flashPeakAlpha = 0.8f;
+
+        [Tooltip("How wide the sheet starts, as a share of the face. The reference opens at " +
+                 "just under half and ends level with the block.")]
+        [SerializeField, Range(0f, 1f)] private float flashStartScale = 0.4f;
+
+        [SerializeField, Range(0.1f, 2f)] private float flashEndScale = 1f;
+
+        [Tooltip("Share of the flash spent brightening. The rest is the fade out.")]
+        [SerializeField, Range(0.05f, 0.8f)] private float flashRiseShare = 0.18f;
 
         private static readonly int StartIdleState = Animator.StringToHash("StartIdle");
 
@@ -57,6 +79,7 @@ namespace ASTeams.SingleLine.Unity
         private float fillDuration;
         private float fillLeft;
         private float connectLeft;
+        private float flashLeft;
         private bool isStartCueVisible;
         private bool isGoalRevealing;
         private float cueElapsed;
@@ -101,6 +124,16 @@ namespace ASTeams.SingleLine.Unity
             {
                 blockAnimator.enabled = false;
             }
+
+            // The sheet sits above the block's own face but below the start and goal marks,
+            // so it washes over the colour without swallowing what the level is telling the
+            // player. It ships collapsed; nothing shows it until a path arrives.
+            if (connectFlash != null)
+            {
+                connectFlash.sortingOrder = BoardSortingOrder.ConnectFlash;
+            }
+
+            HideConnectFlash();
         }
 
         private static void LiftAboveConnector(SpriteRenderer renderer)
@@ -124,6 +157,7 @@ namespace ASTeams.SingleLine.Unity
             transform.localScale = Vector3.one;
             fillLeft = 0f;
             connectLeft = 0f;
+            HideConnectFlash();
             ClearStartMarker();
             HideGoalMarker();
             ResetAnimatedVisual();
@@ -175,6 +209,11 @@ namespace ASTeams.SingleLine.Unity
         /// cannot be played here: it stores absolute scales belonging to the source
         /// prefab's hierarchy, while these squares are resized at runtime to fit the
         /// board, and at 0.62 s it would still be moving two cells after the finger.
+        ///
+        /// One beat, not a bounce: the square goes down under the finger and comes back,
+        /// the way a button does. The white sheet washing over its face is the same clip's
+        /// other half, and it rides along here rather than being a second call, because
+        /// press and flare are one event to the player.
         /// </summary>
         public void PlayConnect()
         {
@@ -184,6 +223,7 @@ namespace ASTeams.SingleLine.Unity
             }
 
             connectLeft = connectDuration;
+            StartConnectFlash();
         }
 
         /// <summary>
@@ -293,12 +333,71 @@ namespace ASTeams.SingleLine.Unity
                 }
             }
 
+            if (flashLeft > 0f)
+            {
+                flashLeft -= deltaTime;
+
+                if (flashLeft <= 0f)
+                {
+                    HideConnectFlash();
+                }
+                else
+                {
+                    AdvanceConnectFlash();
+                    running = true;
+                }
+            }
+
             if (isStartCueVisible)
             {
                 AdvanceStartCue(deltaTime);
             }
 
             return running;
+        }
+
+        private void StartConnectFlash()
+        {
+            if (connectFlash == null || flashDuration <= 0f)
+            {
+                return;
+            }
+
+            flashLeft = flashDuration;
+            connectFlash.enabled = true;
+            AdvanceConnectFlash();
+        }
+
+        /// <summary>
+        /// Opens the sheet out from the middle of the face and fades it as it goes, so the
+        /// square looks lit from within rather than covered over.
+        /// </summary>
+        private void AdvanceConnectFlash()
+        {
+            float t = 1f - (flashLeft / flashDuration);
+            float eased = t * t * (3f - 2f * t);
+            float scale = Mathf.Lerp(flashStartScale, flashEndScale, eased);
+
+            float alpha = t < flashRiseShare
+                ? flashPeakAlpha * (t / flashRiseShare)
+                : flashPeakAlpha * (1f - ((t - flashRiseShare) / (1f - flashRiseShare)));
+
+            connectFlash.transform.localScale = new Vector3(scale, scale, 1f);
+            connectFlash.color = new Color(1f, 1f, 1f, alpha);
+        }
+
+        private void HideConnectFlash()
+        {
+            flashLeft = 0f;
+
+            if (connectFlash == null)
+            {
+                return;
+            }
+
+            connectFlash.transform.localScale = Vector3.zero;
+            connectFlash.color = new Color(1f, 1f, 1f, 0f);
+            connectFlash.enabled = false;
         }
 
         /// <summary>

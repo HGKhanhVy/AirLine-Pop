@@ -22,6 +22,12 @@ namespace ASTeams.SingleLine.Unity
         public const int Connector = 15;
 
         /// <summary>
+        /// The white sheet a square washes over itself when the path lands on it. Above the
+        /// pipe, because it is meant to read as light on the surface rather than under it.
+        /// </summary>
+        public const int ConnectFlash = 17;
+
+        /// <summary>
         /// The start and end dots. They sit above the pipe: the pipe runs through the
         /// middle of a square and would otherwise bury the very marks that say where the
         /// path begins and where it has stopped.

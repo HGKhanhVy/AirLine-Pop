@@ -61,10 +61,16 @@ MonoBehaviour:
   startPulseAlpha: 0.24
   idleReminderDelay: 3
   idleAnimationInterval: 4
-  connectDuration: 0.14
-  connectPressDepth: 0.12
-  connectPopHeight: 0.14
+  connectDuration: 0.26
+  connectPressDepth: 0.2
+  connectPopHeight: 0.05
   connectPressShare: 0.3
+  connectFlash: {fileID: 3059193982834963540}
+  flashDuration: 0.28
+  flashPeakAlpha: 0.5
+  flashStartScale: 0.45
+  flashEndScale: 1
+  flashRiseShare: 0.18
 --- !u!1 &2918404663837964229
 GameObject:
   m_ObjectHideFlags: 0
@@ -905,7 +911,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: -0.3, y: 0, z: 0}
+  m_LocalScale: {x: 0, y: 0, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2920826388865011440}
@@ -953,9 +959,9 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 5
+  m_SortingOrder: 17
   m_Sprite: {fileID: 21300000, guid: 58e399d5d9d24434cb6162c257097730, type: 2}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.11764706}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
