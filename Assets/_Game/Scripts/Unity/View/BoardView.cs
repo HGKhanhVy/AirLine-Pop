@@ -261,9 +261,13 @@ namespace ASTeams.SingleLine.Unity
 
             // The burst is tinted from the palette, not from the square: the square is a
             // tenth of a second into fading towards its new colour when this fires, so
-            // reading its colour here would paint the burst the shade it is leaving. The
-            // start square's burst is tinted the same way, and the two have to match.
-            effects?.Play(GameplayEffect.CellConnected, GetCellWorldPosition(index), palette.Head);
+            // reading its colour here would paint the burst the shade it is leaving.
+            //
+            // Visited, not Head. Head is the pale highlight the square wears only while the
+            // path ends on it, and the next step takes it away; the colour the square keeps
+            // is Visited. The sparks are drawn additively as well, which lightens them
+            // further, so a Head tint came out nearly white against a saturated block.
+            effects?.Play(GameplayEffect.CellConnected, GetCellWorldPosition(index), palette.Visited);
             Track(view);
         }
         /// <summary>
