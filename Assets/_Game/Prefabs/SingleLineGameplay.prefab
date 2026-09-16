@@ -5598,7 +5598,7 @@ MonoBehaviour:
   theme: {fileID: 11400000, guid: c7ef0f465b839234587d76f3d8c4d873, type: 2}
   cellRoot: {fileID: 3686861593823030918}
   cellPrefab: {fileID: 558483796533426618, guid: 4eb777606de3ed74dbc981b013a4ce06, type: 3}
-  poolCapacity: 100
+  poolCapacity: 32
   effectPlayer: {fileID: 7412008451236500013}
   headCueDelay: 3
   headIdleInterval: 4
