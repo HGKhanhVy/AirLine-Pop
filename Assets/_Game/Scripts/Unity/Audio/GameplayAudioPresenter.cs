@@ -29,9 +29,15 @@ namespace ASTeams.SingleLine.Unity
 
         [SerializeField] private AudioClip hintClip;
 
-        [Tooltip("The burst the board itself makes on a win. The fanfare belongs to the " +
-                 "win screen, which plays it as it opens.")]
+        [Tooltip("Played on a win. It used to be a short burst because the win screen " +
+                 "carried the fanfare; that screen is gone and a win now rolls straight " +
+                 "into the next level, so this is the only thing marking the finish.")]
         [SerializeField] private AudioClip winCelebrationClip;
+
+        [Tooltip("Played when the path walks into a dead end. A named SDK sound stood " +
+                 "here before, which made the one moment the player has actually lost " +
+                 "share a cue with every other warning in the game.")]
+        [SerializeField] private AudioClip deadEndClip;
 
         [SerializeField, Range(0f, 1f)] private float actionVolume = 0.7f;
 
@@ -93,8 +99,14 @@ namespace ASTeams.SingleLine.Unity
 
         /// <summary>
         /// The second square is the first step, so the ladder starts there. Past the top
-        /// rung the highest tone repeats rather than falling back to the bottom, which
-        /// would read as the path starting over.
+        /// rung it wraps back to the bottom and climbs again, the way the reference game
+        /// does: the clips are 24 notes of a scale, not 24 unrelated noises.
+        ///
+        /// It used to clamp at the top instead, on the theory that dropping back would
+        /// read as the path starting over. Counting the shipped levels shows why that was
+        /// the wrong call: 48 of 300 run longer than the ladder and the largest is 69
+        /// squares, so on those the last 44 steps all fired the same top note. One note
+        /// hammered forty times reads as a broken sound, not as a melody.
         ///
         /// The clip overload is used on purpose: the named one is rate limited, and a fast
         /// drag would drop most of its own steps.
@@ -112,7 +124,7 @@ namespace ASTeams.SingleLine.Unity
                 return;
             }
 
-            int rung = Mathf.Clamp(visitedCells - 2, 0, stepTones.Length - 1);
+            int rung = (visitedCells - 2) % stepTones.Length;
             AudioClip tone = stepTones[rung];
 
             if (tone == null)
@@ -179,12 +191,10 @@ namespace ASTeams.SingleLine.Unity
         {
             if (current == PathState.Stuck)
             {
-                audioController?.PlaySound(SoundName.UI_Warning);
+                PlayAction(deadEndClip);
             }
             else if (current == PathState.Won)
             {
-                // Not the fanfare: the win screen plays that as it opens, and the board
-                // playing it too meant the same cue twice, a second apart.
                 PlayAction(winCelebrationClip);
             }
         }
