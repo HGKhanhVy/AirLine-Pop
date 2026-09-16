@@ -1,0 +1,13 @@
+<linker>
+  <!--
+    Managed stripping is set to High for Android, which removes members no analysed call
+    reaches. LevelDto and ChapterFile are auto-property DTOs whose setters are only ever
+    invoked by Newtonsoft through reflection (ChapterLevelRepository reads chapter JSON at
+    runtime), so the linker cannot see those calls and is free to drop them. A stripped
+    build would then deserialise every level into default values and load nothing.
+
+    The assembly is a dozen small classes, so preserving all of it costs almost nothing and
+    survives someone adding a field to the DTO later.
+  -->
+  <assembly fullname="ASTeams.SingleLine.Data" preserve="all"/>
+</linker>
