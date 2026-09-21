@@ -485,8 +485,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ada6a83e2b191648a076229c9806344, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  button: {fileID: 279965237}
   pressedScale: 0.9
-  duration: 0.08
+  pressDuration: 0.08
+  releaseDuration: 0.18
+  playsClickSound: 1
+  playsHaptic: 1
 --- !u!1 &443151184
 GameObject:
   m_ObjectHideFlags: 0
@@ -807,8 +811,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ada6a83e2b191648a076229c9806344, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  button: {fileID: 600275534}
   pressedScale: 0.9
-  duration: 0.08
+  pressDuration: 0.08
+  releaseDuration: 0.18
+  playsClickSound: 1
+  playsHaptic: 1
 --- !u!1 &744068083
 GameObject:
   m_ObjectHideFlags: 0
@@ -1405,8 +1413,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ada6a83e2b191648a076229c9806344, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  button: {fileID: 1748446157}
   pressedScale: 0.9
-  duration: 0.08
+  pressDuration: 0.08
+  releaseDuration: 0.18
+  playsClickSound: 1
+  playsHaptic: 1
 --- !u!1001 &1890683749
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1726,8 +1738,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ada6a83e2b191648a076229c9806344, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  button: {fileID: 1950772736}
   pressedScale: 0.9
-  duration: 0.08
+  pressDuration: 0.08
+  releaseDuration: 0.18
+  playsClickSound: 1
+  playsHaptic: 1
 --- !u!1 &2059142497
 GameObject:
   m_ObjectHideFlags: 0

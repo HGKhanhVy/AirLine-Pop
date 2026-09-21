@@ -1,25 +1,40 @@
-﻿using DG.Tweening;
+using ASTeams.Base;
+using DG.Tweening;
 using UnityEngine;
 
+/// <summary>
+/// Base for every panel that pops over the game: scales and fades in on Show, reverses on
+/// Hide. Input is blocked while the panel is animating so a half-open popup cannot be
+/// clicked through or tapped twice.
+/// </summary>
 public abstract class Uibase : MonoBehaviour
 {
     [Header("Animation")]
     [SerializeField] protected CanvasGroup canvasGroup;
     [SerializeField] protected RectTransform panel;
 
-    [SerializeField] private float animDuration = 0.3f;
+    [SerializeField, Min(0f)] private float animDuration = 0.3f;
+    [SerializeField, Range(0f, 1f)] private float hiddenScale = 0.7f;
+    [SerializeField] private bool playsSound = true;
 
     private Sequence currentSequence;
 
+    public bool IsShown { get; private set; }
+
+    private void Reset()
+    {
+        canvasGroup = GetComponent<CanvasGroup>();
+        panel = GetComponent<RectTransform>();
+    }
+
     protected virtual void Awake()
     {
-        // Tự tìm CanvasGroup trên UI
+        // Fallback for panels placed before the references were serialized; runs once.
         if (canvasGroup == null)
         {
             canvasGroup = GetComponent<CanvasGroup>();
         }
 
-        // Nếu không gán Panel thì dùng chính UI
         if (panel == null)
         {
             panel = GetComponent<RectTransform>();
@@ -28,62 +43,62 @@ public abstract class Uibase : MonoBehaviour
 
     public virtual void Show()
     {
-        // Hủy animation cũ nếu đang chạy
         currentSequence?.Kill();
+        IsShown = true;
 
-        // Bật UI
         gameObject.SetActive(true);
+        SetInteractable(false);
 
-        // Trạng thái ban đầu
         canvasGroup.alpha = 0f;
-        panel.localScale = Vector3.one * 0.7f;
+        panel.localScale = Vector3.one * hiddenScale;
 
-        // Tạo animation
-        currentSequence = DOTween.Sequence();
+        if (playsSound)
+        {
+            AudioController.Instance?.PlaySound(SoundName.UI_PopupOpen);
+        }
 
-        // Scale 0.7 -> 1
-        currentSequence.Join(
-            panel
-                .DOScale(Vector3.one, animDuration)
-                .SetEase(Ease.OutBack)
-        );
-
-        // Fade 0 -> 1
-        currentSequence.Join(
-            canvasGroup
-                .DOFade(1f, animDuration)
-                .SetEase(Ease.OutQuad)
-        );
+        currentSequence = DOTween.Sequence()
+            .Join(panel.DOScale(Vector3.one, animDuration).SetEase(Ease.OutBack))
+            .Join(canvasGroup.DOFade(1f, animDuration).SetEase(Ease.OutQuad))
+            .SetUpdate(true)
+            .OnComplete(() => SetInteractable(true));
     }
 
     public virtual void Hide()
     {
-        // Hủy animation cũ
-        currentSequence?.Kill();
-
-        currentSequence = DOTween.Sequence();
-
-        // Scale 1 -> 0.7
-        currentSequence.Join(
-            panel
-                .DOScale(Vector3.one * 0.7f, animDuration)
-                .SetEase(Ease.InBack)
-        );
-
-        // Fade 1 -> 0
-        currentSequence.Join(
-            canvasGroup
-                .DOFade(0f, animDuration * 0.7f)
-        );
-
-        currentSequence.OnComplete(() =>
+        if (!IsShown && !gameObject.activeSelf)
         {
-            gameObject.SetActive(false);
+            return;
+        }
 
-            // Reset lại trạng thái
-            panel.localScale = Vector3.one;
-            canvasGroup.alpha = 1f;
-        });
+        currentSequence?.Kill();
+        IsShown = false;
+        SetInteractable(false);
+
+        if (playsSound)
+        {
+            AudioController.Instance?.PlaySound(SoundName.UI_PopupClose);
+        }
+
+        currentSequence = DOTween.Sequence()
+            .Join(panel.DOScale(Vector3.one * hiddenScale, animDuration).SetEase(Ease.InBack))
+            .Join(canvasGroup.DOFade(0f, animDuration * 0.7f))
+            .SetUpdate(true)
+            .OnComplete(OnHidden);
+    }
+
+    private void OnHidden()
+    {
+        gameObject.SetActive(false);
+        panel.localScale = Vector3.one;
+        canvasGroup.alpha = 1f;
+        SetInteractable(true);
+    }
+
+    private void SetInteractable(bool isInteractable)
+    {
+        canvasGroup.interactable = isInteractable;
+        canvasGroup.blocksRaycasts = isInteractable;
     }
 
     protected virtual void OnDestroy()

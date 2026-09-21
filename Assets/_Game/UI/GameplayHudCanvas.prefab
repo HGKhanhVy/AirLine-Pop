@@ -149,6 +149,7 @@ GameObject:
   - component: {fileID: 2490307324618052105}
   - component: {fileID: 2792459318457352671}
   - component: {fileID: 2773331796044086671}
+  - component: {fileID: 8135073795981884584}
   m_Layer: 0
   m_Name: Hint
   m_TagString: Untagged
@@ -258,6 +259,24 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &8135073795981884584
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 415050399118989899}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ada6a83e2b191648a076229c9806344, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  button: {fileID: 2773331796044086671}
+  pressedScale: 0.9
+  pressDuration: 0.08
+  releaseDuration: 0.18
+  playsClickSound: 0
+  playsHaptic: 1
 --- !u!1 &585091787512282252
 GameObject:
   m_ObjectHideFlags: 0
@@ -1234,6 +1253,7 @@ GameObject:
   - component: {fileID: 7439672151715975195}
   - component: {fileID: 5129140723014875511}
   - component: {fileID: 8203754119236171151}
+  - component: {fileID: 9179224756777531632}
   m_Layer: 0
   m_Name: Restart
   m_TagString: Untagged
@@ -1343,6 +1363,24 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &9179224756777531632
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6605767614497664916}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ada6a83e2b191648a076229c9806344, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  button: {fileID: 8203754119236171151}
+  pressedScale: 0.9
+  pressDuration: 0.08
+  releaseDuration: 0.18
+  playsClickSound: 0
+  playsHaptic: 1
 --- !u!1 &7230601967886236818
 GameObject:
   m_ObjectHideFlags: 0
@@ -1355,6 +1393,7 @@ GameObject:
   - component: {fileID: 5338725434438778435}
   - component: {fileID: 1921803147164319758}
   - component: {fileID: 5128962402468601953}
+  - component: {fileID: 3759110278196681495}
   m_Layer: 0
   m_Name: Undo
   m_TagString: Untagged
@@ -1464,6 +1503,24 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &3759110278196681495
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7230601967886236818}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ada6a83e2b191648a076229c9806344, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  button: {fileID: 5128962402468601953}
+  pressedScale: 0.9
+  pressDuration: 0.08
+  releaseDuration: 0.18
+  playsClickSound: 0
+  playsHaptic: 1
 --- !u!1 &7730204668061724177
 GameObject:
   m_ObjectHideFlags: 0

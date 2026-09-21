@@ -9,8 +9,9 @@ public class UiTheme : Uibase
         closeButton.onClick.AddListener(Hide);
     }
 
-    private void OnDestroy()
+    protected override void OnDestroy()
     {
         closeButton.onClick.RemoveListener(Hide);
+        base.OnDestroy();
     }
 }
