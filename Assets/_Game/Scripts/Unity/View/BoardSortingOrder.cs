@@ -38,5 +38,8 @@ namespace ASTeams.SingleLine.Unity
         public const int Spark = 20;
 
         public const int Dust = 30;
+
+        /// <summary>The tutorial hand, above everything on the board it points at.</summary>
+        public const int Guide = 40;
     }
 }
