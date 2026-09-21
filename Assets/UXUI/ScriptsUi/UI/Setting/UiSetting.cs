@@ -1,39 +1,86 @@
-﻿using UnityEngine;
+using ASTeams.SingleLine.Unity;
+using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// Settings popup (GDD 9.1): music, sound, haptics and the privacy link. Only shows and
+/// forwards; what a switch does and where it is saved belongs to the settings service.
+/// </summary>
 public class UiSetting : Uibase
 {
-    [Header("Sound")]
-    [SerializeField] private Toggle soundToggle;
-    [SerializeField] private GameObject soundOffBtn;
-    [SerializeField] private GameObject soundOnBtn;
+    [Header("Switches")]
+    [SerializeField] private SettingToggleView musicToggle;
+    [SerializeField] private SettingToggleView soundToggle;
+    [SerializeField] private SettingToggleView hapticToggle;
 
-    [Header("Haptic")]
-    [SerializeField] private Toggle hapticToggle;
-    [SerializeField] private GameObject hapticOffBtn;
-    [SerializeField] private GameObject hapticOnBtn;
+    [Header("Links")]
+    [SerializeField] private Button privacyButton;
+    [SerializeField] private SettingsConfigSO config;
 
+    private ISettingsService settings;
 
-    private void Start()
+    public void Initialize(ISettingsService settingsService)
     {
-        // Cập nhật giao diện ban đầu
-        UpdateSoundUI(soundToggle.isOn);
-        UpdateHapticUI(hapticToggle.isOn);
-
-        //  khi Toggle thay đổi
-        soundToggle.onValueChanged.AddListener(UpdateSoundUI);
-        hapticToggle.onValueChanged.AddListener(UpdateHapticUI);
+        settings = settingsService;
     }
 
-    private void UpdateSoundUI(bool isOn)
+    public override void Show()
     {
-        soundOffBtn.SetActive(!isOn);
-        soundOnBtn.SetActive(isOn);
+        Refresh();
+        base.Show();
     }
 
-    private void UpdateHapticUI(bool isOn)
+    private void OnEnable()
     {
-        hapticOffBtn.SetActive(!isOn);
-        hapticOnBtn.SetActive(isOn);
+        musicToggle.OnChanged += HandleMusicChanged;
+        soundToggle.OnChanged += HandleSoundChanged;
+        hapticToggle.OnChanged += HandleHapticChanged;
+        privacyButton.onClick.AddListener(OpenPrivacyPolicy);
+    }
+
+    private void OnDisable()
+    {
+        musicToggle.OnChanged -= HandleMusicChanged;
+        soundToggle.OnChanged -= HandleSoundChanged;
+        hapticToggle.OnChanged -= HandleHapticChanged;
+        privacyButton.onClick.RemoveListener(OpenPrivacyPolicy);
+    }
+
+    private void Refresh()
+    {
+        if (settings == null)
+        {
+            return;
+        }
+
+        musicToggle.SetIsOn(settings.IsMusicOn);
+        soundToggle.SetIsOn(settings.IsSoundOn);
+        hapticToggle.SetIsOn(settings.IsHapticOn);
+    }
+
+    private void HandleMusicChanged(bool isOn)
+    {
+        settings?.SetMusicOn(isOn);
+    }
+
+    private void HandleSoundChanged(bool isOn)
+    {
+        settings?.SetSoundOn(isOn);
+    }
+
+    private void HandleHapticChanged(bool isOn)
+    {
+        settings?.SetHapticOn(isOn);
+    }
+
+    private void OpenPrivacyPolicy()
+    {
+        if (config == null || string.IsNullOrEmpty(config.PrivacyPolicyUrl))
+        {
+            Debug.LogWarning("Privacy policy URL is not set in SettingsConfig.");
+            return;
+        }
+
+        Application.OpenURL(config.PrivacyPolicyUrl);
     }
 }

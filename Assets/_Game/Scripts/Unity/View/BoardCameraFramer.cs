@@ -25,7 +25,12 @@ namespace ASTeams.SingleLine.Unity
         [Tooltip("Share of the screen height reserved at the bottom, where the buttons sit.")]
         [SerializeField, Range(0f, 0.4f)] private float bottomReserve = 0.16f;
 
+        [Tooltip("Space kept between the board and the bars the HUD reports, as a share of the screen height.")]
+        [SerializeField, Range(0f, 0.1f)] private float hudGap = 0.01f;
+
         private Vector2 framedSize;
+        private float hudTop;
+        private float hudBottom;
         private Vector2Int lastScreen;
 
         private void Reset()
@@ -37,6 +42,32 @@ namespace ASTeams.SingleLine.Unity
         {
             boardCamera.orthographic = true;
             boardCamera.backgroundColor = theme.Background;
+        }
+
+        private void OnEnable()
+        {
+            GameplayEvents.OnHudInsetsChanged += HandleHudInsetsChanged;
+        }
+
+        private void OnDisable()
+        {
+            GameplayEvents.OnHudInsetsChanged -= HandleHudInsetsChanged;
+        }
+
+        /// <summary>
+        /// The reserves above are the floor; the bars the HUD actually drew win when they
+        /// are taller, which is the case under a notch or on a squat tablet.
+        /// </summary>
+        private void HandleHudInsetsChanged(float topShare, float bottomShare)
+        {
+            if (Mathf.Approximately(topShare, hudTop) && Mathf.Approximately(bottomShare, hudBottom))
+            {
+                return;
+            }
+
+            hudTop = topShare;
+            hudBottom = bottomShare;
+            Apply();
         }
 
         public void Frame(Vector2 boardWorldSize)
@@ -75,7 +106,9 @@ namespace ASTeams.SingleLine.Unity
             // GDD 9.2 measures the board against the usable screen, not against the gap
             // left between the bars, so the wanted share is of the whole height and the
             // band only caps it.
-            float usable = Mathf.Max(0.1f, 1f - topReserve - bottomReserve);
+            float top = Mathf.Max(topReserve, hudTop + hudGap);
+            float bottom = Mathf.Max(bottomReserve, hudBottom + hudGap);
+            float usable = Mathf.Max(0.1f, 1f - top - bottom);
             float targetShare = Mathf.Min(Mathf.Clamp(theme.BoardHeightFraction, 0.1f, 1f), usable * 0.98f);
 
             // Half height the camera needs for the board to take the wanted share of the
@@ -97,7 +130,7 @@ namespace ASTeams.SingleLine.Unity
 
             // Centre the board between the reserved bars rather than on the screen, or a
             // tall HUD would push it off centre.
-            float offset = (bottomReserve - topReserve) * size;
+            float offset = (bottom - top) * size;
             Vector3 position = boardCamera.transform.position;
             boardCamera.transform.position = new Vector3(position.x, -offset, position.z);
         }

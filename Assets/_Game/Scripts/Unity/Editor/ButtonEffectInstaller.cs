@@ -10,7 +10,8 @@ namespace ASTeams.SingleLine.Unity.EditorTools
 {
     /// <summary>
     /// Gives every Button in the build scenes and in the game's prefabs the shared press
-    /// feedback, and wires its Button reference so nothing is looked up at runtime.
+    /// feedback, wires its Button reference so nothing is looked up at runtime, and
+    /// centres its pivot so the press shrinks towards the middle.
     ///
     /// Rerunnable: buttons that already carry the effect only get a missing reference
     /// filled in, and settings chosen by hand are left alone. New screens should be run
@@ -148,7 +149,32 @@ namespace ASTeams.SingleLine.Unity.EditorTools
                 }
 
                 serialized.ApplyModifiedPropertiesWithoutUndo();
+
+                if (CenterPivot((RectTransform)button.transform))
+                {
+                    result.Centered++;
+                }
             }
+        }
+
+        /// <summary>
+        /// The press effect scales around the pivot, so a button pivoted on a corner
+        /// shrinks into that corner. Moves the pivot to the middle without moving the
+        /// button on screen.
+        /// </summary>
+        private static bool CenterPivot(RectTransform rect)
+        {
+            var center = new Vector2(0.5f, 0.5f);
+
+            if (rect.pivot == center)
+            {
+                return false;
+            }
+
+            Vector2 shift = Vector2.Scale(center - rect.pivot, rect.rect.size);
+            rect.pivot = center;
+            rect.anchoredPosition += shift;
+            return true;
         }
 
         private static HashSet<Button> CollectHudButtons(GameObject root)
@@ -178,13 +204,14 @@ namespace ASTeams.SingleLine.Unity.EditorTools
             public int Added;
             public int Wired;
             public int SdkButtons;
+            public int Centered;
 
-            public bool HasChanges => Added > 0 || Wired > 0;
+            public bool HasChanges => Added > 0 || Wired > 0 || Centered > 0;
 
             public override string ToString()
             {
                 return Total + " buttons, " + Added + " added, " + Wired + " wired, " +
-                       SdkButtons + " left to the SDK";
+                       Centered + " pivots centred, " + SdkButtons + " left to the SDK";
             }
         }
     }

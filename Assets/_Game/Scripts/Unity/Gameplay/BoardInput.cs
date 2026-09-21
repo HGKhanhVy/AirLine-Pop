@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Controls;
 
@@ -38,9 +40,14 @@ namespace ASTeams.SingleLine.Unity
 
         private const int NoTouch = -1;
 
+        private readonly List<RaycastResult> uiHits = new List<RaycastResult>();
+
         private bool isPointerPreviouslyPressed;
+        private bool isPressOnUi;
         private Vector2 lastScreenPosition;
         private int activeTouchId = NoTouch;
+        private PointerEventData uiPointer;
+        private EventSystem uiPointerOwner;
 
         /// <summary>Raised for every cell the pointer passes over, in the order it entered them.</summary>
         public event Action<int> OnCellEntered;
@@ -57,7 +64,12 @@ namespace ASTeams.SingleLine.Unity
                 return;
             }
 
-            if (!AcceptsInput)
+            if (pressed && !isPointerPreviouslyPressed)
+            {
+                isPressOnUi = IsOverUi(screen);
+            }
+
+            if (!AcceptsInput || isPressOnUi)
             {
                 isPointerPreviouslyPressed = pressed;
                 lastScreenPosition = screen;
@@ -86,6 +98,34 @@ namespace ASTeams.SingleLine.Unity
             }
 
             isPointerPreviouslyPressed = pressed;
+        }
+
+        /// <summary>
+        /// Whether a press lands on UI rather than the board. The board reads the pointer
+        /// directly, so without this a popup open over it still lets a drag draw the path
+        /// underneath. Asked once per press, and the whole press follows the answer, so a
+        /// finger that starts on a button never turns into a stroke.
+        /// </summary>
+        private bool IsOverUi(Vector2 screen)
+        {
+            EventSystem eventSystem = EventSystem.current;
+
+            if (eventSystem == null)
+            {
+                return false;
+            }
+
+            // Each scene brings its own EventSystem; the pointer data is bound to one.
+            if (uiPointer == null || uiPointerOwner != eventSystem)
+            {
+                uiPointer = new PointerEventData(eventSystem);
+                uiPointerOwner = eventSystem;
+            }
+
+            uiPointer.position = screen;
+            uiHits.Clear();
+            eventSystem.RaycastAll(uiPointer, uiHits);
+            return uiHits.Count > 0;
         }
 
         private float ScaledDragThreshold()

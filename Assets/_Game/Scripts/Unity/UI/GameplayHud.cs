@@ -168,7 +168,9 @@ namespace ASTeams.SingleLine.Unity
                 }
                 else
                 {
-                    progressLabel.SetText(Format("gameplay.progress", "{0} / {1}"), visitedCells, totalCells);
+                    // The reference layout carries no cell count; the line only speaks
+                    // when a hint has something to say.
+                    progressLabel.SetText(string.Empty);
                 }
             }
 

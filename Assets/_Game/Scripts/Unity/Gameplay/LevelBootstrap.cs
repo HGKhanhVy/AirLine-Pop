@@ -160,6 +160,7 @@ namespace ASTeams.SingleLine.Unity
             GameplayEvents.OnRestartRequested += Restart;
             GameplayEvents.OnHintRequested += HandleHintRequested;
             GameplayEvents.OnNextLevelRequested += HandleNextLevelRequested;
+            GameplayEvents.OnSkipLevelRequested += HandleSkipLevelRequested;
             GameplayEvents.OnSnapshotRequested += PublishSnapshot;
         }
 
@@ -169,6 +170,7 @@ namespace ASTeams.SingleLine.Unity
             GameplayEvents.OnRestartRequested -= Restart;
             GameplayEvents.OnHintRequested -= HandleHintRequested;
             GameplayEvents.OnNextLevelRequested -= HandleNextLevelRequested;
+            GameplayEvents.OnSkipLevelRequested -= HandleSkipLevelRequested;
             GameplayEvents.OnSnapshotRequested -= PublishSnapshot;
         }
 
@@ -189,6 +191,28 @@ namespace ASTeams.SingleLine.Unity
         private void HandleNextLevelRequested()
         {
             CancelAdvance();
+            LoadNext();
+        }
+
+        /// <summary>
+        /// A skipped level counts as passed for the save, so relaunching does not bring
+        /// the player back to it, but it pays nothing.
+        /// </summary>
+        private void HandleSkipLevelRequested()
+        {
+            if (currentLevelNumber >= LastLevelNumber)
+            {
+                return;
+            }
+
+            CancelAdvance();
+            int nextLevel = currentLevelNumber + 1;
+
+            if (progressStore != null && progressStore.CurrentLevelNumber < nextLevel)
+            {
+                progressStore.SaveCurrentLevel(nextLevel);
+            }
+
             LoadNext();
         }
 

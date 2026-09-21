@@ -58,6 +58,12 @@ namespace ASTeams.SingleLine.Unity
         /// </summary>
         public static event Action<bool> OnRewindChanged;
 
+        /// <summary>
+        /// Share of the screen height the HUD covers at the top and at the bottom, safe
+        /// area included. The board camera keeps the board clear of both.
+        /// </summary>
+        public static event Action<float, float> OnHudInsetsChanged;
+
         /// <summary>Asks the board to take back one step.</summary>
         public static event Action OnUndoRequested;
 
@@ -72,6 +78,13 @@ namespace ASTeams.SingleLine.Unity
         /// Continue button when the board is set not to advance on its own.
         /// </summary>
         public static event Action OnNextLevelRequested;
+
+        /// <summary>
+        /// Asks the board to pass over the current level without finishing it, once the
+        /// player has paid for that (a rewarded ad). Unlike the next-level request this
+        /// moves the save on and is not a win: no coins, no win break.
+        /// </summary>
+        public static event Action OnSkipLevelRequested;
 
         /// <summary>
         /// Asks the board to say again where it stands. A screen that opens after the
@@ -135,6 +148,11 @@ namespace ASTeams.SingleLine.Unity
             OnRewindChanged?.Invoke(isRewinding);
         }
 
+        public static void RaiseHudInsetsChanged(float topShare, float bottomShare)
+        {
+            OnHudInsetsChanged?.Invoke(topShare, bottomShare);
+        }
+
         public static void RequestUndo()
         {
             OnUndoRequested?.Invoke();
@@ -153,6 +171,11 @@ namespace ASTeams.SingleLine.Unity
         public static void RequestNextLevel()
         {
             OnNextLevelRequested?.Invoke();
+        }
+
+        public static void RequestSkipLevel()
+        {
+            OnSkipLevelRequested?.Invoke();
         }
 
         public static void RequestSnapshot()
@@ -178,10 +201,12 @@ namespace ASTeams.SingleLine.Unity
             OnCoinsAwarded = null;
             OnCoinBalanceChanged = null;
             OnRewindChanged = null;
+            OnHudInsetsChanged = null;
             OnUndoRequested = null;
             OnRestartRequested = null;
             OnHintRequested = null;
             OnNextLevelRequested = null;
+            OnSkipLevelRequested = null;
             OnSnapshotRequested = null;
         }
     }

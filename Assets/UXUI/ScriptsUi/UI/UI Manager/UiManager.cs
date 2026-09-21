@@ -1,4 +1,6 @@
-using ASTeams.Base;
+﻿using ASTeams.Base;
+using ASTeams.Base.Data;
+using ASTeams.SingleLine.Unity;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -6,7 +8,7 @@ public class UiManager : MonoBehaviour
 {
     public static UiManager Instance { get; private set; }
 
-    public Uibase uiSetting;
+    public UiSetting uiSetting;
     public Uibase uiNoInternet;
     public Uibase uiTheme;
     public Uibase uiTutorial;
@@ -23,6 +25,19 @@ public class UiManager : MonoBehaviour
 
         Instance = this;
         DontDestroyOnLoad(gameObject);
+    }
+
+    private void Start()
+    {
+        if (Instance != this)
+        {
+            return;
+        }
+
+        // Start, not Awake: the SDK controllers must have run their own Awake first.
+        var settings = new SdkSettingsService(AudioController.Instance, VibrationController.Instance, UserProfileController.Instance);
+        settings.SyncWithProfile();
+        uiSetting.Initialize(settings);
     }
 
 
