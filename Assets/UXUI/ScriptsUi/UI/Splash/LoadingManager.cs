@@ -19,7 +19,8 @@ public class LoadingManager : MonoBehaviour
     public TMP_Text progressText;
 
     [Header("Consent")]
-    public GameObject consentPanel;
+    [Tooltip("Asked before the first launch continues (GDD 12.3); the same popup is reopened from Settings.")]
+    [SerializeField] private UiConsent consentPopup;
 
     [Header("Timing")]
     [Tooltip("Least time the logo stays on screen. Home loads in a fraction of a second, " +
@@ -107,22 +108,16 @@ public class LoadingManager : MonoBehaviour
 
         if (hasAccepted)
         {
-            // Đã đồng ý
             loadingOperation.allowSceneActivation = true;
         }
         else
         {
-            // Chưa đồng ý
-            consentPanel.SetActive(true);
+            consentPopup.Ask(ContinueAfterConsent);
         }
     }
 
-    public void AcceptConsent()
+    private void ContinueAfterConsent()
     {
-        FirstRunProfile.AcceptConsent();
-
-        consentPanel.SetActive(false);
-
         loadingOperation.allowSceneActivation = true;
     }
 }

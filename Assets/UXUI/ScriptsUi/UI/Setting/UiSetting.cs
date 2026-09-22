@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
-/// Settings popup (GDD 9.1): music, sound, haptics, the privacy link and, while a level
+/// Settings popup (GDD 9.1): music, sound, haptics, restore purchases, privacy settings and, while a level
 /// is open, the way back to the home screen. Only shows and forwards; what a switch does
 /// and where it is saved belongs to the settings service.
 /// </summary>
@@ -15,8 +15,10 @@ public class UiSetting : Uibase
     [SerializeField] private SettingToggleView hapticToggle;
 
     [Header("Links")]
+    [Tooltip("Opens the privacy popup, where the player reviews consent and the policy.")]
     [SerializeField] private Button privacyButton;
-    [SerializeField] private SettingsConfigSO config;
+    [SerializeField] private UiConsent consentPopup;
+    [SerializeField] private Button restoreButton;
 
     [Header("Home")]
     [Tooltip("Shown only while a level is open; on the home screen it would lead nowhere.")]
@@ -27,13 +29,15 @@ public class UiSetting : Uibase
 
     private ISettingsService settings;
     private ISceneNavigator navigator;
+    private IPurchaseService purchases;
     private Vector2 frameBaseSize;
     private Vector2 frameBasePosition;
 
-    public void Initialize(ISettingsService settingsService, ISceneNavigator sceneNavigator)
+    public void Initialize(ISettingsService settingsService, ISceneNavigator sceneNavigator, IPurchaseService purchaseService)
     {
         settings = settingsService;
         navigator = sceneNavigator;
+        purchases = purchaseService;
     }
 
     protected override void Awake()
@@ -57,8 +61,9 @@ public class UiSetting : Uibase
         musicToggle.OnChanged += HandleMusicChanged;
         soundToggle.OnChanged += HandleSoundChanged;
         hapticToggle.OnChanged += HandleHapticChanged;
-        privacyButton.onClick.AddListener(OpenPrivacyPolicy);
+        privacyButton.onClick.AddListener(OpenPrivacySettings);
         homeButton.onClick.AddListener(GoHome);
+        restoreButton.onClick.AddListener(RestorePurchases);
     }
 
     private void OnDisable()
@@ -66,8 +71,9 @@ public class UiSetting : Uibase
         musicToggle.OnChanged -= HandleMusicChanged;
         soundToggle.OnChanged -= HandleSoundChanged;
         hapticToggle.OnChanged -= HandleHapticChanged;
-        privacyButton.onClick.RemoveListener(OpenPrivacyPolicy);
+        privacyButton.onClick.RemoveListener(OpenPrivacySettings);
         homeButton.onClick.RemoveListener(GoHome);
+        restoreButton.onClick.RemoveListener(RestorePurchases);
     }
 
     private void Refresh()
@@ -112,14 +118,13 @@ public class UiSetting : Uibase
         navigator?.GoHome();
     }
 
-    private void OpenPrivacyPolicy()
+    private void RestorePurchases()
     {
-        if (config == null || string.IsNullOrEmpty(config.PrivacyPolicyUrl))
-        {
-            Debug.LogWarning("Privacy policy URL is not set in SettingsConfig.");
-            return;
-        }
+        purchases?.Restore(PurchaseFeedback.ShowRestoreResult);
+    }
 
-        Application.OpenURL(config.PrivacyPolicyUrl);
+    private void OpenPrivacySettings()
+    {
+        consentPopup.Show();
     }
 }

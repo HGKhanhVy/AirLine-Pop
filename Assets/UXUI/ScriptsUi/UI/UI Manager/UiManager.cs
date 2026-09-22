@@ -1,4 +1,5 @@
 ﻿using ASTeams.Base;
+using ASTeams.Base.Ads;
 using ASTeams.Base.Data;
 using ASTeams.Base.UI;
 using ASTeams.SingleLine.Unity;
@@ -10,12 +11,14 @@ public class UiManager : MonoBehaviour
     public static UiManager Instance { get; private set; }
 
     public UiSetting uiSetting;
+    public UiConsent uiConsent;
     public Uibase uiNoInternet;
-    public Uibase uiTheme;
+    public UiStore uiTheme;
     public Uibase uiTutorial;
     public TutorialHand tutorialHand;
     public TutorialUndoCanvas uiTutorialUndo;
     [SerializeField] private TutorialHandUndo tutorialHandUndo;
+    [SerializeField] private StoreConfigSO storeConfig;
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -38,7 +41,12 @@ public class UiManager : MonoBehaviour
         // Start, not Awake: the SDK controllers must have run their own Awake first.
         var settings = new SdkSettingsService(AudioController.Instance, VibrationController.Instance, UserProfileController.Instance);
         settings.SyncWithProfile();
-        uiSetting.Initialize(settings, new SdkSceneNavigator(UISceneController.Instance));
+
+        var purchases = new SdkPurchaseService(AdsController.Instance, UserProfileController.Instance, storeConfig);
+
+        uiSetting.Initialize(settings, new SdkSceneNavigator(UISceneController.Instance), purchases);
+        uiTheme.Initialize(purchases);
+        uiConsent.Initialize(new ProfileConsentService(UserProfileController.Instance));
     }
 
 

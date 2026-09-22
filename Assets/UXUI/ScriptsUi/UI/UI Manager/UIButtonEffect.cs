@@ -108,6 +108,32 @@ public class UIButtonEffect : MonoBehaviour,
         scaleTween.OnComplete(StartPulse);
     }
 
+    /// <summary>
+    /// Turns the idle pulse on or off, for a button whose call to action comes and goes,
+    /// such as a purchase that has already been made.
+    /// </summary>
+    public void SetPulsing(bool isPulsing)
+    {
+        if (pulsesWhenIdle == isPulsing)
+        {
+            return;
+        }
+
+        pulsesWhenIdle = isPulsing;
+
+        if (isPulsing)
+        {
+            StartPulse();
+            return;
+        }
+
+        if (!isPressed)
+        {
+            scaleTween?.Kill();
+            transform.localScale = originalScale;
+        }
+    }
+
     private void StartPulse()
     {
         if (!pulsesWhenIdle || isPressed || !isActiveAndEnabled)
