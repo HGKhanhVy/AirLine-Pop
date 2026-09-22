@@ -5678,6 +5678,7 @@ GameObject:
   - component: {fileID: 2749185590520753590}
   - component: {fileID: 4911348639305648421}
   - component: {fileID: 8889330386574363939}
+  - component: {fileID: 5172161895518064375}
   m_Layer: 0
   m_Name: Board
   m_TagString: Untagged
@@ -5756,6 +5757,65 @@ MonoBehaviour:
   invalidCooldown: 0.18
   dust: {fileID: 4468489046037610583}
   effectPlayer: {fileID: 7412008451236500013}
+--- !u!114 &5172161895518064375
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8014009263867350044}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ed823e7a51b0824c9d314b11d2f07d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  boardView: {fileID: 4911348639305648421}
+  boardCamera: {fileID: 6419412443081546969}
+  flightDuration: 0.45
+  maxStagger: 0.3
+  launchDistance: 1.2
+  curve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 2.6
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.567
+      value: 1.06
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.833
+      value: 0.987
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &8319337863644714891
 GameObject:
   m_ObjectHideFlags: 0
@@ -5828,7 +5888,7 @@ MonoBehaviour:
   boardInput: {fileID: 6893007312400293912}
   hand: {fileID: 6182185517680320900}
   levelNumber: 1
-  startDelay: 0.6
+  startDelay: 0.9
   idleDelay: 3
 --- !u!1 &9161449699214583546
 GameObject:
