@@ -1,28 +1,27 @@
-using ASTeams.Base.Data;
+﻿using ASTeams.Base.Data;
+using ASTeams.Base.UI;
+using ASTeams.SingleLine.Unity;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using TMPro;
 
 public class HomeController : MonoBehaviour
 {
-    /// <summary>Levels in one chapter, matching the exported campaign files.</summary>
-    private const int LevelsPerChapter = 30;
-
-    /// <summary>
-    /// Straight to the board. The loading screen has already run before this one, and the
-    /// managers it started are still alive.
-    /// </summary>
-    private const string GameplayScene = "Gameplay";
-
     [Header("UI")]
     public TMP_Text levelText;
     public TMP_Text coinText;
 
     [Header("Fallback progress")]
     [Tooltip("Shown only when no save is loaded, which happens when this scene is played on its own.")]
-    public int currentChapter = 1;
     public int currentLevel = 1;
     public int coins = 100;
+
+    private ISceneNavigator navigator;
+    private bool isLeaving;
+
+    private void Awake()
+    {
+        navigator = new SdkSceneNavigator(UISceneController.Instance);
+    }
 
     private void Start()
     {
@@ -43,23 +42,27 @@ public class HomeController : MonoBehaviour
             return;
         }
 
-        int level = Mathf.Max(1, profile.LEVEL);
-        currentChapter = ((level - 1) / LevelsPerChapter) + 1;
-        currentLevel = ((level - 1) % LevelsPerChapter) + 1;
+        // The same absolute number the gameplay HUD shows, so both screens agree.
+        currentLevel = Mathf.Max(1, profile.LEVEL);
         coins = (int)profile.userData.coin;
     }
 
     private void UpdateUI()
     {
-        levelText.text = "CHAPTER " + currentChapter.ToString("00") +
-                          "\nLEVEL " + currentLevel.ToString("00");
-
+        levelText.text = "LEVEL " + currentLevel;
         coinText.text = coins.ToString();
     }
 
     public void Play()
     {
-        SceneManager.LoadScene(GameplayScene);
+        // A second tap during the transition would start a second load.
+        if (isLeaving)
+        {
+            return;
+        }
+
+        isLeaving = true;
+        navigator.GoToGameplay();
     }
 
     public void OpenTheme()

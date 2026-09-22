@@ -1,10 +1,11 @@
-using ASTeams.SingleLine.Unity;
+﻿using ASTeams.SingleLine.Unity;
 using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
-/// Settings popup (GDD 9.1): music, sound, haptics and the privacy link. Only shows and
-/// forwards; what a switch does and where it is saved belongs to the settings service.
+/// Settings popup (GDD 9.1): music, sound, haptics, the privacy link and, while a level
+/// is open, the way back to the home screen. Only shows and forwards; what a switch does
+/// and where it is saved belongs to the settings service.
 /// </summary>
 public class UiSetting : Uibase
 {
@@ -17,17 +18,38 @@ public class UiSetting : Uibase
     [SerializeField] private Button privacyButton;
     [SerializeField] private SettingsConfigSO config;
 
-    private ISettingsService settings;
+    [Header("Home")]
+    [Tooltip("Shown only while a level is open; on the home screen it would lead nowhere.")]
+    [SerializeField] private Button homeButton;
+    [SerializeField] private RectTransform frame;
+    [Tooltip("How much taller the frame grows to fit the Home button. It grows downwards so the title and close button stay put.")]
+    [SerializeField, Min(0f)] private float homeRowHeight = 130f;
 
-    public void Initialize(ISettingsService settingsService)
+    private ISettingsService settings;
+    private ISceneNavigator navigator;
+    private Vector2 frameBaseSize;
+    private Vector2 frameBasePosition;
+
+    public void Initialize(ISettingsService settingsService, ISceneNavigator sceneNavigator)
     {
         settings = settingsService;
+        navigator = sceneNavigator;
+    }
+
+    protected override void Awake()
+    {
+        base.Awake();
+        frameBaseSize = frame.sizeDelta;
+        frameBasePosition = frame.anchoredPosition;
     }
 
     public override void Show()
     {
-        Refresh();
+        // Activate first: the popup starts inactive, and Awake records the frame's
+        // resting size only once it runs.
         base.Show();
+        Refresh();
+        ApplyHomeRow(navigator != null && navigator.IsInGameplay);
     }
 
     private void OnEnable()
@@ -36,6 +58,7 @@ public class UiSetting : Uibase
         soundToggle.OnChanged += HandleSoundChanged;
         hapticToggle.OnChanged += HandleHapticChanged;
         privacyButton.onClick.AddListener(OpenPrivacyPolicy);
+        homeButton.onClick.AddListener(GoHome);
     }
 
     private void OnDisable()
@@ -44,6 +67,7 @@ public class UiSetting : Uibase
         soundToggle.OnChanged -= HandleSoundChanged;
         hapticToggle.OnChanged -= HandleHapticChanged;
         privacyButton.onClick.RemoveListener(OpenPrivacyPolicy);
+        homeButton.onClick.RemoveListener(GoHome);
     }
 
     private void Refresh()
@@ -71,6 +95,21 @@ public class UiSetting : Uibase
     private void HandleHapticChanged(bool isOn)
     {
         settings?.SetHapticOn(isOn);
+    }
+
+    private void ApplyHomeRow(bool isVisible)
+    {
+        homeButton.gameObject.SetActive(isVisible);
+
+        float extra = isVisible ? homeRowHeight : 0f;
+        frame.sizeDelta = frameBaseSize + new Vector2(0f, extra);
+        frame.anchoredPosition = frameBasePosition - new Vector2(0f, extra * 0.5f);
+    }
+
+    private void GoHome()
+    {
+        Hide();
+        navigator?.GoHome();
     }
 
     private void OpenPrivacyPolicy()

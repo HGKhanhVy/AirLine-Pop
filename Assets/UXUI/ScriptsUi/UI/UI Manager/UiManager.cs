@@ -1,5 +1,6 @@
 ﻿using ASTeams.Base;
 using ASTeams.Base.Data;
+using ASTeams.Base.UI;
 using ASTeams.SingleLine.Unity;
 using Sirenix.OdinInspector;
 using UnityEngine;
@@ -37,7 +38,7 @@ public class UiManager : MonoBehaviour
         // Start, not Awake: the SDK controllers must have run their own Awake first.
         var settings = new SdkSettingsService(AudioController.Instance, VibrationController.Instance, UserProfileController.Instance);
         settings.SyncWithProfile();
-        uiSetting.Initialize(settings);
+        uiSetting.Initialize(settings, new SdkSceneNavigator(UISceneController.Instance));
     }
 
 

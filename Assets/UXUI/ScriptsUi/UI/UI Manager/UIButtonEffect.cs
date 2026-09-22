@@ -6,7 +6,11 @@ using UnityEngine.UI;
 
 /// <summary>
 /// Press feedback shared by every button: shrink on touch, spring back on release, and a
-/// click sound plus a light haptic only when the click actually lands.
+/// click sound plus a light haptic only when the click actually lands. A main call to
+/// action can also breathe while idle to draw the eye.
+///
+/// Both behaviours live here because both drive the same scale; two components would
+/// fight over it.
 /// </summary>
 [RequireComponent(typeof(Button))]
 public class UIButtonEffect : MonoBehaviour,
@@ -20,6 +24,13 @@ public class UIButtonEffect : MonoBehaviour,
     [SerializeField, Range(0.5f, 1f)] private float pressedScale = 0.9f;
     [SerializeField, Min(0f)] private float pressDuration = 0.08f;
     [SerializeField, Min(0f)] private float releaseDuration = 0.18f;
+
+    [Header("Idle pulse")]
+    [Tooltip("Grow and shrink continuously while nobody is touching it. Meant for the one button a screen wants pressed.")]
+    [SerializeField] private bool pulsesWhenIdle;
+    [SerializeField, Range(1f, 1.3f)] private float pulseScale = 1.06f;
+    [Tooltip("Seconds for one grow-and-shrink cycle.")]
+    [SerializeField, Min(0.2f)] private float pulsePeriod = 1.2f;
 
     [Header("Feedback")]
     [Tooltip("Turn off where the button's action already plays its own sound, so the two do not stack.")]
@@ -46,6 +57,8 @@ public class UIButtonEffect : MonoBehaviour,
         {
             button.onClick.AddListener(HandleClick);
         }
+
+        StartPulse();
     }
 
     private void OnDisable()
@@ -92,6 +105,25 @@ public class UIButtonEffect : MonoBehaviour,
 
         isPressed = false;
         AnimateTo(originalScale, releaseDuration, Ease.OutBack);
+        scaleTween.OnComplete(StartPulse);
+    }
+
+    private void StartPulse()
+    {
+        if (!pulsesWhenIdle || isPressed || !isActiveAndEnabled)
+        {
+            return;
+        }
+
+        scaleTween?.Kill();
+        transform.localScale = originalScale;
+
+        // Half a period out, half back; Yoyo keeps it going until a press takes over.
+        scaleTween = transform
+            .DOScale(originalScale * pulseScale, pulsePeriod * 0.5f)
+            .SetEase(Ease.InOutSine)
+            .SetLoops(-1, LoopType.Yoyo)
+            .SetUpdate(true);
     }
 
     private void HandleClick()
