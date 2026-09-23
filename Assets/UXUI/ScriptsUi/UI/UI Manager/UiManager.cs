@@ -14,11 +14,13 @@ public class UiManager : MonoBehaviour
     public UiConsent uiConsent;
     public Uibase uiNoInternet;
     public UiStore uiTheme;
+    public UiSkins uiSkins;
     public Uibase uiTutorial;
     public TutorialHand tutorialHand;
     public TutorialUndoCanvas uiTutorialUndo;
     [SerializeField] private TutorialHandUndo tutorialHandUndo;
     [SerializeField] private StoreConfigSO storeConfig;
+    [SerializeField] private SkinCatalogSO skinCatalog;
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -47,6 +49,7 @@ public class UiManager : MonoBehaviour
         uiSetting.Initialize(settings, new SdkSceneNavigator(UISceneController.Instance), purchases);
         uiTheme.Initialize(purchases);
         uiConsent.Initialize(new ProfileConsentService(UserProfileController.Instance));
+        uiSkins.Initialize(new ProfileSkinService(skinCatalog, UserProfileController.Instance), UserProfileController.Instance);
     }
 
 
@@ -68,6 +71,16 @@ public class UiManager : MonoBehaviour
     {
         uiNoInternet.Hide();
     }
+    public void ShowSkins()
+    {
+        uiSkins.Show();
+    }
+
+    public void HideSkins()
+    {
+        uiSkins.Hide();
+    }
+
     public void ShowTheme()
     {
         uiTheme.Show();

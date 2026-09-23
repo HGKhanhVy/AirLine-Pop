@@ -47,6 +47,9 @@ namespace ASTeams.SingleLine.Unity
                 case UiScreen.HowToPlay:
                     ui.ShowTutorialHTP();
                     break;
+                case UiScreen.Skins:
+                    ui.ShowSkins();
+                    break;
             }
         }
     }

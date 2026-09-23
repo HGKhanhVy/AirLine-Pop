@@ -5,6 +5,8 @@ namespace ASTeams.SingleLine.Unity
     {
         Settings = 0,
         Store = 1,
-        HowToPlay = 2
+        HowToPlay = 2,
+
+        Skins = 3
     }
 }

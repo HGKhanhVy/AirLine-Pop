@@ -5679,6 +5679,7 @@ GameObject:
   - component: {fileID: 4911348639305648421}
   - component: {fileID: 8889330386574363939}
   - component: {fileID: 5172161895518064375}
+  - component: {fileID: 7108899137761399615}
   m_Layer: 0
   m_Name: Board
   m_TagString: Untagged
@@ -5770,52 +5771,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   boardView: {fileID: 4911348639305648421}
-  boardCamera: {fileID: 6419412443081546969}
-  flightDuration: 0.45
+  popDuration: 0.32
   maxStagger: 0.3
-  launchDistance: 1.2
-  curve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 2.6
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 0.567
-      value: 1.06
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 0.833
-      value: 0.987
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
+  overshoot: 1.4
+--- !u!114 &7108899137761399615
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8014009263867350044}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a61bafa42f62f4542bbede7b5b2e00c2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  boardView: {fileID: 4911348639305648421}
+  controller: {fileID: 490432196145728844}
+  boardCamera: {fileID: 6419412443081546969}
+  catalog: {fileID: 11400000, guid: 5fd7f347be894a389eab744773436009, type: 2}
 --- !u!1 &8319337863644714891
 GameObject:
   m_ObjectHideFlags: 0
@@ -5907,6 +5881,7 @@ GameObject:
   - component: {fileID: 4891353049534945424}
   - component: {fileID: 2544141247327577434}
   - component: {fileID: 4542676709094699570}
+  - component: {fileID: 7229759553939837357}
   m_Layer: 0
   m_Name: Game
   m_TagString: Untagged
@@ -6174,3 +6149,16 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &7229759553939837357
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9161449699214583546}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 867b213115a13b84a908d658be036b5d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  catalog: {fileID: 11400000, guid: 5fd7f347be894a389eab744773436009, type: 2}

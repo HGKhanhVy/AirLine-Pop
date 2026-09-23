@@ -421,6 +421,23 @@ namespace ASTeams.SingleLine.Unity
                 return;
             }
 
+            RepaintVisuals();
+            OnPathChanged?.Invoke();
+            GameplayEvents.RaiseProgressChanged(session.Length, session.Level.ActiveCellCount);
+        }
+
+        /// <summary>
+        /// Puts the current model back on screen without announcing a move. A skin change
+        /// mid level calls this: the board changes colour, the path the player drew stays
+        /// exactly where it is (GDD EC-10).
+        /// </summary>
+        public void RepaintVisuals()
+        {
+            if (session == null)
+            {
+                return;
+            }
+
             LevelData level = session.Level;
             int head = session.Head;
             int cellCount = level.Grid.CellCount;
@@ -440,8 +457,6 @@ namespace ASTeams.SingleLine.Unity
             // The start square already has a cue of its own, so the head only takes over
             // once the player has drawn at least one step and the board is still theirs.
             boardView.SetHeadCue(head, session.Length > 1 && session.State == PathState.Drawing);
-            OnPathChanged?.Invoke();
-            GameplayEvents.RaiseProgressChanged(session.Length, session.Level.ActiveCellCount);
         }
 
         private Color ColorForState(PathState state)

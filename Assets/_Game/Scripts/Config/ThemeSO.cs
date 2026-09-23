@@ -119,16 +119,14 @@ namespace ASTeams.SingleLine.Unity
                 stuck);
         }
 
-        /// <summary>Softens the drawn line so it sits on the squares instead of burning over them.</summary>
         private Color Fade(Color colour)
         {
-            colour.a = pathAlpha;
-            return colour;
+            return BoardHues.Fade(colour, pathAlpha);
         }
 
         private static Color FromHue(float hue, Vector2 tone)
         {
-            return Color.HSVToRGB(hue, tone.x, tone.y);
+            return BoardHues.FromHue(hue, tone);
         }
 
         public float CellSize => cellSize;

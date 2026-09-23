@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b10ce4a6b64860d42bcaf046bc488a5f, type: 3}
+  m_Name: SkinSunset
+  m_EditorClassIdentifier: 
+  id: sunset
+  displayName: Sunset
+  price: 1000
+  isSoldInShop: 1
+  isOwnedByDefault: 0
+  palette:
+    background: {r: 0.047, g: 0.016, b: 0.031, a: 1}
+    cell: {r: 0.33, g: 0.25, b: 0.29, a: 1}
+    stuck: {r: 1, g: 0.42, b: 0.42, a: 1}
+    usesLevelHue: 1
+    firstLevelHue: 15
+    hueStepPerLevel: 22
+    startTone: {x: 0.88, y: 0.92}
+    visitedTone: {x: 0.78, y: 0.92}
+    headTone: {x: 0.45, y: 1}
+    pathTone: {x: 0.72, y: 1}
+    wonTone: {x: 0.35, y: 1}
+    pathAlpha: 0.78
