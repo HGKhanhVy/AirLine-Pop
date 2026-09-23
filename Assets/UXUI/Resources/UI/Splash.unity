@@ -180,6 +180,7 @@ MonoBehaviour:
   animDuration: 0.4
   hiddenScale: 0.7
   playsSound: 1
+  sounds: {fileID: 11400000, guid: 1dbcfd3e991922c418733f8a076cc3fd, type: 2}
   closeButton: {fileID: 1781734964}
   offers:
   - {fileID: 1122738394}
@@ -1921,6 +1922,7 @@ MonoBehaviour:
   animDuration: 0.5
   hiddenScale: 0.7
   playsSound: 1
+  sounds: {fileID: 11400000, guid: 1dbcfd3e991922c418733f8a076cc3fd, type: 2}
 --- !u!225 &311098311
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -4312,6 +4314,7 @@ MonoBehaviour:
   animDuration: 0.3
   hiddenScale: 0.7
   playsSound: 1
+  sounds: {fileID: 11400000, guid: 1dbcfd3e991922c418733f8a076cc3fd, type: 2}
 --- !u!225 &574134316
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -8742,6 +8745,22 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2823535935960304241, guid: b038c43d04655c143aabc2fee945e244, type: 3}
+      propertyPath: m_Color.b
+      value: 0.05882353
+      objectReference: {fileID: 0}
+    - target: {fileID: 2823535935960304241, guid: b038c43d04655c143aabc2fee945e244, type: 3}
+      propertyPath: m_Color.g
+      value: 0.015686275
+      objectReference: {fileID: 0}
+    - target: {fileID: 2823535935960304241, guid: b038c43d04655c143aabc2fee945e244, type: 3}
+      propertyPath: m_Color.r
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2823535935960304241, guid: b038c43d04655c143aabc2fee945e244, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 4066301832458527525, guid: b038c43d04655c143aabc2fee945e244, type: 3}
       propertyPath: m_IsActive
       value: 1
@@ -11898,6 +11917,7 @@ MonoBehaviour:
   animDuration: 0.3
   hiddenScale: 0.7
   playsSound: 1
+  sounds: {fileID: 11400000, guid: 1dbcfd3e991922c418733f8a076cc3fd, type: 2}
 --- !u!225 &1573972188
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -13221,6 +13241,7 @@ MonoBehaviour:
   animDuration: 0.4
   hiddenScale: 0.7
   playsSound: 1
+  sounds: {fileID: 11400000, guid: 1dbcfd3e991922c418733f8a076cc3fd, type: 2}
   musicToggle: {fileID: 888207332}
   soundToggle: {fileID: 92617907}
   hapticToggle: {fileID: 1233499657}
@@ -16091,6 +16112,7 @@ MonoBehaviour:
   animDuration: 0.3
   hiddenScale: 0.7
   playsSound: 1
+  sounds: {fileID: 11400000, guid: 1dbcfd3e991922c418733f8a076cc3fd, type: 2}
   personalizedAdsToggle: {fileID: 1940803676}
   privacyPolicyButton: {fileID: 1643908484}
   saveButton: {fileID: 1294372268}

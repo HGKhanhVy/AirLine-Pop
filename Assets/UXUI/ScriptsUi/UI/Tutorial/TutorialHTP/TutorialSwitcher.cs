@@ -8,14 +8,14 @@ public class TutorialSwitcher : MonoBehaviour
 
     public void OpenUndo()
     {
-        tutorialHTP.Hide();
+        tutorialHTP.HideQuietly();
         tutorialUndo.Show();
     }
 
 
     public void OpenHTP()
     {
-        tutorialUndo.Hide();
+        tutorialUndo.HideQuietly();
         tutorialHTP.Show();
     }
 }

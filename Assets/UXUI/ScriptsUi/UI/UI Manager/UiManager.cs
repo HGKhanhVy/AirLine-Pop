@@ -79,7 +79,7 @@ public class UiManager : MonoBehaviour
     }
     public void ShowTutorialUndo()
     {
-        uiTutorial.Hide();
+        uiTutorial.HideQuietly();
         uiTutorialUndo.Show();
 
         tutorialHandUndo.Play();
@@ -90,7 +90,7 @@ public class UiManager : MonoBehaviour
     }
     public void ShowTutorialHTP()
     {
-        uiTutorialUndo.Hide();
+        uiTutorialUndo.HideQuietly();
         uiTutorial.Show();
         tutorialHand.Play();
     }

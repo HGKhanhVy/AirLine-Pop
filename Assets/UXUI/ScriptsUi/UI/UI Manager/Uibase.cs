@@ -1,4 +1,5 @@
 using ASTeams.Base;
+using ASTeams.SingleLine.Unity;
 using DG.Tweening;
 using UnityEngine;
 
@@ -16,8 +17,10 @@ public abstract class Uibase : MonoBehaviour
     [SerializeField, Min(0f)] private float animDuration = 0.3f;
     [SerializeField, Range(0f, 1f)] private float hiddenScale = 0.7f;
     [SerializeField] private bool playsSound = true;
+    [SerializeField] private UiSoundConfigSO sounds;
 
     private Sequence currentSequence;
+    private bool isQuiet;
 
     public bool IsShown { get; private set; }
 
@@ -52,9 +55,9 @@ public abstract class Uibase : MonoBehaviour
         canvasGroup.alpha = 0f;
         panel.localScale = Vector3.one * hiddenScale;
 
-        if (playsSound)
+        if (playsSound && sounds != null)
         {
-            AudioController.Instance?.PlaySound(SoundName.UI_PopupOpen);
+            PlaySound(sounds.PopupOpen, sounds.PopupOpenVolume);
         }
 
         currentSequence = DOTween.Sequence()
@@ -75,9 +78,9 @@ public abstract class Uibase : MonoBehaviour
         IsShown = false;
         SetInteractable(false);
 
-        if (playsSound)
+        if (playsSound && !isQuiet && sounds != null)
         {
-            AudioController.Instance?.PlaySound(SoundName.UI_PopupClose);
+            PlaySound(sounds.PopupClose, sounds.PopupCloseVolume);
         }
 
         currentSequence = DOTween.Sequence()
@@ -87,12 +90,32 @@ public abstract class Uibase : MonoBehaviour
             .OnComplete(OnHidden);
     }
 
+    /// <summary>
+    /// Hides without the close sound, for a panel that is being swapped for another: the
+    /// incoming one's open sound is enough, two at once is noise.
+    /// </summary>
+    public void HideQuietly()
+    {
+        isQuiet = true;
+        Hide();
+        isQuiet = false;
+    }
+
     private void OnHidden()
     {
         gameObject.SetActive(false);
         panel.localScale = Vector3.one;
         canvasGroup.alpha = 1f;
         SetInteractable(true);
+    }
+
+    private static void PlaySound(AudioClip clip, float volume)
+    {
+        if (clip != null)
+        {
+            // Goes through the audio controller so the player's sound switch still applies.
+            AudioController.Instance?.PlaySound(clip, volume);
+        }
     }
 
     private void SetInteractable(bool isInteractable)
