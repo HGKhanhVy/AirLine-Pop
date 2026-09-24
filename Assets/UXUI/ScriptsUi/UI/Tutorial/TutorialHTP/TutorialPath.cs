@@ -1,4 +1,3 @@
-﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -14,14 +13,12 @@ public class TutorialPath : MonoBehaviour
         new Color(0.0f, 0.55f, 0.45f, 1f);
 
 
-    private readonly List<GameObject> pathObjects =
-        new List<GameObject>();
+    private UiPathPiecePool pieces;
 
 
     private void Awake()
     {
-        // Đưa Path ra phía sau Blocks
-        //transform.SetAsFirstSibling();
+        pieces = new UiPathPiecePool((RectTransform)transform, "PathPiece");
     }
 
 
@@ -34,10 +31,6 @@ public class TutorialPath : MonoBehaviour
         Vector3 endWorld
     )
     {
-        // ------------------------------------------
-        // Chuyển World → Local
-        // ------------------------------------------
-
         Vector3 startLocal =
             transform.InverseTransformPoint(
                 startWorld
@@ -48,21 +41,7 @@ public class TutorialPath : MonoBehaviour
                 endWorld
             );
 
-
-        // ------------------------------------------
-        // Tạo đoạn Path
-        // ------------------------------------------
-
-        CreateSegment(
-            startLocal,
-            endLocal
-        );
-
-
-        // ------------------------------------------
-        // Tạo điểm nối
-        // ------------------------------------------
-
+        CreateSegment(startLocal, endLocal);
         CreateJoint(startLocal);
         CreateJoint(endLocal);
     }
@@ -77,81 +56,21 @@ public class TutorialPath : MonoBehaviour
         Vector3 end
     )
     {
-        GameObject pathObject =
-            new GameObject(
-                "PathSegment",
-                typeof(RectTransform),
-                typeof(Image)
-            );
+        Image image = pieces.Get();
 
-
-        pathObject.transform.SetParent(
-            transform,
-            false
-        );
-
-
-        RectTransform rect =
-            pathObject.GetComponent<RectTransform>();
-
-
-        Image image =
-            pathObject.GetComponent<Image>();
-
-
-        image.sprite = pathSprite;
+        RoundPathImage.ApplySegment(image, pathSprite, pathWidth);
         image.color = pathColor;
 
-        image.raycastTarget = false;
+        Vector3 direction = end - start;
+        float distance = direction.magnitude;
+        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
 
+        RectTransform rect = image.rectTransform;
+        rect.localPosition = (start + end) / 2f;
 
-        Vector3 direction =
-            end - start;
-
-
-        float distance =
-            direction.magnitude;
-
-
-        // ------------------------------------------
-        // Vị trí
-        // ------------------------------------------
-
-        rect.localPosition =
-            (start + end) / 2f;
-
-
-        // ------------------------------------------
-        // Kích thước
-        // ------------------------------------------
-
-        rect.sizeDelta =
-            new Vector2(
-                distance + pathWidth * 0.5f,
-                pathWidth
-            );
-
-
-        // ------------------------------------------
-        // Xoay
-        // ------------------------------------------
-
-        float angle =
-            Mathf.Atan2(
-                direction.y,
-                direction.x
-            ) * Mathf.Rad2Deg;
-
-
-        rect.localRotation =
-            Quaternion.Euler(
-                0f,
-                0f,
-                angle
-            );
-
-
-        pathObjects.Add(pathObject);
+        // A width past each centre, so the round ends land exactly on the joints.
+        rect.sizeDelta = new Vector2(distance + pathWidth, pathWidth);
+        rect.localRotation = Quaternion.Euler(0f, 0f, angle);
     }
 
 
@@ -163,45 +82,16 @@ public class TutorialPath : MonoBehaviour
         Vector3 position
     )
     {
-        GameObject jointObject =
-            new GameObject(
-                "PathJoint",
-                typeof(RectTransform),
-                typeof(Image)
-            );
+        Image image = pieces.Get();
 
-
-        jointObject.transform.SetParent(
-            transform,
-            false
-        );
-
-
-        RectTransform rect =
-            jointObject.GetComponent<RectTransform>();
-
-
-        Image image =
-            jointObject.GetComponent<Image>();
-
-
-        image.sprite = pathSprite;
+        RoundPathImage.ApplyJoint(image, pathSprite);
         image.color = pathColor;
 
-        image.raycastTarget = false;
-
-
+        // A pooled piece may come back from a rotated segment.
+        RectTransform rect = image.rectTransform;
         rect.localPosition = position;
-
-
-        rect.sizeDelta =
-            new Vector2(
-                pathWidth,
-                pathWidth
-            );
-
-
-        pathObjects.Add(jointObject);
+        rect.localRotation = Quaternion.identity;
+        rect.sizeDelta = new Vector2(pathWidth, pathWidth);
     }
 
 
@@ -211,15 +101,12 @@ public class TutorialPath : MonoBehaviour
 
     public void ClearPath()
     {
-        foreach (GameObject pathObject in pathObjects)
-        {
-            if (pathObject != null)
-            {
-                Destroy(pathObject);
-            }
-        }
+        pieces?.ReleaseAll();
+    }
 
 
-        pathObjects.Clear();
+    private void OnDestroy()
+    {
+        pieces?.Dispose();
     }
 }

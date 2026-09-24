@@ -81,8 +81,8 @@ namespace ASTeams.SingleLine.Unity
             // A skin that is not sold cannot be reached from here; the label says where it comes from.
             bool isReachable = isOwned || skin.IsSoldInShop;
 
-            actionLabel.text = isWorn ? "WEARING"
-                : isOwned ? "WEAR"
+            actionLabel.text = isWorn ? "EQUIPPED"
+                : isOwned ? "EQUIP"
                 : skin.IsSoldInShop ? skin.Price.ToString("N0")
                 : "STARTER PACK";
 

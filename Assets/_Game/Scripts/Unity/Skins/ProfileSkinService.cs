@@ -67,6 +67,7 @@ namespace ASTeams.SingleLine.Unity
             }
 
             Grant(skin);
+            GameplayEvents.RaiseCoinBalanceChanged(profile.userData.coin);
             return true;
         }
 

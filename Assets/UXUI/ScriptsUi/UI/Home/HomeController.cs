@@ -23,10 +23,27 @@ public class HomeController : MonoBehaviour
         navigator = new SdkSceneNavigator(UISceneController.Instance);
     }
 
+    private void OnEnable()
+    {
+        GameplayEvents.OnCoinBalanceChanged += HandleCoinBalanceChanged;
+    }
+
+    private void OnDisable()
+    {
+        GameplayEvents.OnCoinBalanceChanged -= HandleCoinBalanceChanged;
+    }
+
     private void Start()
     {
         ReadSave();
         UpdateUI();
+    }
+
+    /// <summary>Coins spent in a popup over this screen, such as buying a skin.</summary>
+    private void HandleCoinBalanceChanged(long balance)
+    {
+        coins = (int)balance;
+        coinText.text = coins.ToString();
     }
 
     /// <summary>

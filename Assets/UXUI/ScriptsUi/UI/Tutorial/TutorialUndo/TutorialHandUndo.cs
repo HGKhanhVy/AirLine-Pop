@@ -43,8 +43,7 @@ public class TutorialHandUndo : MonoBehaviour
 
     private Vector3 normalScale;
 
-    private readonly List<GameObject> pathObjects =
-        new List<GameObject>();
+    private UiPathPiecePool pathPieces;
 
 
     // ==================================================
@@ -54,6 +53,11 @@ public class TutorialHandUndo : MonoBehaviour
     private void Awake()
     {
         normalScale = transform.localScale;
+
+        if (pathContainer != null)
+        {
+            pathPieces = new UiPathPiecePool(pathContainer, "TutorialPathPiece");
+        }
     }
 
     private void OnEnable()
@@ -279,7 +283,7 @@ public class TutorialHandUndo : MonoBehaviour
             Vector3 targetPosition =
                 points[i].position;
 
-            GameObject pathSegment =
+            Image pathSegment =
                 CreatePathSegment();
 
             float elapsed = 0f;
@@ -486,44 +490,27 @@ public class TutorialHandUndo : MonoBehaviour
     // CREATE PATH
     // ==================================================
 
-    private GameObject CreatePathSegment()
+    private Image CreatePathSegment()
     {
-        if (pathContainer == null)
+        if (pathPieces == null)
             return null;
 
-        GameObject segment =
-            new GameObject(
-                "TutorialPathSegment",
-                typeof(RectTransform),
-                typeof(Image)
-            );
-
-        segment.transform.SetParent(
-            pathContainer,
-            false
-        );
-
-        RectTransform rect =
-            segment.GetComponent<RectTransform>();
-
         Image image =
-            segment.GetComponent<Image>();
+            pathPieces.Get();
 
-        image.sprite =
-            pathSprite;
+        RoundPathImage.ApplySegment(
+            image,
+            pathSprite,
+            pathWidth
+        );
 
         image.color =
             pathColor;
 
-        image.raycastTarget =
-            false;
-
         // Đưa Path xuống dưới Block
-        segment.transform.SetAsFirstSibling();
+        image.transform.SetAsFirstSibling();
 
-        pathObjects.Add(segment);
-
-        return segment;
+        return image;
     }
 
 
@@ -532,7 +519,7 @@ public class TutorialHandUndo : MonoBehaviour
     // ==================================================
 
     private void UpdatePathSegment(
-        GameObject segment,
+        Image segment,
         Vector3 startWorld,
         Vector3 endWorld
     )
@@ -542,7 +529,7 @@ public class TutorialHandUndo : MonoBehaviour
             return;
 
         RectTransform rect =
-            segment.GetComponent<RectTransform>();
+            segment.rectTransform;
 
         Vector3 start =
             pathContainer.InverseTransformPoint(
@@ -592,40 +579,31 @@ public class TutorialHandUndo : MonoBehaviour
         Vector3 worldPosition
     )
     {
-        if (pathContainer == null)
+        if (pathPieces == null)
             return;
 
-        GameObject joint =
-            new GameObject(
-                "TutorialPathJoint",
-                typeof(RectTransform),
-                typeof(Image)
-            );
-
-        joint.transform.SetParent(
-            pathContainer,
-            false
-        );
-
-        RectTransform rect =
-            joint.GetComponent<RectTransform>();
-
         Image image =
-            joint.GetComponent<Image>();
+            pathPieces.Get();
 
-        image.sprite =
-            pathSprite;
+        RoundPathImage.ApplyJoint(
+            image,
+            pathSprite
+        );
 
         image.color =
             pathColor;
 
-        image.raycastTarget =
-            false;
+        // A pooled piece may come back from a rotated segment.
+        RectTransform rect =
+            image.rectTransform;
 
         rect.localPosition =
             pathContainer.InverseTransformPoint(
                 worldPosition
             );
+
+        rect.localRotation =
+            Quaternion.identity;
 
         rect.sizeDelta =
             new Vector2(
@@ -633,9 +611,7 @@ public class TutorialHandUndo : MonoBehaviour
                 pathWidth
             );
 
-        joint.transform.SetAsFirstSibling();
-
-        pathObjects.Add(joint);
+        image.transform.SetAsFirstSibling();
     }
 
 
@@ -645,15 +621,7 @@ public class TutorialHandUndo : MonoBehaviour
 
     private void ClearPath()
     {
-        foreach (GameObject path in pathObjects)
-        {
-            if (path != null)
-            {
-                Destroy(path);
-            }
-        }
-
-        pathObjects.Clear();
+        pathPieces?.ReleaseAll();
     }
 
 
@@ -663,6 +631,6 @@ public class TutorialHandUndo : MonoBehaviour
 
     private void OnDestroy()
     {
-        ClearPath();
+        pathPieces?.Dispose();
     }
 }
