@@ -108,6 +108,7 @@ namespace ASTeams.SingleLine.Unity
                 {
                     profile.AddCoin(config.StarterPackCoins);
                     profile.SetParam(OwnedThemePrefix + config.StarterPackThemeId, true);
+                    GameplayEvents.RaiseCoinBalanceChanged(profile.userData.coin);
                 }
             }
 
