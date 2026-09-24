@@ -28,6 +28,11 @@ namespace ASTeams.SingleLine.Unity
         [Tooltip("Seconds between cells while the path rewinds. Small enough to read as one motion.")]
         [SerializeField, Min(0f)] private float rewindStepDelay = 0.025f;
 
+        [Tooltip("Lets the player step back by dragging onto the square behind the head. Off " +
+                 "by default: stepping back is what the Undo booster is for, so a drag back " +
+                 "is refused like any illegal move.")]
+        [SerializeField] private bool allowsDragBacktrack;
+
         [Tooltip("Search budget for a hint. Kept small so a hint never stalls a frame.")]
         [SerializeField, Min(1000)] private int hintNodeBudget = 200000;
 
@@ -333,8 +338,12 @@ namespace ASTeams.SingleLine.Unity
                 return;
             }
 
-            // The start gesture shares the same rewind as the Restart button.
-            if (session.Length > 1 && cell == session.GetCell(0))
+            // The start gesture shares the same rewind as the Restart button. It has to be
+            // a tap: a finger dragged back along the path onto the start would otherwise
+            // unwind the whole route, which is stepping back without the Undo booster.
+            bool isTap = boardInput.IsReportingPress || allowsDragBacktrack;
+
+            if (isTap && session.Length > 1 && cell == session.GetCell(0))
             {
                 Restart();
                 return;
@@ -347,7 +356,7 @@ namespace ASTeams.SingleLine.Unity
             // already left.
             CancelHint();
 
-            MoveResult result = session.Move(cell);
+            MoveResult result = IsDragBacktrack(cell) ? MoveResult.Rejected : session.Move(cell);
 
             if (result == MoveResult.Rejected)
             {
@@ -396,6 +405,18 @@ namespace ASTeams.SingleLine.Unity
 
             OnStateChanged?.Invoke(previous, current);
             GameplayEvents.RaiseStateChanged(previous, current);
+        }
+
+        /// <summary>
+        /// A drag onto the square just behind the head. The session would step back for
+        /// it, but here only the Undo booster may do that, so the drag is turned away
+        /// before it reaches the session.
+        /// </summary>
+        private bool IsDragBacktrack(int cell)
+        {
+            return !allowsDragBacktrack
+                && session.Length >= 2
+                && cell == session.GetCell(session.Length - 2);
         }
 
         private List<int> CollectPath()

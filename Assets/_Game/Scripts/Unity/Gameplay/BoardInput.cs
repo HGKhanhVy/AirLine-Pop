@@ -54,6 +54,13 @@ namespace ASTeams.SingleLine.Unity
 
         public event Action OnPressReleased;
 
+        /// <summary>
+        /// True while <see cref="OnCellEntered"/> reports the cell a press has just landed
+        /// on, false for the cells a drag passes over. Lets a listener tell a tap on a
+        /// square from a finger sliding across it.
+        /// </summary>
+        public bool IsReportingPress { get; private set; }
+
         /// <summary>Set false while a level is resolving so stray input cannot disturb it.</summary>
         public bool AcceptsInput { get; set; } = true;
 
@@ -264,7 +271,9 @@ namespace ASTeams.SingleLine.Unity
         {
             if (TryGetCell(screen, out int cell))
             {
+                IsReportingPress = true;
                 OnCellEntered?.Invoke(cell);
+                IsReportingPress = false;
             }
         }
 
