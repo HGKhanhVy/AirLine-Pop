@@ -87,6 +87,12 @@ namespace ASTeams.SingleLine.Unity
 
         private IEffectPlayer effects;
         private Sequence running;
+
+        /// <summary>Gap between one square of the last win wave setting off and the next.</summary>
+        public float WinStepSeconds { get; private set; }
+
+        /// <summary>How long one square of the last win wave takes to swell and settle.</summary>
+        public float WinPulseSeconds { get; private set; }
         private Tween invalidTween;
         private CellView invalidCell;
         private Vector3 cameraShakeBase;
@@ -193,6 +199,8 @@ namespace ASTeams.SingleLine.Unity
             // The win screen has to sit out the whole wave, and only the board knows how
             // long that is: the last square sets off one gap behind each of the others and
             // then needs its own pop on top.
+            WinStepSeconds = stepSeconds;
+            WinPulseSeconds = pulseSeconds;
             GameplayEvents.RaiseCelebrationStarted(
                 ((pathInOrder.Count - 1) * stepSeconds) + pulseSeconds);
 

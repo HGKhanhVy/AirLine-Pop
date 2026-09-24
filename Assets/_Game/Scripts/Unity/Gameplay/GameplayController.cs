@@ -378,6 +378,9 @@ namespace ASTeams.SingleLine.Unity
                 boardInput.AcceptsInput = false;
                 boardView.RevealGoal(session.Head);
                 boardFeedback.PlayWin(CollectPath());
+                // The line leaves each square as that square is at its fullest.
+                pathView.RetractForWin(
+                    boardFeedback.WinStepSeconds, boardFeedback.WinPulseSeconds * 0.5f);
                 haptics?.Play(HapticStrength.Medium);
             }
             else if (current == PathState.Stuck)

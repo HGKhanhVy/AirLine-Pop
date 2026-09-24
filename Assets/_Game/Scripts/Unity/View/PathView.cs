@@ -44,6 +44,14 @@ namespace ASTeams.SingleLine.Unity
         private int growIndex = -1;
         private int previousHead = LevelData.NoCell;
         private int previousLength;
+
+        // On a win the line is drawn back into the squares behind the celebration wave,
+        // so the finished board ends up showing only its squares. The controller repaints
+        // the line after the win is raised, so the retraction has to outlast that repaint.
+        private bool isHiddenForWin;
+        private float retractElapsed = -1f;
+        private float retractStepSeconds;
+        private float retractDelay;
         private Color sparkColor = Color.white;
         private float sparkLeft;
 
@@ -88,6 +96,13 @@ namespace ASTeams.SingleLine.Unity
 
         public void Rebuild(PathSession session)
         {
+            // A board that leaves the won state without being cleared, such as a Restart
+            // pressed during the celebration, gets its line back.
+            if (IsWinHidePending && (session == null || session.State != PathState.Won))
+            {
+                ShowLine();
+            }
+
             if (session == null || session.Length == 0)
             {
                 line.positionCount = 0;
@@ -135,7 +150,7 @@ namespace ASTeams.SingleLine.Unity
             grownFor = 0f;
             line.SetPosition(growIndex, growFrom);
 
-            if (spark != null)
+            if (spark != null && !isHiddenForWin)
             {
                 sparkColor = Color.Lerp(line.startColor, Color.white, sparkLift);
                 sparkLeft = connectDuration + sparkAfterglow;
@@ -165,6 +180,44 @@ namespace ASTeams.SingleLine.Unity
             }
 
             AdvanceSpark();
+
+            AdvanceRetract();
+        }
+
+        /// <summary>
+        /// Pulls the tail of the line along the path at the wave's pace. Every point the
+        /// tail has passed is folded onto the tail, so the line shortens from its start
+        /// and the round cap slides with it rather than the line being cut.
+        /// </summary>
+        private void AdvanceRetract()
+        {
+            if (retractElapsed < 0f)
+            {
+                return;
+            }
+
+            retractElapsed += Time.deltaTime;
+            int last = line.positionCount - 1;
+            float travelled = (retractElapsed - retractDelay) / retractStepSeconds;
+
+            if (travelled <= 0f)
+            {
+                return;
+            }
+
+            if (last < 1 || travelled >= last)
+            {
+                HideNow();
+                return;
+            }
+
+            int passed = (int)travelled;
+            Vector3 tail = Vector3.Lerp(points[passed], points[passed + 1], travelled - passed);
+
+            for (int step = 0; step <= passed; step++)
+            {
+                line.SetPosition(step, tail);
+            }
         }
 
         /// <summary>
@@ -222,8 +275,50 @@ namespace ASTeams.SingleLine.Unity
             line.endColor = color;
         }
 
+        /// <summary>
+        /// Draws the finished line back into its squares in step with the win wave: the
+        /// tail leaves the first square after <paramref name="delay"/> and moves on one
+        /// square every <paramref name="stepSeconds"/>, so each stretch of line goes as
+        /// its square swells. Once the tail reaches the last square the line is gone, and
+        /// it comes back on the next <see cref="Clear"/>.
+        /// </summary>
+        public void RetractForWin(float stepSeconds, float delay)
+        {
+            if (stepSeconds <= 0f)
+            {
+                HideNow();
+                return;
+            }
+
+            retractStepSeconds = stepSeconds;
+            retractDelay = delay;
+            retractElapsed = 0f;
+        }
+
+        private void HideNow()
+        {
+            retractElapsed = -1f;
+            isHiddenForWin = true;
+            line.enabled = false;
+            HideSpark();
+        }
+
+        private bool IsWinHidePending => isHiddenForWin || retractElapsed >= 0f;
+
+        private void ShowLine()
+        {
+            retractElapsed = -1f;
+            isHiddenForWin = false;
+            line.enabled = true;
+        }
+
         public void Clear()
         {
+            if (IsWinHidePending)
+            {
+                ShowLine();
+            }
+
             line.positionCount = 0;
             HideSpark();
             growIndex = -1;
