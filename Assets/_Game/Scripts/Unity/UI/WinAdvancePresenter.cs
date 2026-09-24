@@ -23,6 +23,10 @@ namespace ASTeams.SingleLine.Unity
                  "the next one back until the wave is done.")]
         [SerializeField, Min(0f)] private float showDelay = 0.9f;
 
+        [Tooltip("How long the finished board rests after the wave has settled, so the " +
+                 "last squares finish their pop and the dust clears before the next level.")]
+        [SerializeField, Min(0f)] private float holdAfterWave = 0.2f;
+
         [Tooltip("After this much of the celebration a tap moves on at once. GDD 10 asks " +
                  "for the celebration to be skippable after 0.4 seconds.")]
         [SerializeField, Min(0f)] private float skippableAfter = 0.4f;
@@ -70,7 +74,7 @@ namespace ASTeams.SingleLine.Unity
         private IEnumerator AdvanceAfterCelebration()
         {
             float waited = 0f;
-            float wait = Mathf.Max(showDelay, celebrationSeconds);
+            float wait = Mathf.Max(showDelay, celebrationSeconds + holdAfterWave);
             celebrationSeconds = 0f;
 
             while (waited < wait)

@@ -436,6 +436,16 @@ namespace ASTeams.SingleLine.Unity
         /// already sitting on it: letting the head win would paint the opening square in
         /// the pale head tint instead of the saturated one the start is supposed to have.
         /// </summary>
+        /// <summary>
+        /// The colour a square settles on once the path has covered it. Effects read this
+        /// rather than the square's current colour, which can still be mid-fade or, for
+        /// the square that finished the level, not repainted yet.
+        /// </summary>
+        public Color GetSettledColor(int index, bool isHead)
+        {
+            return ColorFor(index, true, isHead);
+        }
+
         private Color ColorFor(int index, bool visited, bool head)
         {
             if (level.HasFixedStart && level.FixedStart == index)

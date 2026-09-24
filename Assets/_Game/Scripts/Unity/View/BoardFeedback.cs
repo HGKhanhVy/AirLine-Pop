@@ -101,8 +101,9 @@ namespace ASTeams.SingleLine.Unity
         private float dustStepSeconds;
 
         // The controller hands out a list it reuses, so what the wave needs is copied here
-        // before the coroutine outlives the call that started it. Colours are read now
-        // too: by the time a cell's turn comes its square may already be mid-pulse.
+        // before the coroutine outlives the call that started it. Colours are the settled
+        // ones, not what the squares show: the win is raised inside the last move, before
+        // that square is repainted, and the last few squares are still fading in.
         private readonly List<Vector3> burstPositions = new List<Vector3>(96);
         private readonly List<Color> burstColors = new List<Color>(96);
 
@@ -184,7 +185,7 @@ namespace ASTeams.SingleLine.Unity
 
                 running.Insert(step * stepSeconds, Pulse(cell.transform, winScale, pulseSeconds));
                 burstPositions.Add(boardView.GetCellWorldPosition(index));
-                burstColors.Add(cell.Color);
+                burstColors.Add(boardView.GetSettledColor(index, step == pathInOrder.Count - 1));
             }
 
             running.SetUpdate(isIndependentUpdate: false);
