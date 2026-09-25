@@ -12,8 +12,8 @@ PlayerSettings:
   targetDevice: 2
   useOnDemandResources: 0
   accelerometerFrequency: 60
-  companyName: InternalStudio
-  productName: UnityTemplateGame
+  companyName: Biexce
+  productName: AirLine Pop
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
   m_SplashScreenBackgroundColor: {r: 0.13725491, g: 0.12156863, b: 0.1254902, a: 1}
@@ -142,7 +142,7 @@ PlayerSettings:
   loadStoreDebugModeEnabled: 0
   visionOSBundleVersion: 1.0
   tvOSBundleVersion: 1.0
-  bundleVersion: 0.0.2
+  bundleVersion: 0.0.1
   preloadedAssets:
   - {fileID: 11400000, guid: 72ef8832855d2b5479dced988beb9ca4, type: 2}
   - {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
@@ -167,9 +167,9 @@ PlayerSettings:
   androidMaxAspectRatio: 2.4
   androidMinAspectRatio: 1
   applicationIdentifier:
-    Android: com.internal.template.game
-    Standalone: com.internal.template.game
-    iPhone: com.internal.template.game
+    Android: com.biexce.game.airlinepop
+    Standalone: com.biexce.game.airlinepop
+    iPhone: com.biexce.game.airlinepop
   buildNumber:
     Standalone: 0
     VisionOS: 0
@@ -835,25 +835,25 @@ PlayerSettings:
   webGLCloseOnQuit: 0
   webWasm2023: 0
   scriptingDefineSymbols:
-    Android: VS_ATT;NEWTONSOFT;DOTWEEN;MOREMOUNTAINS_NICEVIBRATIONS_INSTALLED;ODIN_INSPECTOR;ODIN_INSPECTOR_3;ODIN_INSPECTOR_3_1;ODIN_INSPECTOR_3_2;ODIN_INSPECTOR_3_3;UNITY_MCP_READY;UNITY_MCP_DEPS_3
-    EmbeddedLinux: DOTWEEN;UNITY_MCP_READY;UNITY_MCP_DEPS_3
-    GameCoreScarlett: DOTWEEN;UNITY_MCP_READY;UNITY_MCP_DEPS_3
-    GameCoreXboxOne: DOTWEEN;UNITY_MCP_READY;UNITY_MCP_DEPS_3
-    Kepler: DOTWEEN;UNITY_MCP_READY;UNITY_MCP_DEPS_3
-    LinuxHeadlessSimulation: DOTWEEN;UNITY_MCP_READY;UNITY_MCP_DEPS_3
-    Nintendo Switch: DOTWEEN;UNITY_MCP_READY;UNITY_MCP_DEPS_3
-    Nintendo Switch 2: DOTWEEN;UNITY_MCP_READY;UNITY_MCP_DEPS_3
-    PS4: DOTWEEN;UNITY_MCP_READY;UNITY_MCP_DEPS_3
-    PS5: DOTWEEN;UNITY_MCP_READY;UNITY_MCP_DEPS_3
-    QNX: DOTWEEN;UNITY_MCP_READY;UNITY_MCP_DEPS_3
-    Server: UNITY_MCP_READY;UNITY_MCP_DEPS_3
-    Standalone: DOTWEEN;ODIN_INSPECTOR;ODIN_INSPECTOR_3;ODIN_INSPECTOR_3_1;ODIN_INSPECTOR_3_2;ODIN_INSPECTOR_3_3;UNITY_MCP_READY;UNITY_MCP_DEPS_3
-    VisionOS: DOTWEEN;UNITY_MCP_READY;UNITY_MCP_DEPS_3
-    WebGL: DOTWEEN;UNITY_MCP_READY;UNITY_MCP_DEPS_3
-    Windows Store Apps: DOTWEEN;UNITY_MCP_READY;UNITY_MCP_DEPS_3
-    XboxOne: DOTWEEN;UNITY_MCP_READY;UNITY_MCP_DEPS_3
-    iPhone: NEWTONSOFT;DOTWEEN;UNITY_MCP_READY;UNITY_MCP_DEPS_3
-    tvOS: DOTWEEN;UNITY_MCP_READY;UNITY_MCP_DEPS_3
+    Android: VS_ATT;NEWTONSOFT;DOTWEEN;MOREMOUNTAINS_NICEVIBRATIONS_INSTALLED;ODIN_INSPECTOR;ODIN_INSPECTOR_3;ODIN_INSPECTOR_3_1;ODIN_INSPECTOR_3_2;ODIN_INSPECTOR_3_3;UNITY_MCP_READY;UNITY_MCP_DEPS_6
+    EmbeddedLinux: DOTWEEN;UNITY_MCP_READY;UNITY_MCP_DEPS_6
+    GameCoreScarlett: DOTWEEN;UNITY_MCP_READY;UNITY_MCP_DEPS_6
+    GameCoreXboxOne: DOTWEEN;UNITY_MCP_READY;UNITY_MCP_DEPS_6
+    Kepler: DOTWEEN;UNITY_MCP_READY;UNITY_MCP_DEPS_6
+    LinuxHeadlessSimulation: DOTWEEN;UNITY_MCP_READY;UNITY_MCP_DEPS_6
+    Nintendo Switch: DOTWEEN;UNITY_MCP_READY;UNITY_MCP_DEPS_6
+    Nintendo Switch 2: DOTWEEN;UNITY_MCP_READY;UNITY_MCP_DEPS_6
+    PS4: DOTWEEN;UNITY_MCP_READY;UNITY_MCP_DEPS_6
+    PS5: DOTWEEN;UNITY_MCP_READY;UNITY_MCP_DEPS_6
+    QNX: DOTWEEN;UNITY_MCP_READY;UNITY_MCP_DEPS_6
+    Server: UNITY_MCP_READY;UNITY_MCP_DEPS_6
+    Standalone: DOTWEEN;ODIN_INSPECTOR;ODIN_INSPECTOR_3;ODIN_INSPECTOR_3_1;ODIN_INSPECTOR_3_2;ODIN_INSPECTOR_3_3;UNITY_MCP_READY;UNITY_MCP_DEPS_6
+    VisionOS: DOTWEEN;UNITY_MCP_READY;UNITY_MCP_DEPS_6
+    WebGL: DOTWEEN;UNITY_MCP_READY;UNITY_MCP_DEPS_6
+    Windows Store Apps: DOTWEEN;UNITY_MCP_READY;UNITY_MCP_DEPS_6
+    XboxOne: DOTWEEN;UNITY_MCP_READY;UNITY_MCP_DEPS_6
+    iPhone: NEWTONSOFT;DOTWEEN;UNITY_MCP_READY;UNITY_MCP_DEPS_6
+    tvOS: DOTWEEN;UNITY_MCP_READY;UNITY_MCP_DEPS_6
   additionalCompilerArguments: {}
   platformArchitecture: {}
   scriptingBackend:
