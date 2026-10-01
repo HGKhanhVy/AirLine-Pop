@@ -1,0 +1,303 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a79cb9a8b788ebf4fb533a5ee702505b, type: 3}
+  m_Name: Localization
+  m_EditorClassIdentifier: 
+  entries:
+  - Key: flight.number
+    English: Flight {0}
+    Vietnamese: "Chuy\u1EBFn {0}"
+  - Key: flight.withDestination
+    English: "Flight {0} \xB7 {1}"
+    Vietnamese: "Chuy\u1EBFn {0} \xB7 {1}"
+  - Key: common.restart
+    English: Restart
+    Vietnamese: "Ch\u01A1i l\u1EA1i"
+  - Key: common.backToAirport
+    English: Back to airport
+    Vietnamese: "V\u1EC1 s\xE2n bay"
+  - Key: common.continue
+    English: Continue
+    Vietnamese: "Ti\u1EBFp t\u1EE5c"
+  - Key: common.tapToClose
+    English: Tap to close
+    Vietnamese: "Ch\u1EA1m \u0111\u1EC3 \u0111\xF3ng"
+  - Key: settings.title
+    English: Settings
+    Vietnamese: "C\xE0i \u0111\u1EB7t"
+  - Key: settings.music
+    English: Music
+    Vietnamese: "Nh\u1EA1c n\u1EC1n"
+  - Key: settings.sound
+    English: Sound
+    Vietnamese: "\xC2m thanh"
+  - Key: settings.vibration
+    English: Vibration
+    Vietnamese: Rung
+  - Key: settings.language
+    English: Language
+    Vietnamese: "Ng\xF4n ng\u1EEF"
+  - Key: home.fly
+    English: FLY
+    Vietnamese: BAY
+  - Key: nav.airport
+    English: Airport
+    Vietnamese: "S\xE2n bay"
+  - Key: nav.lounge
+    English: Lounge
+    Vietnamese: "Ph\xF2ng ch\u1EDD"
+  - Key: nav.shop
+    English: Shop
+    Vietnamese: "C\u1EEDa h\xE0ng"
+  - Key: lounge.title
+    English: Lounge
+    Vietnamese: "Ph\xF2ng ch\u1EDD"
+  - Key: lounge.hint
+    English: Tap a cat passenger
+    Vietnamese: "Ch\u1EA1m v\xE0o kh\xE1ch m\xE8o"
+  - Key: shop.title
+    English: Shop
+    Vietnamese: "C\u1EEDa h\xE0ng"
+  - Key: shop.soon
+    English: "Snacks \xB7 Planes \xB7 Airport \xB7 Lounge"
+    Vietnamese: "\u0110\u1ED3 \u0103n \xB7 M\xE1y bay \xB7 S\xE2n bay \xB7 Ph\xF2ng
+      ch\u1EDD"
+  - Key: toast.arrived
+    English: '{0} is now one of our regulars!'
+    Vietnamese: "{0} v\u1EEBa th\xE0nh kh\xE1ch quen c\u1EE7a h\xE3ng!"
+  - Key: departures.boarding
+    English: BOARDING
+    Vietnamese: "L\xCAN M\xC1Y BAY"
+  - Key: departures.onTime
+    English: ON TIME
+    Vietnamese: "\u0110\xDANG GI\u1EDC"
+  - Key: album.title
+    English: Postcard Album
+    Vietnamese: "S\u1ED5 b\u01B0u thi\u1EBFp"
+  - Key: album.summary
+    English: '{0}/{1} postcards'
+    Vietnamese: "{0}/{1} b\u01B0u thi\u1EBFp"
+  - Key: album.stamps
+    English: '{0}/{1} stamps'
+    Vietnamese: '{0}/{1} tem'
+  - Key: care.greet
+    English: Say hi
+    Vietnamese: "Ch\xE0o"
+  - Key: care.play
+    English: Play
+    Vietnamese: "Ch\u01A1i"
+  - Key: care.feed
+    English: "Feed \xB7 {0} left"
+    Vietnamese: "M\u1EDDi \u0103n \xB7 c\xF2n {0}"
+  - Key: care.buy
+    English: "Buy snack \xB7 {0} coins"
+    Vietnamese: "Mua \u0111\u1ED3 \u0103n \xB7 {0} xu"
+  - Key: care.bond
+    English: +{0} bond
+    Vietnamese: "+{0} th\xE2n thi\u1EBFt"
+  - Key: care.tierUp
+    English: Up to {0}!
+    Vietnamese: "L\xEAn {0}!"
+  - Key: care.alreadyGreeted
+    English: Already said hi today, still happy!
+    Vietnamese: "H\xF4m nay \u0111\xE3 ch\xE0o r\u1ED3i, b\xE9 v\u1EABn vui l\u1EAFm!"
+  - Key: care.alreadyPlayed
+    English: Already played today, still having fun!
+    Vietnamese: "H\xF4m nay \u0111\xE3 ch\u01A1i r\u1ED3i, b\xE9 v\u1EABn th\xEDch
+      l\u1EAFm!"
+  - Key: care.full
+    English: '{0} is full, come back tomorrow'
+    Vietnamese: "{0} no r\u1ED3i, mai m\u1EDDi ti\u1EBFp nh\xE9"
+  - Key: care.noCoins
+    English: Not enough coins for a snack
+    Vietnamese: "Ch\u01B0a \u0111\u1EE7 xu \u0111\u1EC3 mua \u0111\u1ED3 \u0103n"
+  - Key: care.bought
+    English: Bought a snack
+    Vietnamese: "\u0110\xE3 mua 1 ph\u1EA7n \u0111\u1ED3 \u0103n"
+  - Key: tier.0
+    English: New guest
+    Vietnamese: "Kh\xE1ch m\u1EDBi"
+  - Key: tier.1
+    English: Bronze
+    Vietnamese: "H\u1EA1ng \u0110\u1ED3ng"
+  - Key: tier.2
+    English: Silver
+    Vietnamese: "H\u1EA1ng B\u1EA1c"
+  - Key: tier.3
+    English: Gold
+    Vietnamese: "H\u1EA1ng V\xE0ng"
+  - Key: tier.4
+    English: Diamond
+    Vietnamese: "Kim C\u01B0\u01A1ng"
+  - Key: cat.bo
+    English: Butter
+    Vietnamese: "B\u01A1"
+  - Key: cat.kem
+    English: Cream
+    Vietnamese: Kem
+  - Key: cat.mun
+    English: Ebony
+    Vietnamese: Mun
+  - Key: cat.muop
+    English: Tabby
+    Vietnamese: "M\u01B0\u1EDBp"
+  - Key: cat.tro
+    English: Ash
+    Vietnamese: Tro
+  - Key: gameplay.level
+    English: Flight {0}
+    Vietnamese: "Chuy\u1EBFn {0}"
+  - Key: gameplay.progress
+    English: '{0} / {1}'
+    Vietnamese: '{0} / {1}'
+  - Key: gameplay.hint.restart
+    English: Try a Restart
+    Vietnamese: "Th\u1EED Ch\u01A1i l\u1EA1i nh\xE9"
+  - Key: gameplay.hint.undo
+    English: Drag back {0} steps
+    Vietnamese: "K\xE9o l\xF9i {0} b\u01B0\u1EDBc"
+  - Key: hud.hint
+    English: Hint
+    Vietnamese: "G\u1EE3i \xFD"
+  - Key: hud.stuck
+    English: "No way forward \xB7 Drag back or Restart"
+    Vietnamese: "H\u1EBFt \u0111\u01B0\u1EDDng r\u1ED3i \xB7 K\xE9o l\xF9i ho\u1EB7c
+      Ch\u01A1i l\u1EA1i"
+  - Key: pause.title
+    English: Paused
+    Vietnamese: "T\u1EA1m d\u1EEBng"
+  - Key: pause.resume
+    English: Resume
+    Vietnamese: "Ti\u1EBFp t\u1EE5c"
+  - Key: win.title
+    English: Flight {0} is off!
+    Vietnamese: "Chuy\u1EBFn {0} c\u1EA5t c\xE1nh!"
+  - Key: win.titleTo
+    English: Flight {0} to {1}!
+    Vietnamese: "Chuy\u1EBFn {0} t\u1EDBi {1}!"
+  - Key: win.detail
+    English: "{0} cat passengers \xB7 Stamp {1}/{2}"
+    Vietnamese: "{0} kh\xE1ch m\xE8o \xB7 Tem {1}/{2}"
+  - Key: win.postcard
+    English: Postcard from {0} added to your album!
+    Vietnamese: "B\u01B0u thi\u1EBFp {0} \u0111\xE3 v\u1EC1 s\u1ED5!"
+  - Key: win.replayNote
+    English: Ticket already earned for this flight
+    Vietnamese: "\u0110\xE3 nh\u1EADn ti\u1EC1n v\xE9 chuy\u1EBFn n\xE0y r\u1ED3i"
+  - Key: destination.da_lat
+    English: Da Lat
+    Vietnamese: "\u0110\xE0 L\u1EA1t"
+  - Key: region.vietnam
+    English: Vietnam
+    Vietnamese: "Vi\u1EC7t Nam"
+  - Key: destination.hoi_an
+    English: Hoi An
+    Vietnamese: "H\u1ED9i An"
+  - Key: destination.ha_long
+    English: Ha Long
+    Vietnamese: "H\u1EA1 Long"
+  - Key: destination.hue
+    English: Hue
+    Vietnamese: "Hu\u1EBF"
+  - Key: destination.saigon
+    English: Saigon
+    Vietnamese: "S\xE0i G\xF2n"
+  - Key: destination.tokyo
+    English: Tokyo
+    Vietnamese: Tokyo
+  - Key: region.japan
+    English: Japan
+    Vietnamese: "Nh\u1EADt B\u1EA3n"
+  - Key: destination.kyoto
+    English: Kyoto
+    Vietnamese: Kyoto
+  - Key: destination.osaka
+    English: Osaka
+    Vietnamese: Osaka
+  - Key: destination.sapporo
+    English: Sapporo
+    Vietnamese: Sapporo
+  - Key: destination.okinawa
+    English: Okinawa
+    Vietnamese: Okinawa
+  - Key: destination.seoul
+    English: Seoul
+    Vietnamese: Seoul
+  - Key: region.korea
+    English: Korea
+    Vietnamese: "H\xE0n Qu\u1ED1c"
+  - Key: destination.busan
+    English: Busan
+    Vietnamese: Busan
+  - Key: destination.jeju
+    English: Jeju
+    Vietnamese: Jeju
+  - Key: destination.gyeongju
+    English: Gyeongju
+    Vietnamese: Gyeongju
+  - Key: destination.incheon
+    English: Incheon
+    Vietnamese: Incheon
+  - Key: destination.paris
+    English: Paris
+    Vietnamese: Paris
+  - Key: region.france
+    English: France
+    Vietnamese: "Ph\xE1p"
+  - Key: destination.nice
+    English: Nice
+    Vietnamese: Nice
+  - Key: destination.lyon
+    English: Lyon
+    Vietnamese: Lyon
+  - Key: destination.provence
+    English: Provence
+    Vietnamese: Provence
+  - Key: destination.bordeaux
+    English: Bordeaux
+    Vietnamese: Bordeaux
+  - Key: destination.cairo
+    English: Cairo
+    Vietnamese: Cairo
+  - Key: region.egypt
+    English: Egypt
+    Vietnamese: "Ai C\u1EADp"
+  - Key: destination.giza
+    English: Giza
+    Vietnamese: Giza
+  - Key: destination.luxor
+    English: Luxor
+    Vietnamese: Luxor
+  - Key: destination.aswan
+    English: Aswan
+    Vietnamese: Aswan
+  - Key: destination.alexandria
+    English: Alexandria
+    Vietnamese: Alexandria
+  - Key: destination.new_york
+    English: New York
+    Vietnamese: New York
+  - Key: region.usa
+    English: USA
+    Vietnamese: "M\u1EF9"
+  - Key: destination.san_francisco
+    English: San Francisco
+    Vietnamese: San Francisco
+  - Key: destination.hawaii
+    English: Hawaii
+    Vietnamese: Hawaii
+  - Key: destination.los_angeles
+    English: Los Angeles
+    Vietnamese: Los Angeles
+  - Key: destination.chicago
+    English: Chicago
+    Vietnamese: Chicago

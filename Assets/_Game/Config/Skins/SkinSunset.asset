@@ -18,15 +18,15 @@ MonoBehaviour:
   isSoldInShop: 1
   isOwnedByDefault: 0
   palette:
-    background: {r: 0.047, g: 0.016, b: 0.031, a: 1}
-    cell: {r: 0.33, g: 0.25, b: 0.29, a: 1}
+    background: {r: 0.627451, g: 0.83137256, b: 0.9411765, a: 1}
+    cell: {r: 1, g: 0.98039216, b: 0.94509804, a: 1}
     stuck: {r: 1, g: 0.42, b: 0.42, a: 1}
-    usesLevelHue: 1
-    firstLevelHue: 15
-    hueStepPerLevel: 22
-    startTone: {x: 0.88, y: 0.92}
-    visitedTone: {x: 0.78, y: 0.92}
-    headTone: {x: 0.45, y: 1}
-    pathTone: {x: 0.72, y: 1}
-    wonTone: {x: 0.35, y: 1}
-    pathAlpha: 0.78
+    usesLevelHue: 0
+    firstLevelHue: 8
+    hueStepPerLevel: 1
+    startTone: {x: 0.48, y: 0.8}
+    visitedTone: {x: 0.05, y: 0.98}
+    headTone: {x: 0.07, y: 0.99}
+    pathTone: {x: 0, y: 1}
+    wonTone: {x: 0.22, y: 1}
+    pathAlpha: 1

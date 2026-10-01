@@ -20,9 +20,6 @@ namespace ASTeams.SingleLine.Unity
     /// </summary>
     public sealed class GameplayHud : MonoBehaviour
     {
-        [Tooltip("Optional. Without it the labels fall back to plain formats.")]
-        [SerializeField] private TextCatalogSO textCatalog;
-
         [Header("Readouts")]
         [SerializeField] private TMP_Text levelLabel;
         [SerializeField] private TMP_Text progressLabel;
@@ -37,7 +34,6 @@ namespace ASTeams.SingleLine.Unity
         [SerializeField] private CanvasGroup stuckBanner;
         [SerializeField, Min(0.01f)] private float bannerFadeSpeed = 4f;
 
-        private ITextCatalog texts;
         private int levelNumber;
         private int visitedCells;
         private int totalCells;
@@ -47,11 +43,6 @@ namespace ASTeams.SingleLine.Unity
         private HintResult hintResult;
         private float bannerAlpha;
         private float bannerTarget;
-
-        private void Awake()
-        {
-            texts = textCatalog == null ? null : new TextCatalog(textCatalog.Entries);
-        }
 
         private void OnEnable()
         {
@@ -66,6 +57,7 @@ namespace ASTeams.SingleLine.Unity
             AddListener(hintButton, OnHintClicked);
             AddListener(undoButton, OnUndoClicked);
             AddListener(restartButton, OnRestartClicked);
+            Localization.Service.OnLanguageChanged += Refresh;
 
             // Catches up with a board that opened before this screen did.
             GameplayEvents.RequestSnapshot();
@@ -85,6 +77,7 @@ namespace ASTeams.SingleLine.Unity
             RemoveListener(hintButton, OnHintClicked);
             RemoveListener(undoButton, OnUndoClicked);
             RemoveListener(restartButton, OnRestartClicked);
+            Localization.Service.OnLanguageChanged -= Refresh;
         }
 
         private void Update()
@@ -153,18 +146,18 @@ namespace ASTeams.SingleLine.Unity
         {
             if (levelLabel != null)
             {
-                levelLabel.SetText(Format("gameplay.level", "LEVEL {0}"), levelNumber);
+                levelLabel.SetText(Localization.Get("gameplay.level"), levelNumber);
             }
 
             if (progressLabel != null)
             {
                 if (hintResult != null && hintResult.NeedsRestart)
                 {
-                    progressLabel.SetText(Format("gameplay.hint.restart", "Try Restart"));
+                    progressLabel.SetText(Localization.Get("gameplay.hint.restart"));
                 }
                 else if (hintResult != null && hintResult.BacktrackCount > 0)
                 {
-                    progressLabel.SetText(Format("gameplay.hint.undo", "Undo {0} steps"), hintResult.BacktrackCount);
+                    progressLabel.SetText(Localization.Get("gameplay.hint.undo"), hintResult.BacktrackCount);
                 }
                 else
                 {
@@ -182,11 +175,6 @@ namespace ASTeams.SingleLine.Unity
 
             // A hint works from the very first cell, unlike undo which needs a step to take back.
             SetInteractable(hintButton, visitedCells > 0 && state != PathState.Won && !isRewinding && !isHintPending);
-        }
-
-        private string Format(string key, string fallback)
-        {
-            return texts == null ? fallback : texts.Get(key);
         }
 
         private void OnHintClicked()

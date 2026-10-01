@@ -50,6 +50,10 @@ namespace ASTeams.SingleLine.Unity
                  "GDD 8.1 puts it at 20 coins; the base reward lives in the team's GameConfig.")]
         [SerializeField, Min(0)] private int firstClearBonus = 20;
 
+        [Tooltip("When set, rewards follow the cat-room economy (GDD 6): coins on the first " +
+                 "clear only. Leave empty for the older base-plus-bonus rule above.")]
+        [SerializeField] private EconomyConfigSO economy;
+
         private ILevelRepository repository;
         private ILevelProgressStore progressStore;
         private ILevelCatalog levelCatalog;
@@ -223,7 +227,14 @@ namespace ASTeams.SingleLine.Unity
         private ILevelRewardService CreateRewardService()
         {
             UserProfileController profile = UserProfileController.Instance;
-            return profile == null ? null : new ProfileLevelRewardService(profile, resultHandler, firstClearBonus);
+            if (profile == null)
+            {
+                return null;
+            }
+
+            return economy != null
+                ? new FirstClearRewardService(profile, resultHandler, economy)
+                : (ILevelRewardService)new ProfileLevelRewardService(profile, resultHandler, firstClearBonus);
         }
 
         private void AwardLevelReward(bool isFirstClear)

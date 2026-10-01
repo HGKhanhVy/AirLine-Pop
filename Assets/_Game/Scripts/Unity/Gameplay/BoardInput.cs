@@ -64,16 +64,30 @@ namespace ASTeams.SingleLine.Unity
         /// <summary>Set false while a level is resolving so stray input cannot disturb it.</summary>
         public bool AcceptsInput { get; set; } = true;
 
+        /// <summary>True while a press that belongs to the board is held down.</summary>
+        public bool IsSteering { get; private set; }
+
+        /// <summary>Where the steering pointer is on the board plane. Valid while <see cref="IsSteering"/>.</summary>
+        public Vector3 PointerWorldPosition { get; private set; }
+
         private void Update()
         {
             if (!TryReadOwningPointer(out bool pressed, out Vector2 screen))
             {
+                IsSteering = false;
                 return;
             }
 
             if (pressed && !isPointerPreviouslyPressed)
             {
                 isPressOnUi = IsOverUi(screen);
+            }
+
+            IsSteering = pressed && AcceptsInput && !isPressOnUi && boardCamera != null;
+
+            if (IsSteering)
+            {
+                PointerWorldPosition = ScreenToWorld(screen);
             }
 
             if (!AcceptsInput || isPressOnUi)
@@ -286,32 +300,42 @@ namespace ASTeams.SingleLine.Unity
                 return false;
             }
 
-            Vector3 world = boardCamera.ScreenToWorldPoint(
-                new Vector3(screen.x, screen.y, -boardCamera.transform.position.z));
+            return boardView.TryGetCellAt(ScreenToWorld(screen), out cell);
+        }
 
-            return boardView.TryGetCellAt(world, out cell);
+        /// <summary>Where the pointer's line of sight meets the board surface, which lies on z = 0.</summary>
+        private Vector3 ScreenToWorld(Vector2 screen)
+        {
+            Ray ray = boardCamera.ScreenPointToRay(new Vector3(screen.x, screen.y, 0f));
+
+            if (Mathf.Abs(ray.direction.z) < 1e-5f)
+            {
+                return ray.origin;
+            }
+
+            float along = -ray.origin.z / ray.direction.z;
+            return ray.origin + ray.direction * along;
         }
 
         /// <summary>
         /// How many screen pixels one cell spans, so the sampling step adapts to the board
         /// size and the screen rather than being a guess in pixels. A tiny board on a tall
         /// phone and a ten by ten board on a tablet need very different step sizes.
+        ///
+        /// Under perspective the far rows are smaller than the near ones; measuring across
+        /// the middle of the board is close enough for a sampling step.
         /// </summary>
         private float EstimatePixelsPerCell()
         {
-            if (boardCamera == null || !boardCamera.orthographic || Screen.height <= 0)
+            if (boardCamera == null || Screen.height <= 0)
             {
                 return FallbackPixelsPerCell;
             }
 
-            float worldPerPixel = boardCamera.orthographicSize * 2f / Screen.height;
-
-            if (worldPerPixel <= 0f)
-            {
-                return FallbackPixelsPerCell;
-            }
-
-            float pixelsPerCell = boardView.CellPitch / worldPerPixel;
+            Vector3 centre = boardView.transform.position;
+            Vector3 left = boardCamera.WorldToScreenPoint(centre);
+            Vector3 right = boardCamera.WorldToScreenPoint(centre + Vector3.right * boardView.CellPitch);
+            float pixelsPerCell = right.x - left.x;
             return pixelsPerCell < 1f ? FallbackPixelsPerCell : pixelsPerCell;
         }
     }

@@ -303,8 +303,8 @@ namespace ASTeams.SingleLine.Unity
         }
 
         /// <summary>
-        /// Plays the hint as somebody playing it: a light drags from square to square in
-        /// the order they are to be walked, and each one presses under it as it lands.
+        /// Plays the hint as somebody leading the way: a paper plane glides from square to
+        /// square in the order they are to be walked, and each one presses under it as it lands.
         ///
         /// A hint points, it does not move. Nothing here is coloured in and no cell is
         /// entered; the player still has to make every move themselves. But three squares
@@ -370,6 +370,7 @@ namespace ASTeams.SingleLine.Unity
 
                 if (hasGhost)
                 {
+                    hintSequence.AppendCallback(() => hintGhost.BeginLeg(to));
                     hintSequence.Append(hintGhost.MoveTo(to, hintStepSeconds));
                 }
                 else

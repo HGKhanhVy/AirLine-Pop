@@ -1,0 +1,48 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 05fe1a4b0ee792741bfed62a8e4c28aa, type: 3}
+  m_Name: CatBreed_tro
+  m_EditorClassIdentifier: 
+  id: tro
+  displayName: Ash
+  arrivesAfterFlight: 6
+  isOwnedByDefault: 0
+  remaps:
+  - from:
+      column: 4
+      row: 9
+    to:
+      column: 8
+      row: 13
+  - from:
+      column: 3
+      row: 9
+    to:
+      column: 6
+      row: 13
+  - from:
+      column: 3
+      row: 12
+    to:
+      column: 6
+      row: 13
+  - from:
+      column: 11
+      row: 13
+    to:
+      column: 11
+      row: 13
+  preservedParts:
+  - MAT_1
+  hiddenParts:
+  - TOC_1
+  prefab: {fileID: 3989873397946406878, guid: ac5f5248bfd5f6e46ba8b21b699622ee, type: 3}

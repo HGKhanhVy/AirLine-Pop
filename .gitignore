@@ -129,3 +129,7 @@ InitTestScene*.unity*
 # Tai lieu noi bo o thu muc goc, giu tren may chu khong day len GitHub.
 # Tai lieu di kem package trong Assets/ van theo repo nhu cu.
 /*.md
+
+# Python bytecode from the art generators
+__pycache__/
+*.pyc

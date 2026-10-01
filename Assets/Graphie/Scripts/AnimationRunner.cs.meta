@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 7b9f2b7bb6d607e4395401785939d832
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 302574
+  packageName: Climbing Cat
+  packageVersion: 1.0
+  assetPath: Assets/Graphie/Scripts/AnimationRunner.cs
+  uploadId: 709765

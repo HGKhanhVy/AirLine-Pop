@@ -4,25 +4,35 @@ using UnityEngine;
 namespace ASTeams.SingleLine.Unity
 {
     /// <summary>
-    /// The light a hint drags through the squares it is pointing at.
+    /// The hint's guide: a paper plane that glides the hinted squares ahead of the player's
+    /// plane, turning to face each leg, dropping little white puffs behind it like a vapour
+    /// trail. A plane, so it speaks the airline's language rather than a generic glowing dot;
+    /// paper, so it is never mistaken for the player's own.
     ///
-    /// It is the same art the player's own path head wears, shown at reduced alpha: the
-    /// hint is meant to read as somebody playing the move, so what it drags has to be the
-    /// thing that leads a real drag. Anything else would teach the player a mark that
-    /// never appears again.
+    /// The puffs are separate sprites laid at even spacing rather than a texture stretched
+    /// along a line, so they stay round through every turn. They are made ahead of time and
+    /// reused on every run.
     ///
-    /// It only knows how to appear, slide and leave. What it slides through, how fast and
-    /// how often is the caller's business.
+    /// It only knows how to appear, turn, glide and leave. What it glides through, how fast
+    /// and how often is the caller's business.
     /// </summary>
     public sealed class HintGhostView : MonoBehaviour
     {
         [SerializeField] private SpriteRenderer marker;
 
-        [Tooltip("How solid the ghost is. Below the real path head on purpose: it is a " +
-                 "suggestion, and it should not compete with the line the player owns.")]
-        [SerializeField, Range(0f, 1f)] private float alpha = 0.7f;
+        [Tooltip("The trail's puffs, used in order and reused on every run. Optional.")]
+        [SerializeField] private SpriteRenderer[] puffs = new SpriteRenderer[0];
+
+        [Tooltip("World distance between two puffs of the trail.")]
+        [SerializeField, Min(0.05f)] private float puffSpacing = 0.24f;
+
+        [Tooltip("How solid the guide and its trail are: a suggestion, not the player's own path.")]
+        [SerializeField, Range(0f, 1f)] private float alpha = 1f;
 
         private Color tint = Color.white;
+        private float fade;
+        private int usedPuffs;
+        private Vector3 lastPuff;
 
         /// <summary>False when no marker was wired, which leaves the hint to run without one.</summary>
         public bool IsReady => marker != null;
@@ -41,27 +51,40 @@ namespace ASTeams.SingleLine.Unity
 
             tint = colour;
             marker.transform.position = worldPosition;
-            marker.color = new Color(tint.r, tint.g, tint.b, alpha);
             marker.enabled = true;
+            HidePuffs();
+            lastPuff = worldPosition;
+            SetFade(1f);
+        }
+
+        /// <summary>Turns the guide to face the next square. Called as each leg begins.</summary>
+        public void BeginLeg(Vector3 towards)
+        {
+            Vector3 direction = towards - marker.transform.position;
+
+            if (direction.sqrMagnitude > 0f)
+            {
+                // The paper plane is drawn nose up.
+                float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg - 90f;
+                marker.transform.rotation = Quaternion.Euler(0f, 0f, angle);
+            }
         }
 
         /// <summary>
-        /// Slides to the next square at a steady rate. Linear on purpose: a finger crossing
-        /// a board does not ease into every square, and easing each leg turns one drag into
-        /// a row of separate little moves.
+        /// Glides to the next square at a steady rate, dropping puffs as it goes. Linear on
+        /// purpose: a plane in flight does not stop at every square.
         /// </summary>
         public Tween MoveTo(Vector3 worldPosition, float duration)
         {
             return marker.transform
                 .DOMove(worldPosition, duration)
-                .SetEase(Ease.Linear);
+                .SetEase(Ease.Linear)
+                .OnUpdate(DropPuffs);
         }
 
         public Tween FadeOut(float duration)
         {
-            return marker
-                .DOFade(0f, duration)
-                .OnComplete(Hide);
+            return DOTween.To(() => fade, SetFade, 0f, duration).OnComplete(Hide);
         }
 
         public void Hide()
@@ -71,8 +94,50 @@ namespace ASTeams.SingleLine.Unity
                 return;
             }
 
-            marker.color = new Color(tint.r, tint.g, tint.b, 0f);
+            SetFade(0f);
             marker.enabled = false;
+            HidePuffs();
+        }
+
+        /// <summary>Lays a puff each time the guide has covered another spacing since the last.</summary>
+        private void DropPuffs()
+        {
+            Vector3 position = marker.transform.position;
+            Vector3 travelled = position - lastPuff;
+            float distance = travelled.magnitude;
+
+            while (distance >= puffSpacing && usedPuffs < puffs.Length)
+            {
+                lastPuff += travelled / distance * puffSpacing;
+                SpriteRenderer puff = puffs[usedPuffs++];
+                puff.transform.position = lastPuff;
+                puff.color = marker.color;
+                puff.enabled = true;
+                travelled = position - lastPuff;
+                distance = travelled.magnitude;
+            }
+        }
+
+        private void HidePuffs()
+        {
+            for (int i = 0; i < puffs.Length; i++)
+            {
+                puffs[i].enabled = false;
+            }
+
+            usedPuffs = 0;
+        }
+
+        private void SetFade(float value)
+        {
+            fade = value;
+            var colour = new Color(tint.r, tint.g, tint.b, alpha * value);
+            marker.color = colour;
+
+            for (int i = 0; i < usedPuffs; i++)
+            {
+                puffs[i].color = colour;
+            }
         }
     }
 }

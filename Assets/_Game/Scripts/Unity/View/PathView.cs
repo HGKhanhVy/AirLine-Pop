@@ -18,6 +18,20 @@ namespace ASTeams.SingleLine.Unity
         [SerializeField] private BoardView boardView;
         [SerializeField] private Material sharedMaterial;
 
+        [Tooltip("Draws the path as a flight route: the material's texture is repeated along " +
+                 "the line instead of stretched over it. One texture tile spans as many path " +
+                 "widths as the texture is wider than tall, so its dashes keep their shape.")]
+        [SerializeField] private bool isDashed;
+
+        [Tooltip("Lines drawn under the path through the same points, bottom first, such as the " +
+                 "runway the path is the centre line of. Their width, colour and material are " +
+                 "their own; only the points and visibility follow the path.")]
+        [SerializeField] private LineRenderer[] underlays = System.Array.Empty<LineRenderer>();
+
+        [Tooltip("Draw the line back into the squares during the win wave. Off keeps the " +
+                 "finished route on the board.")]
+        [SerializeField] private bool retractsOnWin = true;
+
         [Tooltip("How long the newest segment takes to reach the cell it just entered. GDD 10 asks for 80 to 120 ms.")]
         [SerializeField, Min(0.01f)] private float connectDuration = 0.1f;
 
@@ -67,12 +81,25 @@ namespace ASTeams.SingleLine.Unity
             // Ten a corner and ten a cap, the same as the Line the reference block ships
             // with. Four left visible facets on every turn of the path.
             line.numCornerVertices = 10;
-            line.numCapVertices = 10;
-            line.textureMode = LineTextureMode.Stretch;
-            line.alignment = LineAlignment.View;
+
+            // A dash already carries its own rounded ends; a round cap would add a blob of
+            // solid line at both ends of the route.
+            line.numCapVertices = isDashed ? 0 : 10;
+            line.textureMode = isDashed ? LineTextureMode.Tile : LineTextureMode.Stretch;
+            // Flat on the block tops rather than turned to face the tilted camera, or half
+            // the line would sink into the blocks.
+            line.alignment = LineAlignment.TransformZ;
             line.sharedMaterial = sharedMaterial;
             line.sortingOrder = BoardSortingOrder.Connector;
             line.positionCount = 0;
+
+            for (int i = 0; i < underlays.Length; i++)
+            {
+                underlays[i].useWorldSpace = true;
+                underlays[i].alignment = LineAlignment.TransformZ;
+                underlays[i].sortingOrder = BoardSortingOrder.Underlay + i;
+                underlays[i].positionCount = 0;
+            }
 
             if (spark != null)
             {
@@ -105,7 +132,7 @@ namespace ASTeams.SingleLine.Unity
 
             if (session == null || session.Length == 0)
             {
-                line.positionCount = 0;
+                SetPointCount(0);
                 return;
             }
 
@@ -118,10 +145,46 @@ namespace ASTeams.SingleLine.Unity
 
             line.startWidth = theme.PathWidth;
             line.endWidth = theme.PathWidth;
-            line.positionCount = session.Length;
-            line.SetPositions(points);
+            ApplyDashScale();
+            SetPointCount(session.Length);
+            SetAllPoints();
 
             StartGrowth(session);
+        }
+
+        /// <summary>The moving front of the path, where the newest segment has grown to so far.</summary>
+        public bool HasTip => line.enabled && line.positionCount > 0;
+
+        public Vector3 TipPosition => line.GetPosition(line.positionCount - 1);
+
+        /// <summary>
+        /// Direction of the newest segment, taken from the cells it joins rather than from
+        /// the growing tip, so it is already correct on the frame the segment starts.
+        /// </summary>
+        public bool TryGetTipDirection(out Vector2 direction)
+        {
+            int count = line.positionCount;
+
+            if (count < 2)
+            {
+                direction = Vector2.zero;
+                return false;
+            }
+
+            direction = points[count - 1] - points[count - 2];
+            return direction.sqrMagnitude > 0f;
+        }
+
+        private void ApplyDashScale()
+        {
+            if (!isDashed || sharedMaterial == null || sharedMaterial.mainTexture == null)
+            {
+                return;
+            }
+
+            Texture dash = sharedMaterial.mainTexture;
+            float tileLength = theme.PathWidth * dash.width / dash.height;
+            line.textureScale = new Vector2(1f / tileLength, 1f);
         }
 
         /// <summary>
@@ -148,7 +211,7 @@ namespace ASTeams.SingleLine.Unity
             growFrom = points[growIndex - 1];
             growTo = points[growIndex];
             grownFor = 0f;
-            line.SetPosition(growIndex, growFrom);
+            SetPoint(growIndex, growFrom);
 
             if (spark != null && !isHiddenForWin)
             {
@@ -171,7 +234,7 @@ namespace ASTeams.SingleLine.Unity
                 // Fast out, so the segment leaves the previous cell immediately and only
                 // the last of the travel is soft. Easing the start makes it feel sticky.
                 float eased = 1f - (1f - t) * (1f - t);
-                line.SetPosition(growIndex, Vector3.LerpUnclamped(growFrom, growTo, eased));
+                SetPoint(growIndex, Vector3.LerpUnclamped(growFrom, growTo, eased));
 
                 if (t >= 1f)
                 {
@@ -216,7 +279,7 @@ namespace ASTeams.SingleLine.Unity
 
             for (int step = 0; step <= passed; step++)
             {
-                line.SetPosition(step, tail);
+                SetPoint(step, tail);
             }
         }
 
@@ -284,6 +347,11 @@ namespace ASTeams.SingleLine.Unity
         /// </summary>
         public void RetractForWin(float stepSeconds, float delay)
         {
+            if (!retractsOnWin)
+            {
+                return;
+            }
+
             if (stepSeconds <= 0f)
             {
                 HideNow();
@@ -299,7 +367,7 @@ namespace ASTeams.SingleLine.Unity
         {
             retractElapsed = -1f;
             isHiddenForWin = true;
-            line.enabled = false;
+            SetLinesEnabled(false);
             HideSpark();
         }
 
@@ -309,7 +377,47 @@ namespace ASTeams.SingleLine.Unity
         {
             retractElapsed = -1f;
             isHiddenForWin = false;
-            line.enabled = true;
+            SetLinesEnabled(true);
+        }
+
+        private void SetPointCount(int count)
+        {
+            line.positionCount = count;
+
+            for (int i = 0; i < underlays.Length; i++)
+            {
+                underlays[i].positionCount = count;
+            }
+        }
+
+        private void SetAllPoints()
+        {
+            line.SetPositions(points);
+
+            for (int i = 0; i < underlays.Length; i++)
+            {
+                underlays[i].SetPositions(points);
+            }
+        }
+
+        private void SetPoint(int index, Vector3 position)
+        {
+            line.SetPosition(index, position);
+
+            for (int i = 0; i < underlays.Length; i++)
+            {
+                underlays[i].SetPosition(index, position);
+            }
+        }
+
+        private void SetLinesEnabled(bool isEnabled)
+        {
+            line.enabled = isEnabled;
+
+            for (int i = 0; i < underlays.Length; i++)
+            {
+                underlays[i].enabled = isEnabled;
+            }
         }
 
         public void Clear()
@@ -319,7 +427,7 @@ namespace ASTeams.SingleLine.Unity
                 ShowLine();
             }
 
-            line.positionCount = 0;
+            SetPointCount(0);
             HideSpark();
             growIndex = -1;
             previousHead = LevelData.NoCell;

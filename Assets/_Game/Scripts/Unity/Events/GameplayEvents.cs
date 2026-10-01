@@ -23,6 +23,12 @@ namespace ASTeams.SingleLine.Unity
     {
         public static event Action<int, string, int, int> OnLevelLoaded;
         public static event Action<int, int> OnProgressChanged;
+
+        /// <summary>
+        /// Cats aboard and cats on this level, raised when a level opens and whenever a cat
+        /// boards or, after an undo, hops back to its square.
+        /// </summary>
+        public static event Action<int, int> OnPassengersChanged;
         public static event Action<PathState, PathState> OnStateChanged;
         public static event Action<int> OnInvalidMove;
 
@@ -101,6 +107,11 @@ namespace ASTeams.SingleLine.Unity
         public static void RaiseProgressChanged(int visitedCells, int totalCells)
         {
             OnProgressChanged?.Invoke(visitedCells, totalCells);
+        }
+
+        public static void RaisePassengersChanged(int boarded, int total)
+        {
+            OnPassengersChanged?.Invoke(boarded, total);
         }
 
         public static void RaiseStateChanged(PathState previous, PathState current)
@@ -192,6 +203,7 @@ namespace ASTeams.SingleLine.Unity
         {
             OnLevelLoaded = null;
             OnProgressChanged = null;
+            OnPassengersChanged = null;
             OnStateChanged = null;
             OnInvalidMove = null;
             OnHintStarted = null;

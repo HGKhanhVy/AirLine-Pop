@@ -1,0 +1,136 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c0cf977ea790fe4da75c2d2bc581daf, type: 3}
+  m_Name: DestinationCatalog
+  m_EditorClassIdentifier: 
+  destinations:
+  - id: da_lat
+    region: vietnam
+    postcard: {fileID: 21300000, guid: 9ea08b709bfec9f4c8ae0ad02cbc51bd, type: 3}
+    postcardVietnamese: {fileID: 21300000, guid: da0648b373c42bb45a50084a9e734d1e, type: 3}
+  - id: hoi_an
+    region: vietnam
+    postcard: {fileID: 21300000, guid: 2d270667d7af44f4fa2284180a439bf8, type: 3}
+    postcardVietnamese: {fileID: 21300000, guid: 8d9788b55105cf44b979b189ebe05ac1, type: 3}
+  - id: ha_long
+    region: vietnam
+    postcard: {fileID: 21300000, guid: 2df4b201299618047a209a690be84827, type: 3}
+    postcardVietnamese: {fileID: 21300000, guid: faee0233ce22a394f857bbf28475b082, type: 3}
+  - id: hue
+    region: vietnam
+    postcard: {fileID: 21300000, guid: 416d03e2bd89b9b47bb01e09bc9f21a1, type: 3}
+    postcardVietnamese: {fileID: 21300000, guid: 9f840f71aabe1f74e9d0e577949e4e2c, type: 3}
+  - id: saigon
+    region: vietnam
+    postcard: {fileID: 21300000, guid: 7a6ae1cb61fb0c844b56a1f9c558984c, type: 3}
+    postcardVietnamese: {fileID: 21300000, guid: adf346c1859721345a05274cad86115a, type: 3}
+  - id: tokyo
+    region: japan
+    postcard: {fileID: 21300000, guid: 58f90ad72ce5f7f49b47fbd00fef8866, type: 3}
+    postcardVietnamese: {fileID: 21300000, guid: d1c9584bc49a44a43b07bcd54373690d, type: 3}
+  - id: kyoto
+    region: japan
+    postcard: {fileID: 21300000, guid: e48fb791aaf6c034ba4a453e8a616bb3, type: 3}
+    postcardVietnamese: {fileID: 21300000, guid: 17da6150828c5db4d8e261c1e9583436, type: 3}
+  - id: osaka
+    region: japan
+    postcard: {fileID: 21300000, guid: 4a185614e10765c488934e0db4fb9d3b, type: 3}
+    postcardVietnamese: {fileID: 21300000, guid: 374d4316b2c3c6a42b674943ba5cda30, type: 3}
+  - id: sapporo
+    region: japan
+    postcard: {fileID: 21300000, guid: 32273c9be88727c43ab3392627a62e36, type: 3}
+    postcardVietnamese: {fileID: 21300000, guid: c8ff16298a060e04db655c931ca1bbdb, type: 3}
+  - id: okinawa
+    region: japan
+    postcard: {fileID: 21300000, guid: b1ce9239d7890f143bdc8f9bcf079b47, type: 3}
+    postcardVietnamese: {fileID: 21300000, guid: 0cd1adffd32515a46870eeac714c5f20, type: 3}
+  - id: seoul
+    region: korea
+    postcard: {fileID: 21300000, guid: f825a50de9d71d846889fd32961b1603, type: 3}
+    postcardVietnamese: {fileID: 21300000, guid: 5f90a1ff43af6de4181f547cab0959b9, type: 3}
+  - id: busan
+    region: korea
+    postcard: {fileID: 21300000, guid: c6be84d0d179e624c873c00c1055a3fc, type: 3}
+    postcardVietnamese: {fileID: 21300000, guid: 892e85105b054bb41a2f77e30f197aaf, type: 3}
+  - id: jeju
+    region: korea
+    postcard: {fileID: 21300000, guid: 1c301b60cdc5eee408fde00fb21474f6, type: 3}
+    postcardVietnamese: {fileID: 21300000, guid: 74c874c16c7017f478f40cc1398db344, type: 3}
+  - id: gyeongju
+    region: korea
+    postcard: {fileID: 21300000, guid: b4a9e3d6457054e4995adb5c642f7213, type: 3}
+    postcardVietnamese: {fileID: 21300000, guid: 5ef14aec4e8e1014fbded036effd4d97, type: 3}
+  - id: incheon
+    region: korea
+    postcard: {fileID: 21300000, guid: 53fdb0e46299855469fcde8cbaaac068, type: 3}
+    postcardVietnamese: {fileID: 21300000, guid: 1a868a10f4d03c8459fc4901b58d3f7d, type: 3}
+  - id: paris
+    region: france
+    postcard: {fileID: 21300000, guid: 1638033679311a3428f6e43c38d3652c, type: 3}
+    postcardVietnamese: {fileID: 21300000, guid: 5cd98e2acee80174da7043428e101765, type: 3}
+  - id: nice
+    region: france
+    postcard: {fileID: 21300000, guid: bfc543f05c2d8dc478d7de147ac59d47, type: 3}
+    postcardVietnamese: {fileID: 21300000, guid: 06e280ed7e4d3d94e8820006be317705, type: 3}
+  - id: lyon
+    region: france
+    postcard: {fileID: 21300000, guid: 22bb279439d7ba94d9155287da96ae88, type: 3}
+    postcardVietnamese: {fileID: 21300000, guid: cb08c83b13a051444924fd4f15848c65, type: 3}
+  - id: provence
+    region: france
+    postcard: {fileID: 21300000, guid: 2cef44e27ade32f48998218b09565499, type: 3}
+    postcardVietnamese: {fileID: 21300000, guid: c2e7dd4ec9424194ab0bb2c19a499ccc, type: 3}
+  - id: bordeaux
+    region: france
+    postcard: {fileID: 21300000, guid: a8731cc62701e6046a4b957156431e26, type: 3}
+    postcardVietnamese: {fileID: 21300000, guid: bc1a29954069c834388fb7cbb417ccf2, type: 3}
+  - id: cairo
+    region: egypt
+    postcard: {fileID: 21300000, guid: df2afee13606069459ddd511e98dd7ef, type: 3}
+    postcardVietnamese: {fileID: 21300000, guid: 6aa837cea2a668e4c93b7742b2f43466, type: 3}
+  - id: giza
+    region: egypt
+    postcard: {fileID: 21300000, guid: d4b14ebfd9ec8b64f875796136a76887, type: 3}
+    postcardVietnamese: {fileID: 21300000, guid: 38993e3879cf87644a6605ee54d66a47, type: 3}
+  - id: luxor
+    region: egypt
+    postcard: {fileID: 21300000, guid: 29a30f37e6117a24aa5cf70e857e8ea0, type: 3}
+    postcardVietnamese: {fileID: 21300000, guid: e98914eb3eb092b4c8ff3be1869259e8, type: 3}
+  - id: aswan
+    region: egypt
+    postcard: {fileID: 21300000, guid: f7151fb4c5d948b43ace5ac46402c9bc, type: 3}
+    postcardVietnamese: {fileID: 21300000, guid: bafc09c2e29810c4885da88fa944a8e5, type: 3}
+  - id: alexandria
+    region: egypt
+    postcard: {fileID: 21300000, guid: 7a839654b82f8e74bb0394c28d25301a, type: 3}
+    postcardVietnamese: {fileID: 21300000, guid: 26428cd976e95f8489bf0bb789e59534, type: 3}
+  - id: new_york
+    region: usa
+    postcard: {fileID: 21300000, guid: 9ca19cf765a2af649a0754b65cfb9f22, type: 3}
+    postcardVietnamese: {fileID: 21300000, guid: aa1b15eefb487af4ca833ba1b10291b9, type: 3}
+  - id: san_francisco
+    region: usa
+    postcard: {fileID: 21300000, guid: 50ee506ae893b124696d08b5e06051e6, type: 3}
+    postcardVietnamese: {fileID: 21300000, guid: 1f35fac9b0298c6458c1cba68a959c9f, type: 3}
+  - id: hawaii
+    region: usa
+    postcard: {fileID: 21300000, guid: cad7ba7a8251bc0438d14d7680114723, type: 3}
+    postcardVietnamese: {fileID: 21300000, guid: 674803ceeeade8c49bcd50df97c15870, type: 3}
+  - id: los_angeles
+    region: usa
+    postcard: {fileID: 21300000, guid: 9df30da196a6cd642b9e77a243f06b4c, type: 3}
+    postcardVietnamese: {fileID: 21300000, guid: 4c60cf8ae19631b4bb1a5595358c7621, type: 3}
+  - id: chicago
+    region: usa
+    postcard: {fileID: 21300000, guid: 9c79e2d9e746c7a4ab989cf37a3c3d41, type: 3}
+    postcardVietnamese: {fileID: 21300000, guid: 9aac7b38c3bced7489390b2ffdc8b587, type: 3}
+  flightsPerDestination: 10

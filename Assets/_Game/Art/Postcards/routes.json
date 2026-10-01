@@ -1,0 +1,302 @@
+[
+ {
+  "id": "da_lat",
+  "name": "Da Lat",
+  "name_vi": "Đà Lạt",
+  "region": "vietnam",
+  "region_name": "Vietnam",
+  "region_name_vi": "Việt Nam",
+  "postcard": "postcard_da_lat",
+  "postcard_vi": "postcard_da_lat_vi"
+ },
+ {
+  "id": "hoi_an",
+  "name": "Hoi An",
+  "name_vi": "Hội An",
+  "region": "vietnam",
+  "region_name": "Vietnam",
+  "region_name_vi": "Việt Nam",
+  "postcard": "postcard_hoi_an",
+  "postcard_vi": "postcard_hoi_an_vi"
+ },
+ {
+  "id": "ha_long",
+  "name": "Ha Long",
+  "name_vi": "Hạ Long",
+  "region": "vietnam",
+  "region_name": "Vietnam",
+  "region_name_vi": "Việt Nam",
+  "postcard": "postcard_ha_long",
+  "postcard_vi": "postcard_ha_long_vi"
+ },
+ {
+  "id": "hue",
+  "name": "Hue",
+  "name_vi": "Huế",
+  "region": "vietnam",
+  "region_name": "Vietnam",
+  "region_name_vi": "Việt Nam",
+  "postcard": "postcard_hue",
+  "postcard_vi": "postcard_hue_vi"
+ },
+ {
+  "id": "saigon",
+  "name": "Saigon",
+  "name_vi": "Sài Gòn",
+  "region": "vietnam",
+  "region_name": "Vietnam",
+  "region_name_vi": "Việt Nam",
+  "postcard": "postcard_saigon",
+  "postcard_vi": "postcard_saigon_vi"
+ },
+ {
+  "id": "tokyo",
+  "name": "Tokyo",
+  "name_vi": "Tokyo",
+  "region": "japan",
+  "region_name": "Japan",
+  "region_name_vi": "Nhật Bản",
+  "postcard": "postcard_tokyo",
+  "postcard_vi": "postcard_tokyo_vi"
+ },
+ {
+  "id": "kyoto",
+  "name": "Kyoto",
+  "name_vi": "Kyoto",
+  "region": "japan",
+  "region_name": "Japan",
+  "region_name_vi": "Nhật Bản",
+  "postcard": "postcard_kyoto",
+  "postcard_vi": "postcard_kyoto_vi"
+ },
+ {
+  "id": "osaka",
+  "name": "Osaka",
+  "name_vi": "Osaka",
+  "region": "japan",
+  "region_name": "Japan",
+  "region_name_vi": "Nhật Bản",
+  "postcard": "postcard_osaka",
+  "postcard_vi": "postcard_osaka_vi"
+ },
+ {
+  "id": "sapporo",
+  "name": "Sapporo",
+  "name_vi": "Sapporo",
+  "region": "japan",
+  "region_name": "Japan",
+  "region_name_vi": "Nhật Bản",
+  "postcard": "postcard_sapporo",
+  "postcard_vi": "postcard_sapporo_vi"
+ },
+ {
+  "id": "okinawa",
+  "name": "Okinawa",
+  "name_vi": "Okinawa",
+  "region": "japan",
+  "region_name": "Japan",
+  "region_name_vi": "Nhật Bản",
+  "postcard": "postcard_okinawa",
+  "postcard_vi": "postcard_okinawa_vi"
+ },
+ {
+  "id": "seoul",
+  "name": "Seoul",
+  "name_vi": "Seoul",
+  "region": "korea",
+  "region_name": "Korea",
+  "region_name_vi": "Hàn Quốc",
+  "postcard": "postcard_seoul",
+  "postcard_vi": "postcard_seoul_vi"
+ },
+ {
+  "id": "busan",
+  "name": "Busan",
+  "name_vi": "Busan",
+  "region": "korea",
+  "region_name": "Korea",
+  "region_name_vi": "Hàn Quốc",
+  "postcard": "postcard_busan",
+  "postcard_vi": "postcard_busan_vi"
+ },
+ {
+  "id": "jeju",
+  "name": "Jeju",
+  "name_vi": "Jeju",
+  "region": "korea",
+  "region_name": "Korea",
+  "region_name_vi": "Hàn Quốc",
+  "postcard": "postcard_jeju",
+  "postcard_vi": "postcard_jeju_vi"
+ },
+ {
+  "id": "gyeongju",
+  "name": "Gyeongju",
+  "name_vi": "Gyeongju",
+  "region": "korea",
+  "region_name": "Korea",
+  "region_name_vi": "Hàn Quốc",
+  "postcard": "postcard_gyeongju",
+  "postcard_vi": "postcard_gyeongju_vi"
+ },
+ {
+  "id": "incheon",
+  "name": "Incheon",
+  "name_vi": "Incheon",
+  "region": "korea",
+  "region_name": "Korea",
+  "region_name_vi": "Hàn Quốc",
+  "postcard": "postcard_incheon",
+  "postcard_vi": "postcard_incheon_vi"
+ },
+ {
+  "id": "paris",
+  "name": "Paris",
+  "name_vi": "Paris",
+  "region": "france",
+  "region_name": "France",
+  "region_name_vi": "Pháp",
+  "postcard": "postcard_paris",
+  "postcard_vi": "postcard_paris_vi"
+ },
+ {
+  "id": "nice",
+  "name": "Nice",
+  "name_vi": "Nice",
+  "region": "france",
+  "region_name": "France",
+  "region_name_vi": "Pháp",
+  "postcard": "postcard_nice",
+  "postcard_vi": "postcard_nice_vi"
+ },
+ {
+  "id": "lyon",
+  "name": "Lyon",
+  "name_vi": "Lyon",
+  "region": "france",
+  "region_name": "France",
+  "region_name_vi": "Pháp",
+  "postcard": "postcard_lyon",
+  "postcard_vi": "postcard_lyon_vi"
+ },
+ {
+  "id": "provence",
+  "name": "Provence",
+  "name_vi": "Provence",
+  "region": "france",
+  "region_name": "France",
+  "region_name_vi": "Pháp",
+  "postcard": "postcard_provence",
+  "postcard_vi": "postcard_provence_vi"
+ },
+ {
+  "id": "bordeaux",
+  "name": "Bordeaux",
+  "name_vi": "Bordeaux",
+  "region": "france",
+  "region_name": "France",
+  "region_name_vi": "Pháp",
+  "postcard": "postcard_bordeaux",
+  "postcard_vi": "postcard_bordeaux_vi"
+ },
+ {
+  "id": "cairo",
+  "name": "Cairo",
+  "name_vi": "Cairo",
+  "region": "egypt",
+  "region_name": "Egypt",
+  "region_name_vi": "Ai Cập",
+  "postcard": "postcard_cairo",
+  "postcard_vi": "postcard_cairo_vi"
+ },
+ {
+  "id": "giza",
+  "name": "Giza",
+  "name_vi": "Giza",
+  "region": "egypt",
+  "region_name": "Egypt",
+  "region_name_vi": "Ai Cập",
+  "postcard": "postcard_giza",
+  "postcard_vi": "postcard_giza_vi"
+ },
+ {
+  "id": "luxor",
+  "name": "Luxor",
+  "name_vi": "Luxor",
+  "region": "egypt",
+  "region_name": "Egypt",
+  "region_name_vi": "Ai Cập",
+  "postcard": "postcard_luxor",
+  "postcard_vi": "postcard_luxor_vi"
+ },
+ {
+  "id": "aswan",
+  "name": "Aswan",
+  "name_vi": "Aswan",
+  "region": "egypt",
+  "region_name": "Egypt",
+  "region_name_vi": "Ai Cập",
+  "postcard": "postcard_aswan",
+  "postcard_vi": "postcard_aswan_vi"
+ },
+ {
+  "id": "alexandria",
+  "name": "Alexandria",
+  "name_vi": "Alexandria",
+  "region": "egypt",
+  "region_name": "Egypt",
+  "region_name_vi": "Ai Cập",
+  "postcard": "postcard_alexandria",
+  "postcard_vi": "postcard_alexandria_vi"
+ },
+ {
+  "id": "new_york",
+  "name": "New York",
+  "name_vi": "New York",
+  "region": "usa",
+  "region_name": "USA",
+  "region_name_vi": "Mỹ",
+  "postcard": "postcard_new_york",
+  "postcard_vi": "postcard_new_york_vi"
+ },
+ {
+  "id": "san_francisco",
+  "name": "San Francisco",
+  "name_vi": "San Francisco",
+  "region": "usa",
+  "region_name": "USA",
+  "region_name_vi": "Mỹ",
+  "postcard": "postcard_san_francisco",
+  "postcard_vi": "postcard_san_francisco_vi"
+ },
+ {
+  "id": "hawaii",
+  "name": "Hawaii",
+  "name_vi": "Hawaii",
+  "region": "usa",
+  "region_name": "USA",
+  "region_name_vi": "Mỹ",
+  "postcard": "postcard_hawaii",
+  "postcard_vi": "postcard_hawaii_vi"
+ },
+ {
+  "id": "los_angeles",
+  "name": "Los Angeles",
+  "name_vi": "Los Angeles",
+  "region": "usa",
+  "region_name": "USA",
+  "region_name_vi": "Mỹ",
+  "postcard": "postcard_los_angeles",
+  "postcard_vi": "postcard_los_angeles_vi"
+ },
+ {
+  "id": "chicago",
+  "name": "Chicago",
+  "name_vi": "Chicago",
+  "region": "usa",
+  "region_name": "USA",
+  "region_name_vi": "Mỹ",
+  "postcard": "postcard_chicago",
+  "postcard_vi": "postcard_chicago_vi"
+ }
+]

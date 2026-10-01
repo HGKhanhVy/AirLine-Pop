@@ -59,6 +59,11 @@ namespace ASTeams.SingleLine.Unity
         private long shownTotal;
         private bool isClosing;
         private bool isCollecting;
+        private WinPopupFeedback feedback;
+
+        // Resolved on the first win rather than in Awake: the SDK services live on the
+        // managers prefab, which is guaranteed to be up by the time a level is finished.
+        private WinPopupFeedback Feedback => feedback ??= CreateFeedback();
 
         /// <summary>Fills the screen in and opens it. The caller owns when that happens.</summary>
         public void Present(int levelNumber, int coinReward, long coinBalance)
@@ -93,11 +98,7 @@ namespace ASTeams.SingleLine.Unity
 
         public override void Show()
         {
-            // Only the vibration here. The fanfare that used to play on this line was a
-            // second completion cue: UI_LevelComplete is 1.2 s long and UI_Win starts
-            // 0.67 s into it, so the two ran over each other every win. The board's own
-            // confetti already covers the moment this screen arrives.
-            VibrationController.Instance?.PlayMedium();
+            Feedback.PlayOpen();
 
             canvasGroup.alpha = 0f;
             panel.localScale = Vector3.zero;
@@ -110,8 +111,7 @@ namespace ASTeams.SingleLine.Unity
             seq.AppendInterval(0.35f);
             seq.AppendCallback(() =>
             {
-                AudioController.Instance?.PlaySound(SoundName.UI_Win);
-                VibrationController.Instance?.PlayHeavy();
+                Feedback.PlayReveal();
                 panel.localScale = Vector3.one * 0.25f;
             });
             seq.Append(panel.DOScale(Vector3.one, ANIM_DURATION).SetEase(Ease.OutBack).SetUpdate(true));
@@ -144,9 +144,7 @@ namespace ASTeams.SingleLine.Unity
                 return;
             }
 
-            // No sound on the press itself. What the player is waiting to hear is the
-            // coins, and a cue on the button only got in front of them.
-            VibrationController.Instance?.PlayLight();
+            Feedback.PlayContinue();
 
             if (continueButton != null)
             {
@@ -199,35 +197,18 @@ namespace ASTeams.SingleLine.Unity
             shownTotal = System.Math.Min(balance, shownTotal + amount);
             ShowTotal(shownTotal);
 
-            PlayCoinChime();
+            Feedback.PlayCoin();
 
             // Every other coin label climbs with this one. Leaving them behind would have
             // the header disagree with the panel for as long as the screen is open.
             GameplayEvents.RaiseCoinBalanceChanged(shownTotal);
         }
 
-        /// <summary>
-        /// Play, not PlayOneShot: a new coin replaces whatever was still ringing. The mute
-        /// setting has to be honoured here because this source is ours, not the audio
-        /// controller's.
-        /// </summary>
-        private void PlayCoinChime()
+        private WinPopupFeedback CreateFeedback()
         {
-            if (coinClip == null)
-            {
-                return;
-            }
-
-            if (coinSource == null)
-            {
-                AudioController.Instance?.PlaySound(coinClip, coinVolume);
-                return;
-            }
-
-            bool isMuted = AudioController.Instance != null && AudioController.Instance.IsMuteSound;
-            coinSource.clip = coinClip;
-            coinSource.volume = isMuted ? 0f : coinVolume;
-            coinSource.Play();
+            VibrationController vibration = VibrationController.Instance;
+            IHapticService haptics = vibration == null ? null : new SdkHapticService(vibration);
+            return new WinPopupFeedback(AudioController.Instance, haptics, coinClip, coinSource, coinVolume);
         }
 
         private void ShowTotal(long value)

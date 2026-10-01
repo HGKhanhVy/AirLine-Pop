@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 60e277ac66c4e114caf09e05f2c584d2
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 9100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 302574
+  packageName: Climbing Cat
+  packageVersion: 1.0
+  assetPath: Assets/Graphie/Climbing Cat/Animations/Climbing Cat.controller
+  uploadId: 709765

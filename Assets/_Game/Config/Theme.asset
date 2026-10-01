@@ -13,28 +13,28 @@ MonoBehaviour:
   m_Name: Theme
   m_EditorClassIdentifier: 
   cellSprite: {fileID: 21300000, guid: 3106d55e00064814ea81ad8dc5b39b47, type: 3}
-  background: {r: 0, g: 0, b: 0, a: 1}
-  cell: {r: 0.267, g: 0.310, b: 0.380, a: 1}
-  visited: {r: 0.788, g: 0.2, b: 0.2, a: 1}
-  head: {r: 0.941, g: 0.29, b: 0.259, a: 1}
-  start: {r: 0.871, g: 0.231, b: 0.231, a: 1}
-  path: {r: 0.737, g: 0.075, b: 0.141, a: 1}
-  won: {r: 1, g: 0.761, b: 0.302, a: 1}
+  background: {r: 0.627451, g: 0.83137256, b: 0.9411765, a: 1}
+  cell: {r: 1, g: 0.98039216, b: 0.94509804, a: 1}
+  visited: {r: 0.96, g: 0.787, b: 0.384, a: 1}
+  head: {r: 1, g: 0.865, b: 0.55, a: 1}
+  start: {r: 0.95, g: 0.745, b: 0.266, a: 1}
+  path: {r: 1, g: 1, b: 1, a: 1}
+  won: {r: 1, g: 0.85, b: 0.5, a: 1}
   stuck: {r: 1, g: 0.42, b: 0.42, a: 1}
-  usesLevelHue: 1
-  firstLevelHue: 65
+  usesLevelHue: 0
+  firstLevelHue: 42
   hueStepPerLevel: 22
-  startTone: {x: 0.85, y: 0.88}
-  visitedTone: {x: 0.73, y: 0.87}
-  headTone: {x: 0.42, y: 0.98}
-  pathTone: {x: 0.62, y: 0.95}
-  wonTone: {x: 0.35, y: 1}
-  pathAlpha: 0.78
+  startTone: {x: 0.72, y: 0.95}
+  visitedTone: {x: 0.6, y: 0.96}
+  headTone: {x: 0.45, y: 1}
+  pathTone: {x: 0, y: 1}
+  wonTone: {x: 0.5, y: 1}
+  pathAlpha: 0.95
   startDot: {r: 1, g: 1, b: 1, a: 1}
-  startHalo: {r: 0.78, g: 0.8, b: 0.84, a: 1}
+  startHalo: {r: 1, g: 1, b: 1, a: 1}
   cellSize: 1
-  cellSpacing: 0.12
-  pathWidth: 0.4
+  cellSpacing: 0.1
+  pathWidth: 0.065
   boardMargin: 0.15
   boardHeightFraction: 0.62
   maxCellWidthFraction: 0.18

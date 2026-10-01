@@ -228,6 +228,7 @@ namespace ASTeams.SingleLine.Unity
                 return;
             }
 
+            view.SetVisited(visited);
             Color target = ColorFor(index, visited, isHead);
 
             // The controller refreshes every square on every move, and all but two of them
@@ -382,6 +383,56 @@ namespace ASTeams.SingleLine.Unity
 
             index = candidate;
             return true;
+        }
+
+        /// <summary>
+        /// The point on the board's squares closest to a world point: the point itself when
+        /// it is over a square, otherwise the nearest spot on the nearest square. Each square
+        /// counts out to half the gap around it, so moving between neighbours never snags.
+        /// Keeps whatever follows the finger, such as the airplane, on the blocks.
+        /// </summary>
+        public Vector3 ClampToCells(Vector3 worldPosition)
+        {
+            if (level == null)
+            {
+                return worldPosition;
+            }
+
+            Vector3 local = cellRoot.InverseTransformPoint(worldPosition);
+            float half = theme.CellPitch * 0.5f;
+            float bestDistance = float.MaxValue;
+            Vector3 best = local;
+            int cellCount = level.Grid.CellCount;
+
+            for (int index = 0; index < cellCount; index++)
+            {
+                if (!level.IsActive(index))
+                {
+                    continue;
+                }
+
+                Vector3 centre = GetCellLocalPosition(index);
+                var clamped = new Vector3(
+                    Mathf.Clamp(local.x, centre.x - half, centre.x + half),
+                    Mathf.Clamp(local.y, centre.y - half, centre.y + half),
+                    local.z);
+                float dx = clamped.x - local.x;
+                float dy = clamped.y - local.y;
+                float distance = dx * dx + dy * dy;
+
+                if (distance <= 0f)
+                {
+                    return worldPosition;
+                }
+
+                if (distance < bestDistance)
+                {
+                    bestDistance = distance;
+                    best = clamped;
+                }
+            }
+
+            return cellRoot.TransformPoint(best);
         }
 
         /// <summary>The rows and columns actually occupied, or false for an empty board.</summary>

@@ -1,10 +1,10 @@
 ﻿<Solution>
   <Project Path="Assembly-CSharp.csproj" />
   <Project Path="ASTeams.SingleLine.Import.csproj" />
+  <Project Path="ASTeams.SingleLine.Core.csproj" />
   <Project Path="ParticleImage.csproj" />
   <Project Path="ToonyColorsPro.Runtime.csproj" />
   <Project Path="IngameDebugConsole.Runtime.csproj" />
-  <Project Path="ASTeams.SingleLine.Core.csproj" />
   <Project Path="ToonyColorsPro.Editor.csproj" />
   <Project Path="ASTeams.SingleLine.Data.csproj" />
   <Project Path="Assembly-CSharp-Editor.csproj" />

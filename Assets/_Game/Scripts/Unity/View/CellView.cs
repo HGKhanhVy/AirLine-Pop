@@ -5,6 +5,12 @@ namespace ASTeams.SingleLine.Unity
     public sealed class CellView : MonoBehaviour
     {
         [SerializeField] private SpriteRenderer spriteRenderer;
+
+        [Tooltip("The square's 3D block, when it has one. It takes the same colour as the sprite face.")]
+        [SerializeField] private MeshCellFace meshFace;
+
+        [Tooltip("Optional. The grass and pebbles dressing the top of the 3D block.")]
+        [SerializeField] private CellDecor decor;
         [SerializeField] private Transform visualSizeRoot;
         [SerializeField] private Animator blockAnimator;
         [SerializeField] private Transform animatedInner;
@@ -70,35 +76,37 @@ namespace ASTeams.SingleLine.Unity
 
         public int CellIndex { get; private set; }
 
-        public Color Color => spriteRenderer.color;
+        public Color Color => faceColor;
 
         public Vector3 BaseLocalPosition { get; private set; }
 
         private Color fillFrom;
         private Color fillTo;
         private float fillDuration;
+        private Color faceColor = Color.white;
         private float fillLeft;
         private float connectLeft;
-        private float flashLeft;
-        private bool isStartCueVisible;
         private bool isGoalRevealing;
-        private float cueElapsed;
-        private float nextIdleAnimationTime;
-        private Vector3 startDotBaseScale;
-        private Vector3 startPulseBaseScale;
-        private Color startHaloColor = Color.white;
+        private StartCueEffect startCue;
+        private ConnectFlashEffect connectFlashEffect;
+
+        // Built on first use rather than only in Awake: a square placed under an inactive
+        // parent is handed its level before Awake has run.
+        private StartCueEffect StartCue => startCue ??= new StartCueEffect(
+            startDotRenderer,
+            startPulseRenderer,
+            new StartCueSettings(startPulseDuration, startPulseScale, startPulseAlpha,
+                idleReminderDelay, idleAnimationInterval));
+
+        private ConnectFlashEffect ConnectFlash => connectFlashEffect ??= new ConnectFlashEffect(
+            connectFlash,
+            new ConnectFlashSettings(flashDuration, flashPeakAlpha, flashStartScale,
+                flashEndScale, flashRiseShare));
 
         private void Awake()
         {
-            if (startDotRenderer != null)
-            {
-                startDotBaseScale = startDotRenderer.transform.localScale;
-            }
-
-            if (startPulseRenderer != null)
-            {
-                startPulseBaseScale = startPulseRenderer.transform.localScale;
-            }
+            // Record the markers' authored scales before anything animates them.
+            _ = StartCue;
 
             // The block art numbers its own children from 0 to 10, which leaves every dot
             // under the path. The marks saying where the path starts and where it stopped
@@ -125,15 +133,19 @@ namespace ASTeams.SingleLine.Unity
                 blockAnimator.enabled = false;
             }
 
-            // The sheet sits above the block's own face but below the start and goal marks,
-            // so it washes over the colour without swallowing what the level is telling the
-            // player. It ships collapsed; nothing shows it until a path arrives.
-            if (connectFlash != null)
-            {
-                connectFlash.sortingOrder = BoardSortingOrder.ConnectFlash;
-            }
+            // The sheet ships collapsed; nothing shows it until a path arrives.
+            ConnectFlash.Hide();
+        }
 
-            HideConnectFlash();
+        private void ApplyFaceColor(Color color)
+        {
+            faceColor = color;
+            spriteRenderer.color = color;
+
+            if (meshFace != null)
+            {
+                meshFace.SetColor(color);
+            }
         }
 
         private static void LiftAboveConnector(SpriteRenderer renderer)
@@ -157,7 +169,7 @@ namespace ASTeams.SingleLine.Unity
             transform.localScale = Vector3.one;
             fillLeft = 0f;
             connectLeft = 0f;
-            HideConnectFlash();
+            ConnectFlash.Hide();
             ClearStartMarker();
             HideGoalMarker();
             ResetAnimatedVisual();
@@ -167,7 +179,12 @@ namespace ASTeams.SingleLine.Unity
                 spriteRenderer.sprite = sprite;
             }
 
-            spriteRenderer.color = color;
+            ApplyFaceColor(color);
+
+            if (decor != null)
+            {
+                decor.Apply(cellIndex);
+            }
 
             if (visualSizeRoot != null)
             {
@@ -184,7 +201,16 @@ namespace ASTeams.SingleLine.Unity
         public void SetColor(Color color)
         {
             fillLeft = 0f;
-            spriteRenderer.color = color;
+            ApplyFaceColor(color);
+        }
+
+        /// <summary>A square the route runs across is cleared of its dressing, like ground levelled for a runway.</summary>
+        public void SetVisited(bool visited)
+        {
+            if (decor != null)
+            {
+                decor.SetCleared(visited);
+            }
         }
 
         public void FillTo(Color color, float duration)
@@ -195,7 +221,7 @@ namespace ASTeams.SingleLine.Unity
                 return;
             }
 
-            fillFrom = spriteRenderer.color;
+            fillFrom = faceColor;
             fillTo = color;
             fillDuration = duration;
             fillLeft = duration;
@@ -223,7 +249,7 @@ namespace ASTeams.SingleLine.Unity
             }
 
             connectLeft = connectDuration;
-            StartConnectFlash();
+            ConnectFlash.Play();
         }
 
         /// <summary>
@@ -233,19 +259,12 @@ namespace ASTeams.SingleLine.Unity
         /// </summary>
         public void ShowStartCue(Color dotColor, Color haloColor)
         {
-            if (startDotRenderer == null || startPulseRenderer == null)
+            if (!StartCue.Show(dotColor, haloColor))
             {
                 return;
             }
 
-            isStartCueVisible = true;
-            cueElapsed = 0f;
-            nextIdleAnimationTime = idleReminderDelay;
-            startHaloColor = haloColor;
             transform.localPosition = BaseLocalPosition;
-            startDotRenderer.enabled = true;
-            startDotRenderer.color = dotColor;
-            startPulseRenderer.enabled = true;
 
             if (blockAnimator != null)
             {
@@ -260,20 +279,8 @@ namespace ASTeams.SingleLine.Unity
         /// </summary>
         public void HideStartCue()
         {
-            isStartCueVisible = false;
-            cueElapsed = 0f;
+            StartCue.Hide();
             transform.localPosition = BaseLocalPosition;
-
-            if (startDotRenderer != null)
-            {
-                startDotRenderer.transform.localScale = startDotBaseScale;
-            }
-
-            if (startPulseRenderer != null)
-            {
-                startPulseRenderer.enabled = false;
-                startPulseRenderer.transform.localScale = startPulseBaseScale;
-            }
 
             if (blockAnimator != null)
             {
@@ -290,16 +297,12 @@ namespace ASTeams.SingleLine.Unity
         public void ClearStartMarker()
         {
             HideStartCue();
-
-            if (startDotRenderer != null)
-            {
-                startDotRenderer.enabled = false;
-            }
+            StartCue.Clear();
         }
 
         public bool Advance(float deltaTime)
         {
-            bool running = isStartCueVisible;
+            bool running = StartCue.IsVisible;
 
             if (fillLeft > 0f)
             {
@@ -307,12 +310,12 @@ namespace ASTeams.SingleLine.Unity
 
                 if (fillLeft <= 0f)
                 {
-                    spriteRenderer.color = fillTo;
+                    ApplyFaceColor(fillTo);
                 }
                 else
                 {
                     float t = 1f - (fillLeft / fillDuration);
-                    spriteRenderer.color = Color.Lerp(fillFrom, fillTo, t * t * (3f - 2f * t));
+                    ApplyFaceColor(Color.Lerp(fillFrom, fillTo, t * t * (3f - 2f * t)));
                     running = true;
                 }
             }
@@ -333,71 +336,17 @@ namespace ASTeams.SingleLine.Unity
                 }
             }
 
-            if (flashLeft > 0f)
+            if (ConnectFlash.Advance(deltaTime))
             {
-                flashLeft -= deltaTime;
-
-                if (flashLeft <= 0f)
-                {
-                    HideConnectFlash();
-                }
-                else
-                {
-                    AdvanceConnectFlash();
-                    running = true;
-                }
+                running = true;
             }
 
-            if (isStartCueVisible)
+            if (StartCue.IsVisible && StartCue.Advance(deltaTime))
             {
-                AdvanceStartCue(deltaTime);
+                PlayStartReminder();
             }
 
             return running;
-        }
-
-        private void StartConnectFlash()
-        {
-            if (connectFlash == null || flashDuration <= 0f)
-            {
-                return;
-            }
-
-            flashLeft = flashDuration;
-            connectFlash.enabled = true;
-            AdvanceConnectFlash();
-        }
-
-        /// <summary>
-        /// Opens the sheet out from the middle of the face and fades it as it goes, so the
-        /// square looks lit from within rather than covered over.
-        /// </summary>
-        private void AdvanceConnectFlash()
-        {
-            float t = 1f - (flashLeft / flashDuration);
-            float eased = t * t * (3f - 2f * t);
-            float scale = Mathf.Lerp(flashStartScale, flashEndScale, eased);
-
-            float alpha = t < flashRiseShare
-                ? flashPeakAlpha * (t / flashRiseShare)
-                : flashPeakAlpha * (1f - ((t - flashRiseShare) / (1f - flashRiseShare)));
-
-            connectFlash.transform.localScale = new Vector3(scale, scale, 1f);
-            connectFlash.color = new Color(1f, 1f, 1f, alpha);
-        }
-
-        private void HideConnectFlash()
-        {
-            flashLeft = 0f;
-
-            if (connectFlash == null)
-            {
-                return;
-            }
-
-            connectFlash.transform.localScale = Vector3.zero;
-            connectFlash.color = new Color(1f, 1f, 1f, 0f);
-            connectFlash.enabled = false;
         }
 
         /// <summary>
@@ -512,27 +461,15 @@ namespace ASTeams.SingleLine.Unity
             return settled + connectPopHeight * Mathf.Sin(r * Mathf.PI);
         }
 
-        private void AdvanceStartCue(float deltaTime)
+        private void PlayStartReminder()
         {
-            cueElapsed += deltaTime;
-
-            float pulseT = startPulseDuration <= 0f
-                ? 0f
-                : Mathf.Repeat(cueElapsed, startPulseDuration) / startPulseDuration;
-            float scale = Mathf.Lerp(1f, startPulseScale, pulseT);
-            float alpha = startPulseAlpha * (1f - pulseT);
-            startPulseRenderer.transform.localScale = startPulseBaseScale * scale;
-            startPulseRenderer.color = new Color(
-                startHaloColor.r, startHaloColor.g, startHaloColor.b, alpha);
-
-            if (blockAnimator == null || cueElapsed < nextIdleAnimationTime)
+            if (blockAnimator == null)
             {
                 return;
             }
 
             blockAnimator.enabled = true;
             blockAnimator.Play(StartIdleState, 0, 0f);
-            nextIdleAnimationTime = cueElapsed + idleAnimationInterval;
         }
     }
 }

@@ -1,0 +1,44 @@
+{
+ "frameWidth": 278,
+ "frameHeight": 357,
+ "pivotX": 138.92450842696627,
+ "pivotY": 25.578300561797732,
+ "pixelsPerUnit": 390,
+ "clips": [
+  {
+   "name": "Idle",
+   "count": 10,
+   "columns": 6,
+   "seconds": 1.0,
+   "loop": true
+  },
+  {
+   "name": "Walk",
+   "count": 10,
+   "columns": 6,
+   "seconds": 0.8,
+   "loop": true
+  },
+  {
+   "name": "Jump",
+   "count": 10,
+   "columns": 6,
+   "seconds": 0.8,
+   "loop": true
+  },
+  {
+   "name": "Roll",
+   "count": 8,
+   "columns": 6,
+   "seconds": 0.45,
+   "loop": true
+  },
+  {
+   "name": "Dizzy",
+   "count": 12,
+   "columns": 6,
+   "seconds": 1.0,
+   "loop": true
+  }
+ ]
+}

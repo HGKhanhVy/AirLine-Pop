@@ -7,8 +7,9 @@ namespace ASTeams.SingleLine.Unity
 {
     /// <summary>
     /// One on/off switch on the settings screen: the knob slides across and the track
-    /// changes colour. Reports the player's changes; being set from code stays silent and
-    /// snaps, so the screen opens already showing the saved state.
+    /// swaps to its "on" or "off" drawing (a swap rather than a tint, so the outline stays
+    /// brown). Reports the player's changes; being set from code stays silent and snaps, so
+    /// the screen opens already showing the saved state.
     /// </summary>
     public sealed class SettingToggleView : MonoBehaviour
     {
@@ -17,10 +18,8 @@ namespace ASTeams.SingleLine.Unity
         [SerializeField] private Image knob;
 
         [Header("Look")]
-        [SerializeField] private Color trackOnColor = new Color32(46, 204, 140, 255);
-        [SerializeField] private Color trackOffColor = new Color32(78, 90, 102, 255);
-        [SerializeField] private Color knobOnColor = Color.white;
-        [SerializeField] private Color knobOffColor = new Color32(170, 175, 180, 255);
+        [SerializeField] private Sprite trackOn;
+        [SerializeField] private Sprite trackOff;
         [SerializeField, Min(0f)] private float knobTravel = 30f;
         [SerializeField, Min(0f)] private float duration = 0.15f;
 
@@ -55,19 +54,17 @@ namespace ASTeams.SingleLine.Unity
         private void ApplyInstant(bool isOn)
         {
             knob.rectTransform.anchoredPosition = new Vector2(KnobX(isOn), knob.rectTransform.anchoredPosition.y);
-            track.color = isOn ? trackOnColor : trackOffColor;
-            knob.color = isOn ? knobOnColor : knobOffColor;
+            track.sprite = isOn ? trackOn : trackOff;
         }
 
         private void Animate(bool isOn)
         {
             motion?.Kill();
+            track.sprite = isOn ? trackOn : trackOff;
 
             // Unscaled: the settings screen can be opened while the game is paused.
             motion = DOTween.Sequence()
-                .Join(knob.rectTransform.DOAnchorPosX(KnobX(isOn), duration).SetEase(Ease.OutQuad))
-                .Join(track.DOColor(isOn ? trackOnColor : trackOffColor, duration))
-                .Join(knob.DOColor(isOn ? knobOnColor : knobOffColor, duration))
+                .Join(knob.rectTransform.DOAnchorPosX(KnobX(isOn), duration).SetEase(Ease.OutBack))
                 .SetUpdate(true);
         }
 
