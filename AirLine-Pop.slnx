@@ -2,14 +2,10 @@
   <Project Path="Assembly-CSharp.csproj" />
   <Project Path="ASTeams.SingleLine.Import.csproj" />
   <Project Path="ASTeams.SingleLine.Core.csproj" />
-  <Project Path="ParticleImage.csproj" />
-  <Project Path="ToonyColorsPro.Runtime.csproj" />
   <Project Path="IngameDebugConsole.Runtime.csproj" />
-  <Project Path="ToonyColorsPro.Editor.csproj" />
   <Project Path="ASTeams.SingleLine.Data.csproj" />
   <Project Path="Assembly-CSharp-Editor.csproj" />
   <Project Path="Assembly-CSharp-firstpass.csproj" />
-  <Project Path="ParticleImage.Editor.csproj" />
   <Project Path="ASTeams.SingleLine.Core.Tests.csproj" />
   <Project Path="ASTeams.SingleLine.Editor.csproj" />
   <Project Path="Assembly-CSharp-Editor-firstpass.csproj" />
