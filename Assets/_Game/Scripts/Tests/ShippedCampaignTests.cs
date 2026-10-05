@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 using ASTeams.SingleLine.Data;
+using ASTeams.SingleLine.Import;
 using NUnit.Framework;
 using UnityEngine;
 
@@ -8,14 +9,13 @@ namespace ASTeams.SingleLine.Core.Tests
 {
     public sealed class ShippedCampaignTests
     {
-        private const int ChapterCount = 10;
-        private const int LevelsPerChapter = 30;
+        // One level per gate on the route map: chapters of thirty, the last one cut short.
+        private static readonly ChapterLayout Layout = ChapterLayout.FullRoute;
 
         /// <summary>
-        /// The campaign ships in the reference packs' own order, so the opening level is
-        /// theirs too: beginner/Level_1, a three cell row. Checking the shape rather than
-        /// the source id keeps the test meaningful after an export, which renames every
-        /// level to its campaign id.
+        /// Onboarding grows the board from the smallest the pool holds, a three cell row.
+        /// Checking the shape rather than the source id keeps the test meaningful after an
+        /// export, which renames every level to its campaign id.
         /// </summary>
         [Test]
         public void TheCampaignOpensOnTheSmallestReferenceBoard()
@@ -27,19 +27,20 @@ namespace ASTeams.SingleLine.Core.Tests
             Assert.That(first[0].ActiveCellCount, Is.EqualTo(3));
         }
 
-        /// <summary>
-        /// The reference packs ramp gently, so the first levels stay well inside what a
-        /// new player can read at a glance. This is a sanity bound on the ordering, not
-        /// the hard onboarding window the generated curve used to enforce.
-        /// </summary>
+        /// <summary>The onboarding flights never shrink: each board is at least as big as the last.</summary>
         [Test]
-        public void TheOpeningLevelsStaySmall()
+        public void TheOpeningLevelsGrowStepByStep()
         {
             List<LevelData> first = ReadChapter("ch01");
 
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < Layout.OnboardingLevelCount; i++)
             {
-                Assert.That(first[i].ActiveCellCount, Is.InRange(3, 16), first[i].Id);
+                Assert.That(first[i].ActiveCellCount, Is.InRange(Layout.OnboardingMinCells, Layout.OnboardingMaxCells), first[i].Id);
+
+                if (i > 0)
+                {
+                    Assert.That(first[i].ActiveCellCount, Is.GreaterThanOrEqualTo(first[i - 1].ActiveCellCount), first[i].Id);
+                }
             }
         }
 
@@ -53,7 +54,7 @@ namespace ASTeams.SingleLine.Core.Tests
             foreach (string file in ChapterFiles())
             {
                 List<LevelData> levels = LevelJsonSerializer.DeserializeChapter(File.ReadAllText(file));
-                Assert.That(levels.Count, Is.EqualTo(LevelsPerChapter), file);
+                Assert.That(levels.Count, Is.InRange(1, Layout.LevelsPerChapter), file);
 
                 for (int i = 0; i < levels.Count; i++)
                 {
@@ -65,7 +66,7 @@ namespace ASTeams.SingleLine.Core.Tests
                 }
             }
 
-            Assert.That(count, Is.EqualTo(ChapterCount * LevelsPerChapter));
+            Assert.That(count, Is.EqualTo(Layout.TotalLevels));
         }
 
         /// <summary>
@@ -95,7 +96,7 @@ namespace ASTeams.SingleLine.Core.Tests
         {
             string folder = Path.Combine(Application.dataPath, "_Game/Resources/Levels");
             string[] files = Directory.GetFiles(folder, "ch*.json");
-            Assert.That(files.Length, Is.EqualTo(ChapterCount));
+            Assert.That(files.Length, Is.EqualTo(Layout.ChapterCount));
             return files;
         }
 

@@ -140,18 +140,18 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 357
-        width: 278
-        height: 357
+        y: 362
+        width: 281
+        height: 362
       alignment: 9
-      pivot: {x: 0.49972847, y: 0.0716479}
+      pivot: {x: 0.50506943, y: 0.07065829}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 22d68264e254d7b4ba73b7baf8f31a33
+      spriteID: 272a73ec48edf4d4e9ab24d7b1122507
       internalID: -1253056032
       vertices: []
       indices: 
@@ -161,19 +161,19 @@ TextureImporter:
       name: cat_mun_Jump_01
       rect:
         serializedVersion: 2
-        x: 278
-        y: 357
-        width: 278
-        height: 357
+        x: 281
+        y: 362
+        width: 281
+        height: 362
       alignment: 9
-      pivot: {x: 0.49972847, y: 0.0716479}
+      pivot: {x: 0.50506943, y: 0.07065829}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 27db0f94554db1c41b4b8055b9940762
+      spriteID: 4111b4cced318914b9719d3aa41ca2c3
       internalID: 1229100221
       vertices: []
       indices: 
@@ -183,19 +183,19 @@ TextureImporter:
       name: cat_mun_Jump_02
       rect:
         serializedVersion: 2
-        x: 556
-        y: 357
-        width: 278
-        height: 357
+        x: 562
+        y: 362
+        width: 281
+        height: 362
       alignment: 9
-      pivot: {x: 0.49972847, y: 0.0716479}
+      pivot: {x: 0.50506943, y: 0.07065829}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 4b1d308508398654cab10979a7f2703c
+      spriteID: 742ee0d418dc63141ab32294087a780f
       internalID: -1733362832
       vertices: []
       indices: 
@@ -205,19 +205,19 @@ TextureImporter:
       name: cat_mun_Jump_03
       rect:
         serializedVersion: 2
-        x: 834
-        y: 357
-        width: 278
-        height: 357
+        x: 843
+        y: 362
+        width: 281
+        height: 362
       alignment: 9
-      pivot: {x: 0.49972847, y: 0.0716479}
+      pivot: {x: 0.50506943, y: 0.07065829}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ac7994b7011714644946b17c97d8dd8b
+      spriteID: 997600ad210bafe449ae774cd5cf5543
       internalID: 33722080
       vertices: []
       indices: 
@@ -227,19 +227,19 @@ TextureImporter:
       name: cat_mun_Jump_04
       rect:
         serializedVersion: 2
-        x: 1112
-        y: 357
-        width: 278
-        height: 357
+        x: 1124
+        y: 362
+        width: 281
+        height: 362
       alignment: 9
-      pivot: {x: 0.49972847, y: 0.0716479}
+      pivot: {x: 0.50506943, y: 0.07065829}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 22fc5a36995f3a24890c61d94737bcae
+      spriteID: 233ac428cd80f81499d4e3ca1738cea1
       internalID: -188163630
       vertices: []
       indices: 
@@ -249,19 +249,19 @@ TextureImporter:
       name: cat_mun_Jump_05
       rect:
         serializedVersion: 2
-        x: 1390
-        y: 357
-        width: 278
-        height: 357
+        x: 1405
+        y: 362
+        width: 281
+        height: 362
       alignment: 9
-      pivot: {x: 0.49972847, y: 0.0716479}
+      pivot: {x: 0.50506943, y: 0.07065829}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 18ae8f1b5541eeb4baf57d61706908e1
+      spriteID: e297f4012eba8cb4d9cb42ee41d61338
       internalID: -733766791
       vertices: []
       indices: 
@@ -273,17 +273,17 @@ TextureImporter:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 278
-        height: 357
+        width: 281
+        height: 362
       alignment: 9
-      pivot: {x: 0.49972847, y: 0.0716479}
+      pivot: {x: 0.50506943, y: 0.07065829}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 5dd1fc537c884cc4e9385a2ddf50ccfc
+      spriteID: 8af6ca35e5cd0fd44beb3d1bab6f1cb2
       internalID: 1574223049
       vertices: []
       indices: 
@@ -293,19 +293,19 @@ TextureImporter:
       name: cat_mun_Jump_07
       rect:
         serializedVersion: 2
-        x: 278
+        x: 281
         y: 0
-        width: 278
-        height: 357
+        width: 281
+        height: 362
       alignment: 9
-      pivot: {x: 0.49972847, y: 0.0716479}
+      pivot: {x: 0.50506943, y: 0.07065829}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: f67454ad0da087744a6666d1af2a3ec9
+      spriteID: 512e239ecc235ea4ea9409378250207e
       internalID: 1774500102
       vertices: []
       indices: 
@@ -315,19 +315,19 @@ TextureImporter:
       name: cat_mun_Jump_08
       rect:
         serializedVersion: 2
-        x: 556
+        x: 562
         y: 0
-        width: 278
-        height: 357
+        width: 281
+        height: 362
       alignment: 9
-      pivot: {x: 0.49972847, y: 0.0716479}
+      pivot: {x: 0.50506943, y: 0.07065829}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 3282a86ac1aa86f4abf952922ddf49c5
+      spriteID: 6e0c60438a014394ba3cc4d34b8d4ea4
       internalID: -1605626682
       vertices: []
       indices: 
@@ -337,19 +337,19 @@ TextureImporter:
       name: cat_mun_Jump_09
       rect:
         serializedVersion: 2
-        x: 834
+        x: 843
         y: 0
-        width: 278
-        height: 357
+        width: 281
+        height: 362
       alignment: 9
-      pivot: {x: 0.49972847, y: 0.0716479}
+      pivot: {x: 0.50506943, y: 0.07065829}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: aedcbcbbadb6dca4391e1bedcb216699
+      spriteID: 3bf70df7a9d788d429eaedc31f12653e
       internalID: 1071411
       vertices: []
       indices: 

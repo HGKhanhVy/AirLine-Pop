@@ -108,7 +108,18 @@ namespace ASTeams.SingleLine.Import
             }
 
             return new LevelData(level.Id, level.Version, level.Grid, cells, level.FixedStart,
-                level.FixedEnd, ToArray(level.Solution), level.Difficulty, level.ThemeId, CopyTags(level.Tags));
+                level.FixedEnd, ToArray(level.Solution), level.Difficulty, level.ThemeId, CopyTags(level.Tags), CopyWind(level.Wind));
+        }
+
+        private static WindCell[] CopyWind(IReadOnlyList<WindCell> wind)
+        {
+            var copy = new WindCell[wind.Count];
+            for (int i = 0; i < wind.Count; i++)
+            {
+                copy[i] = wind[i];
+            }
+
+            return copy;
         }
 
         private static string[] CopyTags(IReadOnlyList<string> tags)

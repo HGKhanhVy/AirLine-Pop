@@ -13,6 +13,9 @@ namespace ASTeams.SingleLine.Unity
 
         PurchaseOutcome TryBuyFood(int quantity);
 
+        /// <summary>Buys a shop bundle at its own price, which is cheaper per snack than one by one.</summary>
+        PurchaseOutcome TryBuyFoodPack(SnackPack pack);
+
         CareOutcome Pet(string catId);
 
         CareOutcome Play(string catId);

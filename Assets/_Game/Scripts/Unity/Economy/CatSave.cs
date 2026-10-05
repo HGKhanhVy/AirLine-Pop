@@ -18,5 +18,11 @@ namespace ASTeams.SingleLine.Unity
         public bool hasPettedToday;
         public bool hasPlayedToday;
         public int mealsToday;
+
+        /// <summary>Day number this cat last handed over its daily gift.</summary>
+        public int giftDay;
+
+        /// <summary>The accessory it wears, by id; empty for none.</summary>
+        public string accessoryId;
     }
 }

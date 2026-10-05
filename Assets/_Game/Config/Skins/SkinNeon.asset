@@ -14,19 +14,28 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: neon
   displayName: Neon
-  price: 3000
+  price: 1500
   isSoldInShop: 1
   isOwnedByDefault: 0
   palette:
     background: {r: 0.627451, g: 0.83137256, b: 0.9411765, a: 1}
-    cell: {r: 1, g: 0.98039216, b: 0.94509804, a: 1}
+    cell: {r: 0.87058824, g: 0.9019608, b: 1, a: 1}
     stuck: {r: 1, g: 0.42, b: 0.42, a: 1}
-    usesLevelHue: 1
-    firstLevelHue: 150
-    hueStepPerLevel: 40
-    startTone: {x: 0.62399995, y: 0.8}
-    visitedTone: {x: 0.065, y: 0.98}
-    headTone: {x: 0.091, y: 0.99}
+    usesLevelHue: 0
+    firstLevelHue: 220
+    hueStepPerLevel: 1
+    startTone: {x: 0.48, y: 0.8}
+    visitedTone: {x: 0.05, y: 0.98}
+    headTone: {x: 0.07, y: 0.99}
     pathTone: {x: 0, y: 1}
-    wonTone: {x: 0.28599998, y: 1}
+    wonTone: {x: 0.22, y: 1}
     pathAlpha: 1
+  boardSky: {fileID: 21300000, guid: 1ffc7284c1d98354c9fb0a979a8afb1e, type: 3}
+  mapSky: {fileID: 21300000, guid: 1c6c3586889184c498c15668c7bf3ee5, type: 3}
+  gateFlown: {fileID: 21300000, guid: cbbe3bb53a22d9845ac9dab1fd6cd0ab, type: 3}
+  gateCurrent: {fileID: 21300000, guid: 0c0cc88d8397cc14a8b3214f504509ce, type: 3}
+  gateLocked: {fileID: 21300000, guid: 5e1869fa729547c46aaf6b342c5b4514, type: 3}
+  preview: {fileID: 21300000, guid: 37b04bbff38c45245a972eb16aa4f670, type: 3}
+  runwaySurface: {fileID: 2100000, guid: 0169caaca7a8147479aad7ac1dfb660f, type: 2}
+  runwayMarks: {fileID: 2100000, guid: 4b4d37ce0f244a64da3e62b43c62a56a, type: 2}
+  cloudTint: {r: 0.5882353, g: 0.5882353, b: 0.8, a: 1}

@@ -29,5 +29,13 @@ namespace ASTeams.SingleLine.Unity
         {
             transform.DOKill();
         }
+
+#if UNITY_EDITOR
+        public void EditorConfigure(float linkedDistance, float linkedPeriod)
+        {
+            distance = linkedDistance;
+            period = linkedPeriod;
+        }
+#endif
     }
 }

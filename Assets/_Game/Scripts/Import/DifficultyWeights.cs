@@ -11,11 +11,13 @@ namespace ASTeams.SingleLine.Import
     public readonly struct DifficultyWeights
     {
         /// <summary>
-        /// Defaults chosen so path length leads but does not dominate. Cell count is what
-        /// a player sees before starting; the greedy failure rate is what they feel while
-        /// playing, and the two together outweigh the search cost.
+        /// Defaults led by how much trial and error a careful player needs, which tells apart
+        /// boards of the same size; path length comes next, as what a player sees before
+        /// starting. The greedy failure rate and the solver's search barely count: nearly
+        /// every board defeats a greedy player, and the solver solves nearly every one
+        /// without backtracking, so neither separates easy from hard.
         /// </summary>
-        public static readonly DifficultyWeights Default = new DifficultyWeights(0.40, 0.35, 0.20, 0.05);
+        public static readonly DifficultyWeights Default = new DifficultyWeights(0.30, 0.05, 0.05, 0.05, 0.55);
 
         public double CellCount { get; }
 
@@ -29,10 +31,15 @@ namespace ASTeams.SingleLine.Import
         /// </summary>
         public double AverageDegree { get; }
 
-        public double Total => CellCount + GreedyFailureRate + SolverNodes + AverageDegree;
+        /// <summary>Steps a careful player takes, see <see cref="CautiousPlayer"/>.</summary>
+        public double PlayerSteps { get; }
 
-        public DifficultyWeights(double cellCount, double greedyFailureRate, double solverNodes, double averageDegree)
+        public double Total => CellCount + GreedyFailureRate + SolverNodes + AverageDegree + PlayerSteps;
+
+        public DifficultyWeights(double cellCount, double greedyFailureRate, double solverNodes, double averageDegree,
+            double playerSteps = 0)
         {
+            PlayerSteps = playerSteps;
             CellCount = cellCount;
             GreedyFailureRate = greedyFailureRate;
             SolverNodes = solverNodes;

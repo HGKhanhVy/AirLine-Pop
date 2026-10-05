@@ -74,7 +74,8 @@ namespace ASTeams.SingleLine.Unity
                 }
 
                 // A waiting cat hops when the plane pulls up beside it: it says "me next".
-                bool isNext = !isAboard && head != LevelData.NoCell && level.Grid.AreAdjacent(head, cell);
+                bool isNext = !isAboard && head != LevelData.NoCell &&
+                    (level.Grid.AreAdjacent(head, cell) || (level.IsFormation && level.Grid.AreAdjacent(level.MirrorOf(head), cell)));
                 view.SetExcited(i, isNext);
             }
 

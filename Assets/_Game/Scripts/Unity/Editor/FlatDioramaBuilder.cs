@@ -38,29 +38,37 @@ namespace ASTeams.SingleLine.Unity.EditorTools
 
         // Parked at stand A1, side-on with its nose to the left: it stands on its wheels like
         // the passengers stand on their feet, so it reads at their scale instead of lying flat.
-        public static readonly Vector3 PlaneSpot = new Vector3(0.7f, 0f, -0.9f);
+        public static readonly Vector3 PlaneSpot = new Vector3(0.9f, 0f, 4.7f);
         public const float PlaneYaw = 0f;
 
         // About three cats tall: the heart of the picture.
-        private const float PlaneScale = 1.15f;
+        private const float PlaneScale = 1.3f;
 
-        // Where waiting passengers mill about: the apron in front of the gate desk.
-        public static readonly Vector3 QueueCentre = new Vector3(-2.5f, 0.05f, -2.2f);
-        public static readonly Vector2 QueueSize = new Vector2(2.6f, 1.2f);
+        // Where waiting passengers mill about: the gate area beside the gate desk, in front of the plane.
+        public static readonly Vector3 QueueCentre = new Vector3(-0.9f, 0.05f, -2.4f);
+        public static readonly Vector2 QueueSize = new Vector2(2.0f, 0.8f);
 
         // Clouds in the sky above the skyline, drifting behind the title.
         public static readonly Vector3[] CloudSpots =
         {
             new Vector3(-4.2f, 3.2f, 18f), new Vector3(4.6f, 4.0f, 18.2f), new Vector3(0.8f, 5.0f, 18.4f),
+            new Vector3(-7.4f, 4.6f, 18.6f), new Vector3(7.8f, 2.8f, 18.8f),
         };
 
         private const float RunwayZ = 9.0f;
+
+        // Where the haze stands: behind the plane and the gate, in front of the terminal.
+        private const float HazeZ = 3.4f;
 
         private const int GroundOrder = -30;
         private const int WallOrder = -29;
         private const int RugOrder = -28;
         private const int ShadowOrder = -27;
         private const int StandingOrder = 0;
+
+        // Beyond the haze: drawn before it, so it pales them; the apron's foreground draws after.
+        private const int BackOrder = -2;
+        private const int HazeOrder = -1;
 
         [MenuItem("Tools/AirLine Pop/Build Flat Home Dioramas (2D)")]
         public static void BuildFromMenu()
@@ -233,28 +241,25 @@ namespace ASTeams.SingleLine.Unity.EditorTools
 
                 // Right behind the apron: the terminal with the airline's name, and another
                 // airline's plane at the next stand. Beyond the runway: tower and hangar.
-                Standing(root.transform, "Terminal", "terminal", new Vector3(-1.2f, 0f, 5.0f), 6.4f);
-                Standing(root.transform, "Next Stand", "plane_mint", new Vector3(4.9f, 0f, 3.2f), 3.4f)
-                    .transform.localScale = new Vector3(0.8f, 0.8f, 1f);
-                Standing(root.transform, "Tower", "tower", new Vector3(4.6f, 0f, 11.0f), 1.3f)
+                Standing(root.transform, "Terminal", "terminal", new Vector3(-1.2f, 0f, 5.0f), 6.4f, BackOrder);
+                Standing(root.transform, "Tower", "tower", new Vector3(4.6f, 0f, 11.0f), 1.3f, BackOrder)
                     .transform.localScale = new Vector3(0.85f, 0.85f, 1f);
-                Standing(root.transform, "Hangar", "hangar", new Vector3(-6.0f, 0f, 11.4f), 3.0f);
-                Standing(root.transform, "Windsock", "windsock", new Vector3(6.2f, 0f, 8.0f), 0.5f);
-                Standing(root.transform, "Tree 1", "tree_round", new Vector3(-5.6f, 0f, 6.2f), 1.1f);
-                Standing(root.transform, "Tree 2", "tree_round", new Vector3(2.2f, 0f, 6.4f), 1.1f);
+                Standing(root.transform, "Hangar", "hangar", new Vector3(-6.0f, 0f, 11.4f), 3.0f, BackOrder);
+                // The breeze: the windsock and the trees rock gently, each at its own pace.
+                Sway(Standing(root.transform, "Windsock", "windsock", new Vector3(6.2f, 0f, 8.0f), 0.5f, BackOrder), 4f, 1.6f, 0f);
+                Sway(Standing(root.transform, "Tree 1", "tree_round", new Vector3(-5.6f, 0f, 6.2f), 1.1f, BackOrder), 1.6f, 3.2f, 0.3f);
+                Sway(Standing(root.transform, "Tree 2", "tree_round", new Vector3(2.2f, 0f, 6.4f), 1.1f, BackOrder), 1.6f, 2.8f, 0.7f);
+                AddTakeoff(root.transform);
                 Standing(root.transform, "Light 1", "light_pole", new Vector3(-4.4f, 0f, 1.6f), 0.5f);
-                Standing(root.transform, "Light 2", "light_pole", new Vector3(3.0f, 0f, 2.4f), 0.5f);
-                Standing(root.transform, "Taxi Sign", "taxi_sign", new Vector3(-3.6f, 0f, 3.0f), 1.2f);
 
                 // On the apron: stairs at the plane's door, cones by the wing and tail, the
                 // gate desk and queue line for the passengers, and the baggage train.
                 // The stairs' platform meets the plane's front door.
-                Standing(root.transform, "Airstairs", "airstairs", PlaneSpot + new Vector3(-0.3f, 0f, -0.5f), 1.6f);
-                Standing(root.transform, "Cone 1", "cone", PlaneSpot + new Vector3(-3.1f, 0f, 0.3f), 0.4f);
-                Standing(root.transform, "Cone 2", "cone", PlaneSpot + new Vector3(3.2f, 0f, -0.6f), 0.4f);
-                Signed(Standing(root.transform, "Gate Desk", "gate_podium", new Vector3(-3.3f, 0f, -0.9f), 1.0f), "gate_podium");
-                Standing(root.transform, "Queue Line", "queue_rope", new Vector3(-2.0f, 0f, -1.3f), 2.4f);
-                Standing(root.transform, "Baggage", "baggage_train", new Vector3(3.2f, 0f, -2.8f), 3.0f);
+                // Gate A1 stands at the front with its passengers waiting beside it; the plane
+                // waits for them further back, in front of the terminal, clear of everything.
+                Signed(Standing(root.transform, "Gate Desk", "gate_podium", new Vector3(-2.4f, 0f, -1.4f), 1.0f), "gate_podium");
+                AddHaze(root.transform);
+                AddBaggageRounds(root.transform);
 
                 PrefabUtility.SaveAsPrefabAsset(root, HomeDioramaBuilder.AirportPrefabPath);
             }
@@ -264,9 +269,59 @@ namespace ASTeams.SingleLine.Unity.EditorTools
             }
         }
 
-        private static SpriteRenderer Standing(Transform parent, string name, string art, Vector3 foot, float shadowWidth)
+        /// <summary>
+        /// A pale veil standing across the apron just behind the plane: everything beyond it
+        /// (terminal, tower, runway, city) loses about a fifth of its contrast and steps back,
+        /// while the plane and the passengers in front keep their full colour.
+        /// </summary>
+        private static void AddHaze(Transform parent)
         {
-            SpriteRenderer renderer = Upright(parent, name, Art(art, Foot), foot, AirportPitch, StandingOrder);
+            Sprite white = SpriteImport.Import(BoardArtFolder + "/solid_white.png", 100f);
+            SpriteRenderer haze = Upright(parent, "Haze", white, new Vector3(0f, 0f, HazeZ), 0f, HazeOrder);
+            haze.color = new Color(0.93f, 0.97f, 1f, 0.22f);
+
+            // A 60 x 30 unit veil from an 8-pixel white square, its foot on the ground.
+            Vector2 size = white.bounds.size;
+            haze.transform.localScale = new Vector3(60f / size.x, 30f / size.y, 1f);
+            haze.transform.localPosition = new Vector3(0f, 15f, HazeZ);
+        }
+
+        private static void Sway(SpriteRenderer piece, float degrees, float period, float phase)
+        {
+            piece.gameObject.AddComponent<SwayMotion>().EditorConfigure(degrees, period, phase);
+        }
+
+        /// <summary>
+        /// The baggage train drives in from the right once and parks on the open apron beside
+        /// the waiting passengers, under the plane's wing. Its shadow rides along.
+        /// </summary>
+        private static void AddBaggageRounds(Transform parent)
+        {
+            var holder = new GameObject("Baggage Rounds").transform;
+            holder.SetParent(parent, false);
+            holder.localPosition = new Vector3(2.2f, 0f, -1.8f);
+            holder.localScale = new Vector3(0.8f, 0.8f, 0.8f);
+            Standing(holder, "Baggage", "baggage_train", Vector3.zero, 3.0f);
+            holder.gameObject.AddComponent<DriveInMotion>().EditorConfigure(2.6f);
+        }
+
+        /// <summary>One of the airline's planes taking off on the far runway now and then; no shadow, it leaves the ground.</summary>
+        private static void AddTakeoff(Transform parent)
+        {
+            var holder = new GameObject("Departing Plane").transform;
+            holder.SetParent(parent, false);
+            holder.localPosition = new Vector3(0f, 0f, RunwayZ);
+            holder.localRotation = Quaternion.Euler(AirportPitch, 0f, 0f);
+            SpriteRenderer plane = Renderer(holder, "Body", Art("plane_parked_lavender", Foot), BackOrder);
+            plane.transform.localScale = new Vector3(0.55f, 0.55f, 1f);
+            plane.spriteSortPoint = SpriteSortPoint.Pivot;
+            holder.gameObject.AddComponent<TakeoffLoop>().EditorLink(plane);
+        }
+
+        private static SpriteRenderer Standing(Transform parent, string name, string art, Vector3 foot, float shadowWidth,
+            int order = StandingOrder)
+        {
+            SpriteRenderer renderer = Upright(parent, name, Art(art, Foot), foot, AirportPitch, order);
             Shadow(parent, name + " Shadow", foot, shadowWidth);
             return renderer;
         }
@@ -281,6 +336,8 @@ namespace ASTeams.SingleLine.Unity.EditorTools
                 Shadow(root.transform, "Shadow", Vector3.zero, 4.6f);
                 SpriteRenderer body = Upright(root.transform, "Body", Art("plane_parked", Foot), Vector3.zero, AirportPitch, StandingOrder);
                 body.transform.localScale = new Vector3(PlaneScale, PlaneScale, 1f);
+                body.gameObject.AddComponent<PlaneLiveryView>()
+                    .EditorLink(body, AssetDatabase.LoadAssetAtPath<LiveryCatalogSO>(ShopInstaller.CatalogPath), true);
                 PrefabUtility.SaveAsPrefabAsset(root, HomeDioramaBuilder.PlanePrefabPath);
             }
             finally

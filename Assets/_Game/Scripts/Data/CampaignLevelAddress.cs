@@ -5,7 +5,8 @@ namespace ASTeams.SingleLine.Data
     public static class CampaignLevelAddress
     {
         public const int LevelsPerChapter = 30;
-        public const int MaxLevelNumber = 300;
+        // The route map's 41 cities of ten flights each.
+        public const int MaxLevelNumber = 410;
 
         public static string ToLevelId(int levelNumber)
         {

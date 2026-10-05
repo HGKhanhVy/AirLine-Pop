@@ -72,6 +72,25 @@ namespace ASTeams.SingleLine.Unity.EditorTools
             return "Baked " + baked + " passenger cats into " + ArtFolder + ".";
         }
 
+        /// <summary>
+        /// Bakes a visitor who is not one of the regulars, such as the VIP guest, from its
+        /// drawings the same way, or returns null when they are missing.
+        /// </summary>
+        public static CatView BuildGuest(string id)
+        {
+            CatMotionMeta motion = CatMotionSheets.LoadMeta();
+            Dictionary<string, Sprite[]> drawings = motion == null ? null : ImportDrawings(id, motion);
+
+            if (drawings == null)
+            {
+                return null;
+            }
+
+            AssetWriter.EnsureFolder(ClipFolder);
+            AnimatorController controller = BuildController(id, drawings, motion);
+            return BakeBreed(id, drawings[IdleClip][0], controller);
+        }
+
         private static Dictionary<string, Sprite[]> ImportDrawings(string breedId, CatMotionMeta motion)
         {
             var drawings = new Dictionary<string, Sprite[]>();
@@ -125,6 +144,13 @@ namespace ASTeams.SingleLine.Unity.EditorTools
 
                 CatView view = root.AddComponent<CatView>();
                 view.EditorLink(animator, tap, billboard);
+
+                var anchors = AssetDatabase.LoadAssetAtPath<CatHeadAnchorsSO>(CatHeadAnchorBaker.AssetPath);
+
+                if (anchors != null)
+                {
+                    CatAccessoryInstaller.AddTo(root, renderer, anchors);
+                }
 
                 GameObject saved = PrefabUtility.SaveAsPrefabAsset(root, ArtFolder + "/CatFlat_" + id + ".prefab");
                 return saved.GetComponent<CatView>();

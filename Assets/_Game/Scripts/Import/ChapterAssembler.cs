@@ -22,6 +22,7 @@ namespace ASTeams.SingleLine.Import
         private const int MaxSameSizeRun = 3;
 
         private readonly ChapterLayout layout;
+        private readonly Dictionary<int, SpecialLevel> specials = new Dictionary<int, SpecialLevel>();
 
         public ChapterAssembler()
             : this(ChapterLayout.Default)
@@ -29,8 +30,39 @@ namespace ASTeams.SingleLine.Import
         }
 
         public ChapterAssembler(ChapterLayout layout)
+            : this(layout, null)
+        {
+        }
+
+        /// <param name="specialLevels">
+        /// Hand-made boards that take fixed places in the run, such as a picture board on the
+        /// flight that lands in a new country. Each must already carry a solution.
+        /// </param>
+        public ChapterAssembler(ChapterLayout layout, IReadOnlyList<SpecialLevel> specialLevels)
         {
             this.layout = layout;
+
+            if (specialLevels == null)
+            {
+                return;
+            }
+
+            for (int i = 0; i < specialLevels.Count; i++)
+            {
+                SpecialLevel special = specialLevels[i];
+
+                if (special.LevelNumber < 1 || special.LevelNumber > layout.TotalLevels)
+                {
+                    throw new ArgumentException("Special level " + special.Level.Id + " sits outside the campaign.", nameof(specialLevels));
+                }
+
+                if (specials.ContainsKey(special.LevelNumber))
+                {
+                    throw new ArgumentException("Two special levels claim level " + special.LevelNumber + ".", nameof(specialLevels));
+                }
+
+                specials.Add(special.LevelNumber, special);
+            }
         }
 
         public Campaign Assemble(IReadOnlyList<ScoredLevel> pool)
@@ -42,10 +74,12 @@ namespace ASTeams.SingleLine.Import
 
             List<ScoredLevel> sorted = SortByScoreThenId(pool);
 
-            if (sorted.Count < layout.TotalLevels)
+            int needed = layout.TotalLevels - specials.Count;
+
+            if (sorted.Count < needed)
             {
                 throw new ArgumentException(
-                    "Need " + layout.TotalLevels + " levels but the pool holds only " + sorted.Count + ".",
+                    "Need " + needed + " levels but the pool holds only " + sorted.Count + ".",
                     nameof(pool));
             }
 
@@ -55,17 +89,29 @@ namespace ASTeams.SingleLine.Import
             int relaxed = 0;
             int placed = 0;
 
-            for (int chapterIndex = 0; chapterIndex < layout.ChapterCount; chapterIndex++)
+            for (int chapterIndex = 0; chapterIndex < layout.ChapterCount && placed < layout.TotalLevels; chapterIndex++)
             {
                 string chapterId = "ch" + (chapterIndex + 1).ToString("00");
                 var placements = new List<PlacedLevel>(layout.LevelsPerChapter);
 
-                for (int slot = 0; slot < layout.LevelsPerChapter; slot++)
+                for (int slot = 0; slot < layout.LevelsPerChapter && placed < layout.TotalLevels; slot++)
                 {
                     double target = layout.GetTarget(chapterIndex, slot);
+
+                    if (specials.TryGetValue(placed + 1, out SpecialLevel special))
+                    {
+                        string specialId = chapterId + "_" + (slot + 1).ToString("000");
+                        placements.Add(new PlacedLevel(special.Level.WithIdentity(specialId, DifficultyOf(target)), target, target));
+                        Remember(recentSizes, special.Level.Grid.ToString(), MaxSameSizeRun);
+                        placed++;
+                        continue;
+                    }
+
                     int minCells = placed < layout.OnboardingLevelCount ? layout.OnboardingMinCells : 1;
                     int maxCells = placed < layout.OnboardingLevelCount ? layout.OnboardingMaxCells : int.MaxValue;
-                    int pick = FindNearest(sorted, used, target, recentSizes, true, minCells, maxCells);
+                    int pick = placed < layout.OnboardingLevelCount
+                        ? FindOnboarding(sorted, used, minCells, layout.OnboardingCellLimit(placed), maxCells)
+                        : FindNearest(sorted, used, target, recentSizes, true, minCells, maxCells);
 
                     if (pick < 0)
                     {
@@ -95,6 +141,50 @@ namespace ASTeams.SingleLine.Import
             }
 
             return new Campaign(chapters, placed, relaxed);
+        }
+
+        /// <summary>
+        /// Onboarding grows the board one step at a time instead of following the curve:
+        /// the biggest unused board within the step's size limit, the easiest of those on a
+        /// tie. A pool with no board of that size moves on to the next size up.
+        /// </summary>
+        private static int FindOnboarding(List<ScoredLevel> sorted, bool[] used, int minCells, int limit, int maxCells)
+        {
+            for (int cap = limit; cap <= maxCells; cap++)
+            {
+                int best = -1;
+
+                for (int i = 0; i < sorted.Count; i++)
+                {
+                    int cells = sorted[i].Level.ActiveCellCount;
+
+                    if (used[i] || cells < minCells || cells > cap)
+                    {
+                        continue;
+                    }
+
+                    // The list is sorted by score, so the first board of a size is its easiest.
+                    if (best < 0 || cells > sorted[best].Level.ActiveCellCount)
+                    {
+                        best = i;
+                    }
+                }
+
+                if (best >= 0)
+                {
+                    return best;
+                }
+            }
+
+            return -1;
+        }
+
+        /// <summary>A special board is rated where the curve wanted that slot, on the 1 to 10 scale.</summary>
+        private static int DifficultyOf(double target)
+        {
+            int rating = DifficultyScorer.MinDifficulty +
+                (int)Math.Round(target * (DifficultyScorer.MaxDifficulty - DifficultyScorer.MinDifficulty));
+            return Math.Max(DifficultyScorer.MinDifficulty, Math.Min(DifficultyScorer.MaxDifficulty, rating));
         }
 
         /// <summary>

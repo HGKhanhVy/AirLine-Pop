@@ -140,18 +140,18 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 357
-        width: 278
-        height: 357
+        y: 362
+        width: 281
+        height: 362
       alignment: 9
-      pivot: {x: 0.49972847, y: 0.0716479}
+      pivot: {x: 0.50506943, y: 0.07065829}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 1bb7caa27d4b3554f9a4682656006ecf
+      spriteID: db25f035a2cfd544d9e4d6e2f49f6e81
       internalID: -347780136
       vertices: []
       indices: 
@@ -161,19 +161,19 @@ TextureImporter:
       name: cat_tro_Idle_01
       rect:
         serializedVersion: 2
-        x: 278
-        y: 357
-        width: 278
-        height: 357
+        x: 281
+        y: 362
+        width: 281
+        height: 362
       alignment: 9
-      pivot: {x: 0.49972847, y: 0.0716479}
+      pivot: {x: 0.50506943, y: 0.07065829}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 1ee3839d8cefa1144a2280ebaced9d33
+      spriteID: ed04935a08363a747acb26f76eb7838f
       internalID: -1283927195
       vertices: []
       indices: 
@@ -183,19 +183,19 @@ TextureImporter:
       name: cat_tro_Idle_02
       rect:
         serializedVersion: 2
-        x: 556
-        y: 357
-        width: 278
-        height: 357
+        x: 562
+        y: 362
+        width: 281
+        height: 362
       alignment: 9
-      pivot: {x: 0.49972847, y: 0.0716479}
+      pivot: {x: 0.50506943, y: 0.07065829}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 0a23c7be0765401448a80c028c305eac
+      spriteID: d82a5a1fe65e2b947b4829e80593c2ff
       internalID: 739376488
       vertices: []
       indices: 
@@ -205,19 +205,19 @@ TextureImporter:
       name: cat_tro_Idle_03
       rect:
         serializedVersion: 2
-        x: 834
-        y: 357
-        width: 278
-        height: 357
+        x: 843
+        y: 362
+        width: 281
+        height: 362
       alignment: 9
-      pivot: {x: 0.49972847, y: 0.0716479}
+      pivot: {x: 0.50506943, y: 0.07065829}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: f125a9c84dfd09a4184f00f8ed4a0e98
+      spriteID: 9bd6bbbf8b6bf1d4b933d3a22cd04373
       internalID: -384107105
       vertices: []
       indices: 
@@ -227,19 +227,19 @@ TextureImporter:
       name: cat_tro_Idle_04
       rect:
         serializedVersion: 2
-        x: 1112
-        y: 357
-        width: 278
-        height: 357
+        x: 1124
+        y: 362
+        width: 281
+        height: 362
       alignment: 9
-      pivot: {x: 0.49972847, y: 0.0716479}
+      pivot: {x: 0.50506943, y: 0.07065829}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 8cd41f386c96a0c4299be4352a875987
+      spriteID: 4dbb41b88b7ecfc4c8ae5d6419b654fa
       internalID: 1036493890
       vertices: []
       indices: 
@@ -249,19 +249,19 @@ TextureImporter:
       name: cat_tro_Idle_05
       rect:
         serializedVersion: 2
-        x: 1390
-        y: 357
-        width: 278
-        height: 357
+        x: 1405
+        y: 362
+        width: 281
+        height: 362
       alignment: 9
-      pivot: {x: 0.49972847, y: 0.0716479}
+      pivot: {x: 0.50506943, y: 0.07065829}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 6316a2d350c7cf148b15af1c0e02157e
+      spriteID: 0d4c7ac61c199884fb5bd45bf0b06e01
       internalID: 184453867
       vertices: []
       indices: 
@@ -273,17 +273,17 @@ TextureImporter:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 278
-        height: 357
+        width: 281
+        height: 362
       alignment: 9
-      pivot: {x: 0.49972847, y: 0.0716479}
+      pivot: {x: 0.50506943, y: 0.07065829}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a31abb2ebf3d6314686eb0866cc234d5
+      spriteID: 3f2678fcd9d05a047943629011e99d65
       internalID: -1215734961
       vertices: []
       indices: 
@@ -293,19 +293,19 @@ TextureImporter:
       name: cat_tro_Idle_07
       rect:
         serializedVersion: 2
-        x: 278
+        x: 281
         y: 0
-        width: 278
-        height: 357
+        width: 281
+        height: 362
       alignment: 9
-      pivot: {x: 0.49972847, y: 0.0716479}
+      pivot: {x: 0.50506943, y: 0.07065829}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 2db24862057ed4f4c9be04c33eb2eaac
+      spriteID: c79fc063dc4160b479e112051a7b6cf8
       internalID: -472029580
       vertices: []
       indices: 
@@ -315,19 +315,19 @@ TextureImporter:
       name: cat_tro_Idle_08
       rect:
         serializedVersion: 2
-        x: 556
+        x: 562
         y: 0
-        width: 278
-        height: 357
+        width: 281
+        height: 362
       alignment: 9
-      pivot: {x: 0.49972847, y: 0.0716479}
+      pivot: {x: 0.50506943, y: 0.07065829}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b053efd335539f742a2bdc6ce522a262
+      spriteID: da6ac1c37dd0ea64fbed58de3318808c
       internalID: 1136173450
       vertices: []
       indices: 
@@ -337,19 +337,19 @@ TextureImporter:
       name: cat_tro_Idle_09
       rect:
         serializedVersion: 2
-        x: 834
+        x: 843
         y: 0
-        width: 278
-        height: 357
+        width: 281
+        height: 362
       alignment: 9
-      pivot: {x: 0.49972847, y: 0.0716479}
+      pivot: {x: 0.50506943, y: 0.07065829}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 5d7fff6b0f59a33419d7d5afc4620b18
+      spriteID: 0b0f741222623b74090559fb012c19fd
       internalID: -1824916743
       vertices: []
       indices: 

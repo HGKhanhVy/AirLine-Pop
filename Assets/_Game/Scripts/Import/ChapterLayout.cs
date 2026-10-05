@@ -27,6 +27,13 @@ namespace ASTeams.SingleLine.Import
         /// <summary>The MVP campaign of GDD 18.1: ten chapters of thirty.</summary>
         public static readonly ChapterLayout Default = new ChapterLayout(10, 30, 0.2, DefaultRhythm, 10, 3, 10);
 
+        /// <summary>
+        /// The whole route map: 41 cities of ten flights, stored as chapters of thirty, so
+        /// the last chapter holds only twenty. A block of ten is one city, which puts the
+        /// rhythm's peak on the flight that lands there.
+        /// </summary>
+        public static readonly ChapterLayout FullRoute = new ChapterLayout(14, 30, 0.2, DefaultRhythm, 10, 3, 10, 410, 1.6);
+
         private readonly double[] rhythm;
         private readonly double lowestTrend;
         private readonly double highestTrend;
@@ -42,14 +49,29 @@ namespace ASTeams.SingleLine.Import
         /// </summary>
         public double Overlap { get; }
 
-        public int TotalLevels => ChapterCount * LevelsPerChapter;
+        /// <summary>Every slot of every chapter, unless a cap stops the last chapter short.</summary>
+        public int TotalLevels { get; }
         public int OnboardingLevelCount { get; }
         public int OnboardingMinCells { get; }
         public int OnboardingMaxCells { get; }
 
+        /// <summary>
+        /// Bends the curve: above 1 it climbs gently through the opening chapters and
+        /// steepens later, which suits a pool where small boards are scarce and difficulty
+        /// is ranked by percentile.
+        /// </summary>
+        public double CurvePower { get; }
+
         public ChapterLayout(int chapterCount, int levelsPerChapter, double overlap, double[] rhythm,
-            int onboardingLevelCount = 0, int onboardingMinCells = 3, int onboardingMaxCells = 10)
+            int onboardingLevelCount = 0, int onboardingMinCells = 3, int onboardingMaxCells = 10, int levelCap = 0,
+            double curvePower = 1.0)
         {
+            if (curvePower <= 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(curvePower), curvePower, "The curve power must be positive.");
+            }
+
+            CurvePower = curvePower;
             if (chapterCount <= 0)
             {
                 throw new ArgumentOutOfRangeException(nameof(chapterCount), chapterCount, "Need at least one chapter.");
@@ -67,6 +89,14 @@ namespace ASTeams.SingleLine.Import
 
             ChapterCount = chapterCount;
             LevelsPerChapter = levelsPerChapter;
+            int slots = chapterCount * levelsPerChapter;
+
+            if (levelCap < 0 || levelCap > slots || (levelCap > 0 && levelCap <= slots - levelsPerChapter))
+            {
+                throw new ArgumentOutOfRangeException(nameof(levelCap), levelCap, "A cap may only shorten the last chapter.");
+            }
+
+            TotalLevels = levelCap > 0 ? levelCap : slots;
             if (onboardingLevelCount < 0 || onboardingLevelCount > chapterCount * levelsPerChapter ||
                 onboardingMinCells < 1 || onboardingMaxCells < onboardingMinCells)
             {
@@ -118,8 +148,24 @@ namespace ASTeams.SingleLine.Import
             double trend = start + (end - start) * progress;
             double offset = rhythm[slot % rhythm.Length] * span;
             double target = trend + offset;
+            target = target < 0 ? 0 : target > 1 ? 1 : target;
+            return CurvePower == 1.0 ? target : Math.Pow(target, CurvePower);
+        }
 
-            return target < 0 ? 0 : target > 1 ? 1 : target;
+        /// <summary>
+        /// The largest board the onboarding level at <paramref name="levelIndex"/> may use:
+        /// it grows from the minimum to the maximum, so the very first flight is the
+        /// smallest and each one after it a step bigger.
+        /// </summary>
+        public int OnboardingCellLimit(int levelIndex)
+        {
+            if (OnboardingLevelCount <= 1)
+            {
+                return OnboardingMaxCells;
+            }
+
+            double step = (OnboardingMaxCells - OnboardingMinCells) / (double)(OnboardingLevelCount - 1);
+            return OnboardingMinCells + (int)Math.Round(levelIndex * step);
         }
 
         /// <summary>True when this slot is one of the rests, which the tests lean on.</summary>

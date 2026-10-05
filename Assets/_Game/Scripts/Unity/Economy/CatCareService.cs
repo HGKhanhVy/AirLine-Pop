@@ -48,6 +48,24 @@ namespace ASTeams.SingleLine.Unity
             return PurchaseOutcome.Purchased;
         }
 
+        public PurchaseOutcome TryBuyFoodPack(SnackPack pack)
+        {
+            if (pack == null || pack.Quantity <= 0)
+            {
+                return PurchaseOutcome.Invalid;
+            }
+
+            if (store.Coins < pack.Price)
+            {
+                return PurchaseOutcome.NotEnoughCoins;
+            }
+
+            store.State.foodCount += pack.Quantity;
+            store.Commit(-pack.Price);
+            OnCareChanged?.Invoke();
+            return PurchaseOutcome.Purchased;
+        }
+
         public CareOutcome Pet(string catId)
         {
             CatSave cat = GetFreshSave(catId);

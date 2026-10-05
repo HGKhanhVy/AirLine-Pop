@@ -51,6 +51,14 @@ def L(c, pts, fill, width):
     c.line(pts, fill, width)
 
 
+def on_polyline(pts, x):
+    """Height of a polyline at x, for hanging things on a string."""
+    for (x0, y0), (x1, y1) in zip(pts, pts[1:]):
+        if x0 <= x <= x1:
+            return y0 + (y1 - y0) * (x - x0) / (x1 - x0)
+    return pts[-1][1]
+
+
 def is_night(mood):
     return mood[4]
 
@@ -151,11 +159,13 @@ def fuji(c, cx, base, half, h, snow=WHITE):
 
 
 def torii(c, cx, base, w, h):
+    """Posts, the tie beam (nuki), a centre strut, then the red and the wider dark top beam."""
     for x in (cx - w * 0.36, cx + w * 0.36):
-        R(c, (x - 7, base - h, x + 7, base), TORII, r=3, line=3)
-    R(c, (cx - w * 0.44, base - h * 0.78, cx + w * 0.44, base - h * 0.7), TORII, r=3, line=3)
-    P(c, [(cx - w / 2 - 6, base - h - 4), (cx + w / 2 + 6, base - h - 4), (cx + w / 2 - 2, base - h + 10), (cx - w / 2 + 2, base - h + 10)], TORII, line=3)
-    R(c, (cx - w / 2 - 2, base - h - 14, cx + w / 2 + 2, base - h - 4), (60, 60, 80, 255), r=3, line=3)
+        R(c, (x - 7, base - h + 6, x + 7, base), TORII, r=3, line=3)
+    R(c, (cx - w * 0.44, base - h * 0.74, cx + w * 0.44, base - h * 0.66), TORII, r=3, line=3)
+    R(c, (cx - 5, base - h + 6, cx + 5, base - h * 0.74), TORII, r=2, line=3)
+    P(c, [(cx - w / 2, base - h - 2), (cx + w / 2, base - h - 2), (cx + w / 2 - 4, base - h + 8), (cx - w / 2 + 4, base - h + 8)], TORII, line=3)
+    P(c, [(cx - w / 2 - 12, base - h - 16), (cx + w / 2 + 12, base - h - 16), (cx + w / 2 + 4, base - h - 4), (cx - w / 2 - 4, base - h - 4)], (60, 60, 80, 255), line=3)
 
 
 def flag_pole(c, x, base, h, draw_flag):
@@ -249,9 +259,11 @@ def hoi_an(c, mood):
         R(c, (x, 168, x + 14, 196), (120, 80, 60, 255), r=2, line=2)
     roof(c, cx, 160, 190, 34, (150, 96, 80, 255), curl=14)
     # Lanterns along a string.
-    L(c, [(20, 50), (240, 74), (460, 48)], BROWN, 3)
+    string = [(20, 50), (240, 74), (460, 48)]
+    L(c, string, BROWN, 3)
     for i, x in enumerate((60, 120, 180, 300, 360, 420)):
-        y = 60 + 14 * math.sin(i)
+        y = on_polyline(string, x) + 4 + (i % 2) * 6
+        L(c, [(x, y - 6), (x, y + 2)], BROWN, 2)
         col = (CORAL, GOLD, (226, 110, 160, 255))[i % 3]
         O(c, (x - 12, y, x + 12, y + 28), col, line=3)
 
@@ -263,7 +275,7 @@ def ha_long(c, mood):
               (x + w / 2 - 6, 222 - h * 0.6), (x + w / 2, 222)], (104, 150, 130, 255))
         c.d.ellipse(c._box((x - 12, 222 - h + 4, x + 14, 222 - h + 24)), fill=GREEN)
     # A junk boat with its orange batten sails.
-    bx = 260
+    bx = 310
     P(c, [(bx - 70, 248), (bx + 70, 248), (bx + 54, 270), (bx - 54, 270)], (150, 100, 70, 255))
     for x, h in ((bx - 30, 80), (bx + 20, 96)):
         L(c, [(x, 248), (x, 248 - h)], BROWN, 4)
@@ -295,14 +307,14 @@ def hue(c, mood):
 def sai_gon(c, mood):
     ground(c, mood, 246, colour=(196, 188, 176, 255))
     # Bitexco tower behind, with its helipad.
-    bx = 380
-    P(c, [(bx - 24, 246), (bx - 14, 60), (bx + 14, 60), (bx + 24, 246)], (150, 190, 220, 255))
-    windows(c, (bx - 12, 76, bx + 12, 240), lit(mood), step=(10, 16), size=(4, 8))
-    P(c, [(bx + 6, 120), (bx + 46, 112), (bx + 46, 124), (bx + 8, 128)], METAL, line=3)
+    bx = 396
+    P(c, [(bx - 22, 246), (bx - 13, 112), (bx + 13, 112), (bx + 22, 246)], (150, 190, 220, 255))
+    windows(c, (bx - 11, 126, bx + 11, 240), lit(mood), step=(10, 16), size=(4, 8))
+    P(c, [(bx + 6, 156), (bx + 40, 150), (bx + 40, 160), (bx + 8, 164)], METAL, line=3)
     # Bến Thành market and its clock tower.
     cx = 230
     R(c, (cx - 120, 196, cx + 120, 246), (240, 220, 180, 255))
-    for x in range(int(cx - 104), int(cx + 104), 34):
+    for x in (cx - 108, cx - 78, cx - 48, cx + 30, cx + 60, cx + 90):
         R(c, (x, 206, x + 18, 236), (200, 120, 90, 255), r=8, line=3)
     R(c, (cx - 26, 130, cx + 26, 246), (240, 220, 180, 255))
     P(c, [(cx - 32, 132), (cx + 32, 132), (cx, 104)], RED)
@@ -310,6 +322,244 @@ def sai_gon(c, mood):
     L(c, [(cx, 160), (cx, 150)], BROWN, 3)
     L(c, [(cx, 160), (cx + 8, 162)], BROWN, 3)
 
+
+BRICK = (196, 104, 80, 255)
+BRICK_DARK = (160, 80, 64, 255)
+TILE_ROOF = (176, 96, 76, 255)
+STRAW = (236, 208, 140, 255)
+WOOD_BOAT = (150, 100, 70, 255)
+CAVE = (46, 40, 52, 255)
+
+
+def boat(c, x, y, s=1.0, hull=WOOD_BOAT):
+    """A Mekong-style wooden boat with a raised bow and a painted eye."""
+    P(c, [(x - 60 * s, y - 14 * s), (x + 50 * s, y - 14 * s), (x + 70 * s, y - 26 * s), (x + 58 * s, y), (x - 50 * s, y)], hull, line=3)
+    O(c, (x + 44 * s, y - 16 * s, x + 54 * s, y - 8 * s), WHITE, line=2)
+    c.d.ellipse(c._box((x + 47 * s, y - 14 * s, x + 51 * s, y - 10 * s)), fill=RED)
+
+
+def rower(c, x, y, s=1.0):
+    """A rower in a nón lá: a body, a round face and the conical leaf hat."""
+    R(c, (x - 6 * s, y - 22 * s, x + 6 * s, y), (120, 150, 200, 255), r=3, line=3)
+    O(c, (x - 6 * s, y - 32 * s, x + 6 * s, y - 20 * s), (250, 220, 190, 255), line=2)
+    P(c, [(x - 16 * s, y - 28 * s), (x + 16 * s, y - 28 * s), (x, y - 44 * s)], STRAW, line=3)
+
+
+def cham_tower(c, cx, base, s=1.0):
+    """A Cham brick tower: tiers shrinking upwards, each with corner finials, a dark doorway."""
+    tiers = ((34, 64), (26, 32), (18, 24), (11, 18))
+    y = base
+    for half, h in tiers:
+        R(c, (cx - half * s, y - h * s, cx + half * s, y), BRICK, r=2, line=3)
+        for fx in (cx - half * s, cx + half * s):
+            P(c, [(fx - 5 * s, y - h * s), (fx + 5 * s, y - h * s), (fx, y - h * s - 12 * s)], BRICK_DARK, line=2)
+        y -= h * s
+    P(c, [(cx - 9 * s, y), (cx + 9 * s, y), (cx, y - 22 * s)], BRICK_DARK, line=3)
+    R(c, (cx - 9 * s, base - 40 * s, cx + 9 * s, base), CAVE, r=int(8 * s), line=3)
+
+
+def ha_noi(c, mood):
+    ground(c, mood)
+    for x in (410, 446):
+        R(c, (x - 4, GROUND_Y - 30, x + 4, GROUND_Y), (150, 110, 80, 255), r=2, line=3)
+        O(c, (x - 26, GROUND_Y - 80, x + 26, GROUND_Y - 26), GREEN, line=3)
+    # Khuê Văn Các in the Temple of Literature: brick piers below, the pavilion with its sun windows above.
+    cx = 290
+    R(c, (cx - 74, 190, cx + 74, GROUND_Y), STONE)
+    for x in (cx - 56, cx - 11, cx + 34):
+        R(c, (x, 202, x + 22, GROUND_Y), (120, 90, 80, 255), r=10, line=3)
+    roof(c, cx, 192, 170, 18, TILE_ROOF, curl=14)
+    R(c, (cx - 46, 132, cx + 46, 176), (204, 92, 72, 255), r=3)
+    for wx in (cx - 22, cx + 22):
+        O(c, (wx - 15, 139, wx + 15, 169), CREAM, line=3)
+        for k in range(8):
+            a = k * math.pi / 4
+            c.d.line(c._box((wx, 154, wx + 13 * math.cos(a), 154 + 13 * math.sin(a))), fill=BROWN, width=2 * c_ss(c))
+    roof(c, cx, 134, 136, 28, TILE_ROOF, curl=16)
+    L(c, [(cx - 44, 106), (cx + 44, 106)], BROWN, 4)
+    O(c, (cx - 6, 96, cx + 6, 108), GOLD, line=2)
+
+
+def sa_pa(c, mood):
+    # Fansipan behind, rice terraces stepping down the valley, a stilt house on a ledge.
+    P(c, [(40, 200), (170, 92), (290, 200)], (110, 150, 130, 255))
+    P(c, [(200, 200), (340, 64), (480, 200)], (96, 140, 124, 255))
+    P(c, [(312, 92), (340, 64), (368, 92), (352, 86), (340, 96), (326, 86)], WHITE, line=3)
+    greens = ((176, 222, 140, 255), (150, 206, 120, 255), (196, 230, 150, 255), (140, 196, 112, 255))
+    for k in range(6):
+        top = 168 + k * 26
+        pts = [(x, top + 9 * math.sin(x / 46.0 + k * 1.3)) for x in range(0, W + 1, 8)]
+        c.d.polygon([(px * c_ss(c), py * c_ss(c)) for px, py in pts + [(W, H), (0, H)]], fill=greens[k % len(greens)])
+        L(c, pts, (96, 150, 96, 255), 3)
+    hx, hy = 390, 200
+    for x in (hx - 30, hx + 22):
+        L(c, [(x, hy), (x, hy + 18)], BROWN, 4)
+    R(c, (hx - 34, hy - 30, hx + 30, hy), (200, 160, 120, 255), r=2, line=3)
+    R(c, (hx - 8, hy - 22, hx + 6, hy - 8), (120, 90, 80, 255), r=2, line=2)
+    P(c, [(hx - 44, hy - 28), (hx + 40, hy - 28), (hx, hy - 60)], STRAW, line=3)
+
+
+def ninh_binh(c, mood):
+    # Tràng An: round limestone karsts, a cave the boats row through, a rower in a nón lá.
+    karst = (98, 150, 120, 255)
+    for x, top, w in ((60, 120, 90), (420, 110, 100)):
+        P(c, [(x - w / 2, 230), (x - w / 2 + 6, top + 40), (x - 14, top), (x + 16, top + 4), (x + w / 2 - 4, top + 36), (x + w / 2, 230)], karst)
+        c.d.ellipse(c._box((x - 16, top + 2, x + 18, top + 26)), fill=GREEN)
+    P(c, [(150, 230), (160, 120), (210, 86), (290, 80), (340, 108), (360, 230)], karst)
+    c.d.ellipse(c._box((200, 84, 300, 120)), fill=GREEN)
+    O(c, (196, 172, 304, 262), CAVE)
+    sea(c, mood, 224)
+    boat(c, 380, 262, 0.9)
+    rower(c, 360, 250)
+    L(c, [(378, 222), (410, 262)], BROWN, 4)
+
+
+def phong_nha(c, mood):
+    # A cave mouth in the limestone cliff, jungle along the top, the Son river flowing out of it.
+    cliff = (160, 160, 150, 255)
+    R(c, (0, 70, W, 250), cliff, r=0)
+    for i, x in enumerate(range(-10, W + 40, 44)):
+        r = 22 + (i * 7) % 12
+        O(c, (x - r, 72 - r, x + r, 72 + r * 0.8), GREEN_DARK if i % 2 else PINE, line=3)
+    O(c, (130, 110, 410, 330), CAVE)
+    # A few thin stalactites of different lengths hanging from the arch.
+    for x, length in ((196, 18), (238, 30), (262, 14), (300, 24), (346, 16)):
+        top = 220 - 110 * math.sqrt(max(0.0, 1 - ((x - 270) / 140.0) ** 2)) + 2
+        c.d.polygon([(px * c_ss(c), py * c_ss(c)) for px, py in ((x - 6, top - 4), (x + 6, top - 4), (x, top + length))], fill=cliff)
+    for x, y in ((200, 196), (330, 182), (270, 210)):
+        c.d.ellipse(c._box((x - 5, y - 5, x + 5, y + 5)), fill=(255, 220, 140, 255))
+    sea(c, mood, 238)
+    for x in (324, 344, 364):
+        R(c, (x - 6, 244, x + 6, 258), (240, 140, 100, 255), r=3, line=2)
+        O(c, (x - 6, 232, x + 6, 244), (250, 220, 190, 255), line=2)
+    boat(c, 350, 270, 0.8, hull=(90, 140, 190, 255))
+
+
+def da_nang(c, mood):
+    ground(c, mood, 250, colour=(96, 156, 110, 255))
+    for i, x in enumerate(range(30, W, 46)):
+        r = 24 + (i * 5) % 8
+        O(c, (x - r, 238 - r, x + r, 238 + r), (110, 170, 120, 255), line=3)
+    # Cầu Vàng: the golden walkway lying across two giant stone palms, the fingers curling up round it.
+    stone = (176, 172, 168, 255)
+
+    def deck_y(x):
+        return 150 - 24 * math.sin(math.pi * x / W)
+
+    hands = (270, 380)
+    for hx in hands:
+        R(c, (hx - 22, 200, hx + 22, H), stone, r=6)
+        R(c, (hx - 40, deck_y(hx) + 2, hx + 40, deck_y(hx) + 58), stone, r=26)
+    deck = [(x, deck_y(x)) for x in range(0, W + 1, 12)]
+    L(c, deck, BROWN, 18)
+    L(c, deck, GOLD, 12)
+    L(c, [(x, y - 14) for x, y in deck], BROWN, 3)
+    for x, y in deck[::2]:
+        c.d.line(c._box((x, y - 14, x, y - 6)), fill=BROWN, width=2 * c_ss(c))
+    for hx in hands:
+        for k in range(4):
+            fx = hx - 27 + k * 18
+            fy = deck_y(fx)
+            R(c, (fx - 7, fy - 22 + abs(k - 1.5) * 4, fx + 7, fy + 24), stone, r=7, line=3)
+        tx = hx + 40
+        P(c, [(tx - 6, deck_y(tx) + 30), (tx + 10, deck_y(tx) + 4), (tx + 20, deck_y(tx) + 10), (tx + 6, deck_y(tx) + 40)], stone, line=3)
+
+
+def nha_trang(c, mood):
+    sea(c, mood, 186)
+    c.d.polygon([(px * c_ss(c), py * c_ss(c)) for px, py in ((0, H), (0, 236), (160, 216), (300, 200), (480, 214), (480, H))],
+                fill=mood[2] + (255,))
+    P(c, [(70, 196), (130, 196), (120, 206), (80, 206)], WOOD_BOAT, line=3)
+    L(c, [(100, 196), (100, 160)], BROWN, 3)
+    P(c, [(102, 162), (124, 192), (102, 192)], WHITE, line=3)
+    # The Po Nagar Cham towers on their hill above the bay.
+    cham_tower(c, 230, 220, 0.7)
+    cham_tower(c, 400, 216, 0.8)
+    cham_tower(c, 310, 214, 1.15)
+
+
+def quy_nhon(c, mood):
+    sea(c, mood, 160)
+    # Eo Gió: two grassy arms of rock closing round a cove, boulders and surf at their feet.
+    rock = (200, 168, 132, 255)
+    P(c, [(0, 140), (80, 146), (150, 200), (130, 246), (0, 256)], rock)
+    P(c, [(480, 104), (380, 112), (318, 160), (322, 236), (380, 290), (480, 300)], rock)
+    c.d.polygon([(px * c_ss(c), py * c_ss(c)) for px, py in ((480, 106), (382, 114), (350, 136), (480, 132))], fill=GREEN)
+    c.d.polygon([(px * c_ss(c), py * c_ss(c)) for px, py in ((0, 142), (80, 148), (104, 166), (0, 160))], fill=GREEN)
+    for x, y, r in ((300, 246, 16), (340, 270, 20), (150, 236, 14), (120, 254, 12)):
+        O(c, (x - r, y - r * 0.8, x + r, y + r * 0.8), (176, 146, 116, 255), line=3)
+    for x, y in ((280, 258), (320, 286), (168, 250)):
+        c.d.ellipse(c._box((x - 14, y - 4, x + 14, y + 4)), fill=(255, 255, 255, 200))
+
+
+def mui_ne(c, mood):
+    sea(c, mood, 176)
+    # Mũi Né: rippled red dunes in front, round basket boats bobbing in the bay.
+    for x in (330, 380, 430):
+        O(c, (x - 16, 184, x + 16, 198), (150, 104, 70, 255), line=3)
+        c.d.line(c._box((x - 12, 191, x + 12, 191)), fill=BROWN, width=2 * c_ss(c))
+    back = [(0, 222)] + [(x, 214 - 30 * math.sin(x / 80.0)) for x in range(0, W + 1, 8)] + [(W, 222)]
+    c.d.polygon([(px * c_ss(c), py * c_ss(c)) for px, py in back + [(W, H), (0, H)]], fill=(240, 184, 124, 255))
+    front = [(x, 252 - 22 * math.sin(x / 70.0 + 2)) for x in range(0, W + 1, 8)]
+    c.d.polygon([(px * c_ss(c), py * c_ss(c)) for px, py in front + [(W, H), (0, H)]], fill=(226, 140, 96, 255))
+    L(c, front, (190, 104, 76, 255), 3)
+    for k in range(4):
+        ripple = [(x, 270 + k * 12 - 22 * math.sin(x / 70.0 + 2) * 0.6) for x in range(200, W + 1, 8)]
+        L(c, ripple, (204, 120, 84, 255), 2)
+    palm(c, 430, 236, 100, -10)
+
+
+def vung_tau(c, mood):
+    sea(c, mood, 220)
+    # The Christ of Vũng Tàu, arms open on top of Núi Nhỏ, a fishing boat below.
+    P(c, [(120, 222), (230, 132), (330, 124), (440, 222)], GREEN_DARK)
+    for x, y in ((210, 170), (250, 150), (300, 160), (350, 180), (280, 196)):
+        c.d.ellipse(c._box((x - 10, y - 8, x + 10, y + 8)), fill=GREEN)
+    L(c, [(330, 214), (300, 190), (320, 166), (290, 144), (282, 128)], CREAM, 3)
+    cx = 282
+    R(c, (cx - 12, 108, cx + 12, 128), STONE, r=2, line=3)
+    P(c, [(cx - 11, 110), (cx - 6, 62), (cx + 6, 62), (cx + 11, 110)], WHITE, line=3)
+    R(c, (cx - 34, 64, cx + 34, 71), WHITE, r=3, line=3)
+    O(c, (cx - 7, 46, cx + 7, 60), WHITE, line=3)
+    boat(c, 400, 262, 0.7, hull=(70, 120, 180, 255))
+
+
+def phu_quoc(c, mood):
+    sea(c, mood, 176)
+    for x, w in ((280, 70), (340, 40)):
+        c.d.ellipse(c._box((x - w, 164, x + w, 192)), fill=GREEN_DARK)
+    # Bãi Sao: white sand, leaning palms with a hammock, the cable car out to the islands.
+    L(c, [(16, 70), (320, 168)], BROWN, 2)
+    gx, gy = 150, 113
+    L(c, [(gx, gy), (gx, gy + 10)], BROWN, 2)
+    R(c, (gx - 12, gy + 10, gx + 12, gy + 28), RED, r=4, line=3)
+    R(c, (gx - 8, gy + 14, gx + 8, gy + 21), (190, 220, 240, 255), r=2, line=0)
+    c.d.polygon([(px * c_ss(c), py * c_ss(c)) for px, py in ((0, H), (0, 250), (200, 234), (480, 224), (480, H))], fill=(252, 246, 230, 255))
+    palm(c, 360, 262, 130, -22)
+    palm(c, 450, 256, 120, 10)
+    sling = [(352, 214), (380, 232), (410, 236), (446, 214)]
+    L(c, sling, BROWN, 8)
+    L(c, sling, CORAL, 4)
+    star = [(300 + (10 if k % 2 == 0 else 4) * math.cos(math.radians(-90 + k * 36)),
+             280 + (10 if k % 2 == 0 else 4) * math.sin(math.radians(-90 + k * 36))) for k in range(10)]
+    P(c, star, (246, 150, 90, 255), line=2)
+
+
+def can_tho(c, mood):
+    ground(c, mood, 204, colour=(130, 184, 120, 255))
+    for x in (60, 150, 250, 350, 440):
+        palm(c, x, 214, 70, 6 if x % 100 else -6)
+    sea(c, mood, 214)
+    # Cái Răng floating market: boats piled with fruit, a cây bẹo pole showing what each one sells.
+    for x, y, s in ((130, 232, 0.5), (400, 240, 0.7), (290, 274, 1.0)):
+        boat(c, x, y, s)
+        L(c, [(x - 30 * s, y - 14 * s), (x - 30 * s, y - 90 * s)], BROWN, max(2, 4 * s))
+        for k, col in enumerate(((246, 150, 60, 255), GREEN, GOLD)):
+            O(c, (x - 38 * s, y - (84 - k * 18) * s, x - 22 * s, y - (70 - k * 18) * s), col, line=2)
+        for k, col in enumerate(((90, 160, 90, 255), (246, 150, 60, 255), GOLD, (90, 160, 90, 255))):
+            fx = x - 8 * s + k * 14 * s
+            O(c, (fx - 9 * s, y - 30 * s, fx + 9 * s, y - 14 * s), col, line=2)
+    rower(c, 330, 262)
 
 # ================================================================== Nhật Bản
 
@@ -325,7 +575,14 @@ def _tokyo_scene(c, mood):
     for y, w in ((200, 92), (150, 60), (100, 34)):
         R(c, (cx - w / 2, y, cx + w / 2, y + 12), WHITE, r=3, line=3)
     for y in (126, 178, 224):
-        c.d.line(c._box((cx - (248 - y) * 0.32, y, cx + (248 - y) * 0.32, y)), fill=WHITE, width=3 * c_ss(c))
+        # Keep each band inside the outline, and split it where the legs open.
+        outer = 12 + (y - 60) * 58 / 188 - 4
+        inner = 44 * (y - 160) / 88 + 4
+        if inner > 4:
+            for sgn in (-1, 1):
+                c.d.line(c._box((cx + sgn * inner, y, cx + sgn * outer, y)), fill=WHITE, width=3 * c_ss(c))
+        else:
+            c.d.line(c._box((cx - outer, y, cx + outer, y)), fill=WHITE, width=3 * c_ss(c))
     L(c, [(cx, 60), (cx, 28)], BROWN, 4)
 
 
@@ -339,8 +596,9 @@ def kyoto(c, mood):
         P(c, [(cx - w / 2 - 6, y - h + 2), (cx + w / 2 + 6, y - h + 2), (cx + w / 2 - 6, y - h - 8), (cx - w / 2 + 6, y - h - 8)], (80, 70, 80, 255), line=3)
         y -= h + 10
     L(c, [(cx, y + 6), (cx, y - 20)], BROWN, 4)
-    for k, x in enumerate((210, 186, 162)):
-        torii(c, x, GROUND_Y + 6 - k * 6, 84 - k * 10, 98 - k * 10)
+    # Far gates first, so the near gate covers them.
+    for k, x in reversed(list(enumerate((210, 182, 154)))):
+        torii(c, x, GROUND_Y + 6 - k * 8, 84 - k * 12, 98 - k * 14)
     sakura_tree(c, 430, GROUND_Y, 0.9)
     sakura_branch(c)
     petals(c)
@@ -409,21 +667,26 @@ def seoul(c, mood):
 
 def busan(c, mood):
     sea(c, mood, 250)
-    # A hanok village: white walls under dark curving tiled roofs, by the sea.
-    c.d.polygon([(xy[0] * c_ss(c), xy[1] * c_ss(c)) for xy in ((140, 250), (240, 150), (480, 130), (480, 250))], fill=GREEN_DARK)
-    for x, y, w in ((210, 248, 110), (330, 236, 100), (400, 200, 90), (270, 196, 80)):
-        R(c, (x - w / 2 + 10, y - 40, x + w / 2 - 10, y), WHITE, r=2, line=3)
-        for k in range(3):
-            c.d.rectangle(c._box((x - w / 2 + 20 + k * (w - 40) / 3, y - 32, x - w / 2 + 34 + k * (w - 40) / 3, y - 12)), fill=(196, 150, 110, 255))
-        roof(c, x, y - 40, w, 22, (70, 80, 96, 255), curl=12)
+    # Gamcheon Culture Village: pastel box houses stepping up the hillside, far rows first.
+    c.d.polygon([(xy[0] * c_ss(c), xy[1] * c_ss(c)) for xy in ((140, 250), (240, 150), (480, 128), (480, 250))], fill=GREEN_DARK)
+    pastel = ((150, 206, 214, 255), PINK, (250, 214, 120, 255), (160, 190, 236, 255), (190, 226, 176, 255), LAVENDER)
+    rows = ((168, (300, 360, 420), 50), (206, (250, 318, 388, 452), 56), (246, (214, 290, 366), 64))
+    k = 0
+    for y, xs, w in rows:
+        for x in xs:
+            R(c, (x - w / 2, y - 38, x + w / 2, y), pastel[k % len(pastel)], r=2, line=3)
+            R(c, (x - w / 2 - 4, y - 44, x + w / 2 + 4, y - 36), (70, 80, 96, 255), r=2, line=3)
+            for wx in (x - w / 4, x + w / 4):
+                c.d.rectangle(c._box((wx - 5, y - 28, wx + 5, y - 16)), fill=(90, 120, 160, 255))
+            k += 1
     flag_pole(c, 120, 250, 110, korea_flag)
 
 
 def _jeju_scene(c, mood):
     sea(c, mood, 220)
     # Seongsan Ilchulbong: the green crater rising out of the sea.
-    P(c, [(150, 222), (200, 110), (330, 100), (400, 222)], GREEN_DARK)
-    c.d.ellipse(c._box((206, 102, 324, 126)), fill=GREEN)
+    P(c, [(150, 222), (206, 108), (324, 108), (400, 222)], GREEN_DARK)
+    c.d.ellipse(c._box((216, 111, 314, 127)), fill=GREEN)
     # A dol hareubang, the stone grandfather, on the shore: a hat, big eyes, hands on belly.
     c.d.rectangle(c._box((0, 248, W, H)), fill=(150, 140, 136, 255))
     hx = 420
@@ -447,8 +710,11 @@ def gyeongju(c, mood):
     for x in range(int(cx - 104), int(cx + 104), 34):
         R(c, (x, 140, x + 10, 198), RED, r=2, line=3)
     R(c, (cx - 112, 132, cx + 112, 144), TEAL, r=3, line=3)
-    roof(c, cx, 132, 270, 40, (70, 80, 96, 255), curl=20)
-    c.d.rectangle(c._box((cx - 110, 220, cx + 110, 250)), fill=(200, 110, 100, 90))
+    roof(c, cx, 132, 250, 40, (70, 80, 96, 255), curl=18)
+    for x in range(int(cx - 104), int(cx + 104), 34):
+        c.d.rectangle(c._box((x, 218, x + 10, 248)), fill=(226, 92, 76, 90))
+    for y in (228, 240):
+        c.d.line(c._box((cx - 100, y, cx + 100, y)), fill=(255, 255, 255, 120), width=2 * c_ss(c))
     for x in (90, 150):
         O(c, (x - 18, 232, x + 18, 246), GREEN, line=3)
         O(c, (x - 6, 222, x + 6, 236), PINK, line=2)
@@ -464,8 +730,12 @@ def incheon(c, mood):
         c.d.line(c._box((x, 190, x, 244)), fill=WHITE, width=3 * c_ss(c))
     L(c, [(cx - 150, 196), (cx, 170), (cx + 150, 196)], BROWN, 5)
     px, py = 200, 110
+    P(c, [(px - 44, py + 18), (px - 62, py - 12), (px - 50, py - 14), (px - 28, py + 12)], (150, 190, 220, 255), line=3)
     P(c, [(px - 50, py + 14), (px + 40, py - 10), (px + 54, py - 8), (px + 44, py + 4), (px - 46, py + 26)], WHITE)
     P(c, [(px - 4, py + 6), (px + 20, py + 34), (px + 32, py + 32), (px + 20, py + 2)], (150, 190, 220, 255), line=3)
+    for k in range(6):
+        wx, wy = px - 30 + k * 11, py + 12 - k * 2.6
+        c.d.ellipse(c._box((wx - 2, wy - 2, wx + 2, wy + 2)), fill=(90, 120, 160, 255))
     flag_pole(c, 90, 246, 130, korea_flag)
 
 
@@ -475,31 +745,33 @@ def _paris_scene(c, mood):
     ground(c, mood)
     cx, base = 280, GROUND_Y
     tower = (150, 120, 104, 255)
-    P(c, [(cx - 64, base), (cx - 16, 108), (cx + 16, 108), (cx + 64, base), (cx + 38, base), (cx, 172), (cx - 38, base)], tower)
-    R(c, (cx - 38, 168, cx + 38, 178), tower, r=3)
-    P(c, [(cx - 16, 110), (cx - 6, 40), (cx + 6, 40), (cx + 16, 110)], tower)
-    R(c, (cx - 18, 104, cx + 18, 112), tower, r=3)
-    L(c, [(cx, 40), (cx, 24)], BROWN, 3)
+    # Legs ending in a round arch, then the middle and the spire, platforms drawn over the joins.
+    arch = [(cx + 40 * math.cos(a), base - 4 - 38 * math.sin(a)) for a in [i * math.pi / 8 for i in range(9)]]
+    P(c, [(cx - 66, base), (cx - 26, 160), (cx + 26, 160), (cx + 66, base), (cx + 40, base)] + arch + [(cx - 40, base)], tower)
+    P(c, [(cx - 26, 162), (cx - 12, 112), (cx + 12, 112), (cx + 26, 162)], tower)
+    P(c, [(cx - 12, 114), (cx - 3, 70), (cx + 3, 70), (cx + 12, 114)], tower)
+    R(c, (cx - 40, 156, cx + 40, 166), tower, r=3)
+    R(c, (cx - 18, 108, cx + 18, 116), tower, r=3)
+    L(c, [(cx, 70), (cx, 58)], BROWN, 3)
     for x in (380, 420):
         O(c, (x - 20, 196, x + 20, 236), GREEN_DARK)
 
 
 def _nice_scene(c, mood):
-    sea(c, mood, 210)
-    c.d.rectangle(c._box((0, 246, W, H)), fill=(220, 214, 204, 255))
-    # The Promenade des Anglais: blue chairs and palms by the Baie des Anges.
-    for x in (330, 420):
-        palm(c, x, 246, 100, 8)
-    for x in (150, 210, 270):
-        R(c, (x, 226, x + 34, 238), (90, 150, 220, 255), r=4, line=3)
-        R(c, (x + 24, 206, x + 34, 238), (90, 150, 220, 255), r=4, line=3)
-    for x, y in ((120, 214), (200, 220)):
-        c.d.line(c._box((x, y, x + 40, y)), fill=WHITE, width=3 * c_ss(c))
+    sea(c, mood, 196)
+    c.d.rectangle(c._box((0, 232, W, H)), fill=(220, 214, 204, 255))
+    L(c, [(0, 232), (W, 232)], WHITE, 4)
+    # The Promenade des Anglais: blue chairs and palms on the walk above the Baie des Anges.
+    for x in (340, 430):
+        palm(c, x, 262, 110, 8)
+    for x in (160, 220, 280):
+        R(c, (x, 250, x + 34, 260), (90, 150, 220, 255), r=4, line=3)
+        R(c, (x + 24, 228, x + 34, 260), (90, 150, 220, 255), r=4, line=3)
 
 
 def lyon(c, mood):
     ground(c, mood, 250, colour=(214, 204, 192, 255))
-    # A French café: the striped awning, a table outside, a croissant and a baguette.
+    # A French café: the striped awning, a table outside with a coffee and a croissant.
     cx = 290
     R(c, (cx - 120, 120, cx + 120, 250), CREAM)
     R(c, (cx - 100, 160, cx - 10, 230), (190, 220, 240, 255), r=4, line=3)
@@ -510,15 +782,17 @@ def lyon(c, mood):
         P(c, [(x, 126), (x + 32, 126), (x + 32, 150), (x + 16, 158), (x, 150)], col, line=3)
     R(c, (cx - 60, 90, cx + 60, 118), (60, 90, 170, 255), r=6)
     c.d.text((cx * c_ss(c), 104 * c_ss(c)), "CAFÉ", fill=CREAM, anchor="mm", font=font_small(c))
-    R(c, (cx + 82, 214, cx + 126, 222), (90, 70, 60, 255), r=3, line=3)
     L(c, [(cx + 104, 222), (cx + 104, 250)], BROWN, 4)
-    P(c, [(cx + 86, 214), (cx + 98, 196), (cx + 112, 196), (cx + 124, 214)], GOLD, line=3)
-    L(c, [(cx - 150, 250), (cx - 110, 170)], BROWN, 18)
-    L(c, [(cx - 150, 250), (cx - 110, 170)], (226, 172, 104, 255), 12)
+    L(c, [(cx + 92, 250), (cx + 116, 250)], BROWN, 4)
+    R(c, (cx + 80, 216, cx + 128, 222), (90, 70, 60, 255), r=3, line=3)
+    O(c, (cx + 86, 202, cx + 106, 214), GOLD, line=3)
+    R(c, (cx + 110, 202, cx + 122, 214), WHITE, r=3, line=3)
     tricolour_bunting(c)
 
 
 def _provence_scene(c, mood):
+    # The sun sets behind the far hills, clear of the bunting.
+    O(c, (196, 126, 244, 174), GOLD, line=3)
     ground(c, mood, 200, colour=LAVENDER)
     # Rows of lavender running to the horizon, a stone farmhouse at the end.
     for i in range(7):
@@ -528,7 +802,6 @@ def _provence_scene(c, mood):
     P(c, [(312, 152), (428, 152), (400, 128), (340, 128)], (210, 130, 100, 255))
     R(c, (340, 166, 356, 186), (150, 190, 220, 255), r=3, line=3)
     R(c, (376, 168, 396, 202), (150, 110, 90, 255), r=3, line=3)
-    O(c, (110, 50, 160, 100), GOLD, line=3)
 
 
 def _bordeaux_scene(c, mood):
@@ -538,14 +811,16 @@ def _bordeaux_scene(c, mood):
         c.d.line(c._box((0, y, W, y)), fill=GREEN_DARK, width=8 * c_ss(c))
         for x in range(10, W, 26):
             c.d.ellipse(c._box((x - 4, y - 8, x + 4, y)), fill=(120, 70, 120, 255))
-    cx = 290
-    R(c, (cx - 70, 130, cx + 70, 210), CREAM)
-    for x in (cx - 82, cx + 58):
-        R(c, (x, 110, x + 24, 210), CREAM)
-        P(c, [(x - 6, 112), (x + 30, 112), (x + 12, 74)], SLATE)
-    P(c, [(cx - 76, 132), (cx + 76, 132), (cx + 50, 108), (cx - 50, 108)], SLATE)
+    # Main house and roof first, then the turrets in front of it, all below the bunting.
+    cx = 260
+    R(c, (cx - 70, 150, cx + 70, 210), CREAM)
+    P(c, [(cx - 76, 152), (cx + 76, 152), (cx + 50, 126), (cx - 50, 126)], SLATE)
     for x in (cx - 46, cx - 12, cx + 22):
-        R(c, (x, 150, x + 18, 180), (150, 190, 220, 255), r=3, line=3)
+        R(c, (x, 166, x + 18, 194), (150, 190, 220, 255), r=3, line=3)
+    for x in (cx - 94, cx + 70):
+        R(c, (x, 134, x + 24, 210), CREAM)
+        P(c, [(x - 6, 136), (x + 30, 136), (x + 12, 98)], SLATE)
+        R(c, (x + 7, 158, x + 17, 176), (150, 190, 220, 255), r=5, line=3)
 
 
 # ================================================================== Ai Cập
@@ -553,10 +828,26 @@ def _bordeaux_scene(c, mood):
 def cairo(c, mood):
     ground(c, mood, 244, colour=SAND)
     far_pyramids(c, 222)
-    # A camel caravan crossing the desert below the pyramids.
-    for x, s in ((210, 1.0), (320, 0.85), (410, 0.7)):
-        camel(c, x, 244 - (1 - s) * 10, s)
-    palm(c, 70, 244, 100, 8)
+    # The Muhammad Ali Mosque on the Citadel: a great dome on its drum, half domes, two pencil minarets.
+    cx = 270
+    for x in (cx - 92, cx + 92):
+        R(c, (x - 6, 82, x + 6, 244), STONE, r=2, line=3)
+        R(c, (x - 10, 128, x + 10, 136), STONE_DARK, r=2, line=3)
+        R(c, (x - 10, 176, x + 10, 184), STONE_DARK, r=2, line=3)
+        P(c, [(x - 8, 84), (x + 8, 84), (x, 54)], SLATE, line=3)
+    O(c, (cx - 40, 96, cx + 40, 172), SLATE)
+    L(c, [(cx, 96), (cx, 80)], BROWN, 3)
+    O(c, (cx - 5, 72, cx + 5, 82), GOLD, line=2)
+    R(c, (cx - 46, 140, cx + 46, 176), STONE, r=3)
+    for x in (cx - 34, cx - 12, cx + 10, cx + 32):
+        R(c, (x - 4, 148, x + 4, 166), (120, 100, 90, 255), r=4, line=2)
+    for x in (cx - 50, cx + 50):
+        O(c, (x - 28, 162, x + 28, 214), SLATE)
+    R(c, (cx - 86, 190, cx + 86, 244), STONE, r=3)
+    for x in (cx - 66, cx - 34, cx + 22, cx + 54):
+        R(c, (x, 204, x + 12, 228), (120, 100, 90, 255), r=6, line=3)
+    R(c, (cx - 12, 200, cx + 12, 244), (150, 110, 90, 255), r=10)
+    camel(c, 420, 252, 0.6)
 
 
 def giza(c, mood):
@@ -566,10 +857,16 @@ def giza(c, mood):
         P(c, [(x - w / 2, GROUND_Y), (x, GROUND_Y - h), (x + w / 2, GROUND_Y)], SAND)
         c.d.polygon([(xy[0] * c_ss(c), xy[1] * c_ss(c)) for xy in ((x, GROUND_Y - h), (x + w / 2, GROUND_Y), (x + w / 6, GROUND_Y))], fill=SAND_DARK)
     # The Sphinx lying in front.
-    sx = 120
-    R(c, (sx, 214, sx + 90, 240), SAND_DARK, r=8)
-    P(c, [(sx + 60, 214), (sx + 64, 176), (sx + 92, 176), (sx + 96, 214)], SAND_DARK)
-    R(c, (sx + 68, 180, sx + 88, 204), SAND, r=6, line=3)
+    sx = 104
+    R(c, (sx, 212, sx + 96, 240), SAND_DARK, r=12)
+    R(c, (sx + 80, 228, sx + 126, 240), SAND_DARK, r=6)
+    P(c, [(sx + 58, 222), (sx + 62, 188), (sx + 70, 172), (sx + 94, 172), (sx + 102, 188), (sx + 106, 222)], SAND)
+    for y in (196, 206, 216):
+        c.d.line(c._box((sx + 62, y, sx + 70, y)), fill=SAND_DARK, width=3 * c_ss(c))
+        c.d.line(c._box((sx + 94, y, sx + 102, y)), fill=SAND_DARK, width=3 * c_ss(c))
+    R(c, (sx + 71, 180, sx + 93, 210), SAND_DARK, r=6, line=3)
+    for ex in (sx + 77, sx + 87):
+        c.d.ellipse(c._box((ex - 2, 190, ex + 2, 194)), fill=BROWN)
 
 
 def luxor(c, mood):
@@ -579,16 +876,21 @@ def luxor(c, mood):
     cx = 300
     blue = (60, 90, 170, 255)
     P(c, [(cx - 90, 230), (cx - 70, 80), (cx, 56), (cx + 70, 80), (cx + 90, 230)], GOLD)
-    for k in range(1, 7):
+    for k in range(1, 6):
         y = 80 + k * 22
-        c.d.line(c._box((cx - 74 - k * 2, y, cx - 44, y)), fill=blue, width=7 * c_ss(c))
-        c.d.line(c._box((cx + 44, y, cx + 74 + k * 2, y)), fill=blue, width=7 * c_ss(c))
+        # Stripes stop just inside the slanted outline of the headdress.
+        edge = 90 - 20 * (230 - y) / 150 - 6
+        c.d.line(c._box((cx - edge, y, cx - 44, y)), fill=blue, width=7 * c_ss(c))
+        c.d.line(c._box((cx + 44, y, cx + edge, y)), fill=blue, width=7 * c_ss(c))
     O(c, (cx - 44, 86, cx + 44, 196), GOLD)
     for ex in (cx - 18, cx + 18):
         P(c, [(ex - 14, 128), (ex + 14, 128), (ex + 6, 136), (ex - 10, 136)], WHITE, line=3)
         c.d.ellipse(c._box((ex - 4, 128, ex + 4, 136)), fill=BROWN)
-    R(c, (cx - 10, 196, cx + 10, 240), blue, r=4)
-    R(c, (cx - 50, 200, cx + 50, 214), blue, r=4)
+    R(c, (cx - 60, 192, cx + 60, 212), blue, r=8)
+    c.d.line(c._box((cx - 52, 202, cx + 52, 202)), fill=GOLD, width=4 * c_ss(c))
+    R(c, (cx - 9, 210, cx + 9, 240), blue, r=4)
+    for y in (220, 230):
+        c.d.line(c._box((cx - 7, y, cx + 7, y)), fill=GOLD, width=3 * c_ss(c))
 
 
 def _aswan_scene(c, mood):
@@ -605,7 +907,7 @@ def _aswan_scene(c, mood):
 def _alexandria_scene(c, mood):
     sea(c, mood, 228)
     # A lighthouse on the harbour wall, its lamp lit.
-    c.d.rectangle(c._box((180, 228, 420, 250)), fill=STONE_DARK)
+    R(c, (180, 226, 420, 250), STONE_DARK, r=3, line=3)
     cx = 300
     R(c, (cx - 50, 178, cx + 50, 230), STONE)
     R(c, (cx - 34, 116, cx + 34, 180), STONE)
@@ -666,8 +968,9 @@ def _hawaii_scene(c, mood):
     c.d.rectangle(c._box((0, 242, W, H)), fill=SAND)
     palm(c, 420, 242, 120, -14)
     palm(c, 380, 242, 90, 6)
-    P(c, [(240, 244), (252, 160), (264, 160), (276, 244)], (240, 140, 100, 255))
-    c.d.line(c._box((258, 166, 258, 240)), fill=WHITE, width=3 * c_ss(c))
+    O(c, (242, 150, 274, 256), (240, 140, 100, 255))
+    c.d.line(c._box((258, 160, 258, 246)), fill=WHITE, width=3 * c_ss(c))
+    O(c, (230, 246, 286, 262), SAND, line=3)
 
 
 def _los_angeles_scene(c, mood):
@@ -675,11 +978,11 @@ def _los_angeles_scene(c, mood):
     c.d.polygon([(xy[0] * c_ss(c), xy[1] * c_ss(c)) for xy in ((0, 250), (60, 170), (200, 120), (340, 140), (480, 110), (480, 250))], fill=(170, 150, 110, 255))
     ground(c, mood, 250, colour=(196, 188, 176, 255))
     for i, ch in enumerate("HOLLYWOOD"):
-        x = 140 + i * 30
-        y = 142 + 6 * math.sin(i * 0.8)
+        x = 118 + i * 30
+        y = 146
         R(c, (x, y, x + 24, y + 34), WHITE, r=2, line=2)
         c.d.text(((x + 12) * c_ss(c), (y + 18) * c_ss(c)), ch, fill=BROWN, anchor="mm", font=font_small(c))
-    for x in (60, 410, 450):
+    for x in (60, 432, 462):
         palm(c, x, 250, 120, 6)
 
 
@@ -767,7 +1070,10 @@ def los_angeles(c, mood):
 
 
 LANDMARKS = {
-    "da_lat": da_lat, "hoi_an": hoi_an, "ha_long": ha_long, "hue": hue, "saigon": sai_gon,
+    "hanoi": ha_noi, "ha_long": ha_long, "ninh_binh": ninh_binh, "sa_pa": sa_pa, "phong_nha": phong_nha,
+    "hue": hue, "da_nang": da_nang, "hoi_an": hoi_an, "quy_nhon": quy_nhon, "nha_trang": nha_trang,
+    "da_lat": da_lat, "mui_ne": mui_ne, "vung_tau": vung_tau, "saigon": sai_gon, "phu_quoc": phu_quoc,
+    "can_tho": can_tho,
     "tokyo": tokyo, "kyoto": kyoto, "osaka": osaka, "sapporo": sapporo, "okinawa": okinawa,
     "seoul": seoul, "busan": busan, "jeju": jeju, "gyeongju": gyeongju, "incheon": incheon,
     "paris": paris, "nice": nice, "lyon": lyon, "provence": provence, "bordeaux": bordeaux,

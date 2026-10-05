@@ -6,8 +6,9 @@ namespace ASTeams.SingleLine.Unity
     public readonly struct WinFlightSummary
     {
         public WinFlightSummary(int flightNumber, int coins, int passengers, string destination, int stamp,
-            int stampsNeeded, Sprite earnedPostcard)
+            int stampsNeeded, Sprite earnedPostcard, bool isVip)
         {
+            IsVip = isVip;
             FlightNumber = flightNumber;
             Coins = coins;
             Passengers = passengers;
@@ -33,5 +34,8 @@ namespace ASTeams.SingleLine.Unity
 
         /// <summary>The destination's postcard when this flight completed it; otherwise null.</summary>
         public Sprite EarnedPostcard { get; }
+
+        /// <summary>True for a chapter's VIP flight, which His Majesty the VIP guest flew on.</summary>
+        public bool IsVip { get; }
     }
 }

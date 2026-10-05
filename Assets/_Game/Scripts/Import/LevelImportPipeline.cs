@@ -46,12 +46,13 @@ namespace ASTeams.SingleLine.Import
             CampaignMode mode,
             ChapterLayout layout,
             int solverNodeBudget,
-            LevelPackOrder packOrder = null)
+            LevelPackOrder packOrder = null,
+            IReadOnlyList<SpecialLevel> specialLevels = null)
         {
             if (mode == CampaignMode.DifficultyCurve)
             {
                 return new LevelImportPipeline(
-                    solverNodeBudget, new UniqueBoardSelector(), new ChapterAssembler(layout));
+                    solverNodeBudget, new UniqueBoardSelector(), new ChapterAssembler(layout, specialLevels));
             }
 
             return new LevelImportPipeline(

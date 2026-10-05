@@ -36,8 +36,8 @@ namespace ASTeams.SingleLine.Unity.EditorTools
         // The hint's paper plane against a one-unit tile, and its trail of puffs: enough
         // puffs for three squares and the step out of the plane's own.
         private const float HintGuideScale = 0.8f;
-        private const float HintPuffScale = 0.75f;
-        private const float HintPuffSpacing = 0.24f;
+        // A landing puff per hop: a footprint, smaller than the old vapour trail's puffs.
+        private const float HintPuffScale = 1.4f;
         private const int HintPuffCount = 18;
 
         // One run of the surface texture, a lamp each side, every this many world units.
@@ -99,6 +99,8 @@ namespace ASTeams.SingleLine.Unity.EditorTools
             UpdateTheme();
             UpdateSkins();
             AssetDatabase.SaveAssets();
+            prefabReport += "\n" + BoardRuleInstaller.Install();
+            prefabReport += "\n" + NightFormationInstaller.Install();
 
             return "Flat board installed.\n" + prefabReport;
         }
@@ -225,6 +227,7 @@ namespace ASTeams.SingleLine.Unity.EditorTools
                 SetUpAirplane(art, airplane);
                 SetObject(airplane, "board", board);
                 SetUpSky(art, contents.transform, framer);
+                SetUpThemes(contents, board, framer);
                 SwitchOffScenery(contents.transform);
 
                 PrefabUtility.SaveAsPrefabAsset(contents, GameplayPrefabPath);
@@ -331,7 +334,6 @@ namespace ASTeams.SingleLine.Unity.EditorTools
                 puffs.GetArrayElementAtIndex(i).objectReferenceValue = puff;
             }
 
-            so.FindProperty("puffSpacing").floatValue = HintPuffSpacing;
             so.FindProperty("alpha").floatValue = 1f;
             so.ApplyModifiedPropertiesWithoutUndo();
         }
@@ -369,6 +371,8 @@ namespace ASTeams.SingleLine.Unity.EditorTools
             SpriteRenderer shadow = AddSprite(root, "Sprite Shadow", art.AirplaneShadow, BoardSortingOrder.AirplaneShadow);
             SpriteRenderer body = AddSprite(root, "Sprite Body", art.Airplane, BoardSortingOrder.Airplane);
             SpriteRenderer pilot = AddSprite(root, "Sprite Pilot", art.Pilot, BoardSortingOrder.AirplanePilot);
+            AssetWriter.GetOrAdd<PlaneLiveryView>(body.gameObject)
+                .EditorLink(body, ShopInstaller.BuildCatalog(), false);
             shadow.color = Color.white;
 
             var rig = AssetWriter.GetOrAdd<SpriteAirplaneRig>(root.gameObject);
@@ -437,6 +441,37 @@ namespace ASTeams.SingleLine.Unity.EditorTools
             so.ApplyModifiedPropertiesWithoutUndo();
         }
 
+        /// <summary>The theme the player wears repaints the tiles, the start pad and the sky behind the board.</summary>
+        private static void SetUpThemes(GameObject contents, BoardView board, BoardCameraFramer framer)
+        {
+            SpriteRenderer gradient = null;
+
+            foreach (SpriteRenderer renderer in contents.GetComponentsInChildren<SpriteRenderer>(true))
+            {
+                if (renderer.name == "Gradient")
+                {
+                    gradient = renderer;
+                }
+            }
+
+            var clouds = new System.Collections.Generic.List<SpriteRenderer>();
+
+            foreach (SpriteRenderer renderer in contents.GetComponentsInChildren<SpriteRenderer>(true))
+            {
+                if (renderer.name.StartsWith("Cloud "))
+                {
+                    clouds.Add(renderer);
+                }
+            }
+
+            var path = contents.GetComponentInChildren<PathView>(true);
+            Transform runway = path.transform.Find("Runway");
+            var presenter = AssetWriter.GetOrAdd<BoardSkinPresenter>(board.gameObject);
+            presenter.EditorLink(board, contents.GetComponentInChildren<GameplayController>(true), framer.GetComponent<Camera>(),
+                AssetDatabase.LoadAssetAtPath<SkinCatalogSO>(ThemeInstaller.CatalogPath), gradient, path,
+                runway != null ? runway.GetComponent<LineRenderer>() : null, clouds.ToArray());
+        }
+
         private static void SwitchOffScenery(Transform root)
         {
             Transform landscape = root.Find("Landscape");
@@ -468,43 +503,10 @@ namespace ASTeams.SingleLine.Unity.EditorTools
             so.ApplyModifiedPropertiesWithoutUndo();
         }
 
-        /// <summary>
-        /// Every skin becomes a pastel take on the same flat board: cream tiles, a white
-        /// centre line, and its own hue for the start pad and the ground the runway covers.
-        /// </summary>
+        /// <summary>The board skins are the shop's themes; ThemeInstaller sets their colours and art.</summary>
         private static void UpdateSkins()
         {
-            ApplyFlatSkin(SkinFolder + "/SkinClassic.asset", hue: 140f, hueStep: 0f, saturation: 1f);
-            ApplyFlatSkin(SkinFolder + "/SkinOcean.asset", hue: 200f, hueStep: 0f, saturation: 1.1f);
-            ApplyFlatSkin(SkinFolder + "/SkinSunset.asset", hue: 8f, hueStep: 0f, saturation: 1f);
-            ApplyFlatSkin(SkinFolder + "/SkinAurora.asset", hue: 265f, hueStep: 0f, saturation: 0.9f);
-            ApplyFlatSkin(SkinFolder + "/SkinNeon.asset", hue: 150f, hueStep: 40f, saturation: 1.3f);
-        }
-
-        private static void ApplyFlatSkin(string path, float hue, float hueStep, float saturation)
-        {
-            var skin = AssetDatabase.LoadAssetAtPath<SkinSO>(path);
-
-            if (skin == null)
-            {
-                return;
-            }
-
-            var so = new SerializedObject(skin);
-            SerializedProperty palette = so.FindProperty("palette");
-            palette.FindPropertyRelative("background").colorValue = SkyColor;
-            palette.FindPropertyRelative("cell").colorValue = TileCream;
-            palette.FindPropertyRelative("usesLevelHue").boolValue = hueStep > 0f;
-            palette.FindPropertyRelative("firstLevelHue").floatValue = hue;
-            palette.FindPropertyRelative("hueStepPerLevel").floatValue = Mathf.Max(1f, hueStep);
-            palette.FindPropertyRelative("startTone").vector2Value = new Vector2(0.48f * saturation, 0.8f);
-            // Squares the runway covers only warm a touch: the runway itself shows the way.
-            palette.FindPropertyRelative("visitedTone").vector2Value = new Vector2(0.05f * saturation, 0.98f);
-            palette.FindPropertyRelative("headTone").vector2Value = new Vector2(0.07f * saturation, 0.99f);
-            palette.FindPropertyRelative("pathTone").vector2Value = new Vector2(0f, 1f);
-            palette.FindPropertyRelative("wonTone").vector2Value = new Vector2(0.22f * saturation, 1f);
-            palette.FindPropertyRelative("pathAlpha").floatValue = 1f;
-            so.ApplyModifiedPropertiesWithoutUndo();
+            ThemeInstaller.Install();
         }
 
         private static void SetObject(Object target, string property, Object value)

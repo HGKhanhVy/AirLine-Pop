@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 350ba12975df99142abd0907084b296f, type: 3}
+  m_Name: LiveryCatalog
+  m_EditorClassIdentifier: 
+  liveries:
+  - {fileID: 11400000, guid: d468d7a8decd9c841ab19e8c2b1695ce, type: 2}
+  - {fileID: 11400000, guid: 8a7065ebc7c4cff4db561df51eff9731, type: 2}
+  - {fileID: 11400000, guid: af84680785a8f914dab733cf28bb8bb5, type: 2}
+  - {fileID: 11400000, guid: 3adde686901021044aa68139c3e66655, type: 2}
+  - {fileID: 11400000, guid: 055b6c43af0a07d4a9585e7a7957331e, type: 2}
+  - {fileID: 11400000, guid: 8720f1faea53feb459125215f64bdd67, type: 2}

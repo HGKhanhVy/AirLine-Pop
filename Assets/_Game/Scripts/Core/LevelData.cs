@@ -20,11 +20,16 @@ namespace ASTeams.SingleLine.Core
 
         private static readonly int[] EmptyCells = new int[0];
         private static readonly string[] EmptyTags = new string[0];
+        private static readonly WindCell[] EmptyWind = new WindCell[0];
 
         private readonly bool[] activeMask;
         private readonly int[] declaredActiveCells;
         private readonly int[] solution;
         private readonly string[] tags;
+        private readonly WindCell[] wind;
+
+        // Per square: the wind's direction plus one, or zero for still air.
+        private readonly byte[] windByCell;
 
         public string Id { get; }
 
@@ -60,6 +65,33 @@ namespace ASTeams.SingleLine.Core
 
         public IReadOnlyList<string> Tags => tags;
 
+        public IReadOnlyList<WindCell> Wind => wind;
+
+        public bool HasWind => wind.Length > 0;
+
+        /// <summary>A night flight: tagged, since it changes only what the player sees.</summary>
+        public bool IsNight { get; }
+
+        /// <summary>A formation flight: the board is two mirror halves flown at once, see <see cref="MirrorOf"/>.</summary>
+        public bool IsFormation { get; }
+
+        /// <summary>The VIP flight closing a chapter.</summary>
+        public bool IsVip { get; }
+
+        /// <summary>
+        /// Squares the player's own route visits to win: every square, or half of them in a
+        /// formation flight, where the wingman covers the other half.
+        /// </summary>
+        public int PathLength => IsFormation ? ActiveCellCount / 2 : ActiveCellCount;
+
+        /// <summary>The extra conditions this level sets, for screens that explain them.</summary>
+        public LevelRule Rules =>
+            (HasFixedEnd ? LevelRule.Runway : LevelRule.None) |
+            (HasWind ? LevelRule.Wind : LevelRule.None) |
+            (IsNight ? LevelRule.Night : LevelRule.None) |
+            (IsFormation ? LevelRule.Formation : LevelRule.None) |
+            (IsVip ? LevelRule.Vip : LevelRule.None);
+
         public LevelData(
             string id,
             int version,
@@ -70,7 +102,8 @@ namespace ASTeams.SingleLine.Core
             int[] solution = null,
             int difficulty = 1,
             string themeId = null,
-            string[] tags = null)
+            string[] tags = null,
+            WindCell[] wind = null)
         {
             if (string.IsNullOrEmpty(id))
             {
@@ -95,6 +128,9 @@ namespace ASTeams.SingleLine.Core
             declaredActiveCells = (int[])activeCells.Clone();
             this.solution = solution == null ? EmptyCells : (int[])solution.Clone();
             this.tags = tags == null ? EmptyTags : (string[])tags.Clone();
+            IsNight = Array.IndexOf(this.tags, LevelTags.Night) >= 0;
+            IsFormation = Array.IndexOf(this.tags, LevelTags.Formation) >= 0;
+            IsVip = Array.IndexOf(this.tags, LevelTags.Vip) >= 0;
 
             activeMask = new bool[grid.CellCount];
             int distinctCount = 0;
@@ -121,6 +157,49 @@ namespace ASTeams.SingleLine.Core
             }
 
             ActiveCellCount = distinctCount;
+
+            this.wind = wind == null ? EmptyWind : (WindCell[])wind.Clone();
+            windByCell = new byte[grid.CellCount];
+
+            for (int i = 0; i < this.wind.Length; i++)
+            {
+                WindCell gust = this.wind[i];
+
+                if (!grid.Contains(gust.Cell))
+                {
+                    throw new ArgumentOutOfRangeException(nameof(wind), gust.Cell, "Wind lies outside the grid of level " + id + ".");
+                }
+
+                windByCell[gust.Cell] = (byte)((int)gust.Direction + 1);
+            }
+        }
+
+        /// <summary>True when the square carries wind, and which way it blows.</summary>
+        public bool TryGetWind(int cell, out Direction direction)
+        {
+            int stored = cell >= 0 && cell < windByCell.Length ? windByCell[cell] : 0;
+            direction = stored == 0 ? Direction.Up : (Direction)(stored - 1);
+            return stored != 0;
+        }
+
+        /// <summary>Copy of this level with its runway and wind replaced; everything else carries over.</summary>
+        public LevelData WithRules(int fixedEnd, WindCell[] newWind)
+        {
+            return new LevelData(Id, Version, Grid, declaredActiveCells, FixedStart, fixedEnd, solution, Difficulty, ThemeId, tags,
+                newWind);
+        }
+
+        /// <summary>The square mirroring this one across the board's middle column, where a formation's wingman flies.</summary>
+        public int MirrorOf(int cell)
+        {
+            return Grid.ToIndex(Grid.ToRow(cell), Grid.Width - 1 - Grid.ToColumn(cell));
+        }
+
+        /// <summary>Copy of this level carrying different tags; everything else carries over.</summary>
+        public LevelData WithTags(string[] newTags)
+        {
+            return new LevelData(Id, Version, Grid, declaredActiveCells, FixedStart, FixedEnd, solution, Difficulty, ThemeId, newTags,
+                wind);
         }
 
         public bool IsActive(int cell)
@@ -145,7 +224,8 @@ namespace ASTeams.SingleLine.Core
                 solution,
                 difficulty,
                 ThemeId,
-                tags);
+                tags,
+                wind);
         }
 
         /// <summary>
@@ -165,7 +245,8 @@ namespace ASTeams.SingleLine.Core
                 newSolution,
                 Difficulty,
                 ThemeId,
-                tags);
+                tags,
+                wind);
         }
 
         public override string ToString()

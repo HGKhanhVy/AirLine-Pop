@@ -22,6 +22,7 @@ namespace ASTeams.SingleLine.Unity.EditorTools
         public const string PrefabPath = "Assets/_Game/UI/AirlineHud.prefab";
         private const string ScenePath = "Assets/_SDK/Template/Scenes/Gameplay.unity";
         private const string GameplayPrefabPath = "Assets/_Game/Prefabs/SingleLineGameplay.prefab";
+        private const string VipGuestPrefabPath = "Assets/_Game/Art/FlatCats/CatFlat_vip.prefab";
         private const string OldHudName = "Gameplay HUD";
 
         private static readonly Vector2 Reference = new Vector2(1080f, 1920f);
@@ -78,6 +79,8 @@ namespace ASTeams.SingleLine.Unity.EditorTools
             RectTransform bottom = BuildBottomBar(safe, out Button restartButton, out Button hintButton);
 
             PausePanelView pausePanel = BuildPausePanel(canvasObject.transform);
+            RuleIntroBuilder.Build(canvasObject.transform);
+            canvasObject.AddComponent<VipFlightRecorder>();
             WinPanelView winPanel = BuildWinPanel(canvasObject.transform);
             CatPortraitStage stage = BuildStage(root.transform);
 
@@ -102,7 +105,7 @@ namespace ASTeams.SingleLine.Unity.EditorTools
             win.EditorLink(winPanel, pause);
             DestinationInstaller.LinkWinRoutes(win, DestinationInstaller.BuildCatalog());
             GameplayHudBootstrap bootstrap = root.AddComponent<GameplayHudBootstrap>();
-            bootstrap.EditorLink(catalog, pause, win, stage);
+            bootstrap.EditorLink(catalog, pause, win, stage, AssetDatabase.LoadAssetAtPath<CatView>(VipGuestPrefabPath));
             return root;
         }
 
@@ -125,6 +128,10 @@ namespace ASTeams.SingleLine.Unity.EditorTools
             level = UiBuilder.Label("Level", pill.transform, "Flight 1", 60f, false);
             level.font = AssetDatabase.LoadAssetAtPath<TMP_FontAsset>(UiKitInstaller.TitleFontPath);
             UiBuilder.Place(level.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0f, 4f), new Vector2(320f, 90f));
+            // A special flight adds its picture's name, so the label shrinks to keep it in the pill.
+            level.enableAutoSizing = true;
+            level.fontSizeMin = 30f;
+            level.fontSizeMax = 60f;
 
             PassengerInstaller.BuildCounter(bar);
             return bar;
@@ -143,7 +150,8 @@ namespace ASTeams.SingleLine.Unity.EditorTools
         private static CanvasGroup BuildStuckBanner(RectTransform safe)
         {
             Image pill = UiBuilder.Image("StuckBanner", safe, "pill_cream", true);
-            UiBuilder.Place(pill.rectTransform, new Vector2(0.5f, 1f), new Vector2(0f, -190f), new Vector2(760f, 96f));
+            // Below the passenger counter that hangs under the top bar, so the two never overlap.
+            UiBuilder.Place(pill.rectTransform, new Vector2(0.5f, 1f), new Vector2(0f, -270f), new Vector2(760f, 96f));
             TMP_Text text = UiBuilder.Text("Text", pill.transform, "hud.stuck", 40f, false);
             UiBuilder.Place(text.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(0f, 4f), new Vector2(720f, 80f));
             CanvasGroup group = UiBuilder.Group(pill.rectTransform);
@@ -190,6 +198,9 @@ namespace ASTeams.SingleLine.Unity.EditorTools
 
         // ---------------------------------------------------------------- cards
 
+        /// <summary>Space a popup keeps from the screen's edges when it has to shrink to fit.</summary>
+        public const float FitMargin = 24f;
+
         /// <summary>A popup: the dimmed backdrop and a cream card that springs up. Shared by every screen's popups.</summary>
         public static RectTransform Card(string name, Transform parent, Vector2 size, out ModalPanel modal)
         {
@@ -198,7 +209,15 @@ namespace ASTeams.SingleLine.Unity.EditorTools
 
             UiBuilder.Backdrop(root, UiBuilder.ModalDim);
 
-            Image card = UiBuilder.Image("Card", root, "panel_cream", true);
+            // The wash covers the whole screen; the card keeps clear of notches. It sits in a
+            // holder of its own size that shrinks to fit short or narrow screens, so the
+            // card's own spring-in scale stays free.
+            RectTransform safe = UiBuilder.SafeLayer(root);
+            RectTransform fit = UiBuilder.Rect("Fit", safe);
+            UiBuilder.Place(fit, new Vector2(0.5f, 0.5f), Vector2.zero, size);
+            safe.gameObject.AddComponent<ContentScaleFitter>().EditorLink(safe, fit, FitMargin);
+
+            Image card = UiBuilder.Image("Card", fit, "panel_cream", true);
             UiBuilder.Place(card.rectTransform, new Vector2(0.5f, 0.5f), Vector2.zero, size);
             card.raycastTarget = true;
 

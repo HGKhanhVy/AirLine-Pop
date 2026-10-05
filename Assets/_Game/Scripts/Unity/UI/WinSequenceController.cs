@@ -36,6 +36,7 @@ namespace ASTeams.SingleLine.Unity
         private int passengersAboard;
         private Coroutine pending;
         private bool isLeaving;
+        private bool isVipFlight;
 
         public void Initialize(CatPortraitStage portraitStage, ISceneNavigator sceneNavigator)
         {
@@ -50,6 +51,7 @@ namespace ASTeams.SingleLine.Unity
             GameplayEvents.OnPassengersChanged += HandlePassengersChanged;
             GameplayEvents.OnLevelWon += HandleLevelWon;
             GameplayEvents.OnLevelLoaded += HandleLevelLoaded;
+            GameplayEvents.OnLevelRules += HandleLevelRules;
             panel.OnContinue += HandleContinue;
             panel.OnHome += HandleHome;
         }
@@ -60,6 +62,7 @@ namespace ASTeams.SingleLine.Unity
             GameplayEvents.OnPassengersChanged -= HandlePassengersChanged;
             GameplayEvents.OnLevelWon -= HandleLevelWon;
             GameplayEvents.OnLevelLoaded -= HandleLevelLoaded;
+            GameplayEvents.OnLevelRules -= HandleLevelRules;
             panel.OnContinue -= HandleContinue;
             panel.OnHome -= HandleHome;
             StopPending();
@@ -69,6 +72,11 @@ namespace ASTeams.SingleLine.Unity
         private void HandleCoinsAwarded(int amount, long balance)
         {
             pendingCoins = amount;
+        }
+
+        private void HandleLevelRules(ASTeams.SingleLine.Core.LevelRule rules)
+        {
+            isVipFlight = (rules & ASTeams.SingleLine.Core.LevelRule.Vip) != 0;
         }
 
         private void HandlePassengersChanged(int aboard, int total)
@@ -105,6 +113,8 @@ namespace ASTeams.SingleLine.Unity
 
             if (stage != null)
             {
+                // After a VIP flight His Majesty himself comes out to say well done.
+                stage.ShowGuest(isVipFlight);
                 stage.SetRendering(true);
                 stage.Play(CatAnimatorParams.Celebrate);
             }
@@ -118,14 +128,14 @@ namespace ASTeams.SingleLine.Unity
 
             if (destination == null)
             {
-                return new WinFlightSummary(flightNumber, coins, passengers, null, 0, 0, null);
+                return new WinFlightSummary(flightNumber, coins, passengers, null, 0, 0, null, isVipFlight);
             }
 
             ASTeams.SingleLine.Core.DestinationSchedule schedule = destinations.Schedule;
             Sprite postcard = schedule.CompletesPostcard(flightNumber) ? destination.Postcard : null;
 
             return new WinFlightSummary(flightNumber, coins, passengers, destination.DisplayName,
-                schedule.StampOf(flightNumber), schedule.FlightsPerDestination, postcard);
+                schedule.StampOf(flightNumber), schedule.FlightsPerDestination, postcard, isVipFlight);
         }
 
         private void HandleLevelLoaded(int levelNumber, string levelId, int difficulty, int totalCells)

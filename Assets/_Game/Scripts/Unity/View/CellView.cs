@@ -164,6 +164,7 @@ namespace ASTeams.SingleLine.Unity
         public void Place(int cellIndex, Vector3 localPosition, float size, Sprite sprite, Color color)
         {
             CellIndex = cellIndex;
+            IsVisited = false;
             BaseLocalPosition = localPosition;
             transform.localPosition = localPosition;
             transform.localScale = Vector3.one;
@@ -205,8 +206,18 @@ namespace ASTeams.SingleLine.Unity
         }
 
         /// <summary>A square the route runs across is cleared of its dressing, like ground levelled for a runway.</summary>
+        /// <summary>
+        /// The square's face at its drawn size: something laid over the whole square, such
+        /// as a special tile, parents here to match it exactly and press with it.
+        /// </summary>
+        public Transform FaceRoot => spriteRenderer.transform;
+
+        /// <summary>True once the path covers this square.</summary>
+        public bool IsVisited { get; private set; }
+
         public void SetVisited(bool visited)
         {
+            IsVisited = visited;
             if (decor != null)
             {
                 decor.SetCleared(visited);

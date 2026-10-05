@@ -25,6 +25,12 @@ namespace ASTeams.SingleLine.Unity
         [SerializeField] private BoardCameraFramer cameraFramer;
         [SerializeField] private BoardFeedback boardFeedback;
 
+        [Tooltip("The wingman's mirrored line, drawn only on formation flights.")]
+        [SerializeField] private PathView wingmanPath;
+
+        [Tooltip("The dark of night flights.")]
+        [SerializeField] private NightFlightView nightView;
+
         [Tooltip("Seconds between cells while the path rewinds. Small enough to read as one motion.")]
         [SerializeField, Min(0f)] private float rewindStepDelay = 0.025f;
 
@@ -47,6 +53,7 @@ namespace ASTeams.SingleLine.Unity
         private WaitForSeconds rewindWait;
         private IHintService hintService;
         private CancellationTokenSource hintRequest;
+        private bool isNightHeldForIntro;
 
         // Reused so a move never allocates; a board holds at most ninety cells.
         private readonly List<int> scratchCells = new List<int>(96);
@@ -65,7 +72,8 @@ namespace ASTeams.SingleLine.Unity
 
         public PathState State => session == null ? PathState.Ready : session.State;
 
-        public int Progress => session == null ? 0 : session.Length;
+        /// <summary>Squares covered so far, the wingman's included on a formation flight.</summary>
+        public int Progress => session == null ? 0 : session.CoveredCount;
 
         public int Target => session == null ? 0 : session.Level.ActiveCellCount;
 
@@ -79,6 +87,9 @@ namespace ASTeams.SingleLine.Unity
 
         /// <summary>True while the path is unwinding itself back to the start.</summary>
         public bool IsRewinding => rewind != null;
+
+        /// <summary>True while a night flight is still showing its route, before the player may fly.</summary>
+        private bool IsNightPreviewing => nightView != null && nightView.IsPreviewing;
 
         private void Awake()
         {
@@ -105,7 +116,7 @@ namespace ASTeams.SingleLine.Unity
                 CancelHint();
             }
 
-            boardInput.AcceptsInput = enabled && rewind == null && State != PathState.Won;
+            boardInput.AcceptsInput = enabled && rewind == null && State != PathState.Won && !IsNightPreviewing;
         }
 
         public void SetHintService(IHintService service)
@@ -116,7 +127,7 @@ namespace ASTeams.SingleLine.Unity
 
         public async Task<bool> ShowHintAsync()
         {
-            if (session == null || IsHintPending || hintService == null || rewind != null ||
+            if (session == null || IsHintPending || hintService == null || rewind != null || IsNightPreviewing ||
                 session.State == PathState.Won || session.Length == 0 || !isActiveAndEnabled)
             {
                 return false;
@@ -203,11 +214,13 @@ namespace ASTeams.SingleLine.Unity
         private void OnEnable()
         {
             boardInput.OnCellEntered += HandleCellEntered;
+            GameplayEvents.OnRuleIntroChanged += HandleRuleIntroChanged;
         }
 
         private void OnDisable()
         {
             boardInput.OnCellEntered -= HandleCellEntered;
+            GameplayEvents.OnRuleIntroChanged -= HandleRuleIntroChanged;
             CancelHint();
             CancelRewind();
         }
@@ -228,6 +241,7 @@ namespace ASTeams.SingleLine.Unity
             PathState previous = State;
 
             CancelRewind();
+            isNightHeldForIntro = false;
             session = new PathSession(level);
             session.OnStateChanged += HandleSessionStateChanged;
 
@@ -244,7 +258,9 @@ namespace ASTeams.SingleLine.Unity
             boardFeedback.Stop();
             boardView.Build(level);
             cameraFramer.Frame(boardView.WorldSize);
-            pathView.Prepare(level.ActiveCellCount);
+            pathView.Prepare(level.PathLength);
+            wingmanPath?.Prepare(level.PathLength);
+            nightView?.Prepare();
 
             // Hold the starting cell from the outset, the same way a reset leaves it. A
             // board with nothing drawn has no head to move from, so a hint would have
@@ -257,7 +273,58 @@ namespace ASTeams.SingleLine.Unity
             Refresh();
 
             boardInput.AcceptsInput = true;
+            ShowNightRoute();
             OnStateChanged?.Invoke(previous, State);
+        }
+
+        /// <summary>
+        /// On a night flight, shows the route once before the dark falls, with the board held
+        /// still until then. Played again after a restart, so a forgotten turn can be relearnt.
+        /// </summary>
+        private void ShowNightRoute()
+        {
+            if (nightView == null || !session.Level.IsNight)
+            {
+                return;
+            }
+
+            if (isNightHeldForIntro)
+            {
+                return;
+            }
+
+            boardInput.AcceptsInput = false;
+            nightView.PlayPreview(session.Level.Solution, HandleNightFallen);
+        }
+
+        /// <summary>
+        /// A card explaining a rule opens just after the level loads, over a night route that
+        /// has started showing; the route waits and starts again from its first square once
+        /// the card is closed, so none of it is missed.
+        /// </summary>
+        private void HandleRuleIntroChanged(bool isShown)
+        {
+            if (session == null || nightView == null || !session.Level.IsNight)
+            {
+                return;
+            }
+
+            if (isShown && session.Length <= 1)
+            {
+                isNightHeldForIntro = true;
+                boardInput.AcceptsInput = false;
+                nightView.Prepare();
+            }
+            else if (!isShown && isNightHeldForIntro)
+            {
+                isNightHeldForIntro = false;
+                ShowNightRoute();
+            }
+        }
+
+        private void HandleNightFallen()
+        {
+            boardInput.AcceptsInput = rewind == null && State != PathState.Won;
         }
 
         /// <summary>Steps back exactly one cell, as GDD 3.3 specifies.</summary>
@@ -297,6 +364,7 @@ namespace ASTeams.SingleLine.Unity
                 }
 
                 Refresh();
+                ShowNightRoute();
                 return;
             }
 
@@ -323,6 +391,7 @@ namespace ASTeams.SingleLine.Unity
             boardInput.AcceptsInput = true;
             GameplayEvents.RaiseRewindChanged(false);
             Refresh();
+            ShowNightRoute();
         }
 
         private void CancelRewind()
@@ -349,6 +418,15 @@ namespace ASTeams.SingleLine.Unity
             // drag that crosses the start would otherwise wipe the whole route. Dragging
             // back onto it from the second square is an ordinary one-step backtrack.
             bool isTap = boardInput.IsReportingPress;
+
+            // In formation either half may be touched: the right half steers the wingman,
+            // which is the player's own route seen in the mirror.
+            LevelData level = session.Level;
+
+            if (level.IsFormation && level.Grid.ToColumn(cell) >= level.Grid.Width / 2)
+            {
+                cell = level.MirrorOf(cell);
+            }
 
             if (isTap && session.Length > 1 && cell == session.GetCell(0))
             {
@@ -397,6 +475,8 @@ namespace ASTeams.SingleLine.Unity
                 // The line leaves each square as that square is at its fullest.
                 pathView.RetractForWin(
                     boardFeedback.WinStepSeconds, boardFeedback.WinPulseSeconds * 0.5f);
+                wingmanPath?.RetractForWin(boardFeedback.WinStepSeconds, boardFeedback.WinPulseSeconds * 0.5f);
+                nightView?.Dawn();
                 haptics?.Play(HapticStrength.Medium);
             }
             else if (current == PathState.Stuck)
@@ -453,7 +533,7 @@ namespace ASTeams.SingleLine.Unity
 
             RepaintVisuals();
             OnPathChanged?.Invoke();
-            GameplayEvents.RaiseProgressChanged(session.Length, session.Level.ActiveCellCount);
+            GameplayEvents.RaiseProgressChanged(session.CoveredCount, session.Level.ActiveCellCount);
         }
 
         /// <summary>
@@ -470,18 +550,26 @@ namespace ASTeams.SingleLine.Unity
 
             LevelData level = session.Level;
             int head = session.Head;
+            int wingHead = level.IsFormation && head != LevelData.NoCell ? level.MirrorOf(head) : LevelData.NoCell;
             int cellCount = level.Grid.CellCount;
 
             for (int index = 0; index < cellCount; index++)
             {
                 if (level.IsActive(index))
                 {
-                    boardView.SetCellVisited(index, session.IsVisited(index), index == head);
+                    boardView.SetCellVisited(index, session.IsVisited(index), index == head || index == wingHead);
                 }
             }
 
+            Color lineColor = ColorForState(session.State);
             pathView.Rebuild(session);
-            pathView.SetColor(ColorForState(session.State));
+            pathView.SetColor(lineColor);
+
+            if (wingmanPath != null)
+            {
+                wingmanPath.Rebuild(session);
+                wingmanPath.SetColor(lineColor);
+            }
             boardView.SetStartCue(session.Length <= 1 && session.State != PathState.Won);
 
             // The start square already has a cue of its own, so the head only takes over

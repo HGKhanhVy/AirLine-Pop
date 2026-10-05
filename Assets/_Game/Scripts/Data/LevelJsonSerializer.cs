@@ -105,8 +105,39 @@ namespace ASTeams.SingleLine.Data
                 Solution = level.HasSolution ? ToArray(level.Solution) : null,
                 Difficulty = level.Difficulty,
                 ThemeId = level.ThemeId,
-                Tags = level.Tags.Count == 0 ? null : ToArray(level.Tags)
+                Tags = level.Tags.Count == 0 ? null : ToArray(level.Tags),
+                Wind = level.HasWind ? FlattenWind(level.Wind) : null
             };
+        }
+
+        private static int[] FlattenWind(IReadOnlyList<WindCell> wind)
+        {
+            var pairs = new int[wind.Count * 2];
+
+            for (int i = 0; i < wind.Count; i++)
+            {
+                pairs[i * 2] = wind[i].Cell;
+                pairs[i * 2 + 1] = (int)wind[i].Direction;
+            }
+
+            return pairs;
+        }
+
+        private static WindCell[] ReadWind(int[] pairs)
+        {
+            if (pairs == null || pairs.Length < 2)
+            {
+                return null;
+            }
+
+            var wind = new WindCell[pairs.Length / 2];
+
+            for (int i = 0; i < wind.Length; i++)
+            {
+                wind[i] = new WindCell(pairs[i * 2], (Direction)pairs[i * 2 + 1]);
+            }
+
+            return wind;
         }
 
         public static LevelData FromDto(LevelDto dto)
@@ -126,7 +157,8 @@ namespace ASTeams.SingleLine.Data
                 dto.Solution,
                 dto.Difficulty,
                 dto.ThemeId,
-                dto.Tags);
+                dto.Tags,
+                ReadWind(dto.Wind));
         }
 
         private static T[] ToArray<T>(IReadOnlyList<T> source)

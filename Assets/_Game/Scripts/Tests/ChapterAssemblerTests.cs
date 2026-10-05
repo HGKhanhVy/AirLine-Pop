@@ -211,7 +211,8 @@ namespace ASTeams.SingleLine.Core.Tests
         {
             List<PlacedLevel> all = FlattenPlacements(AssembleDefault());
 
-            for (int start = 0; start + 10 <= all.Count; start += 10)
+            // Onboarding grows the board step by step on purpose, so its block is left out.
+            for (int start = ChapterLayout.Default.OnboardingLevelCount; start + 10 <= all.Count; start += 10)
             {
                 int dips = 0;
 
@@ -233,7 +234,8 @@ namespace ASTeams.SingleLine.Core.Tests
             List<LevelData> all = Flatten(AssembleDefault());
             int run = 1;
 
-            for (int i = 1; i < all.Count; i++)
+            // Onboarding takes the biggest board each step allows, so it may repeat a size.
+            for (int i = ChapterLayout.Default.OnboardingLevelCount + 1; i < all.Count; i++)
             {
                 run = all[i].Grid.Equals(all[i - 1].Grid) ? run + 1 : 1;
                 Assert.LessOrEqual(run, 4, "board size repeats too long at " + all[i].Id);

@@ -44,6 +44,10 @@ namespace ASTeams.SingleLine.Unity.EditorTools
         public static string Build()
         {
             LocalizationInstaller.Install();
+            ShopInstaller.Install();
+            ThemeInstaller.Install();
+            AccessoryInstaller.Install();
+            CatHeadAnchorBaker.Bake();
             FlatDioramaBuilder.Build();
             FlatCatBuilder.Build();
             UiKitInstaller.Install();
@@ -76,25 +80,149 @@ namespace ASTeams.SingleLine.Unity.EditorTools
                 new HomeTabStage(HomeTab.Airport, airportAnchor, ui.AirportPanel),
                 new HomeTabStage(HomeTab.Cats, roomAnchor, ui.RoomPanel),
                 new HomeTabStage(HomeTab.Shop, airportAnchor, ui.ShopPanel),
+                new HomeTabStage(HomeTab.Map, airportAnchor, ui.MapPanel),
             });
             rig.SetPositionAndRotation(airportAnchor.position, airportAnchor.rotation);
+
+            // On the route map the airline's header takes the top row; Settings and the stamp album step down a row.
+            StepDownOnMap(tabs, ui.SettingsButton, new Vector2(36f, -168f));
+            StepDownOnMap(tabs, ui.AlbumButton, new Vector2(164f, -168f));
 
             var bootstrap = new GameObject("HomeBootstrap").AddComponent<HomeBootstrap>();
             bootstrap.EditorLink(economy, catalog, ui.Coins, ui.Airport, tabs, airportCats, roomCats);
             bootstrap.EditorLinkRoutes(ui.Routes, ui.Album);
+            bootstrap.EditorLinkRouteMap(ui.RouteMap);
             bootstrap.EditorLinkSettings(ui.Settings);
+            bootstrap.EditorLinkShop(ui.Shop, AssetDatabase.LoadAssetAtPath<LiveryCatalogSO>(ShopInstaller.CatalogPath),
+                AssetDatabase.LoadAssetAtPath<SkinCatalogSO>(ThemeInstaller.CatalogPath));
 
             // Tapping a regular in the lounge opens its card.
             var lounge = new GameObject("LoungeCare");
             CatTapInput tapInput = lounge.AddComponent<CatTapInput>();
             tapInput.EditorLink(viewer.GetComponent<Camera>(), roomCats, tabs);
             CatCarePresenter care = lounge.AddComponent<CatCarePresenter>();
-            care.EditorLink(tapInput, ui.CatMenu, tabs, economy, viewer);
+            ui.CareBubble.EditorLinkCamera(viewer.GetComponent<Camera>());
+            ui.CatMenu.EditorLinkCamera(viewer.GetComponent<Camera>());
+            care.EditorLink(tapInput, ui.CatMenu, tabs, economy, viewer, ui.CareBubble);
+            BuildTouchReactor(lounge, tapInput, viewer);
+            BuildPerks(lounge, bootstrap, care, tapInput, viewer, ui, roomCats, airportCats);
+            BuildVipGuest(roomCats.transform.parent, viewer, bootstrap);
             bootstrap.EditorLinkLounge(care, ui.ArrivalToast, departures);
 
             EditorSceneManager.SaveScene(scene, ScenePath);
             RegisterInBuild();
             return "Home scene built at " + ScenePath + " and set as the Home scene in Build Settings.";
+        }
+
+        /// <summary>
+        /// The loyalty perks: accessories the regulars wear and choose from the menu's Dress
+        /// up, and the daily gift box over a regular with coins for the player.
+        /// </summary>
+        private static void BuildPerks(GameObject lounge, HomeBootstrap bootstrap, CatCarePresenter care, CatTapInput tapInput,
+            Transform viewer, HomeUi ui, CatRoster roomCats, CatRoster airportCats)
+        {
+            var catalog = AssetDatabase.LoadAssetAtPath<AccessoryCatalogSO>(AccessoryInstaller.CatalogPath);
+
+            LoungeWardrobePresenter dresser = lounge.AddComponent<LoungeWardrobePresenter>();
+            dresser.EditorLink(new[] { roomCats, airportCats });
+
+            CatWardrobePickerView picker = LoungeUiBuilder.BuildWardrobePicker(ui.CatMenu);
+            CatWardrobePresenter wardrobe = lounge.AddComponent<CatWardrobePresenter>();
+            wardrobe.EditorLink(care, ui.CatMenu, picker, UiBuilder.Sprite("icon_close"));
+
+            const int boxCount = 4;
+            Sprite boxArt = AssetDatabase.LoadAssetAtPath<Sprite>(AccessoryInstaller.GiftBoxArt);
+            var holder = new GameObject("GiftBoxes");
+            holder.transform.SetParent(lounge.transform, false);
+            var boxes = new SpriteRenderer[boxCount];
+
+            for (int i = 0; i < boxCount; i++)
+            {
+                var box = new GameObject("Gift " + (i + 1));
+                box.transform.SetParent(holder.transform, false);
+                boxes[i] = box.AddComponent<SpriteRenderer>();
+                boxes[i].sprite = boxArt;
+                boxes[i].sortingOrder = 150;
+                boxes[i].enabled = false;
+            }
+
+            CatGiftMarkersView markers = holder.AddComponent<CatGiftMarkersView>();
+            markers.EditorLink(boxes, viewer);
+            CatGiftPopView pop = LoungeUiBuilder.BuildGiftPop(ui.Safe, viewer.GetComponent<Camera>());
+            CatGiftPresenter gifts = lounge.AddComponent<CatGiftPresenter>();
+            gifts.EditorLink(tapInput, roomCats, markers, pop);
+
+            bootstrap.EditorLinkPerks(catalog, dresser, wardrobe, gifts);
+        }
+
+        /// <summary>
+        /// A touched cat rolls, rubs, purrs or hops, with hearts rising over it. The hearts are
+        /// made here once and reused, sized to a cat's head whatever the icon's own size.
+        /// </summary>
+        private const string VipGuestId = "vip";
+        private const string VipSealArt = "Assets/_Game/Art/Flat/vip_seal.png";
+
+        /// <summary>
+        /// The VIP guest who visits the room after a VIP flight: the crowned cat standing near
+        /// the front of the room, clear of the regulars' usual spots, with a gold seal over it.
+        /// </summary>
+        private static void BuildVipGuest(Transform room, Transform viewer, HomeBootstrap bootstrap)
+        {
+            CatView prefab = FlatCatBuilder.BuildGuest(VipGuestId);
+
+            if (prefab == null)
+            {
+                Debug.LogWarning("No VIP guest drawings; run Tools/flat_art/import_craftpix_cats.py.");
+                return;
+            }
+
+            var holder = new GameObject("VipGuest");
+            holder.transform.SetParent(room, false);
+            holder.transform.localPosition = new Vector3(HomeDioramaBuilder.RoomWidth * 0.5f - 1.5f, 0.04f, -HomeDioramaBuilder.RoomDepth * 0.5f + 2.2f);
+
+            var guest = (CatView)PrefabUtility.InstantiatePrefab(prefab, holder.transform);
+            guest.transform.localScale = Vector3.one * 2.2f;
+
+            var seal = new GameObject("Seal");
+            seal.transform.SetParent(guest.transform.Find("Visual"), false);
+            seal.transform.localPosition = new Vector3(0f, 0.8f, 0f);
+            seal.transform.localScale = Vector3.one * 0.15f;
+            SpriteRenderer sealRenderer = seal.AddComponent<SpriteRenderer>();
+            sealRenderer.sprite = SpriteImport.Import(VipSealArt, 128f);
+            sealRenderer.sortingOrder = 20;
+
+            VipGuestView view = holder.AddComponent<VipGuestView>();
+            view.EditorLink(guest, seal.transform, viewer);
+            bootstrap.EditorLinkVipGuest(view);
+        }
+
+        private static void BuildTouchReactor(GameObject lounge, CatTapInput tapInput, Transform viewer)
+        {
+            const int heartCount = 8;
+            const float heartWorldSize = 0.42f;
+            Sprite heartArt = UiBuilder.Sprite("icon_heart");
+            var holder = new GameObject("Hearts");
+            holder.transform.SetParent(lounge.transform, false);
+            var hearts = new SpriteRenderer[heartCount];
+
+            for (int i = 0; i < heartCount; i++)
+            {
+                var heart = new GameObject("Heart " + (i + 1));
+                heart.transform.SetParent(holder.transform, false);
+                hearts[i] = heart.AddComponent<SpriteRenderer>();
+                hearts[i].sprite = heartArt;
+                hearts[i].sortingOrder = 200;
+                hearts[i].enabled = false;
+            }
+
+            float scale = heartArt != null && heartArt.bounds.size.x > 0f ? heartWorldSize / heartArt.bounds.size.x : 1f;
+            lounge.AddComponent<CatTouchReactor>().EditorLink(tapInput, viewer, hearts, scale);
+        }
+
+        private static void StepDownOnMap(HomeTabController tabs, Button button, Vector2 mapPosition)
+        {
+            var rect = (RectTransform)button.transform;
+            button.gameObject.AddComponent<TabPlacement>().EditorLink(tabs, rect, HomeTab.Map, mapPosition);
         }
 
         private static T LoadOrCreate<T>(string path) where T : ScriptableObject
@@ -191,8 +319,10 @@ namespace ASTeams.SingleLine.Unity.EditorTools
             for (int i = 0; i < clouds.Length; i++)
             {
                 GameObject cloud = Spawn(HomeDioramaBuilder.CloudPrefabPath, root, clouds[i]);
-                cloud.transform.localScale = Vector3.one * 1.6f;
-                cloud.AddComponent<CloudDrift>();
+                cloud.transform.localScale = Vector3.one * (1.3f + 0.15f * (i % 3));
+
+                // Each cloud drifts its own way and pace, wide enough to see from the apron.
+                cloud.AddComponent<CloudDrift>().EditorConfigure((i % 2 == 0 ? 1.6f : -1.4f), 12f + 3f * i);
             }
 
             // Passengers wait on the apron in front of the gate desk.
@@ -250,11 +380,19 @@ namespace ASTeams.SingleLine.Unity.EditorTools
             public CanvasGroup AirportPanel;
             public CanvasGroup RoomPanel;
             public CanvasGroup ShopPanel;
+            public ShopPresenter Shop;
             public DestinationCatalogSO Routes;
-            public PostcardAlbumView Album;
+            public StampAlbumView Album;
+            public Button SettingsButton;
+            public Button AlbumButton;
+            public CanvasGroup MapPanel;
+            public RouteMapView RouteMap;
             public SettingsPanelView Settings;
             public CatMenuView CatMenu;
             public ArrivalToastView ArrivalToast;
+            public CatCareBubbleView CareBubble;
+            public CanvasGroup LoungeHint;
+            public RectTransform Safe;
         }
 
         /// <summary>
@@ -296,20 +434,33 @@ namespace ASTeams.SingleLine.Unity.EditorTools
             RectTransform safe = UiBuilder.Stretch(UiBuilder.Rect("SafeArea", canvasObject.transform));
             safe.gameObject.AddComponent<SafeArea>();
 
-            var ui = new HomeUi();
+            // Popups go on their own full-screen layer over everything, so their wash covers
+            // the notch and home bar too; each keeps its card inside the safe area itself.
+            RectTransform modals = UiBuilder.Stretch(UiBuilder.Rect("Modals", canvasObject.transform));
+
+            var ui = new HomeUi { Safe = safe };
             ui.AirportPanel = BuildAirportPanel(safe, ui);
-            ui.RoomPanel = BuildRoomPanel(safe);
-            ui.ShopPanel = BuildShopPanel(safe);
+            ui.RoomPanel = BuildRoomPanel(safe, ui);
+            ui.ShopPanel = ShopUiBuilder.Build(safe, AssetDatabase.LoadAssetAtPath<LiveryCatalogSO>(ShopInstaller.CatalogPath),
+                AssetDatabase.LoadAssetAtPath<SkinCatalogSO>(ThemeInstaller.CatalogPath),
+                AssetDatabase.LoadAssetAtPath<EconomyConfigSO>(ShopInstaller.EconomyPath), out ui.Shop);
             ui.Coins = BuildCoinPill(safe);
             Button settingsButton = BuildSettingsButton(safe);
+            ui.SettingsButton = settingsButton;
             ui.Nav = BuildNav(safe);
-            ui.CatMenu = LoungeUiBuilder.BuildCatMenu(safe);
+            ui.CatMenu = LoungeUiBuilder.BuildCatMenu(modals);
+            ui.CatMenu.EditorLinkHints(new[] { ui.LoungeHint });
             ui.ArrivalToast = LoungeUiBuilder.BuildArrivalToast(safe);
+            ui.CareBubble = LoungeUiBuilder.BuildCareBubble(safe);
             ui.Routes = DestinationInstaller.BuildCatalog();
-            ui.Album = DestinationInstaller.BuildAlbum(safe, ui.Routes);
+            ui.Album = StampAlbumUiBuilder.Build(safe, modals, ui.Routes, out ui.AlbumButton);
+
+            // Behind the safe area, so its sky fills the whole screen under the coins and the bar.
+            ui.MapPanel = RouteMapUiBuilder.Build(canvasObject.transform, out ui.RouteMap);
 
             // Built last so it sits over everything, on whichever tab is showing.
-            ui.Settings = BuildSettingsPanel(safe, settingsButton);
+            ui.Settings = BuildSettingsPanel(modals, settingsButton);
+            modals.SetAsLastSibling();
             return ui;
         }
 
@@ -342,11 +493,11 @@ namespace ASTeams.SingleLine.Unity.EditorTools
         }
 
         /// <summary>Music, sound and vibration, as on the pause screen, behind the gear.</summary>
-        private static SettingsPanelView BuildSettingsPanel(RectTransform safe, Button open)
+        private static SettingsPanelView BuildSettingsPanel(RectTransform modals, Button open)
         {
             // The view lives on an always-active holder: the popup itself is switched off while
             // closed, and a view on it would never hear the gear.
-            RectTransform holder = UiBuilder.Stretch(UiBuilder.Rect("Settings", safe));
+            RectTransform holder = UiBuilder.Stretch(UiBuilder.Rect("Settings", modals));
             RectTransform card = GameplayHudBuilder.Card("SettingsPanel", holder, new Vector2(820f, 820f), out ModalPanel modal);
             Button backdrop = modal.transform.Find("Backdrop").gameObject.AddComponent<Button>();
             backdrop.transition = Selectable.Transition.None;
@@ -369,13 +520,21 @@ namespace ASTeams.SingleLine.Unity.EditorTools
             return view;
         }
 
+        // The kit's pink face tinted towards the airline's coral.
+        private static readonly Color TitleBannerTint = new Color(1f, 0.62f, 0.55f, 1f);
+
         private static CanvasGroup BuildAirportPanel(RectTransform safe, HomeUi ui)
         {
             RectTransform panel = UiBuilder.Stretch(UiBuilder.Rect("AirportPanel", safe));
             CanvasGroup group = UiBuilder.Group(panel);
 
-            TMP_Text title = UiBuilder.Label("Title", panel, "AirLine Pop", 132f, true);
-            UiBuilder.Place(title.rectTransform, new Vector2(0.5f, 1f), new Vector2(0f, -150f), new Vector2(1000f, 170f));
+            // The game's name on a banner in the airline's coral, on its own row under the top bar's
+            // buttons, so it stands clear of them and of the pale airport behind.
+            Image banner = UiBuilder.Image("TitleBanner", panel, "btn_pink", true);
+            banner.color = TitleBannerTint;
+            UiBuilder.Place(banner.rectTransform, new Vector2(0.5f, 1f), new Vector2(0f, -210f), new Vector2(720f, 146f));
+            TMP_Text title = UiBuilder.Label("Title", panel, "AirLine Pop", 118f, true);
+            UiBuilder.Place(title.rectTransform, new Vector2(0.5f, 1f), new Vector2(0f, -201f), new Vector2(900f, 160f));
 
             // Play is a boarding pass: the flight on the ticket, a plane on its stub.
             Button play = UiBuilder.Button("PlayButton", panel, UiBuilder.TicketFace, new Vector2(620f, 210f));
@@ -400,7 +559,7 @@ namespace ASTeams.SingleLine.Unity.EditorTools
             return group;
         }
 
-        private static CanvasGroup BuildRoomPanel(RectTransform safe)
+        private static CanvasGroup BuildRoomPanel(RectTransform safe, HomeUi ui)
         {
             RectTransform panel = UiBuilder.Stretch(UiBuilder.Rect("RoomPanel", safe));
             CanvasGroup group = UiBuilder.Group(panel);
@@ -410,31 +569,12 @@ namespace ASTeams.SingleLine.Unity.EditorTools
 
             Image hint = UiBuilder.Image("TapHint", panel, "pill_cream", true);
             UiBuilder.Place(hint.rectTransform, new Vector2(0.5f, 0f), new Vector2(0f, 300f), new Vector2(600f, 96f));
+            ui.LoungeHint = UiBuilder.Group(hint.rectTransform);
             Image paw = UiBuilder.Icon("Paw", hint.transform, "paw", 64f);
             paw.color = new Color32(242, 160, 170, 255);
             UiBuilder.Place(paw.rectTransform, new Vector2(0f, 0.5f), new Vector2(34f, 4f), new Vector2(64f, 64f));
             TMP_Text text = UiBuilder.Text("Text", hint.transform, "lounge.hint", 46f, false);
             UiBuilder.Place(text.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(40f, 4f), new Vector2(460f, 70f));
-            return group;
-        }
-
-        private static CanvasGroup BuildShopPanel(RectTransform safe)
-        {
-            RectTransform panel = UiBuilder.Stretch(UiBuilder.Rect("ShopPanel", safe));
-            CanvasGroup group = UiBuilder.Group(panel);
-
-            Image sheet = UiBuilder.Image("Sheet", panel, "panel_cream", true);
-            RectTransform rect = sheet.rectTransform;
-            rect.anchorMin = new Vector2(0f, 0f);
-            rect.anchorMax = new Vector2(1f, 1f);
-            rect.offsetMin = new Vector2(36f, 230f);
-            rect.offsetMax = new Vector2(-36f, -170f);
-            sheet.raycastTarget = true;
-
-            TMP_Text title = UiBuilder.Text("Title", sheet.transform, "shop.title", 88f, true);
-            UiBuilder.Place(title.rectTransform, new Vector2(0.5f, 1f), new Vector2(0f, -40f), new Vector2(800f, 120f));
-            TMP_Text soon = UiBuilder.Text("Body", sheet.transform, "shop.soon", 44f, false);
-            UiBuilder.Place(soon.rectTransform, new Vector2(0.5f, 1f), new Vector2(0f, -170f), new Vector2(900f, 70f));
             return group;
         }
 
@@ -454,6 +594,7 @@ namespace ASTeams.SingleLine.Unity.EditorTools
                 (HomeTab.Airport, "airport", "nav.airport"),
                 (HomeTab.Cats, "paw", "nav.lounge"),
                 (HomeTab.Shop, "shop", "nav.shop"),
+                (HomeTab.Map, "map", "nav.map"),
             };
 
             var buttons = new NavTabButton[items.Length];
@@ -489,15 +630,16 @@ namespace ASTeams.SingleLine.Unity.EditorTools
 
             // The menu icons are drawn in their own colours and never tinted.
             Image glyph = UiBuilder.Icon("Icon", content, "nav_" + icon, 72f);
-            glyph.rectTransform.anchoredPosition = new Vector2(0f, 22f);
+            glyph.rectTransform.anchoredPosition = new Vector2(0f, 26f);
 
             TMP_Text text = UiBuilder.Text("Label", content, labelKey, 28f, false);
             text.font = AssetDatabase.LoadAssetAtPath<TMP_FontAsset>(UiKitInstaller.TitleFontPath);
-            UiBuilder.Place(text.rectTransform, new Vector2(0.5f, 0f), new Vector2(0f, 14f), new Vector2(196f, 40f));
+            // A clear gap under the icon, so the name never touches it.
+            UiBuilder.Place(text.rectTransform, new Vector2(0.5f, 0f), new Vector2(0f, 2f), new Vector2(196f, 40f));
 
             // Selected: a small unframed marker under the name, so no frame sits in the bar's frame.
             Image plate = UiBuilder.Image("Marker", content, "tab_marker", false);
-            UiBuilder.Place(plate.rectTransform, new Vector2(0.5f, 0f), new Vector2(0f, 2f), new Vector2(44f, 10f));
+            UiBuilder.Place(plate.rectTransform, new Vector2(0.5f, 0f), new Vector2(0f, -10f), new Vector2(44f, 10f));
 
             NavTabButton tabButton = slot.gameObject.AddComponent<NavTabButton>();
             tabButton.EditorLink(tab, button, plate, content, text, glyph, Color.white, IdleTabIcon, UiBuilder.IconBlue, UiBuilder.IconIdle);

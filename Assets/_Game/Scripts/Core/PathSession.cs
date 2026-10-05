@@ -32,8 +32,11 @@ namespace ASTeams.SingleLine.Core
 
         public PathState State => state;
 
-        /// <summary>Number of cells currently drawn, which equals the visited count.</summary>
+        /// <summary>Number of cells currently drawn by the player's own route.</summary>
         public int Length => length;
+
+        /// <summary>Squares covered so far, counting the wingman's in a formation flight.</summary>
+        public int CoveredCount => level.IsFormation ? length * 2 : length;
 
         /// <summary>Last cell of the path, or <see cref="LevelData.NoCell"/> when empty.</summary>
         public int Head => length > 0 ? path[length - 1] : LevelData.NoCell;
@@ -43,7 +46,7 @@ namespace ASTeams.SingleLine.Core
             this.level = level ?? throw new ArgumentNullException(nameof(level));
 
             visited = new bool[level.Grid.CellCount];
-            path = new int[level.ActiveCellCount];
+            path = new int[level.PathLength];
             state = PathState.Ready;
         }
 
@@ -162,7 +165,7 @@ namespace ASTeams.SingleLine.Core
         {
             path[length] = cell;
             length++;
-            visited[cell] = true;
+            PathRules.Visit(level, visited, cell, true);
             OnCellVisited?.Invoke(cell);
         }
 
@@ -170,7 +173,7 @@ namespace ASTeams.SingleLine.Core
         {
             length--;
             int cell = path[length];
-            visited[cell] = false;
+            PathRules.Visit(level, visited, cell, false);
             OnCellUnvisited?.Invoke(cell);
         }
 

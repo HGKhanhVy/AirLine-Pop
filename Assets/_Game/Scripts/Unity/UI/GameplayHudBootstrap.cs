@@ -17,6 +17,9 @@ namespace ASTeams.SingleLine.Unity
         [SerializeField] private WinSequenceController win;
         [SerializeField] private CatPortraitStage portraitStage;
 
+        [Tooltip("His Majesty the VIP guest, shown on the win card after a VIP flight.")]
+        [SerializeField] private CatView vipGuest;
+
         // Start rather than Awake: the SDK singletons load their saves in their own Awake.
         private void Start()
         {
@@ -25,6 +28,7 @@ namespace ASTeams.SingleLine.Unity
             var navigator = new SdkSceneNavigator(UISceneController.Instance);
 
             portraitStage.Initialize(FindCompanion(profile));
+            portraitStage.InitializeGuest(vipGuest);
             pause.Initialize(settings, navigator);
             win.Initialize(portraitStage, navigator);
         }
@@ -48,8 +52,10 @@ namespace ASTeams.SingleLine.Unity
         }
 
 #if UNITY_EDITOR
-        public void EditorLink(CatCatalogSO linkedCatalog, PauseController linkedPause, WinSequenceController linkedWin, CatPortraitStage linkedStage)
+        public void EditorLink(CatCatalogSO linkedCatalog, PauseController linkedPause, WinSequenceController linkedWin, CatPortraitStage linkedStage,
+            CatView linkedVipGuest)
         {
+            vipGuest = linkedVipGuest;
             catalog = linkedCatalog;
             pause = linkedPause;
             win = linkedWin;

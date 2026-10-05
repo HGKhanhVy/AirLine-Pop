@@ -14,11 +14,17 @@ namespace ASTeams.SingleLine.Unity
         [Tooltip("Optional. Turns a flat cat to face its viewer; a modelled cat leaves it empty.")]
         [SerializeField] private CatBillboard billboard;
 
+        [Tooltip("The slot for an accessory on the cat's head. Optional.")]
+        [SerializeField] private CatAccessoryView accessory;
+
         public string CatId { get; private set; }
 
         public Transform Root => transform;
 
         public Collider TapCollider => tapCollider;
+
+        /// <summary>The cat's accessory slot; null on a cat built without one.</summary>
+        public CatAccessoryView Accessory => accessory;
 
         public void Bind(string catId)
         {
@@ -62,6 +68,11 @@ namespace ASTeams.SingleLine.Unity
             animator = linkedAnimator;
             tapCollider = linkedCollider;
             billboard = linkedBillboard;
+        }
+
+        public void EditorLinkAccessory(CatAccessoryView linkedAccessory)
+        {
+            accessory = linkedAccessory;
         }
 #endif
     }

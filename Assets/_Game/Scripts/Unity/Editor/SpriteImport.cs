@@ -8,6 +8,12 @@ namespace ASTeams.SingleLine.Unity.EditorTools
         /// <summary>Imports a PNG as a single centred sprite and returns it, or null if it is missing.</summary>
         public static Sprite Import(string path, float pixelsPerUnit)
         {
+            return Import(path, pixelsPerUnit, SpriteAlignment.Center);
+        }
+
+        /// <summary>Imports a PNG as a single sprite pivoted at <paramref name="alignment"/>, such as the bottom for a hat.</summary>
+        public static Sprite Import(string path, float pixelsPerUnit, SpriteAlignment alignment)
+        {
             AssetDatabase.ImportAsset(path, ImportAssetOptions.ForceUpdate);
             var importer = AssetImporter.GetAtPath(path) as TextureImporter;
 
@@ -26,7 +32,7 @@ namespace ASTeams.SingleLine.Unity.EditorTools
 
             var settings = new TextureImporterSettings();
             importer.ReadTextureSettings(settings);
-            settings.spriteAlignment = (int)SpriteAlignment.Center;
+            settings.spriteAlignment = (int)alignment;
             settings.spriteMeshType = SpriteMeshType.FullRect;
             importer.SetTextureSettings(settings);
             importer.SaveAndReimport();

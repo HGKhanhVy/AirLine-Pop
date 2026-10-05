@@ -122,7 +122,7 @@ namespace ASTeams.SingleLine.Core
             IReadOnlyList<int> solution = level.Solution;
             bool valid = true;
 
-            if (solution.Count != level.ActiveCellCount)
+            if (solution.Count != level.PathLength)
             {
                 issues.Add(new LevelIssue(LevelIssueCode.SolutionWrongLength));
                 valid = false;
@@ -148,6 +148,11 @@ namespace ASTeams.SingleLine.Core
                 }
 
                 seen[cell] = true;
+
+                if (level.IsFormation)
+                {
+                    seen[level.MirrorOf(cell)] = true;
+                }
 
                 if (step > 0 && !level.Grid.AreAdjacent(solution[step - 1], cell))
                 {

@@ -59,5 +59,14 @@ namespace ASTeams.SingleLine.Unity
             float scale = Mathf.Min(maxScale, available.x / needed.x, available.y / needed.y);
             content.localScale = new Vector3(scale, scale, 1f);
         }
+
+#if UNITY_EDITOR
+        public void EditorLink(RectTransform linkedContainer, RectTransform linkedContent, float linkedMargin)
+        {
+            container = linkedContainer;
+            content = linkedContent;
+            margin = linkedMargin;
+        }
+#endif
     }
 }

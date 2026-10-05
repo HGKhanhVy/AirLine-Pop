@@ -5,7 +5,7 @@ using ASTeams.SingleLine.Core;
 namespace ASTeams.SingleLine.Import
 {
     /// <summary>
-    /// Turns four raw signals into the 1 to 10 difficulty GDD 6.3 requires.
+    /// Turns five raw signals into the 1 to 10 difficulty GDD 6.3 requires.
     ///
     /// Difficulty is scored relative to the corpus rather than on an absolute scale.
     /// There is no natural unit that puts "37 cells" and "four of six greedy players
@@ -62,6 +62,7 @@ namespace ASTeams.SingleLine.Import
             var greedyRates = new double[count];
             var solverNodes = new double[count];
             var degrees = new double[count];
+            var playerSteps = new double[count];
 
             for (int i = 0; i < count; i++)
             {
@@ -73,12 +74,14 @@ namespace ASTeams.SingleLine.Import
                 // would otherwise flatten the ranking for everything else.
                 solverNodes[i] = Math.Log(1 + features[i].SolverNodes);
                 degrees[i] = features[i].AverageDegree;
+                playerSteps[i] = Math.Log(1 + features[i].PlayerSteps);
             }
 
             double[] cellRanks = PercentileRanks(cellCounts);
             double[] greedyRanks = PercentileRanks(greedyRates);
             double[] nodeRanks = PercentileRanks(solverNodes);
             double[] degreeRanks = PercentileRanks(degrees);
+            double[] playerRanks = PercentileRanks(playerSteps);
 
             var rawScores = new double[count];
 
@@ -87,11 +90,12 @@ namespace ASTeams.SingleLine.Import
                 rawScores[i] = (cellRanks[i] * weights.CellCount +
                                 greedyRanks[i] * weights.GreedyFailureRate +
                                 nodeRanks[i] * weights.SolverNodes +
-                                degreeRanks[i] * weights.AverageDegree) / weights.Total;
+                                degreeRanks[i] * weights.AverageDegree +
+                                playerRanks[i] * weights.PlayerSteps) / weights.Total;
             }
 
             // Ranking the blend again is what makes the result usable downstream. The
-            // blend of four uniform rankings is not itself uniform, so both the ten bands
+            // blend of five uniform rankings is not itself uniform, so both the ten bands
             // and the chapter curve would be fed a distribution with compressed tails.
             double[] finalRanks = PercentileRanks(rawScores);
 

@@ -13,124 +13,351 @@ MonoBehaviour:
   m_Name: DestinationCatalog
   m_EditorClassIdentifier: 
   destinations:
-  - id: da_lat
+  - id: hanoi
     region: vietnam
-    postcard: {fileID: 21300000, guid: 9ea08b709bfec9f4c8ae0ad02cbc51bd, type: 3}
-    postcardVietnamese: {fileID: 21300000, guid: da0648b373c42bb45a50084a9e734d1e, type: 3}
-  - id: hoi_an
-    region: vietnam
-    postcard: {fileID: 21300000, guid: 2d270667d7af44f4fa2284180a439bf8, type: 3}
-    postcardVietnamese: {fileID: 21300000, guid: 8d9788b55105cf44b979b189ebe05ac1, type: 3}
+    postcard: {fileID: 21300000, guid: a17680d2b906c1e4d99f385e5eb49220, type: 3}
+    postcardVietnamese: {fileID: 21300000, guid: a1cee286c4cec334aa8632bcf22034d2, type: 3}
+    pin: {fileID: 21300000, guid: 8b636a3d01920fb4fb2254b776daee81, type: 3}
+    stamp: {fileID: 21300000, guid: 4633bd56018f4424ab97e83528b8b8c5, type: 3}
+    airportCode: HAN
+    mapPosition: {x: 0.49225956, y: 0.17069355}
   - id: ha_long
     region: vietnam
     postcard: {fileID: 21300000, guid: 2df4b201299618047a209a690be84827, type: 3}
     postcardVietnamese: {fileID: 21300000, guid: faee0233ce22a394f857bbf28475b082, type: 3}
+    pin: {fileID: 21300000, guid: efe4a21cb82639b448c5ad7ba3e337c5, type: 3}
+    stamp: {fileID: 21300000, guid: 7b28cfdbf28ba5d4f82b58f879e0fac9, type: 3}
+    airportCode: VDO
+    mapPosition: {x: 0.63619864, y: 0.20821592}
+  - id: ninh_binh
+    region: vietnam
+    postcard: {fileID: 21300000, guid: 93a671b08c5cd734b9722ff26a6e3a50, type: 3}
+    postcardVietnamese: {fileID: 21300000, guid: 6b5eb4e24f22a864b98c2748c69de955, type: 3}
+    pin: {fileID: 21300000, guid: fe64ac45b9bb1424aa4026bce89d8fa3, type: 3}
+    stamp: {fileID: 21300000, guid: 67d8b4906f62e864e8ee06fda1549fc6, type: 3}
+    airportCode: 
+    mapPosition: {x: 0.5201761, y: 0.2823185}
+  - id: sa_pa
+    region: vietnam
+    postcard: {fileID: 21300000, guid: 86befcf8d97287f4f8d9ae254b48988f, type: 3}
+    postcardVietnamese: {fileID: 21300000, guid: f7aa9b81d0a898e47920f8d9a2ee1afb, type: 3}
+    pin: {fileID: 21300000, guid: a36b76de24791834daa2690b076a21ce, type: 3}
+    stamp: {fileID: 21300000, guid: 157106fe8195ea64687e8059c085b217, type: 3}
+    airportCode: 
+    mapPosition: {x: 0.3504501, y: 0.12698637}
+  - id: phong_nha
+    region: vietnam
+    postcard: {fileID: 21300000, guid: 5af68265d58683c42ab1d277d8d8bf97, type: 3}
+    postcardVietnamese: {fileID: 21300000, guid: 8ae936df5b46caf49b933147e0a617d9, type: 3}
+    pin: {fileID: 21300000, guid: 7905efab8185dbc4193e4e8668c84f97, type: 3}
+    stamp: {fileID: 21300000, guid: 1e6cc9ef65193714ebf243db2d7a6bfc, type: 3}
+    airportCode: VDH
+    mapPosition: {x: 0.48773223, y: 0.3947818}
   - id: hue
     region: vietnam
     postcard: {fileID: 21300000, guid: 416d03e2bd89b9b47bb01e09bc9f21a1, type: 3}
     postcardVietnamese: {fileID: 21300000, guid: 9f840f71aabe1f74e9d0e577949e4e2c, type: 3}
+    pin: {fileID: 21300000, guid: cdcf1654e287c0c4f9e17802f59ee3ab, type: 3}
+    stamp: {fileID: 21300000, guid: 1b86dda963642a14682472afd3e3dfc3, type: 3}
+    airportCode: HUI
+    mapPosition: {x: 0.62532693, y: 0.4417335}
+  - id: da_nang
+    region: vietnam
+    postcard: {fileID: 21300000, guid: 4da449f778d100b4983159fcb553572b, type: 3}
+    postcardVietnamese: {fileID: 21300000, guid: ab3698832a00b2543b2ea95299e32a93, type: 3}
+    pin: {fileID: 21300000, guid: 103f360052272324787f625231664848, type: 3}
+    stamp: {fileID: 21300000, guid: 0c7e047efa1bb0640a512fd38f99f6c1, type: 3}
+    airportCode: DAD
+    mapPosition: {x: 0.76737326, y: 0.4817695}
+  - id: hoi_an
+    region: vietnam
+    postcard: {fileID: 21300000, guid: 2d270667d7af44f4fa2284180a439bf8, type: 3}
+    postcardVietnamese: {fileID: 21300000, guid: 8d9788b55105cf44b979b189ebe05ac1, type: 3}
+    pin: {fileID: 21300000, guid: 368ba1da58290ec47a074eb6bbe61634, type: 3}
+    stamp: {fileID: 21300000, guid: 24e456c036efd2843af155dc5898a2d6, type: 3}
+    airportCode: 
+    mapPosition: {x: 0.65077734, y: 0.55371034}
+  - id: quy_nhon
+    region: vietnam
+    postcard: {fileID: 21300000, guid: a7d2d5dc07f0f034ba4ec01c8ee81245, type: 3}
+    postcardVietnamese: {fileID: 21300000, guid: 0f3b456a34731c34f92ce9cc510fa844, type: 3}
+    pin: {fileID: 21300000, guid: e9049dcc8f30b68448b74f9ccd8c9133, type: 3}
+    stamp: {fileID: 21300000, guid: 23ecb99ba2f14b24396ace656accc129, type: 3}
+    airportCode: UIH
+    mapPosition: {x: 0.78281873, y: 0.610921}
+  - id: nha_trang
+    region: vietnam
+    postcard: {fileID: 21300000, guid: 32d13f3d4a5ddb54ab52a023d7b48b60, type: 3}
+    postcardVietnamese: {fileID: 21300000, guid: 5f03f92ca5202c049be878e70a909f35, type: 3}
+    pin: {fileID: 21300000, guid: d79013c7680c75c47af559dc46009f0d, type: 3}
+    stamp: {fileID: 21300000, guid: 6737ed2685149314eb5ce76d04c81897, type: 3}
+    airportCode: CXR
+    mapPosition: {x: 0.82565486, y: 0.720538}
+  - id: da_lat
+    region: vietnam
+    postcard: {fileID: 21300000, guid: 9ea08b709bfec9f4c8ae0ad02cbc51bd, type: 3}
+    postcardVietnamese: {fileID: 21300000, guid: da0648b373c42bb45a50084a9e734d1e, type: 3}
+    pin: {fileID: 21300000, guid: 837eb20a432ea5346a765ec4d3523e2d, type: 3}
+    stamp: {fileID: 21300000, guid: d7e00b82215d55d479ec31eeb7c406e2, type: 3}
+    airportCode: DLI
+    mapPosition: {x: 0.6777764, y: 0.69418675}
+  - id: mui_ne
+    region: vietnam
+    postcard: {fileID: 21300000, guid: 394ecdd30dc93c04392ac40e779e50a7, type: 3}
+    postcardVietnamese: {fileID: 21300000, guid: 764393ee4ce6cc84983eb46096a4a331, type: 3}
+    pin: {fileID: 21300000, guid: 6d29517ad12147d4ca670521fd1824e7, type: 3}
+    stamp: {fileID: 21300000, guid: b0f5a52a27057084e96001c29716e2db, type: 3}
+    airportCode: 
+    mapPosition: {x: 0.72132206, y: 0.803089}
+  - id: vung_tau
+    region: vietnam
+    postcard: {fileID: 21300000, guid: aef0ea98248c34846b1c2e611aef42df, type: 3}
+    postcardVietnamese: {fileID: 21300000, guid: 7c5950104346dc5439ea03faf558f41a, type: 3}
+    pin: {fileID: 21300000, guid: b20b9a0796f611440800344f416003d4, type: 3}
+    stamp: {fileID: 21300000, guid: 42a780d400258674583e23afd70fc3a6, type: 3}
+    airportCode: VTG
+    mapPosition: {x: 0.61792916, y: 0.88587457}
   - id: saigon
     region: vietnam
     postcard: {fileID: 21300000, guid: 7a6ae1cb61fb0c844b56a1f9c558984c, type: 3}
     postcardVietnamese: {fileID: 21300000, guid: adf346c1859721345a05274cad86115a, type: 3}
+    pin: {fileID: 21300000, guid: 00d232088c30d724394023ce4ee90c95, type: 3}
+    stamp: {fileID: 21300000, guid: 7b6a5a0b7c38efe40a4d17ae43abce14, type: 3}
+    airportCode: SGN
+    mapPosition: {x: 0.57250327, y: 0.7769353}
+  - id: phu_quoc
+    region: vietnam
+    postcard: {fileID: 21300000, guid: e2a10670f96a7154fb56b791643c299f, type: 3}
+    postcardVietnamese: {fileID: 21300000, guid: b87bc1b5f43a0b248b424f9290f27cf7, type: 3}
+    pin: {fileID: 21300000, guid: be2f9d4335b23234698ded1c48d1b9c2, type: 3}
+    stamp: {fileID: 21300000, guid: 6ec2c16ea393e534aaf1f9047d5f3108, type: 3}
+    airportCode: PQC
+    mapPosition: {x: 0.32940847, y: 0.8179421}
+  - id: can_tho
+    region: vietnam
+    postcard: {fileID: 21300000, guid: 10d25866470ec7e4a8b23894c812d4d8, type: 3}
+    postcardVietnamese: {fileID: 21300000, guid: 28e34f0021c021a4a98b915510b08eae, type: 3}
+    pin: {fileID: 21300000, guid: b7f9b3267065e9c4ebe0bccf16986193, type: 3}
+    stamp: {fileID: 21300000, guid: 694f306af1a6ea24d9d2d000065b6156, type: 3}
+    airportCode: VCA
+    mapPosition: {x: 0.4702737, y: 0.8612221}
   - id: tokyo
     region: japan
     postcard: {fileID: 21300000, guid: 58f90ad72ce5f7f49b47fbd00fef8866, type: 3}
     postcardVietnamese: {fileID: 21300000, guid: d1c9584bc49a44a43b07bcd54373690d, type: 3}
+    pin: {fileID: 21300000, guid: b044cdb47a81d66409942e7c39987725, type: 3}
+    stamp: {fileID: 21300000, guid: e06e21eeeaf2a814d99a5f4f6593b7e6, type: 3}
+    airportCode: HND
+    mapPosition: {x: 0.6443351, y: 0.5053822}
   - id: kyoto
     region: japan
     postcard: {fileID: 21300000, guid: e48fb791aaf6c034ba4a453e8a616bb3, type: 3}
     postcardVietnamese: {fileID: 21300000, guid: 17da6150828c5db4d8e261c1e9583436, type: 3}
+    pin: {fileID: 21300000, guid: 5a30b17562e807849b8ce10d94c88936, type: 3}
+    stamp: {fileID: 21300000, guid: 6ced161bbc773024b9f1b88c42cfe9a2, type: 3}
+    airportCode: UKY
+    mapPosition: {x: 0.492655, y: 0.48931822}
   - id: osaka
     region: japan
     postcard: {fileID: 21300000, guid: 4a185614e10765c488934e0db4fb9d3b, type: 3}
     postcardVietnamese: {fileID: 21300000, guid: 374d4316b2c3c6a42b674943ba5cda30, type: 3}
+    pin: {fileID: 21300000, guid: ab384c976740d3841bc21f4e7e374adc, type: 3}
+    stamp: {fileID: 21300000, guid: 721f23b02c1b01045a7755985091ec6d, type: 3}
+    airportCode: KIX
+    mapPosition: {x: 0.42155737, y: 0.588979}
   - id: sapporo
     region: japan
     postcard: {fileID: 21300000, guid: 32273c9be88727c43ab3392627a62e36, type: 3}
     postcardVietnamese: {fileID: 21300000, guid: c8ff16298a060e04db655c931ca1bbdb, type: 3}
+    pin: {fileID: 21300000, guid: 505f630b1b046824aadbadc438104bec, type: 3}
+    stamp: {fileID: 21300000, guid: cd6eafa30f1af2544ab4bc4634bbcbf1, type: 3}
+    airportCode: CTS
+    mapPosition: {x: 0.71452516, y: 0.19925128}
   - id: okinawa
     region: japan
     postcard: {fileID: 21300000, guid: b1ce9239d7890f143bdc8f9bcf079b47, type: 3}
     postcardVietnamese: {fileID: 21300000, guid: 0cd1adffd32515a46870eeac714c5f20, type: 3}
+    pin: {fileID: 21300000, guid: ab1fa49e4bd586d4d9f2004e082ac818, type: 3}
+    stamp: {fileID: 21300000, guid: 671c4f950ac06ca499356fe1caa4282c, type: 3}
+    airportCode: OKA
+    mapPosition: {x: 0.108938545, y: 0.89229894}
   - id: seoul
     region: korea
     postcard: {fileID: 21300000, guid: f825a50de9d71d846889fd32961b1603, type: 3}
     postcardVietnamese: {fileID: 21300000, guid: 5f90a1ff43af6de4181f547cab0959b9, type: 3}
+    pin: {fileID: 21300000, guid: b5775bcc33cf834418f1627cce0251f3, type: 3}
+    stamp: {fileID: 21300000, guid: bdd91db7a28189c47880bc32b3262c84, type: 3}
+    airportCode: GMP
+    mapPosition: {x: 0.38712028, y: 0.23255242}
   - id: busan
     region: korea
     postcard: {fileID: 21300000, guid: c6be84d0d179e624c873c00c1055a3fc, type: 3}
     postcardVietnamese: {fileID: 21300000, guid: 892e85105b054bb41a2f77e30f197aaf, type: 3}
+    pin: {fileID: 21300000, guid: 7dc39e5b85da2d248a85f7a9e61b42e9, type: 3}
+    stamp: {fileID: 21300000, guid: 00c910cd46879c042afc13818527315f, type: 3}
+    airportCode: PUS
+    mapPosition: {x: 0.7185785, y: 0.6182688}
   - id: jeju
     region: korea
     postcard: {fileID: 21300000, guid: 1c301b60cdc5eee408fde00fb21474f6, type: 3}
     postcardVietnamese: {fileID: 21300000, guid: 74c874c16c7017f478f40cc1398db344, type: 3}
+    pin: {fileID: 21300000, guid: 43a71e203edeb464e83d8af208b7d6bc, type: 3}
+    stamp: {fileID: 21300000, guid: fe5c01474774d0e4984f8b718dd101cf, type: 3}
+    airportCode: CJU
+    mapPosition: {x: 0.28247935, y: 0.8965613}
   - id: gyeongju
     region: korea
     postcard: {fileID: 21300000, guid: b4a9e3d6457054e4995adb5c642f7213, type: 3}
     postcardVietnamese: {fileID: 21300000, guid: 5ef14aec4e8e1014fbded036effd4d97, type: 3}
+    pin: {fileID: 21300000, guid: aa71f52fb2bc0414db4aa9c529e1eeac, type: 3}
+    stamp: {fileID: 21300000, guid: 780224c8ca98b50438ffc693d82bb17a, type: 3}
+    airportCode: 
+    mapPosition: {x: 0.743867, y: 0.5049654}
   - id: incheon
     region: korea
     postcard: {fileID: 21300000, guid: 53fdb0e46299855469fcde8cbaaac068, type: 3}
     postcardVietnamese: {fileID: 21300000, guid: 1a868a10f4d03c8459fc4901b58d3f7d, type: 3}
+    pin: {fileID: 21300000, guid: c28d9127e5a9b5e4dbe279008c48c467, type: 3}
+    stamp: {fileID: 21300000, guid: eeed7c93c02467c43a3744689b329028, type: 3}
+    airportCode: ICN
+    mapPosition: {x: 0.23949781, y: 0.26029146}
   - id: paris
     region: france
     postcard: {fileID: 21300000, guid: 1638033679311a3428f6e43c38d3652c, type: 3}
     postcardVietnamese: {fileID: 21300000, guid: 5cd98e2acee80174da7043428e101765, type: 3}
+    pin: {fileID: 21300000, guid: c251ab96c7f54ca489656ecd3c7d8a10, type: 3}
+    stamp: {fileID: 21300000, guid: f6985f35b306db24596a694fbc467002, type: 3}
+    airportCode: CDG
+    mapPosition: {x: 0.49578947, y: 0.34218916}
   - id: nice
     region: france
     postcard: {fileID: 21300000, guid: bfc543f05c2d8dc478d7de147ac59d47, type: 3}
     postcardVietnamese: {fileID: 21300000, guid: 06e280ed7e4d3d94e8820006be317705, type: 3}
+    pin: {fileID: 21300000, guid: 7d0c5e1efbe2e72419e57fb855a60d3a, type: 3}
+    stamp: {fileID: 21300000, guid: 6fe175ab07c8e2c4985c5b8f3a3ac56d, type: 3}
+    airportCode: NCE
+    mapPosition: {x: 0.8109884, y: 0.658372}
   - id: lyon
     region: france
     postcard: {fileID: 21300000, guid: 22bb279439d7ba94d9155287da96ae88, type: 3}
     postcardVietnamese: {fileID: 21300000, guid: cb08c83b13a051444924fd4f15848c65, type: 3}
+    pin: {fileID: 21300000, guid: 81204e9239178554299297c4c58e41b1, type: 3}
+    stamp: {fileID: 21300000, guid: 212a9855cbf37084a96f07d007d7450d, type: 3}
+    airportCode: LYS
+    mapPosition: {x: 0.63540536, y: 0.5288405}
   - id: provence
     region: france
     postcard: {fileID: 21300000, guid: 2cef44e27ade32f48998218b09565499, type: 3}
     postcardVietnamese: {fileID: 21300000, guid: c2e7dd4ec9424194ab0bb2c19a499ccc, type: 3}
+    pin: {fileID: 21300000, guid: 1d5bf4bb2644aff47baa1e00b8633772, type: 3}
+    stamp: {fileID: 21300000, guid: 8dae2fec68828df4496020b4fee53dbd, type: 3}
+    airportCode: MRS
+    mapPosition: {x: 0.6607641, y: 0.6423159}
   - id: bordeaux
     region: france
     postcard: {fileID: 21300000, guid: a8731cc62701e6046a4b957156431e26, type: 3}
     postcardVietnamese: {fileID: 21300000, guid: bc1a29954069c834388fb7cbb417ccf2, type: 3}
+    pin: {fileID: 21300000, guid: b7035960492110e4988bc6a02865c77e, type: 3}
+    stamp: {fileID: 21300000, guid: 55e91003d2b1e8647a0a508671c68e7a, type: 3}
+    airportCode: BOD
+    mapPosition: {x: 0.33129823, y: 0.58525413}
   - id: cairo
     region: egypt
     postcard: {fileID: 21300000, guid: df2afee13606069459ddd511e98dd7ef, type: 3}
     postcardVietnamese: {fileID: 21300000, guid: 6aa837cea2a668e4c93b7742b2f43466, type: 3}
+    pin: {fileID: 21300000, guid: a2ac23db391093446aaef310f705718c, type: 3}
+    stamp: {fileID: 21300000, guid: 65050b7950c46464595d13c51000b7a0, type: 3}
+    airportCode: CAI
+    mapPosition: {x: 0.57321596, y: 0.28103733}
   - id: giza
     region: egypt
     postcard: {fileID: 21300000, guid: d4b14ebfd9ec8b64f875796136a76887, type: 3}
     postcardVietnamese: {fileID: 21300000, guid: 38993e3879cf87644a6605ee54d66a47, type: 3}
+    pin: {fileID: 21300000, guid: 55c78eeb6850f8144bc4b974d4b86057, type: 3}
+    stamp: {fileID: 21300000, guid: cb3aca2c0b075d940b24a75ae64cf87d, type: 3}
+    airportCode: SPX
+    mapPosition: {x: 0.46060717, y: 0.3559592}
   - id: luxor
     region: egypt
     postcard: {fileID: 21300000, guid: 29a30f37e6117a24aa5cf70e857e8ea0, type: 3}
     postcardVietnamese: {fileID: 21300000, guid: e98914eb3eb092b4c8ff3be1869259e8, type: 3}
+    pin: {fileID: 21300000, guid: e791493a8802d67498ce6f21d07bc299, type: 3}
+    stamp: {fileID: 21300000, guid: 9bf128b18d2f2e747836257cdad143fd, type: 3}
+    airportCode: LXR
+    mapPosition: {x: 0.6115273, y: 0.55258393}
   - id: aswan
     region: egypt
     postcard: {fileID: 21300000, guid: f7151fb4c5d948b43ace5ac46402c9bc, type: 3}
     postcardVietnamese: {fileID: 21300000, guid: bafc09c2e29810c4885da88fa944a8e5, type: 3}
+    pin: {fileID: 21300000, guid: a45faaba0cc1bdc42bc0cdcb554a7d33, type: 3}
+    stamp: {fileID: 21300000, guid: 5b11d1f9f6be72f498abd0f6ace72b7c, type: 3}
+    airportCode: ASW
+    mapPosition: {x: 0.63317853, y: 0.66598123}
   - id: alexandria
     region: egypt
     postcard: {fileID: 21300000, guid: 7a839654b82f8e74bb0394c28d25301a, type: 3}
     postcardVietnamese: {fileID: 21300000, guid: 26428cd976e95f8489bf0bb789e59534, type: 3}
+    pin: {fileID: 21300000, guid: 1d30a4ae54782d1409814a1b52dbd3cf, type: 3}
+    stamp: {fileID: 21300000, guid: 58934985cf6a7c44c8e17f5c8955b1a2, type: 3}
+    airportCode: HBE
+    mapPosition: {x: 0.42852977, y: 0.24392629}
   - id: new_york
     region: usa
     postcard: {fileID: 21300000, guid: 9ca19cf765a2af649a0754b65cfb9f22, type: 3}
     postcardVietnamese: {fileID: 21300000, guid: aa1b15eefb487af4ca833ba1b10291b9, type: 3}
+    pin: {fileID: 21300000, guid: 5933a230787669142a72870d056f4e49, type: 3}
+    stamp: {fileID: 21300000, guid: 468f1b688f176b94086898f8f0ee237f, type: 3}
+    airportCode: JFK
+    mapPosition: {x: 0.80294627, y: 0.45308736}
   - id: san_francisco
     region: usa
     postcard: {fileID: 21300000, guid: 50ee506ae893b124696d08b5e06051e6, type: 3}
     postcardVietnamese: {fileID: 21300000, guid: 1f35fac9b0298c6458c1cba68a959c9f, type: 3}
+    pin: {fileID: 21300000, guid: 53f3e4d32d6302c4392c1dfbedfddeef, type: 3}
+    stamp: {fileID: 21300000, guid: 1595b4249b4440e489e94f7ffb222a90, type: 3}
+    airportCode: SFO
+    mapPosition: {x: 0.0982616, y: 0.47347188}
   - id: hawaii
     region: usa
     postcard: {fileID: 21300000, guid: cad7ba7a8251bc0438d14d7680114723, type: 3}
     postcardVietnamese: {fileID: 21300000, guid: 674803ceeeade8c49bcd50df97c15870, type: 3}
+    pin: {fileID: 21300000, guid: d78d0a12a7d3a634ca31765fd2303565, type: 3}
+    stamp: {fileID: 21300000, guid: a737a9ac5764b90468ffeb036d0e84a4, type: 3}
+    airportCode: HNL
+    mapPosition: {x: 0.2031682, y: 0.64732593}
   - id: los_angeles
     region: usa
     postcard: {fileID: 21300000, guid: 9df30da196a6cd642b9e77a243f06b4c, type: 3}
     postcardVietnamese: {fileID: 21300000, guid: 4c60cf8ae19631b4bb1a5595358c7621, type: 3}
+    pin: {fileID: 21300000, guid: 86bc21cde99831b41887a665ee6e289a, type: 3}
+    stamp: {fileID: 21300000, guid: 9ce0ac9f811ba1049b41c5de8abbdf83, type: 3}
+    airportCode: LAX
+    mapPosition: {x: 0.22650781, y: 0.53428835}
   - id: chicago
     region: usa
     postcard: {fileID: 21300000, guid: 9c79e2d9e746c7a4ab989cf37a3c3d41, type: 3}
     postcardVietnamese: {fileID: 21300000, guid: 9aac7b38c3bced7489390b2ffdc8b587, type: 3}
+    pin: {fileID: 21300000, guid: 2d0c7c1184e048c439e4886abf799ce4, type: 3}
+    stamp: {fileID: 21300000, guid: 1a46ec7a06b7cab4a84edd02e0ee9f36, type: 3}
+    airportCode: ORD
+    mapPosition: {x: 0.6139688, y: 0.43848956}
   flightsPerDestination: 10
+  pages:
+  - region: vietnam
+    map: {fileID: 21300000, guid: b0fdc41df81eaa045b0c98dcc11f64c6, type: 3}
+    entry: {x: 0.31263423, y: 0.1268731}
+  - region: japan
+    map: {fileID: 21300000, guid: fd364bc07ffc59e4eb55784b8d2003fa, type: 3}
+    entry: {x: 0.5143404, y: 0.402601}
+  - region: korea
+    map: {fileID: 21300000, guid: e768df0c26b1bc34999b3db41389f5e5, type: 3}
+    entry: {x: 0.23467663, y: 0.14890154}
+  - region: france
+    map: {fileID: 21300000, guid: 8820bbbd348dba545b6a35527b447a03, type: 3}
+    entry: {x: 0.3553968, y: 0.24741302}
+  - region: egypt
+    map: {fileID: 21300000, guid: 04fe7b7791a95b04cbc89bbdd606e8a3, type: 3}
+    entry: {x: 0.40985882, y: 0.20991194}
+  - region: usa
+    map: {fileID: 21300000, guid: 92ccbe1f379d91f429776c01eeb55128, type: 3}
+    entry: {x: 0.6494491, y: 0.37052724}

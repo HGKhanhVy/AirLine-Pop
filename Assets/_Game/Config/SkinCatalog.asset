@@ -14,9 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skins:
   - {fileID: 11400000, guid: a46d0802596841afa4c7c8520a1907bf, type: 2}
-  - {fileID: 11400000, guid: 58f5626dbf7b43ad9abe864058122007, type: 2}
   - {fileID: 11400000, guid: 1c98bab920044255927803c9a15d825e, type: 2}
-  - {fileID: 11400000, guid: fe901df1056e482aa2c2dc98b81b641b, type: 2}
+  - {fileID: 11400000, guid: 58f5626dbf7b43ad9abe864058122007, type: 2}
   - {fileID: 11400000, guid: 4cd463ae0b4b4072927a74178eacd7cd, type: 2}
+  - {fileID: 11400000, guid: fe901df1056e482aa2c2dc98b81b641b, type: 2}
   chapterOneReward: {fileID: 11400000, guid: 58f5626dbf7b43ad9abe864058122007, type: 2}
   chapterOneLastLevel: 30

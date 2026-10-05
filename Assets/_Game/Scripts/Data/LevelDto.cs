@@ -44,5 +44,9 @@ namespace ASTeams.SingleLine.Data
 
         [JsonProperty("tags", NullValueHandling = NullValueHandling.Ignore)]
         public string[] Tags { get; set; }
+
+        /// <summary>Wind squares as pairs: cell, direction (0 up, 1 right, 2 down, 3 left), cell, direction...</summary>
+        [JsonProperty("wind", NullValueHandling = NullValueHandling.Ignore)]
+        public int[] Wind { get; set; }
     }
 }

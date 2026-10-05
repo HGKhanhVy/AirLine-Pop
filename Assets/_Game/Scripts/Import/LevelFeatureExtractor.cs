@@ -4,13 +4,14 @@ using ASTeams.SingleLine.Core;
 namespace ASTeams.SingleLine.Import
 {
     /// <summary>
-    /// Measures one level. Separated from the scoring so the four signals can be
+    /// Measures one level. Separated from the scoring so the five signals can be
     /// inspected and tested on their own, and so re-weighting never means re-measuring.
     /// </summary>
     public sealed class LevelFeatureExtractor
     {
         private readonly ILevelSolver solver;
         private readonly GreedyPlayer player;
+        private readonly CautiousPlayer carefulPlayer;
 
         private int[] solutionBuffer;
 
@@ -18,6 +19,7 @@ namespace ASTeams.SingleLine.Import
         {
             this.solver = solver ?? throw new ArgumentNullException(nameof(solver));
             player = new GreedyPlayer();
+            carefulPlayer = new CautiousPlayer();
         }
 
         public LevelFeatures Extract(LevelData level)
@@ -46,7 +48,8 @@ namespace ASTeams.SingleLine.Import
                 MeasureAverageDegree(level),
                 solver.LastNodeCount,
                 player.CountFailures(level),
-                solvable);
+                solvable,
+                carefulPlayer.MeasureSteps(level));
         }
 
         /// <summary>Mean count of active orthogonal neighbours over the active cells.</summary>

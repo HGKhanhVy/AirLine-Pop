@@ -14,19 +14,28 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: ocean
   displayName: Ocean
-  price: 1000
+  price: 600
   isSoldInShop: 1
   isOwnedByDefault: 0
   palette:
     background: {r: 0.627451, g: 0.83137256, b: 0.9411765, a: 1}
-    cell: {r: 1, g: 0.98039216, b: 0.94509804, a: 1}
+    cell: {r: 0.93333334, g: 1, b: 0.972549, a: 1}
     stuck: {r: 1, g: 0.42, b: 0.42, a: 1}
     usesLevelHue: 0
-    firstLevelHue: 200
+    firstLevelHue: 165
     hueStepPerLevel: 1
-    startTone: {x: 0.528, y: 0.8}
-    visitedTone: {x: 0.055000003, y: 0.98}
-    headTone: {x: 0.077, y: 0.99}
+    startTone: {x: 0.48, y: 0.8}
+    visitedTone: {x: 0.05, y: 0.98}
+    headTone: {x: 0.07, y: 0.99}
     pathTone: {x: 0, y: 1}
-    wonTone: {x: 0.242, y: 1}
+    wonTone: {x: 0.22, y: 1}
     pathAlpha: 1
+  boardSky: {fileID: 21300000, guid: b2f3b81d24988ea4cbcdc8ec388ff885, type: 3}
+  mapSky: {fileID: 21300000, guid: 35bb52aad843f474b8e259780e29cb8a, type: 3}
+  gateFlown: {fileID: 21300000, guid: aaf85a84644440a49b3b29a06d662969, type: 3}
+  gateCurrent: {fileID: 21300000, guid: 55af6e9ddb17c374ab7d88aa40b84863, type: 3}
+  gateLocked: {fileID: 21300000, guid: 64c5b767d85da3f40af5a32100d7ab6e, type: 3}
+  preview: {fileID: 21300000, guid: 41ab773eb8b904f4d99ad88fec15caf0, type: 3}
+  runwaySurface: {fileID: 2100000, guid: 821bceee88744b74289d30c554e288f3, type: 2}
+  runwayMarks: {fileID: 2100000, guid: f4d7cc2b7dd3fff428db916bfa692a24, type: 2}
+  cloudTint: {r: 0.9411765, g: 1, b: 0.98039216, a: 1}

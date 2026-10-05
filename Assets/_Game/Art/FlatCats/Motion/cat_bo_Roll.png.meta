@@ -140,18 +140,18 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 357
-        width: 278
-        height: 357
+        y: 362
+        width: 281
+        height: 362
       alignment: 9
-      pivot: {x: 0.49972847, y: 0.0716479}
+      pivot: {x: 0.50506943, y: 0.07065829}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 2272d4ad15674fa4fa7fe8ad180f9130
+      spriteID: 920e3566e5733544e99799971e03f966
       internalID: -2026130987
       vertices: []
       indices: 
@@ -161,19 +161,19 @@ TextureImporter:
       name: cat_bo_Roll_01
       rect:
         serializedVersion: 2
-        x: 278
-        y: 357
-        width: 278
-        height: 357
+        x: 281
+        y: 362
+        width: 281
+        height: 362
       alignment: 9
-      pivot: {x: 0.49972847, y: 0.0716479}
+      pivot: {x: 0.50506943, y: 0.07065829}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 3fc5e70ebf4c4014ba62eb055b849b4b
+      spriteID: 70e3156828e87d44fbd8735969e7e0d9
       internalID: 1474465431
       vertices: []
       indices: 
@@ -183,19 +183,19 @@ TextureImporter:
       name: cat_bo_Roll_02
       rect:
         serializedVersion: 2
-        x: 556
-        y: 357
-        width: 278
-        height: 357
+        x: 562
+        y: 362
+        width: 281
+        height: 362
       alignment: 9
-      pivot: {x: 0.49972847, y: 0.0716479}
+      pivot: {x: 0.50506943, y: 0.07065829}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 1796959b3ee08594fba5897ec220a81b
+      spriteID: a2b00ed7b1ca2984d911c9328a45df01
       internalID: 2134354779
       vertices: []
       indices: 
@@ -205,19 +205,19 @@ TextureImporter:
       name: cat_bo_Roll_03
       rect:
         serializedVersion: 2
-        x: 834
-        y: 357
-        width: 278
-        height: 357
+        x: 843
+        y: 362
+        width: 281
+        height: 362
       alignment: 9
-      pivot: {x: 0.49972847, y: 0.0716479}
+      pivot: {x: 0.50506943, y: 0.07065829}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 8f141cb49c745544abe8c975a9487be0
+      spriteID: 471716bdc6db0dd4690f778f003ae9c5
       internalID: -2122869111
       vertices: []
       indices: 
@@ -227,19 +227,19 @@ TextureImporter:
       name: cat_bo_Roll_04
       rect:
         serializedVersion: 2
-        x: 1112
-        y: 357
-        width: 278
-        height: 357
+        x: 1124
+        y: 362
+        width: 281
+        height: 362
       alignment: 9
-      pivot: {x: 0.49972847, y: 0.0716479}
+      pivot: {x: 0.50506943, y: 0.07065829}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 42f73d144db87484f837e1b254d114fd
+      spriteID: d871693a0ac70364bb19aded2a501405
       internalID: 201401337
       vertices: []
       indices: 
@@ -249,19 +249,19 @@ TextureImporter:
       name: cat_bo_Roll_05
       rect:
         serializedVersion: 2
-        x: 1390
-        y: 357
-        width: 278
-        height: 357
+        x: 1405
+        y: 362
+        width: 281
+        height: 362
       alignment: 9
-      pivot: {x: 0.49972847, y: 0.0716479}
+      pivot: {x: 0.50506943, y: 0.07065829}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 10d22149d6283194caee6002aab15b6c
+      spriteID: 480c5f4649928a74dad0f1c5d73abc85
       internalID: -34186283
       vertices: []
       indices: 
@@ -273,17 +273,17 @@ TextureImporter:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 278
-        height: 357
+        width: 281
+        height: 362
       alignment: 9
-      pivot: {x: 0.49972847, y: 0.0716479}
+      pivot: {x: 0.50506943, y: 0.07065829}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a374e29c93c7c5441934ed5362df4935
+      spriteID: 3af427f7483cae04aa774bba7685dddb
       internalID: 806615772
       vertices: []
       indices: 
@@ -293,19 +293,19 @@ TextureImporter:
       name: cat_bo_Roll_07
       rect:
         serializedVersion: 2
-        x: 278
+        x: 281
         y: 0
-        width: 278
-        height: 357
+        width: 281
+        height: 362
       alignment: 9
-      pivot: {x: 0.49972847, y: 0.0716479}
+      pivot: {x: 0.50506943, y: 0.07065829}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: cb583f5f75113224a83791734445b58f
+      spriteID: 94cc26e6fe7b1c5439c5fa6cae1746da
       internalID: -1733086435
       vertices: []
       indices: 

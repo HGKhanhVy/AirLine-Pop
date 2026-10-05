@@ -140,18 +140,18 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 357
-        width: 278
-        height: 357
+        y: 362
+        width: 281
+        height: 362
       alignment: 9
-      pivot: {x: 0.49972847, y: 0.0716479}
+      pivot: {x: 0.50506943, y: 0.07065829}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 190dda2b3a40e904688ab75ea191c259
+      spriteID: 76dc394423b1c6849a43e3e102fc00a8
       internalID: -1936190111
       vertices: []
       indices: 
@@ -161,19 +161,19 @@ TextureImporter:
       name: cat_bo_Walk_01
       rect:
         serializedVersion: 2
-        x: 278
-        y: 357
-        width: 278
-        height: 357
+        x: 281
+        y: 362
+        width: 281
+        height: 362
       alignment: 9
-      pivot: {x: 0.49972847, y: 0.0716479}
+      pivot: {x: 0.50506943, y: 0.07065829}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: fd19d9d4a6a2d2a468115c56965291f5
+      spriteID: 23b272c7fecbd2143a2a5c0d8e71fed0
       internalID: 1299627045
       vertices: []
       indices: 
@@ -183,19 +183,19 @@ TextureImporter:
       name: cat_bo_Walk_02
       rect:
         serializedVersion: 2
-        x: 556
-        y: 357
-        width: 278
-        height: 357
+        x: 562
+        y: 362
+        width: 281
+        height: 362
       alignment: 9
-      pivot: {x: 0.49972847, y: 0.0716479}
+      pivot: {x: 0.50506943, y: 0.07065829}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 5e9947c57306a454da1d0730d12d4714
+      spriteID: a9ebb0c391a3f3648be7133a760a3e3f
       internalID: -1378404681
       vertices: []
       indices: 
@@ -205,19 +205,19 @@ TextureImporter:
       name: cat_bo_Walk_03
       rect:
         serializedVersion: 2
-        x: 834
-        y: 357
-        width: 278
-        height: 357
+        x: 843
+        y: 362
+        width: 281
+        height: 362
       alignment: 9
-      pivot: {x: 0.49972847, y: 0.0716479}
+      pivot: {x: 0.50506943, y: 0.07065829}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 21c82c444e41f1c42adf3afd27e89463
+      spriteID: 68f4323d4f8dca447aa5bf8b04069c39
       internalID: -470849382
       vertices: []
       indices: 
@@ -227,19 +227,19 @@ TextureImporter:
       name: cat_bo_Walk_04
       rect:
         serializedVersion: 2
-        x: 1112
-        y: 357
-        width: 278
-        height: 357
+        x: 1124
+        y: 362
+        width: 281
+        height: 362
       alignment: 9
-      pivot: {x: 0.49972847, y: 0.0716479}
+      pivot: {x: 0.50506943, y: 0.07065829}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 0bf5c1b7e82170b419c6a06b07b1a80b
+      spriteID: fb23a2b21ce8efe4fb498842f5db0ff0
       internalID: -1324367291
       vertices: []
       indices: 
@@ -249,19 +249,19 @@ TextureImporter:
       name: cat_bo_Walk_05
       rect:
         serializedVersion: 2
-        x: 1390
-        y: 357
-        width: 278
-        height: 357
+        x: 1405
+        y: 362
+        width: 281
+        height: 362
       alignment: 9
-      pivot: {x: 0.49972847, y: 0.0716479}
+      pivot: {x: 0.50506943, y: 0.07065829}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: e39d08ad08dec7b4287c37f4552836fc
+      spriteID: e802c7af6ce987044830bb934ab13e29
       internalID: 651725991
       vertices: []
       indices: 
@@ -273,17 +273,17 @@ TextureImporter:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 278
-        height: 357
+        width: 281
+        height: 362
       alignment: 9
-      pivot: {x: 0.49972847, y: 0.0716479}
+      pivot: {x: 0.50506943, y: 0.07065829}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: f3ebcfd5547cee444bb2468cdd5778a6
+      spriteID: 5dffbae63cfe2bd42bc571ea80bbcd87
       internalID: 1327136127
       vertices: []
       indices: 
@@ -293,19 +293,19 @@ TextureImporter:
       name: cat_bo_Walk_07
       rect:
         serializedVersion: 2
-        x: 278
+        x: 281
         y: 0
-        width: 278
-        height: 357
+        width: 281
+        height: 362
       alignment: 9
-      pivot: {x: 0.49972847, y: 0.0716479}
+      pivot: {x: 0.50506943, y: 0.07065829}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 865cd6cc84cc29f42a9f90f3740a0e20
+      spriteID: d73f9dd311162734290425f07ed2e192
       internalID: 1025038852
       vertices: []
       indices: 
@@ -315,19 +315,19 @@ TextureImporter:
       name: cat_bo_Walk_08
       rect:
         serializedVersion: 2
-        x: 556
+        x: 562
         y: 0
-        width: 278
-        height: 357
+        width: 281
+        height: 362
       alignment: 9
-      pivot: {x: 0.49972847, y: 0.0716479}
+      pivot: {x: 0.50506943, y: 0.07065829}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: db538d134f9e8c845b70fc57f9a07596
+      spriteID: a01c82a300672d94483d48fc7b8c604f
       internalID: -239437783
       vertices: []
       indices: 
@@ -337,19 +337,19 @@ TextureImporter:
       name: cat_bo_Walk_09
       rect:
         serializedVersion: 2
-        x: 834
+        x: 843
         y: 0
-        width: 278
-        height: 357
+        width: 281
+        height: 362
       alignment: 9
-      pivot: {x: 0.49972847, y: 0.0716479}
+      pivot: {x: 0.50506943, y: 0.07065829}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 857fc52b1be2c62489c4f46f284b93c6
+      spriteID: 63577eb71e5e94c4399c314cefa9efb0
       internalID: 1086528013
       vertices: []
       indices: 

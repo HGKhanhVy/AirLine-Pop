@@ -140,18 +140,18 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 357
-        width: 278
-        height: 357
+        y: 362
+        width: 281
+        height: 362
       alignment: 9
-      pivot: {x: 0.49972847, y: 0.0716479}
+      pivot: {x: 0.50506943, y: 0.07065829}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: e372b2dd777e73b43bba5b1ea6eb3570
+      spriteID: 7541c11b096df4844bcc03e4dd514848
       internalID: -1045194934
       vertices: []
       indices: 
@@ -161,19 +161,19 @@ TextureImporter:
       name: cat_kem_Roll_01
       rect:
         serializedVersion: 2
-        x: 278
-        y: 357
-        width: 278
-        height: 357
+        x: 281
+        y: 362
+        width: 281
+        height: 362
       alignment: 9
-      pivot: {x: 0.49972847, y: 0.0716479}
+      pivot: {x: 0.50506943, y: 0.07065829}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 1c3700e5c5088bd4d8b16d59007396ee
+      spriteID: f95d61f14dd305642950d2e53171c5b3
       internalID: -18809244
       vertices: []
       indices: 
@@ -183,19 +183,19 @@ TextureImporter:
       name: cat_kem_Roll_02
       rect:
         serializedVersion: 2
-        x: 556
-        y: 357
-        width: 278
-        height: 357
+        x: 562
+        y: 362
+        width: 281
+        height: 362
       alignment: 9
-      pivot: {x: 0.49972847, y: 0.0716479}
+      pivot: {x: 0.50506943, y: 0.07065829}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b6811a62d687c9c40bd43e2ed1ff5710
+      spriteID: 753d089fce411124587fb0aa23c33365
       internalID: 327831639
       vertices: []
       indices: 
@@ -205,19 +205,19 @@ TextureImporter:
       name: cat_kem_Roll_03
       rect:
         serializedVersion: 2
-        x: 834
-        y: 357
-        width: 278
-        height: 357
+        x: 843
+        y: 362
+        width: 281
+        height: 362
       alignment: 9
-      pivot: {x: 0.49972847, y: 0.0716479}
+      pivot: {x: 0.50506943, y: 0.07065829}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 454d2f9ce6d645a41b1ad3dc55cd7a51
+      spriteID: f502dfdd59896fe4aa6151b2f22c4078
       internalID: 1292665331
       vertices: []
       indices: 
@@ -227,19 +227,19 @@ TextureImporter:
       name: cat_kem_Roll_04
       rect:
         serializedVersion: 2
-        x: 1112
-        y: 357
-        width: 278
-        height: 357
+        x: 1124
+        y: 362
+        width: 281
+        height: 362
       alignment: 9
-      pivot: {x: 0.49972847, y: 0.0716479}
+      pivot: {x: 0.50506943, y: 0.07065829}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b5e6f67994969fe4c8dd2b2700ca8618
+      spriteID: fce208155a9d82844b2aae80a4012649
       internalID: -1315968646
       vertices: []
       indices: 
@@ -249,19 +249,19 @@ TextureImporter:
       name: cat_kem_Roll_05
       rect:
         serializedVersion: 2
-        x: 1390
-        y: 357
-        width: 278
-        height: 357
+        x: 1405
+        y: 362
+        width: 281
+        height: 362
       alignment: 9
-      pivot: {x: 0.49972847, y: 0.0716479}
+      pivot: {x: 0.50506943, y: 0.07065829}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 870e6b362eca0c8408b2a2f46bf9ecb0
+      spriteID: 69c3d4652d6444642a6db2f170308e51
       internalID: -625368681
       vertices: []
       indices: 
@@ -273,17 +273,17 @@ TextureImporter:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 278
-        height: 357
+        width: 281
+        height: 362
       alignment: 9
-      pivot: {x: 0.49972847, y: 0.0716479}
+      pivot: {x: 0.50506943, y: 0.07065829}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: e29049f0ee6e0d147a9eac5617ecfaba
+      spriteID: 9efd2570bf3ff314badc8b4f66dc005e
       internalID: -1375560642
       vertices: []
       indices: 
@@ -293,19 +293,19 @@ TextureImporter:
       name: cat_kem_Roll_07
       rect:
         serializedVersion: 2
-        x: 278
+        x: 281
         y: 0
-        width: 278
-        height: 357
+        width: 281
+        height: 362
       alignment: 9
-      pivot: {x: 0.49972847, y: 0.0716479}
+      pivot: {x: 0.50506943, y: 0.07065829}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: d87fe76e1e66df2499ba2b4827e25d65
+      spriteID: f245181614aac35448d695a8a79a59c9
       internalID: -660013704
       vertices: []
       indices: 

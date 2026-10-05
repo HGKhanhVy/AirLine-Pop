@@ -55,6 +55,9 @@ namespace ASTeams.SingleLine.Unity
         /// <summary>Distance between neighbouring cell centres, in world units.</summary>
         public float CellPitch => theme.CellPitch;
 
+        /// <summary>The width of one square, without the gap round it.</summary>
+        public float CellSize => theme.CellSize;
+
         /// <summary>Squares currently drawn, in no particular order.</summary>
         public IReadOnlyList<CellView> ActiveCells => pool.Live;
 
@@ -336,6 +339,23 @@ namespace ASTeams.SingleLine.Unity
             }
         }
 
+        /// <summary>
+        /// A world point moved onto the left or the right half of the board by mirroring it
+        /// across the middle when it is on the other half. A formation board is symmetric
+        /// and centred, so its middle is the board's own origin.
+        /// </summary>
+        public Vector3 OntoHalf(Vector3 worldPosition, bool rightHalf)
+        {
+            Vector3 local = cellRoot.InverseTransformPoint(worldPosition);
+
+            if (local.x > 0f != rightHalf)
+            {
+                local.x = -local.x;
+            }
+
+            return cellRoot.TransformPoint(local);
+        }
+
         /// <summary>The square standing for a cell, or null when the cell is a hole.</summary>
         public CellView GetCellView(int index)
         {
@@ -383,56 +403,6 @@ namespace ASTeams.SingleLine.Unity
 
             index = candidate;
             return true;
-        }
-
-        /// <summary>
-        /// The point on the board's squares closest to a world point: the point itself when
-        /// it is over a square, otherwise the nearest spot on the nearest square. Each square
-        /// counts out to half the gap around it, so moving between neighbours never snags.
-        /// Keeps whatever follows the finger, such as the airplane, on the blocks.
-        /// </summary>
-        public Vector3 ClampToCells(Vector3 worldPosition)
-        {
-            if (level == null)
-            {
-                return worldPosition;
-            }
-
-            Vector3 local = cellRoot.InverseTransformPoint(worldPosition);
-            float half = theme.CellPitch * 0.5f;
-            float bestDistance = float.MaxValue;
-            Vector3 best = local;
-            int cellCount = level.Grid.CellCount;
-
-            for (int index = 0; index < cellCount; index++)
-            {
-                if (!level.IsActive(index))
-                {
-                    continue;
-                }
-
-                Vector3 centre = GetCellLocalPosition(index);
-                var clamped = new Vector3(
-                    Mathf.Clamp(local.x, centre.x - half, centre.x + half),
-                    Mathf.Clamp(local.y, centre.y - half, centre.y + half),
-                    local.z);
-                float dx = clamped.x - local.x;
-                float dy = clamped.y - local.y;
-                float distance = dx * dx + dy * dy;
-
-                if (distance <= 0f)
-                {
-                    return worldPosition;
-                }
-
-                if (distance < bestDistance)
-                {
-                    bestDistance = distance;
-                    best = clamped;
-                }
-            }
-
-            return cellRoot.TransformPoint(best);
         }
 
         /// <summary>The rows and columns actually occupied, or false for an empty board.</summary>

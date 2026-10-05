@@ -140,18 +140,18 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 357
-        width: 278
-        height: 357
+        y: 362
+        width: 281
+        height: 362
       alignment: 9
-      pivot: {x: 0.49972847, y: 0.0716479}
+      pivot: {x: 0.50506943, y: 0.07065829}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 18a34cf80c2d36441a26132ae8bf429b
+      spriteID: 2ce35925cc0d86b40bb7a09f0294f8fc
       internalID: 1331872002
       vertices: []
       indices: 
@@ -161,19 +161,19 @@ TextureImporter:
       name: cat_kem_Dizzy_01
       rect:
         serializedVersion: 2
-        x: 278
-        y: 357
-        width: 278
-        height: 357
+        x: 281
+        y: 362
+        width: 281
+        height: 362
       alignment: 9
-      pivot: {x: 0.49972847, y: 0.0716479}
+      pivot: {x: 0.50506943, y: 0.07065829}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: c93aa8a433de9254eaadcd28b28a32d1
+      spriteID: 9e8746cc1626a504994a4b954cd2ad80
       internalID: -1509871353
       vertices: []
       indices: 
@@ -183,19 +183,19 @@ TextureImporter:
       name: cat_kem_Dizzy_02
       rect:
         serializedVersion: 2
-        x: 556
-        y: 357
-        width: 278
-        height: 357
+        x: 562
+        y: 362
+        width: 281
+        height: 362
       alignment: 9
-      pivot: {x: 0.49972847, y: 0.0716479}
+      pivot: {x: 0.50506943, y: 0.07065829}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 7d5312e99a3663c4984ee039007bcb0e
+      spriteID: 0f663a0076c3a694895e4f77baf3da94
       internalID: -122271318
       vertices: []
       indices: 
@@ -205,19 +205,19 @@ TextureImporter:
       name: cat_kem_Dizzy_03
       rect:
         serializedVersion: 2
-        x: 834
-        y: 357
-        width: 278
-        height: 357
+        x: 843
+        y: 362
+        width: 281
+        height: 362
       alignment: 9
-      pivot: {x: 0.49972847, y: 0.0716479}
+      pivot: {x: 0.50506943, y: 0.07065829}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: e5a30b1aeb585734984c59bc2eb392af
+      spriteID: 26a3753a6e955b847a60691e62be5aee
       internalID: 1624819362
       vertices: []
       indices: 
@@ -227,19 +227,19 @@ TextureImporter:
       name: cat_kem_Dizzy_04
       rect:
         serializedVersion: 2
-        x: 1112
-        y: 357
-        width: 278
-        height: 357
+        x: 1124
+        y: 362
+        width: 281
+        height: 362
       alignment: 9
-      pivot: {x: 0.49972847, y: 0.0716479}
+      pivot: {x: 0.50506943, y: 0.07065829}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: af8fbe218be0aa24d9fffa72812d0c44
+      spriteID: d24d882e00fcb7d4e9e252de81cfd9fc
       internalID: 1563660912
       vertices: []
       indices: 
@@ -249,19 +249,19 @@ TextureImporter:
       name: cat_kem_Dizzy_05
       rect:
         serializedVersion: 2
-        x: 1390
-        y: 357
-        width: 278
-        height: 357
+        x: 1405
+        y: 362
+        width: 281
+        height: 362
       alignment: 9
-      pivot: {x: 0.49972847, y: 0.0716479}
+      pivot: {x: 0.50506943, y: 0.07065829}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 3aecbb8fce8d67b43b218a5ac4046a7a
+      spriteID: 51db58ec755367d4fb70af78549fb033
       internalID: -453762893
       vertices: []
       indices: 
@@ -273,17 +273,17 @@ TextureImporter:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 278
-        height: 357
+        width: 281
+        height: 362
       alignment: 9
-      pivot: {x: 0.49972847, y: 0.0716479}
+      pivot: {x: 0.50506943, y: 0.07065829}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 17bc3e2ae3b2a7b4da2a73976b6e4580
+      spriteID: 2c956ef6ee48aca49a910a7b3b1c71e7
       internalID: -1012111780
       vertices: []
       indices: 
@@ -293,19 +293,19 @@ TextureImporter:
       name: cat_kem_Dizzy_07
       rect:
         serializedVersion: 2
-        x: 278
+        x: 281
         y: 0
-        width: 278
-        height: 357
+        width: 281
+        height: 362
       alignment: 9
-      pivot: {x: 0.49972847, y: 0.0716479}
+      pivot: {x: 0.50506943, y: 0.07065829}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 5cb8ca47b7923214b8f29888b963b195
+      spriteID: e42c63f74df5d9c449eccd16aae9a4cf
       internalID: -1318699668
       vertices: []
       indices: 
@@ -315,19 +315,19 @@ TextureImporter:
       name: cat_kem_Dizzy_08
       rect:
         serializedVersion: 2
-        x: 556
+        x: 562
         y: 0
-        width: 278
-        height: 357
+        width: 281
+        height: 362
       alignment: 9
-      pivot: {x: 0.49972847, y: 0.0716479}
+      pivot: {x: 0.50506943, y: 0.07065829}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 92bea8df5dd8e2a49afaec452c3bea13
+      spriteID: 498147531d8dfe74d82df9a5ccb32398
       internalID: -13684807
       vertices: []
       indices: 
@@ -337,19 +337,19 @@ TextureImporter:
       name: cat_kem_Dizzy_09
       rect:
         serializedVersion: 2
-        x: 834
+        x: 843
         y: 0
-        width: 278
-        height: 357
+        width: 281
+        height: 362
       alignment: 9
-      pivot: {x: 0.49972847, y: 0.0716479}
+      pivot: {x: 0.50506943, y: 0.07065829}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 75d9b1c41cfaddf4690a452fafa3f188
+      spriteID: 8e2f1a69477429e479168a3a0d5de0a4
       internalID: -459935208
       vertices: []
       indices: 
@@ -359,19 +359,19 @@ TextureImporter:
       name: cat_kem_Dizzy_10
       rect:
         serializedVersion: 2
-        x: 1112
+        x: 1124
         y: 0
-        width: 278
-        height: 357
+        width: 281
+        height: 362
       alignment: 9
-      pivot: {x: 0.49972847, y: 0.0716479}
+      pivot: {x: 0.50506943, y: 0.07065829}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 49b22ca43f1573746a05c7f0d226efde
+      spriteID: f4c38f17fe4b4cd418aef6bd2c4d83fd
       internalID: 1347086727
       vertices: []
       indices: 
@@ -381,19 +381,19 @@ TextureImporter:
       name: cat_kem_Dizzy_11
       rect:
         serializedVersion: 2
-        x: 1390
+        x: 1405
         y: 0
-        width: 278
-        height: 357
+        width: 281
+        height: 362
       alignment: 9
-      pivot: {x: 0.49972847, y: 0.0716479}
+      pivot: {x: 0.50506943, y: 0.07065829}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ca72a03967dcd774998801069dbb05ea
+      spriteID: b91f803aab09f084397cbb881b59476c
       internalID: 605874619
       vertices: []
       indices: 

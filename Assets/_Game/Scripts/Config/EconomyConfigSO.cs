@@ -14,6 +14,9 @@ namespace ASTeams.SingleLine.Unity
 
         [Header("Food")]
         [SerializeField, Min(0)] private int foodPrice = 40;
+
+        [Tooltip("Snack bundles sold in the shop; bigger ones cost less per snack.")]
+        [SerializeField] private SnackPack[] snackPacks = { new SnackPack(1, 40), new SnackPack(5, 180), new SnackPack(10, 320) };
         [SerializeField, Min(0)] private int starterFood = 3;
         [SerializeField, Min(1)] private int maxFoodPerPurchase = 10;
 
@@ -29,12 +32,19 @@ namespace ASTeams.SingleLine.Unity
         [Tooltip("How many loyalty cards there are, one per bond level; their names are tier.0, tier.1... in the localization table.")]
         [SerializeField, Min(1)] private int loyaltyTierCount = 5;
 
+        [Header("Daily gift")]
+        [Tooltip("Coins a regular brings once a day, by loyalty card: New guest, Bronze, Silver, Gold, Diamond. " +
+                 "Zero means no gift at that card.")]
+        [SerializeField] private int[] dailyGiftCoins = { 0, 10, 20, 35, 50 };
+
         [Header("Room")]
         [SerializeField, Range(1, 8)] private int maxVisibleCats = 4;
 
         public int FirstClearCoins => firstClearCoins;
 
         public int FoodPrice => foodPrice;
+
+        public System.Collections.Generic.IReadOnlyList<SnackPack> SnackPacks => snackPacks;
 
         public int StarterFood => starterFood;
 
@@ -51,6 +61,19 @@ namespace ASTeams.SingleLine.Unity
         public int MaxVisibleCats => maxVisibleCats;
 
         public int BondLevelCount => bondLevelThresholds.Length;
+
+        /// <summary>The loyalty card a bond level shows, from 0 (New guest) up.</summary>
+        public int GetTierIndex(int bondLevel)
+        {
+            return Mathf.Clamp(bondLevel - 1, 0, loyaltyTierCount - 1);
+        }
+
+        /// <summary>Coins a regular at this bond level brings each day; zero for none.</summary>
+        public int GetDailyGiftCoins(int bondLevel)
+        {
+            int tier = GetTierIndex(bondLevel);
+            return tier < dailyGiftCoins.Length ? dailyGiftCoins[tier] : 0;
+        }
 
         /// <summary>1-based bond level reached with <paramref name="bondXP"/>.</summary>
         public int GetBondLevel(int bondXP)

@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db94fbe4f034177458c22731d35719f2, type: 3}
+  m_Name: Livery_lavender
+  m_EditorClassIdentifier: 
+  id: lavender
+  price: 1500
+  isOwnedByDefault: 0
+  planeTopDown: {fileID: 21300000, guid: 917df280d453f0c4ab0acc822553eea2, type: 3}
+  planeParked: {fileID: 21300000, guid: 33e813e199324204caa8e8e5983f9d03, type: 3}

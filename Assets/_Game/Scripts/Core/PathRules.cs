@@ -48,12 +48,53 @@ namespace ASTeams.SingleLine.Core
                 throw new ArgumentNullException(nameof(visited));
             }
 
-            if (!level.IsActive(target) || visited[target])
+            if (!level.IsActive(target) || IsCovered(level, visited, target))
             {
                 return false;
             }
 
-            return level.Grid.AreAdjacent(head, target);
+            return level.Grid.AreAdjacent(head, target) && CanLeave(level, head, target);
+        }
+
+        /// <summary>
+        /// Marks a square visited or not. In a formation flight the wingman flies the mirror
+        /// square at the same time, so both are marked together and the rest of the rules
+        /// read one mask for both planes.
+        /// </summary>
+        public static void Visit(LevelData level, bool[] visited, int cell, bool isVisited)
+        {
+            visited[cell] = isVisited;
+
+            if (level.IsFormation)
+            {
+                visited[level.MirrorOf(cell)] = isVisited;
+            }
+        }
+
+        /// <summary>True when either plane has already flown over the square.</summary>
+        private static bool IsCovered(LevelData level, bool[] visited, int cell)
+        {
+            return visited[cell] || (level.IsFormation && visited[level.MirrorOf(cell)]);
+        }
+
+        /// <summary>
+        /// The level's own conditions on leaving a square: nothing flies on from the runway,
+        /// and a square with wind only lets the plane go the way it blows. The solver asks
+        /// the same question, so the two can never disagree.
+        /// </summary>
+        public static bool CanLeave(LevelData level, int head, int target)
+        {
+            if (level.HasFixedEnd && head == level.FixedEnd)
+            {
+                return false;
+            }
+
+            if (level.TryGetWind(head, out Direction wind))
+            {
+                return level.Grid.TryGetNeighbor(head, wind, out int downwind) && downwind == target;
+            }
+
+            return true;
         }
 
         /// <summary>
@@ -91,7 +132,7 @@ namespace ASTeams.SingleLine.Core
                     continue;
                 }
 
-                if (level.IsActive(neighbor) && !visited[neighbor])
+                if (level.IsActive(neighbor) && !IsCovered(level, visited, neighbor) && CanLeave(level, cell, neighbor))
                 {
                     count++;
                 }
@@ -100,15 +141,18 @@ namespace ASTeams.SingleLine.Core
             return count;
         }
 
-        /// <summary>MOV-07: every active cell covered and the end constraint satisfied.</summary>
-        public static bool IsComplete(LevelData level, int visitedCount, int head)
+        /// <summary>
+        /// MOV-07: every active cell covered and the end constraint satisfied. Takes the
+        /// length of the player's route, which in a formation flight covers two squares a step.
+        /// </summary>
+        public static bool IsComplete(LevelData level, int pathLength, int head)
         {
             if (level == null)
             {
                 throw new ArgumentNullException(nameof(level));
             }
 
-            if (visitedCount != level.ActiveCellCount)
+            if (pathLength != level.PathLength)
             {
                 return false;
             }

@@ -12,6 +12,8 @@ import os
 
 from PIL import Image, ImageChops, ImageDraw, ImageFilter
 
+from liveries import LIVERIES
+from liveries import suffix as livery_suffix
 from puff import puff
 
 OUT = os.path.join(os.path.dirname(__file__), "..", "..", "Assets", "_Game", "Art", "Flat")
@@ -203,7 +205,7 @@ def glow():
 PLANE = 512
 
 
-def plane_shapes():
+def plane_shapes(main=CORAL, dark=CORAL_DARK):
     """Returns (silhouette mask, list of (mask, colour) layers) for the top-down plane."""
     s = PLANE
     c = s / 2
@@ -251,17 +253,17 @@ def plane_shapes():
         silhouette = ImageChops.lighter(silhouette, part)
 
     layers = []
-    layers.append((tail_plane, CORAL, True))
-    layers.append((wings, CORAL_DARK, True))
+    layers.append((tail_plane, main, True))
+    layers.append((wings, dark, True))
     layers.append((ring(engines, 5), BROWN))
     layers.append((engines, CREAM, True))
-    layers.append((intakes, CORAL))
+    layers.append((intakes, main))
 
     layers.append((ring(body, 6), BROWN))
     layers.append((body, CREAM, True))
     # The livery's cheatline, seen from above as a stripe down each side.
     stripes = ImageChops.lighter(rr((c - 84, 220, c - 70, 400), 7), rr((c + 70, 220, c + 84, 400), 7))
-    layers.append((ImageChops.multiply(stripes, body), CORAL))
+    layers.append((ImageChops.multiply(stripes, body), main))
     windows = blank()
     wd = ImageDraw.Draw(windows)
     for y in (262, 296, 330):
@@ -274,9 +276,9 @@ def plane_shapes():
     roundel = ell((c - 24, 270, c + 24, 318))
     layers.append((ring(roundel, 4), BROWN))
     layers.append((roundel, CREAM))
-    layers.append((ell((c - 12, 282, c + 12, 306)), CORAL))
+    layers.append((ell((c - 12, 282, c + 12, 306)), main))
     layers.append((ring(fin, 5), BROWN))
-    layers.append((fin, CORAL, True))
+    layers.append((fin, main, True))
 
     # Cockpit bubble for the cat captain. The captain is Bơ from the passenger art,
     # pasted in by captain() into its own sprite so it can stay upright as the plane turns.
@@ -319,6 +321,7 @@ PILOT_SIZE = 176
 
 
 def airplane():
+    """The airline's coral plane, its pilot and shadow, then the body in every other livery."""
     s = PLANE
     silhouette, body_layers, cockpit = plane_shapes()
     img = Image.new("RGBA", (s * SS, s * SS), (0, 0, 0, 0))
@@ -343,6 +346,13 @@ def airplane():
     fill_mask(shadow, grow(silhouette, 12), BROWN)
     shadow = shadow.filter(ImageFilter.GaussianBlur(SS))
     save(shadow, "airplane_shadow", s, s)
+
+    # The body in each shop livery. The pilot and shadow are the same for all of them.
+    for livery_id, main, dark in LIVERIES[1:]:
+        _, layers, _ = plane_shapes(main, dark)
+        img = Image.new("RGBA", (s * SS, s * SS), (0, 0, 0, 0))
+        paint_layers(img, layers)
+        save(outline_under(img, silhouette, 12), "airplane" + livery_suffix(livery_id), s, s)
 
 
 # ---------------------------------------------------------------- hint

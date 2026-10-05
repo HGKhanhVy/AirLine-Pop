@@ -21,6 +21,9 @@ namespace ASTeams.SingleLine.Unity
 
         public bool HasCat => cat != null;
 
+        // The VIP guest, who takes the companion's place on the card after a VIP flight.
+        private CatView guest;
+
         public void Initialize(CatView prefab)
         {
             texture = new RenderTexture(textureSize, textureSize, 16, RenderTextureFormat.ARGB32) { name = "CatPortrait" };
@@ -48,6 +51,38 @@ namespace ASTeams.SingleLine.Unity
             }
         }
 
+        /// <summary>Seats the VIP guest on the stage too, out of sight until a VIP flight is won.</summary>
+        public void InitializeGuest(CatView prefab)
+        {
+            if (prefab == null)
+            {
+                return;
+            }
+
+            guest = Instantiate(prefab, catAnchor.position, catAnchor.rotation, catAnchor);
+            guest.transform.localScale = Vector3.one * catScale;
+            guest.TapCollider.enabled = false;
+            guest.SetViewer(stageCamera.transform);
+            guest.SetPose(CatPose.Wait);
+            guest.gameObject.SetActive(false);
+        }
+
+        /// <summary>Puts the VIP guest in front of the camera instead of the companion, or back again.</summary>
+        public void ShowGuest(bool isShown)
+        {
+            bool hasGuest = isShown && guest != null;
+
+            if (guest != null)
+            {
+                guest.gameObject.SetActive(hasGuest);
+            }
+
+            if (cat != null)
+            {
+                cat.gameObject.SetActive(!hasGuest);
+            }
+        }
+
         public void SetRendering(bool isRendering)
         {
             stageCamera.enabled = isRendering && texture != null;
@@ -55,9 +90,11 @@ namespace ASTeams.SingleLine.Unity
 
         public void Play(int trigger)
         {
-            if (cat != null)
+            CatView shown = guest != null && guest.gameObject.activeSelf ? guest : cat;
+
+            if (shown != null)
             {
-                cat.Trigger(trigger);
+                shown.Trigger(trigger);
             }
         }
 

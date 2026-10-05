@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -27,15 +28,29 @@ namespace ASTeams.Base.UI
         [Header("Stability")]
         [SerializeField] private int waitFramesAfterSceneActive = 2;
 
+        [Tooltip("Shortest time the overlay stays up, so a loading screen on it can be seen.")]
+        [SerializeField, Min(0f)] private float minHoldSeconds;
+
+        /// <summary>Raised as the overlay starts to fade in.</summary>
+        public event Action TransitionStarted;
+
+        /// <summary>Raised when the new scene is ready, just before the overlay fades out.</summary>
+        public event Action SceneReady;
+
+        /// <summary>Raised once the overlay has faded out.</summary>
+        public event Action TransitionFinished;
+
         public string CurrentScene;
 
         private Coroutine _co;
         private Tween _fadeTween;
+        private ThreadPriority _defaultLoadingPriority;
 
         public override void Init()
         {
             base.Init();
             DontDestroyOnLoad(gameObject);
+            _defaultLoadingPriority = Application.backgroundLoadingPriority;
 
             if (root != null)
             {
@@ -54,6 +69,7 @@ namespace ASTeams.Base.UI
         public void ChangeScene(string sceneName)
         {
             if (_co != null) StopCoroutine(_co);
+            Application.backgroundLoadingPriority = _defaultLoadingPriority;
             _co = StartCoroutine(CoLoad(sceneName));
             CurrentScene = sceneName;
             //SceneManager.LoadScene(sceneName);
@@ -62,6 +78,8 @@ namespace ASTeams.Base.UI
         private IEnumerator CoLoad(string sceneName)
         {
             KillTween();
+            float startTime = Time.unscaledTime;
+            TransitionStarted?.Invoke();
 
             // 1) Fade IN overlay
             if (root != null)
@@ -74,18 +92,24 @@ namespace ASTeams.Base.UI
                 yield return _fadeTween.WaitForCompletion();
             }
 
-            // 2) Load async scene
+            // 2) Load async scene. Load gently in the background and keep the scene inactive
+            // until the hold is over: activating it stalls the main thread, so it goes last,
+            // where the stall cannot interrupt the loading screen's animation midway.
+            Application.backgroundLoadingPriority = ThreadPriority.Low;
             var op = SceneManager.LoadSceneAsync(sceneName);
             op.allowSceneActivation = false;
 
-            while (op.progress < 0.9f) yield return null;
+            while (op.progress < 0.9f || Time.unscaledTime - startTime < minHoldSeconds) yield return null;
 
+            Application.backgroundLoadingPriority = _defaultLoadingPriority;
             op.allowSceneActivation = true;
             while (!op.isDone) yield return null;
 
             while (SceneManager.GetActiveScene().name != sceneName) yield return null;
             for (int i = 0; i < waitFramesAfterSceneActive; i++) yield return null;
             yield return new WaitForEndOfFrame();
+
+            SceneReady?.Invoke();
 
             // 3) Fade OUT overlay
             KillTween();
@@ -99,6 +123,7 @@ namespace ASTeams.Base.UI
             }
 
             _co = null;
+            TransitionFinished?.Invoke();
         }
 
         private void KillTween()

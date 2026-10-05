@@ -10,7 +10,7 @@ namespace ASTeams.SingleLine.Core
             bool[] visited, bool needsCompletion = false)
         {
             Array.Clear(visited, 0, level.Grid.CellCount);
-            if (path.Count == 0 || path.Count > level.ActiveCellCount || !PathRules.CanStart(level, path[0]))
+            if (path.Count == 0 || path.Count > level.PathLength || !PathRules.CanStart(level, path[0]))
             {
                 return false;
             }
@@ -24,7 +24,7 @@ namespace ASTeams.SingleLine.Core
                     return false;
                 }
 
-                visited[cell] = true;
+                PathRules.Visit(level, visited, cell, true);
             }
 
             return !needsCompletion || PathRules.IsComplete(level, path.Count, path[path.Count - 1]);

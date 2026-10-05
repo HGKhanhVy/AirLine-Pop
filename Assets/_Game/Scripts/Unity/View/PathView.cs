@@ -47,6 +47,10 @@ namespace ASTeams.SingleLine.Unity
         [Tooltip("Extra time the spark lingers on the cell after landing, so the arrival is seen.")]
         [SerializeField, Min(0f)] private float sparkAfterglow = 0.11f;
 
+        [Tooltip("Draws the mirror of the route, for the wingman of a formation flight. " +
+                 "On any other flight a mirrored line stays empty.")]
+        [SerializeField] private bool isMirrored;
+
         private Vector3[] points;
 
         // The newest segment grows instead of appearing whole, so the eye can see which
@@ -130,7 +134,7 @@ namespace ASTeams.SingleLine.Unity
                 ShowLine();
             }
 
-            if (session == null || session.Length == 0)
+            if (session == null || session.Length == 0 || (isMirrored && !session.Level.IsFormation))
             {
                 SetPointCount(0);
                 return;
@@ -138,7 +142,8 @@ namespace ASTeams.SingleLine.Unity
 
             for (int step = 0; step < session.Length; step++)
             {
-                Vector3 position = boardView.GetCellWorldPosition(session.GetCell(step));
+                int cell = session.GetCell(step);
+                Vector3 position = boardView.GetCellWorldPosition(isMirrored ? session.Level.MirrorOf(cell) : cell);
                 position.z = -0.1f;
                 points[step] = position;
             }
@@ -330,6 +335,14 @@ namespace ASTeams.SingleLine.Unity
             {
                 spark.enabled = false;
             }
+        }
+
+        /// <summary>Swaps the line's dashes for another set, such as a theme's runway marks.</summary>
+        public void SetDashMaterial(Material material)
+        {
+            sharedMaterial = material;
+            line.sharedMaterial = material;
+            ApplyDashScale();
         }
 
         public void SetColor(Color color)

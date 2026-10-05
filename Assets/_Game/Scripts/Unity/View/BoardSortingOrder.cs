@@ -45,6 +45,9 @@ namespace ASTeams.SingleLine.Unity
         /// <summary>Highest order used inside the cell prefab's own art.</summary>
         public const int CellArtCeiling = 10;
 
+        /// <summary>A level rule's mark on its square (runway, wind): over the square's art, under the path.</summary>
+        public const int RuleMarker = 11;
+
         /// <summary>
         /// First of the lines drawn under the path through the same points, such as the
         /// runway it is the centre line of. Each further underlay takes the next order, so
@@ -79,6 +82,12 @@ namespace ASTeams.SingleLine.Unity
 
         /// <summary>The airplane's shadow, on the board surface above the path and its spark.</summary>
         public const int AirplaneShadow = 21;
+
+        /// <summary>The dark of a night flight, over the board and under the planes.</summary>
+        public const int NightShade = 22;
+
+        /// <summary>What stays lit through a night flight: the runway lights, the gusts, the planes' glow.</summary>
+        public const int NightLit = 23;
 
         public const int Dust = 30;
 

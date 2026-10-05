@@ -89,6 +89,14 @@ namespace ASTeams.SingleLine.Unity
 
         private string Title(in WinFlightSummary flight)
         {
+            if (flight.IsVip)
+            {
+                string detail = flight.EarnedPostcard != null && !string.IsNullOrEmpty(flight.Destination)
+                    ? Localization.Format("win.postcard", flight.Destination)
+                    : Localization.Get("win.vipDetail");
+                return Localization.Format("win.vipTitle", flight.FlightNumber) + Detail(detail);
+            }
+
             if (string.IsNullOrEmpty(flight.Destination))
             {
                 return Localization.Format("win.title", flight.FlightNumber);

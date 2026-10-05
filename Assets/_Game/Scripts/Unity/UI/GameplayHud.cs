@@ -35,6 +35,9 @@ namespace ASTeams.SingleLine.Unity
         [SerializeField, Min(0.01f)] private float bannerFadeSpeed = 4f;
 
         private int levelNumber;
+
+        // The picture of a special board, such as "plane"; null on an ordinary one.
+        private string specialName;
         private int visitedCells;
         private int totalCells;
         private PathState state = PathState.Ready;
@@ -47,6 +50,7 @@ namespace ASTeams.SingleLine.Unity
         private void OnEnable()
         {
             GameplayEvents.OnLevelLoaded += HandleLevelLoaded;
+            GameplayEvents.OnSpecialFlight += HandleSpecialFlight;
             GameplayEvents.OnProgressChanged += HandleProgressChanged;
             GameplayEvents.OnStateChanged += HandleStateChanged;
             GameplayEvents.OnHintStarted += HandleHintStarted;
@@ -67,6 +71,7 @@ namespace ASTeams.SingleLine.Unity
         private void OnDisable()
         {
             GameplayEvents.OnLevelLoaded -= HandleLevelLoaded;
+            GameplayEvents.OnSpecialFlight -= HandleSpecialFlight;
             GameplayEvents.OnProgressChanged -= HandleProgressChanged;
             GameplayEvents.OnStateChanged -= HandleStateChanged;
             GameplayEvents.OnHintStarted -= HandleHintStarted;
@@ -128,6 +133,12 @@ namespace ASTeams.SingleLine.Unity
             Refresh();
         }
 
+        private void HandleSpecialFlight(string pictureName)
+        {
+            specialName = pictureName;
+            Refresh();
+        }
+
         private void HandleRewindChanged(bool rewinding)
         {
             isRewinding = rewinding;
@@ -146,7 +157,14 @@ namespace ASTeams.SingleLine.Unity
         {
             if (levelLabel != null)
             {
-                levelLabel.SetText(Localization.Get("gameplay.level"), levelNumber);
+                if (specialName == null)
+                {
+                    levelLabel.SetText(Localization.Get("gameplay.level"), levelNumber);
+                }
+                else
+                {
+                    levelLabel.text = Localization.Format("gameplay.specialLevel", levelNumber, Localization.Get("special." + specialName));
+                }
             }
 
             if (progressLabel != null)

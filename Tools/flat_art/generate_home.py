@@ -16,6 +16,8 @@ import random
 
 from PIL import Image, ImageChops, ImageDraw, ImageFilter
 
+from liveries import LIVERIES
+from liveries import suffix as livery_suffix
 from puff import puff
 
 OUT = os.path.join(os.path.dirname(__file__), "..", "..", "Assets", "_Game", "Art", "FlatHome")
@@ -669,8 +671,9 @@ def gate_podium(suffix=""):
     base = h - 10
     c.line([(w / 2, 70), (w / 2, 120)], BROWN, 12)
     c.line([(w / 2, 70), (w / 2, 120)], METAL, 6)
+    # The sign says what it is: the gate's name, so it reads as the place to board.
     c.rect((14, 8, w - 14, 76), 14, CORAL)
-    c.d.text(((w / 2) * SS, 42 * SS), "A1", font=font(46), fill=CREAM, anchor="mm")
+    c.d.text(((w / 2) * SS, 42 * SS), SIGNS[suffix]["gate"], font=font(30 if suffix == "" else 28), fill=CREAM, anchor="mm")
     c.rect((20, 120, w - 20, base), 14, CREAM)
     c.rect((34, 136, w - 34, 186), 8, NAVY, line=4)
     c.d.text(((w / 2) * SS, 161 * SS), SIGNS[suffix]["boarding"], font=font(17 if suffix == "" else 15), fill=TAXI_YELLOW, anchor="mm")
@@ -734,6 +737,13 @@ MINT_LIVERY = (104, 196, 178, 255)
 MINT_LIVERY_DARK = (74, 160, 146, 255)
 
 
+def paw_logo(c, cx, cy, colour):
+    """The airline's logo: a paw print, a pad and four toes."""
+    c.d.ellipse(c._box((cx - 11, cy - 2, cx + 11, cy + 16)), fill=colour)
+    for dx, dy in ((-15, -6), (-6, -15), (6, -15), (15, -6)):
+        c.d.ellipse(c._box((cx + dx - 5, cy + dy - 6, cx + dx + 5, cy + dy + 6)), fill=colour)
+
+
 def plane_parked(name, livery, livery_dark, captain=True):
     """The plane parked at a stand, seen from the side with the nose to the left, standing
     on its wheels like the passengers stand on their feet. Chibi proportions to match
@@ -745,10 +755,11 @@ def plane_parked(name, livery, livery_dark, captain=True):
     base = h - 8
     wheel = (92, 78, 88, 255)
 
-    # Behind the body: the tail fin with the airline's roundel, and the far tailplane.
+    # Behind the body: the tail fin with the airline's logo, a paw print on a cream disc,
+    # and the far tailplane.
     c.poly([(w - 176, top + 40), (w - 112, 10), (w - 50, 10), (w - 26, top + 70)], livery)
-    c.d.ellipse(c._box((w - 118, 34, w - 70, 82)), fill=CREAM)
-    c.d.ellipse(c._box((w - 106, 46, w - 82, 70)), fill=livery_dark)
+    c.d.ellipse(c._box((w - 122, 28, w - 66, 84)), fill=CREAM)
+    paw_logo(c, w - 94, 58, livery_dark)
     c.poly([(w - 140, top + 74), (w - 50, top + 54), (w - 30, top + 84), (w - 130, top + 96)], livery_dark)
 
     # Landing gear under the nose and the wing.
@@ -824,7 +835,9 @@ def taxi_sign():
 
 
 def planes():
-    plane_parked("plane_parked", CORAL, CORAL_DARK)
+    # Our plane in each livery the shop sells; the coral one keeps the plain name.
+    for livery_id, main, dark in LIVERIES:
+        plane_parked("plane_parked" + livery_suffix(livery_id), main, dark)
     # Another airline at the next stand, and the same shape climbing away in the sky.
     plane_parked("plane_mint", MINT_LIVERY, MINT_LIVERY_DARK, captain=False)
     light_pole()

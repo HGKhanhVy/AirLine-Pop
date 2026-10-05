@@ -46,6 +46,33 @@ MonoBehaviour:
   - Key: settings.language
     English: Language
     Vietnamese: "Ng\xF4n ng\u1EEF"
+  - Key: loading.tip.wings
+    English: Let me check the wings first...
+    Vietnamese: "\u0110\u1EC3 B\u01A1 ki\u1EC3m tra c\xE1nh m\xE1y bay \u0111\xE3
+      nha..."
+  - Key: loading.tip.bags
+    English: Are all the bags on board?
+    Vietnamese: "H\xE0nh l\xFD l\xEAn khoang h\u1EBFt ch\u01B0a n\xE8?"
+  - Key: loading.tip.belts
+    English: Fasten your seatbelts, kitties!
+    Vietnamese: "C\xE1c b\xE9 th\u1EAFt d\xE2y an to\xE0n nh\xE9!"
+  - Key: loading.tip.snacks
+    English: Did we pack enough fish snacks?
+    Vietnamese: "C\xE1 kh\xF4 cho chuy\u1EBFn bay x\u1EBFp \u0111\u1EE7 ch\u01B0a?"
+  - Key: loading.tip.tower
+    English: Control tower, come in... meow?
+    Vietnamese: "Al\xF4 \u0111\xE0i ki\u1EC3m so\xE1t... meo meo?"
+  - Key: loading.tip.nap
+    English: Someone wake up the co-pilot!
+    Vietnamese: "Ai \u0111\xE1nh th\u1EE9c c\u01A1 ph\xF3 d\u1EADy gi\xF9m B\u01A1
+      v\u1EDBi!"
+  - Key: loading.tip.yarn
+    English: Hey, come back here, yarn!
+    Vietnamese: "\u01A0 k\xECa, cu\u1ED9n len l\u0103n \u0111i \u0111\xE2u r\u1ED3i!"
+  - Key: loading.tip.window
+    English: No fighting over the window seat!
+    Vietnamese: "\u0110\u1EEBng gi\xE0nh gh\u1EBF c\u1EEDa s\u1ED5 n\u1EEFa m\u1EA5y
+      \u0111\u1EE9a!"
   - Key: home.fly
     English: FLY
     Vietnamese: BAY
@@ -58,6 +85,24 @@ MonoBehaviour:
   - Key: nav.shop
     English: Shop
     Vietnamese: "C\u1EEDa h\xE0ng"
+  - Key: nav.map
+    English: Map
+    Vietnamese: "B\u1EA3n \u0111\u1ED3"
+  - Key: map.chapter
+    English: Chapter {0}
+    Vietnamese: "Ch\u01B0\u01A1ng {0}"
+  - Key: map.international
+    English: International flight
+    Vietnamese: "Chuy\u1EBFn bay qu\u1ED1c t\u1EBF"
+  - Key: map.title
+    English: Flight routes
+    Vietnamese: "\u0110\u01B0\u1EDDng bay c\u1EE7a h\xE3ng"
+  - Key: map.airport
+    English: AIRPORT
+    Vietnamese: "S\xC2N BAY"
+  - Key: map.hubProgress
+    English: '{0}/{1} flights'
+    Vietnamese: "{0}/{1} chuy\u1EBFn"
   - Key: lounge.title
     English: Lounge
     Vietnamese: "Ph\xF2ng ch\u1EDD"
@@ -67,10 +112,82 @@ MonoBehaviour:
   - Key: shop.title
     English: Shop
     Vietnamese: "C\u1EEDa h\xE0ng"
-  - Key: shop.soon
-    English: "Snacks \xB7 Planes \xB7 Airport \xB7 Lounge"
-    Vietnamese: "\u0110\u1ED3 \u0103n \xB7 M\xE1y bay \xB7 S\xE2n bay \xB7 Ph\xF2ng
-      ch\u1EDD"
+  - Key: shop.snacks
+    English: Snacks
+    Vietnamese: "\u0110\u1ED3 \u0103n"
+  - Key: shop.planes
+    English: Planes
+    Vietnamese: "M\xE1y bay"
+  - Key: shop.themes
+    English: Themes
+    Vietnamese: "Giao di\u1EC7n"
+  - Key: shop.themesHint
+    English: Dress your board and route map
+    Vietnamese: "\u0110\u1ED5i giao di\u1EC7n m\xE0n ch\u01A1i v\xE0 b\u1EA3n \u0111\u1ED3"
+  - Key: shop.boughtTheme
+    English: Theme {0} is on!
+    Vietnamese: "\u0110\xE3 d\xF9ng giao di\u1EC7n {0}!"
+  - Key: theme.default
+    English: Blue Sky
+    Vietnamese: "Tr\u1EDDi xanh"
+  - Key: theme.ocean
+    English: Mint
+    Vietnamese: "B\u1EA1c h\xE0"
+  - Key: theme.sunset
+    English: Sunset
+    Vietnamese: "Ho\xE0ng h\xF4n"
+  - Key: theme.starter
+    English: Sakura
+    Vietnamese: "Anh \u0111\xE0o"
+  - Key: theme.neon
+    English: Starry Night
+    Vietnamese: "\u0110\xEAm sao"
+  - Key: shop.use
+    English: Use
+    Vietnamese: "D\xF9ng"
+  - Key: shop.inUse
+    English: In use
+    Vietnamese: "\u0110ang d\xF9ng"
+  - Key: shop.snackPack
+    English: '{0} snacks'
+    Vietnamese: "{0} ph\u1EA7n \u0103n"
+  - Key: shop.snackPackOne
+    English: 1 snack
+    Vietnamese: "1 ph\u1EA7n \u0103n"
+  - Key: shop.snackStock
+    English: "You have {0} snacks \xB7 feed your regulars in the lounge"
+    Vietnamese: "B\u1EA1n c\xF3 {0} ph\u1EA7n \u0103n \xB7 m\u1EDDi kh\xE1ch quen
+      \u1EDF ph\xF2ng ch\u1EDD"
+  - Key: shop.planesHint
+    English: Pick a plane for your airline
+    Vietnamese: "Ch\u1ECDn m\xE1y bay cho h\xE3ng c\u1EE7a b\u1EA1n"
+  - Key: shop.boughtSnacks
+    English: Bought {0} snacks!
+    Vietnamese: "\u0110\xE3 mua {0} ph\u1EA7n \u0103n!"
+  - Key: shop.boughtLivery
+    English: Your plane is now {0}!
+    Vietnamese: "M\xE1y bay \u0111\xE3 \u0111\u1ED5i sang m\xE0u {0}!"
+  - Key: shop.noCoins
+    English: Not enough coins
+    Vietnamese: "Ch\u01B0a \u0111\u1EE7 xu"
+  - Key: livery.coral
+    English: Classic Pop
+    Vietnamese: "Pop c\u1ED5 \u0111i\u1EC3n"
+  - Key: livery.sunny
+    English: Propeller
+    Vietnamese: "C\xE1nh qu\u1EA1t"
+  - Key: livery.mint
+    English: Seaplane
+    Vietnamese: "Th\u1EE7y phi c\u01A1"
+  - Key: livery.sky
+    English: Jumbo
+    Vietnamese: Jumbo
+  - Key: livery.lavender
+    English: Supersonic
+    Vietnamese: "Si\xEAu thanh"
+  - Key: livery.whale
+    English: Sky Whale
+    Vietnamese: "C\xE1 voi bay"
   - Key: toast.arrived
     English: '{0} is now one of our regulars!'
     Vietnamese: "{0} v\u1EEBa th\xE0nh kh\xE1ch quen c\u1EE7a h\xE3ng!"
@@ -81,14 +198,20 @@ MonoBehaviour:
     English: ON TIME
     Vietnamese: "\u0110\xDANG GI\u1EDC"
   - Key: album.title
-    English: Postcard Album
-    Vietnamese: "S\u1ED5 b\u01B0u thi\u1EBFp"
+    English: Stamp Collection
+    Vietnamese: "S\u1ED5 tem"
   - Key: album.summary
-    English: '{0}/{1} postcards'
-    Vietnamese: "{0}/{1} b\u01B0u thi\u1EBFp"
-  - Key: album.stamps
     English: '{0}/{1} stamps'
-    Vietnamese: '{0}/{1} tem'
+    Vietnamese: '{0}/{1} con tem'
+  - Key: album.stamps
+    English: '{0}/{1}'
+    Vietnamese: '{0}/{1}'
+  - Key: album.country
+    English: "{0} \xB7 {1}/{2}"
+    Vietnamese: "{0} \xB7 {1}/{2}"
+  - Key: album.page
+    English: Page {0}/{1}
+    Vietnamese: Trang {0}/{1}
   - Key: care.greet
     English: Say hi
     Vietnamese: "Ch\xE0o"
@@ -101,6 +224,30 @@ MonoBehaviour:
   - Key: care.buy
     English: "Buy snack \xB7 {0} coins"
     Vietnamese: "Mua \u0111\u1ED3 \u0103n \xB7 {0} xu"
+  - Key: care.feedShort
+    English: Snack
+    Vietnamese: "M\u1EDDi \u0103n"
+  - Key: care.wardrobe
+    English: Dress up
+    Vietnamese: "Thay \u0111\u1ED3"
+  - Key: accessory.none
+    English: None
+    Vietnamese: "B\u1ECF"
+  - Key: accessory.bow
+    English: Bow
+    Vietnamese: "N\u01A1 h\u1ED3ng"
+  - Key: accessory.pilot_cap
+    English: Pilot cap
+    Vietnamese: "M\u0169 phi c\xF4ng"
+  - Key: accessory.flower_crown
+    English: Flower crown
+    Vietnamese: "V\xF2ng hoa"
+  - Key: accessory.crown
+    English: Crown
+    Vietnamese: "V\u01B0\u01A1ng mi\u1EC7n"
+  - Key: care.buyShort
+    English: "Buy \xB7 {0}"
+    Vietnamese: "Mua \xB7 {0}"
   - Key: care.bond
     English: +{0} bond
     Vietnamese: "+{0} th\xE2n thi\u1EBFt"
@@ -156,6 +303,89 @@ MonoBehaviour:
   - Key: gameplay.level
     English: Flight {0}
     Vietnamese: "Chuy\u1EBFn {0}"
+  - Key: gameplay.specialLevel
+    English: "Flight {0} \xB7 {1}"
+    Vietnamese: "Chuy\u1EBFn {0} \xB7 {1}"
+  - Key: rule.runway.title
+    English: Runway
+    Vietnamese: "\u0110\u01B0\u1EDDng b\u0103ng"
+  - Key: rule.runway.body
+    English: 'Land on the runway: the flight has to end on this square, so plan your
+      route to finish here.'
+    Vietnamese: "H\u1EA1 c\xE1nh \u1EDF \u0111\u01B0\u1EDDng b\u0103ng: chuy\u1EBFn
+      bay ph\u1EA3i k\u1EBFt th\xFAc t\u1EA1i \xF4 n\xE0y, h\xE3y t\xEDnh \u0111\u01B0\u1EDDng
+      \u0111\u1EC3 v\u1EC1 \u0111\xEDch \u1EDF \u0111\xE2y."
+  - Key: rule.night.title
+    English: Night flight
+    Vietnamese: "Bay \u0111\xEAm"
+  - Key: rule.night.body
+    English: Watch the route once, then fly it in the dark. Only your plane's lights
+      show the way.
+    Vietnamese: "Nh\u1EDB k\u1EF9 \u0111\u01B0\u1EDDng bay \u0111\u01B0\u1EE3c ch\u1EC9
+      m\u1ED9t l\u1EA7n, r\u1ED3i bay trong \u0111\xEAm. Ch\u1EC9 c\xF3 \u0111\xE8n
+      m\xE1y bay soi \u0111\u01B0\u1EDDng."
+  - Key: rule.formation.title
+    English: Formation
+    Vietnamese: "Bay \u0111\u1ED9i h\xECnh"
+  - Key: rule.formation.body
+    English: Two planes fly as mirror images. Cover your half and your wingman covers
+      the other.
+    Vietnamese: "Hai m\xE1y bay bay \u0111\u1ED1i x\u1EE9ng nh\u01B0 soi g\u01B0\u01A1ng.
+      Ph\u1EE7 k\xEDn n\u1EEDa c\u1EE7a b\u1EA1n, m\xE1y bay \u0111\u1ED3ng \u0111\u1ED9i
+      s\u1EBD ph\u1EE7 n\u1EEDa c\xF2n l\u1EA1i."
+  - Key: rule.vip.title
+    English: VIP flight
+    Vietnamese: "Chuy\u1EBFn bay VIP"
+  - Key: rule.vip.body
+    English: A chapter's last flight mixes the rules you know. Land it for a gold
+      seal on the stamp and a VIP guest in the lounge!
+    Vietnamese: "Chuy\u1EBFn cu\u1ED1i ch\u01B0\u01A1ng k\u1EBFt h\u1EE3p c\xE1c
+      lu\u1EADt \u0111\xE3 h\u1ECDc. Ho\xE0n th\xE0nh \u0111\u1EC3 nh\u1EADn d\u1EA5u
+      v\xE0ng tr\xEAn tem v\xE0 m\u1ED9t v\u1ECB kh\xE1ch VIP gh\xE9 ph\xF2ng ch\u1EDD!"
+  - Key: special.vip
+    English: VIP
+    Vietnamese: VIP
+  - Key: rule.wind.title
+    English: Wind
+    Vietnamese: "Lu\u1ED3ng gi\xF3"
+  - Key: rule.wind.body
+    English: Fly onto a windy square and the gust pushes you on the way its arrow
+      points.
+    Vietnamese: "Bay v\xE0o \xF4 c\xF3 gi\xF3, m\xE1y bay s\u1EBD b\u1ECB \u0111\u1EA9y
+      \u0111i ti\u1EBFp theo \u0111\xFAng h\u01B0\u1EDBng m\u0169i t\xEAn."
+  - Key: rule.gotIt
+    English: Got it!
+    Vietnamese: "\u0110\xE3 hi\u1EC3u!"
+  - Key: special.heart
+    English: Heart
+    Vietnamese: "Tr\xE1i tim"
+  - Key: special.plane
+    English: Plane
+    Vietnamese: "M\xE1y bay"
+  - Key: special.fish
+    English: Fish
+    Vietnamese: "Con c\xE1"
+  - Key: special.suitcase
+    English: Suitcase
+    Vietnamese: Vali
+  - Key: special.lotus
+    English: Lotus
+    Vietnamese: Hoa sen
+  - Key: special.fuji
+    English: Mount Fuji
+    Vietnamese: "N\xFAi Ph\xFA S\u0129"
+  - Key: special.kimchi
+    English: Kimchi jar
+    Vietnamese: "H\u0169 kim chi"
+  - Key: special.eiffel
+    English: Eiffel Tower
+    Vietnamese: "Th\xE1p Eiffel"
+  - Key: special.pyramid
+    English: Pyramid
+    Vietnamese: "Kim t\u1EF1 th\xE1p"
+  - Key: special.cat
+    English: Cat face
+    Vietnamese: "M\u1EB7t m\xE8o"
   - Key: gameplay.progress
     English: '{0} / {1}'
     Vietnamese: '{0} / {1}'
@@ -188,29 +418,70 @@ MonoBehaviour:
     English: "{0} cat passengers \xB7 Stamp {1}/{2}"
     Vietnamese: "{0} kh\xE1ch m\xE8o \xB7 Tem {1}/{2}"
   - Key: win.postcard
-    English: Postcard from {0} added to your album!
-    Vietnamese: "B\u01B0u thi\u1EBFp {0} \u0111\xE3 v\u1EC1 s\u1ED5!"
+    English: Stamp and postcard from {0} added to your collection!
+    Vietnamese: "Tem v\xE0 b\u01B0u thi\u1EBFp {0} \u0111\xE3 v\u1EC1 s\u1ED5 tem!"
+  - Key: win.vipTitle
+    English: His Majesty is delighted with flight {0}!
+    Vietnamese: "Ho\xE0ng th\u01B0\u1EE3ng r\u1EA5t h\xE0i l\xF2ng v\u1EDBi chuy\u1EBFn
+      {0}!"
+  - Key: win.vipDetail
+    English: "He'll drop by your lounge \xB7 Gold seal on your stamp"
+    Vietnamese: "Ng\xE0i s\u1EBD gh\xE9 ph\xF2ng ch\u1EDD \xB7 Tem \u0111\u01B0\u1EE3c
+      \u0111\xF3ng d\u1EA5u v\xE0ng"
   - Key: win.replayNote
     English: Ticket already earned for this flight
     Vietnamese: "\u0110\xE3 nh\u1EADn ti\u1EC1n v\xE9 chuy\u1EBFn n\xE0y r\u1ED3i"
-  - Key: destination.da_lat
-    English: Da Lat
-    Vietnamese: "\u0110\xE0 L\u1EA1t"
+  - Key: destination.hanoi
+    English: Hanoi
+    Vietnamese: "H\xE0 N\u1ED9i"
   - Key: region.vietnam
     English: Vietnam
     Vietnamese: "Vi\u1EC7t Nam"
-  - Key: destination.hoi_an
-    English: Hoi An
-    Vietnamese: "H\u1ED9i An"
   - Key: destination.ha_long
     English: Ha Long
     Vietnamese: "H\u1EA1 Long"
+  - Key: destination.ninh_binh
+    English: Ninh Binh
+    Vietnamese: "Ninh B\xECnh"
+  - Key: destination.sa_pa
+    English: Sa Pa
+    Vietnamese: Sa Pa
+  - Key: destination.phong_nha
+    English: Phong Nha
+    Vietnamese: Phong Nha
   - Key: destination.hue
     English: Hue
     Vietnamese: "Hu\u1EBF"
+  - Key: destination.da_nang
+    English: Da Nang
+    Vietnamese: "\u0110\xE0 N\u1EB5ng"
+  - Key: destination.hoi_an
+    English: Hoi An
+    Vietnamese: "H\u1ED9i An"
+  - Key: destination.quy_nhon
+    English: Quy Nhon
+    Vietnamese: "Quy Nh\u01A1n"
+  - Key: destination.nha_trang
+    English: Nha Trang
+    Vietnamese: Nha Trang
+  - Key: destination.da_lat
+    English: Da Lat
+    Vietnamese: "\u0110\xE0 L\u1EA1t"
+  - Key: destination.mui_ne
+    English: Mui Ne
+    Vietnamese: "M\u0169i N\xE9"
+  - Key: destination.vung_tau
+    English: Vung Tau
+    Vietnamese: "V\u0169ng T\xE0u"
   - Key: destination.saigon
     English: Saigon
     Vietnamese: "S\xE0i G\xF2n"
+  - Key: destination.phu_quoc
+    English: Phu Quoc
+    Vietnamese: "Ph\xFA Qu\u1ED1c"
+  - Key: destination.can_tho
+    English: Can Tho
+    Vietnamese: "C\u1EA7n Th\u01A1"
   - Key: destination.tokyo
     English: Tokyo
     Vietnamese: Tokyo

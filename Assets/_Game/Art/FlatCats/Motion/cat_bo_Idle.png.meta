@@ -140,18 +140,18 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 357
-        width: 278
-        height: 357
+        y: 362
+        width: 281
+        height: 362
       alignment: 9
-      pivot: {x: 0.49972847, y: 0.0716479}
+      pivot: {x: 0.50506943, y: 0.07065829}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: cdac290a260751742a4bbfddea286b50
+      spriteID: f552e56862d55164f8ab5a1f22963153
       internalID: 213485535
       vertices: []
       indices: 
@@ -161,19 +161,19 @@ TextureImporter:
       name: cat_bo_Idle_01
       rect:
         serializedVersion: 2
-        x: 278
-        y: 357
-        width: 278
-        height: 357
+        x: 281
+        y: 362
+        width: 281
+        height: 362
       alignment: 9
-      pivot: {x: 0.49972847, y: 0.0716479}
+      pivot: {x: 0.50506943, y: 0.07065829}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 0b7a87534263a494ca74151b68694c27
+      spriteID: 71015a9f17f85314abfa388ede7ec458
       internalID: 1384211569
       vertices: []
       indices: 
@@ -183,19 +183,19 @@ TextureImporter:
       name: cat_bo_Idle_02
       rect:
         serializedVersion: 2
-        x: 556
-        y: 357
-        width: 278
-        height: 357
+        x: 562
+        y: 362
+        width: 281
+        height: 362
       alignment: 9
-      pivot: {x: 0.49972847, y: 0.0716479}
+      pivot: {x: 0.50506943, y: 0.07065829}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 54614a6ee94118b49b0a1f5ec058059e
+      spriteID: 048e9d2b6c092d343921c4f73f7163fd
       internalID: 1739048172
       vertices: []
       indices: 
@@ -205,19 +205,19 @@ TextureImporter:
       name: cat_bo_Idle_03
       rect:
         serializedVersion: 2
-        x: 834
-        y: 357
-        width: 278
-        height: 357
+        x: 843
+        y: 362
+        width: 281
+        height: 362
       alignment: 9
-      pivot: {x: 0.49972847, y: 0.0716479}
+      pivot: {x: 0.50506943, y: 0.07065829}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 4e877c5aa49881f4a989d5846a07ee50
+      spriteID: 5940f025688fa1342957b56461f00375
       internalID: 1324541816
       vertices: []
       indices: 
@@ -227,19 +227,19 @@ TextureImporter:
       name: cat_bo_Idle_04
       rect:
         serializedVersion: 2
-        x: 1112
-        y: 357
-        width: 278
-        height: 357
+        x: 1124
+        y: 362
+        width: 281
+        height: 362
       alignment: 9
-      pivot: {x: 0.49972847, y: 0.0716479}
+      pivot: {x: 0.50506943, y: 0.07065829}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 14f4caa37c6a84f4ab4770be24fdf80f
+      spriteID: 16ba21a7f9b43394298d643860ebcf87
       internalID: -543490177
       vertices: []
       indices: 
@@ -249,19 +249,19 @@ TextureImporter:
       name: cat_bo_Idle_05
       rect:
         serializedVersion: 2
-        x: 1390
-        y: 357
-        width: 278
-        height: 357
+        x: 1405
+        y: 362
+        width: 281
+        height: 362
       alignment: 9
-      pivot: {x: 0.49972847, y: 0.0716479}
+      pivot: {x: 0.50506943, y: 0.07065829}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 86023af6fdaf04b4ab7584436d452809
+      spriteID: c84e0073a9e7b674f9d7c5e1d83496dd
       internalID: -1545649166
       vertices: []
       indices: 
@@ -273,17 +273,17 @@ TextureImporter:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 278
-        height: 357
+        width: 281
+        height: 362
       alignment: 9
-      pivot: {x: 0.49972847, y: 0.0716479}
+      pivot: {x: 0.50506943, y: 0.07065829}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 7ae96821c8901784a8f8c8615bcce0c7
+      spriteID: 6770c7b54ae53b347a0f877654c33f23
       internalID: -1195113701
       vertices: []
       indices: 
@@ -293,19 +293,19 @@ TextureImporter:
       name: cat_bo_Idle_07
       rect:
         serializedVersion: 2
-        x: 278
+        x: 281
         y: 0
-        width: 278
-        height: 357
+        width: 281
+        height: 362
       alignment: 9
-      pivot: {x: 0.49972847, y: 0.0716479}
+      pivot: {x: 0.50506943, y: 0.07065829}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 0269d0b69b5081444be89b3751732fd3
+      spriteID: 89ac410885cf9f847b7ad3491112ba6d
       internalID: 455810129
       vertices: []
       indices: 
@@ -315,19 +315,19 @@ TextureImporter:
       name: cat_bo_Idle_08
       rect:
         serializedVersion: 2
-        x: 556
+        x: 562
         y: 0
-        width: 278
-        height: 357
+        width: 281
+        height: 362
       alignment: 9
-      pivot: {x: 0.49972847, y: 0.0716479}
+      pivot: {x: 0.50506943, y: 0.07065829}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: c6530b5fb527af4469537732534a05e9
+      spriteID: 0b542958b75d3574f998a2c08dec9282
       internalID: 1613982191
       vertices: []
       indices: 
@@ -337,19 +337,19 @@ TextureImporter:
       name: cat_bo_Idle_09
       rect:
         serializedVersion: 2
-        x: 834
+        x: 843
         y: 0
-        width: 278
-        height: 357
+        width: 281
+        height: 362
       alignment: 9
-      pivot: {x: 0.49972847, y: 0.0716479}
+      pivot: {x: 0.50506943, y: 0.07065829}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 6121f04ca0060d74d91e13c10dead789
+      spriteID: cd39590a638844d46a702333684415ec
       internalID: -1436320776
       vertices: []
       indices: 

@@ -104,6 +104,37 @@ namespace ASTeams.SingleLine.Unity
             OnLevelLoaded?.Invoke(levelNumber, levelId, difficulty, totalCells);
         }
 
+        /// <summary>
+        /// Raised right after every level loads: the picture a special board shows, such as
+        /// "plane", or null for an ordinary board, so a screen can tell the two apart.
+        /// </summary>
+        public static event Action<string> OnSpecialFlight;
+
+        public static void RaiseSpecialFlight(string pictureName)
+        {
+            OnSpecialFlight?.Invoke(pictureName);
+        }
+
+        /// <summary>Raised right after every level loads: the extra conditions it sets, if any.</summary>
+        public static event Action<LevelRule> OnLevelRules;
+
+        public static void RaiseLevelRules(LevelRule rules)
+        {
+            OnLevelRules?.Invoke(rules);
+        }
+
+        /// <summary>
+        /// Raised with true when a card explaining a new rule opens over the board, and with
+        /// false once the last one has closed, so the board can hold anything the player
+        /// should see until the card is out of the way.
+        /// </summary>
+        public static event Action<bool> OnRuleIntroChanged;
+
+        public static void RaiseRuleIntroChanged(bool isShown)
+        {
+            OnRuleIntroChanged?.Invoke(isShown);
+        }
+
         public static void RaiseProgressChanged(int visitedCells, int totalCells)
         {
             OnProgressChanged?.Invoke(visitedCells, totalCells);
@@ -202,6 +233,8 @@ namespace ASTeams.SingleLine.Unity
         public static void Clear()
         {
             OnLevelLoaded = null;
+            OnSpecialFlight = null;
+            OnLevelRules = null;
             OnProgressChanged = null;
             OnPassengersChanged = null;
             OnStateChanged = null;

@@ -14,19 +14,28 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: starter
   displayName: Aurora
-  price: 0
-  isSoldInShop: 0
+  price: 1200
+  isSoldInShop: 1
   isOwnedByDefault: 0
   palette:
     background: {r: 0.627451, g: 0.83137256, b: 0.9411765, a: 1}
-    cell: {r: 1, g: 0.98039216, b: 0.94509804, a: 1}
+    cell: {r: 1, g: 0.9411765, b: 0.9607843, a: 1}
     stuck: {r: 1, g: 0.42, b: 0.42, a: 1}
     usesLevelHue: 0
-    firstLevelHue: 265
+    firstLevelHue: 335
     hueStepPerLevel: 1
-    startTone: {x: 0.43199998, y: 0.8}
-    visitedTone: {x: 0.044999998, y: 0.98}
-    headTone: {x: 0.063, y: 0.99}
+    startTone: {x: 0.48, y: 0.8}
+    visitedTone: {x: 0.05, y: 0.98}
+    headTone: {x: 0.07, y: 0.99}
     pathTone: {x: 0, y: 1}
-    wonTone: {x: 0.198, y: 1}
+    wonTone: {x: 0.22, y: 1}
     pathAlpha: 1
+  boardSky: {fileID: 21300000, guid: 5dbc6d0e62846984e8f3c3ad789f26fc, type: 3}
+  mapSky: {fileID: 21300000, guid: a44e65c53fae9f440bd0c5b5921d5414, type: 3}
+  gateFlown: {fileID: 21300000, guid: 61cb161109ae20344bca0bb60112b07a, type: 3}
+  gateCurrent: {fileID: 21300000, guid: 435ad93b8d626f64b9d9e74c4967acf1, type: 3}
+  gateLocked: {fileID: 21300000, guid: 52faa93a8918ce3438ddc6c8592adaed, type: 3}
+  preview: {fileID: 21300000, guid: e7b765d0dbb4cd84e9aa773589dca158, type: 3}
+  runwaySurface: {fileID: 2100000, guid: 258b35d790b30244ca01214d87a58e77, type: 2}
+  runwayMarks: {fileID: 2100000, guid: 40e54a7bb029f4f4aa76eb2e275d07e8, type: 2}
+  cloudTint: {r: 1, g: 0.93333334, b: 0.9607843, a: 1}

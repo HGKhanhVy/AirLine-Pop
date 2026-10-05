@@ -1,3 +1,4 @@
+using Crystal;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
@@ -148,6 +149,18 @@ namespace ASTeams.SingleLine.Unity.EditorTools
         }
 
         public const string TicketFace = "btn_ticket";
+
+        /// <summary>
+        /// A full-size layer that keeps its children inside the screen's safe area, clear of
+        /// notches and the home bar. Backdrops and skies go outside it so they still fill the
+        /// whole screen.
+        /// </summary>
+        public static RectTransform SafeLayer(Transform parent)
+        {
+            RectTransform safe = Stretch(Rect("Safe", parent));
+            safe.gameObject.AddComponent<SafeArea>();
+            return safe;
+        }
 
         public static CanvasGroup Group(RectTransform rect)
         {

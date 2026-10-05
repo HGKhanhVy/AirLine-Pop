@@ -23,6 +23,9 @@ namespace ASTeams.SingleLine.Unity
         [Tooltip("Keeps the airplane over the blocks while it follows the finger. Empty lets it fly anywhere.")]
         [SerializeField] private BoardView board;
 
+        [Tooltip("The wingman of a formation flight: flies the mirrored route on the right half.")]
+        [SerializeField] private bool isWingman;
+
         [Header("Height")]
         [Tooltip("Height above the block tops while parked on the runway.")]
         [SerializeField, Min(0f)] private float parkedHeight = 0.12f;
@@ -154,7 +157,14 @@ namespace ASTeams.SingleLine.Unity
             {
                 // The finger may leave the board; the airplane stays over the blocks.
                 Vector3 pointer = input.PointerWorldPosition;
-                Steer(board != null ? board.ClampToCells(pointer) : pointer, deltaTime);
+
+                // In formation the finger may be on either half; each plane flies its own.
+                if (board != null && board.Level != null && board.Level.IsFormation)
+                {
+                    pointer = board.OntoHalf(pointer, isWingman);
+                }
+
+                Steer(board != null ? OnTrack(pointer) : pointer, deltaTime);
             }
             else
             {
@@ -164,6 +174,35 @@ namespace ASTeams.SingleLine.Unity
             altitude = Mathf.Lerp(altitude, isSteering ? 1f : 0f, 1f - Mathf.Exp(-climbSharpness * deltaTime));
             Apply(FlightScale(), FlightHeight());
             SetVisible(true);
+        }
+
+        /// <summary>
+        /// Where the airplane may go towards the finger: only straight ahead, back or to the
+        /// side, along the row or column of the square it stands on, and no further than the
+        /// next square, never over a hole or off the board. However the finger wanders, the
+        /// airplane keeps to the grid the route is drawn on.
+        /// </summary>
+        private Vector3 OnTrack(Vector3 pointer)
+        {
+            Vector3 head = path.TipPosition;
+
+            if (board.TryGetCellAt(head, out int headCell))
+            {
+                head = board.GetCellWorldPosition(headCell);
+            }
+
+            float pitch = board.CellPitch;
+            Vector3 offset = pointer - head;
+            bool isAcross = Mathf.Abs(offset.x) >= Mathf.Abs(offset.y);
+            float along = Mathf.Clamp(isAcross ? offset.x : offset.y, -pitch, pitch);
+            var step = isAcross ? new Vector3(Mathf.Sign(along) * pitch, 0f, 0f) : new Vector3(0f, Mathf.Sign(along) * pitch, 0f);
+
+            if (!board.TryGetCellAt(head + step, out int _))
+            {
+                return head;
+            }
+
+            return head + (isAcross ? new Vector3(along, 0f, 0f) : new Vector3(0f, along, 0f));
         }
 
         private float FlightScale()

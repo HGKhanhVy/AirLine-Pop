@@ -14,15 +14,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: sunset
   displayName: Sunset
-  price: 1000
+  price: 900
   isSoldInShop: 1
   isOwnedByDefault: 0
   palette:
     background: {r: 0.627451, g: 0.83137256, b: 0.9411765, a: 1}
-    cell: {r: 1, g: 0.98039216, b: 0.94509804, a: 1}
+    cell: {r: 1, g: 0.9490196, b: 0.89411765, a: 1}
     stuck: {r: 1, g: 0.42, b: 0.42, a: 1}
     usesLevelHue: 0
-    firstLevelHue: 8
+    firstLevelHue: 20
     hueStepPerLevel: 1
     startTone: {x: 0.48, y: 0.8}
     visitedTone: {x: 0.05, y: 0.98}
@@ -30,3 +30,12 @@ MonoBehaviour:
     pathTone: {x: 0, y: 1}
     wonTone: {x: 0.22, y: 1}
     pathAlpha: 1
+  boardSky: {fileID: 21300000, guid: 0fc13da1d8461e242b54a8dd251d154c, type: 3}
+  mapSky: {fileID: 21300000, guid: 74a440975ae78424c931f097d0d80bf8, type: 3}
+  gateFlown: {fileID: 21300000, guid: 59af1f0a6c1f5ef4fa812724f4757dfd, type: 3}
+  gateCurrent: {fileID: 21300000, guid: cc767192237add646bd5119c4feeb80b, type: 3}
+  gateLocked: {fileID: 21300000, guid: 1f844d87c31f40745b684d1df16d0474, type: 3}
+  preview: {fileID: 21300000, guid: 2f2abfc50990f50478bdbec63cc62e28, type: 3}
+  runwaySurface: {fileID: 2100000, guid: b4e9410930e97d440a71e530f36321ec, type: 2}
+  runwayMarks: {fileID: 2100000, guid: 27c7094f5db28e94bab0a3ef935a3f8a, type: 2}
+  cloudTint: {r: 1, g: 0.89411765, b: 0.8392157, a: 1}

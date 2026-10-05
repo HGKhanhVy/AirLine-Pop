@@ -140,18 +140,18 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 357
-        width: 278
-        height: 357
+        y: 362
+        width: 281
+        height: 362
       alignment: 9
-      pivot: {x: 0.49972847, y: 0.0716479}
+      pivot: {x: 0.50506943, y: 0.07065829}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 72e86e6581f24c942951a55970a884ed
+      spriteID: 378674e4805948f45998c7af356c3b98
       internalID: -525210377
       vertices: []
       indices: 
@@ -161,19 +161,19 @@ TextureImporter:
       name: cat_mun_Roll_01
       rect:
         serializedVersion: 2
-        x: 278
-        y: 357
-        width: 278
-        height: 357
+        x: 281
+        y: 362
+        width: 281
+        height: 362
       alignment: 9
-      pivot: {x: 0.49972847, y: 0.0716479}
+      pivot: {x: 0.50506943, y: 0.07065829}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 0fcebfd9f6d26cf48b821508cb898640
+      spriteID: f6ddc27245fc0334e8afcea4111f3b07
       internalID: -222867362
       vertices: []
       indices: 
@@ -183,19 +183,19 @@ TextureImporter:
       name: cat_mun_Roll_02
       rect:
         serializedVersion: 2
-        x: 556
-        y: 357
-        width: 278
-        height: 357
+        x: 562
+        y: 362
+        width: 281
+        height: 362
       alignment: 9
-      pivot: {x: 0.49972847, y: 0.0716479}
+      pivot: {x: 0.50506943, y: 0.07065829}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: e1321b0e3c6d6724dbf034837d849a19
+      spriteID: 6fbb5a4c0989df8408e1981e96f71722
       internalID: 2061284278
       vertices: []
       indices: 
@@ -205,19 +205,19 @@ TextureImporter:
       name: cat_mun_Roll_03
       rect:
         serializedVersion: 2
-        x: 834
-        y: 357
-        width: 278
-        height: 357
+        x: 843
+        y: 362
+        width: 281
+        height: 362
       alignment: 9
-      pivot: {x: 0.49972847, y: 0.0716479}
+      pivot: {x: 0.50506943, y: 0.07065829}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 200480b4fcb6e844dac4cb304706993b
+      spriteID: b5bf445613f94eb43a8414169d1452f1
       internalID: -317812581
       vertices: []
       indices: 
@@ -227,19 +227,19 @@ TextureImporter:
       name: cat_mun_Roll_04
       rect:
         serializedVersion: 2
-        x: 1112
-        y: 357
-        width: 278
-        height: 357
+        x: 1124
+        y: 362
+        width: 281
+        height: 362
       alignment: 9
-      pivot: {x: 0.49972847, y: 0.0716479}
+      pivot: {x: 0.50506943, y: 0.07065829}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 4b3ae4ce81e54b747a1796b307e72d76
+      spriteID: 62bb75bd1e2233f4f8c6ebe5a54cd502
       internalID: -2123611772
       vertices: []
       indices: 
@@ -249,19 +249,19 @@ TextureImporter:
       name: cat_mun_Roll_05
       rect:
         serializedVersion: 2
-        x: 1390
-        y: 357
-        width: 278
-        height: 357
+        x: 1405
+        y: 362
+        width: 281
+        height: 362
       alignment: 9
-      pivot: {x: 0.49972847, y: 0.0716479}
+      pivot: {x: 0.50506943, y: 0.07065829}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: fdc0c72ceb403764391ecf27d892270e
+      spriteID: cd0716ad251940f488628d9c998d733a
       internalID: -1050494452
       vertices: []
       indices: 
@@ -273,17 +273,17 @@ TextureImporter:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 278
-        height: 357
+        width: 281
+        height: 362
       alignment: 9
-      pivot: {x: 0.49972847, y: 0.0716479}
+      pivot: {x: 0.50506943, y: 0.07065829}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 61f970b8367b384489e04474d18ad14a
+      spriteID: 5b7e5092987eac740a361a437a76970c
       internalID: 1532805635
       vertices: []
       indices: 
@@ -293,19 +293,19 @@ TextureImporter:
       name: cat_mun_Roll_07
       rect:
         serializedVersion: 2
-        x: 278
+        x: 281
         y: 0
-        width: 278
-        height: 357
+        width: 281
+        height: 362
       alignment: 9
-      pivot: {x: 0.49972847, y: 0.0716479}
+      pivot: {x: 0.50506943, y: 0.07065829}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 9085bdd82a8d18c4c8c76c9b649f6061
+      spriteID: ebf64b22bfe724c4199b54eaec7adc91
       internalID: 1348199458
       vertices: []
       indices: 

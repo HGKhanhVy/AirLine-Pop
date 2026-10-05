@@ -14,6 +14,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   firstClearCoins: 80
   foodPrice: 40
+  snackPacks:
+  - quantity: 1
+    price: 40
+    artwork: {fileID: 21300000, guid: abf9d15a42caf7645a5df981ec342ab3, type: 3}
+  - quantity: 5
+    price: 180
+    artwork: {fileID: 21300000, guid: 8ebc139cfdda4b14491d3257ffff1935, type: 3}
+  - quantity: 10
+    price: 320
+    artwork: {fileID: 21300000, guid: 17a0805a757881643b95f5bcdba8fb70, type: 3}
   starterFood: 3
   maxFoodPerPurchase: 10
   petBond: 2
@@ -21,4 +31,6 @@ MonoBehaviour:
   mealBond: 10
   rewardedMealsPerDay: 3
   bondLevelThresholds: 00000000140000003c00000078000000c8000000
+  loyaltyTierCount: 5
+  dailyGiftCoins: 000000000a000000140000002300000032000000
   maxVisibleCats: 4

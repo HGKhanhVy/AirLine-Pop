@@ -420,7 +420,59 @@ def nav_shop(d, s):
     d.ellipse([s * .58, s * .58, s * .66, s * .66], fill=BROWN)
 
 
-NAV_ICONS = {"icon_nav_airport": nav_airport, "icon_nav_paw": nav_paw, "icon_nav_shop": nav_shop}
+def nav_map(d, s):
+    """A folded map in three panels with a dashed flight route ending at a coral pin."""
+    panels = [((.10, .24), (.37, .14), (.37, .84), (.10, .94)),
+              ((.37, .14), (.63, .24), (.63, .94), (.37, .84)),
+              ((.63, .24), (.90, .14), (.90, .84), (.63, .94))]
+    for i, pts in enumerate(panels):
+        d.polygon([(s * x, s * y) for x, y in pts], fill=SKY if i != 1 else SKY_DARK)
+    route = [(.20, .78), (.32, .62), (.48, .66), (.60, .50), (.70, .40)]
+    for (x0, y0), (x1, y1) in zip(route, route[1:]):
+        d.line([s * (x0 + (x1 - x0) * .2), s * (y0 + (y1 - y0) * .2), s * (x0 + (x1 - x0) * .75), s * (y0 + (y1 - y0) * .75)],
+               fill=WHITE, width=int(s * .045))
+    d.ellipse([s * .62, s * .14, s * .84, s * .36], fill=CORAL)
+    d.polygon([(s * .64, s * .30), (s * .82, s * .30), (s * .73, s * .46)], fill=CORAL)
+    d.ellipse([s * .69, s * .21, s * .77, s * .29], fill=WHITE)
+
+
+def _fish(d, s, cx, cy, size, colour=(150, 196, 230, 255)):
+    """A little fish lying on its side, nose left."""
+    d.ellipse([s * (cx - size), s * (cy - size * .55), s * (cx + size * .7), s * (cy + size * .55)], fill=colour)
+    d.polygon([(s * (cx + size * .5), s * cy), (s * (cx + size * 1.1), s * (cy - size * .55)),
+               (s * (cx + size * 1.1), s * (cy + size * .55))], fill=colour)
+    d.ellipse([s * (cx - size * .62), s * (cy - size * .16), s * (cx - size * .38), s * (cy + size * .08)], fill=BROWN)
+
+
+def snack_one(d, s):
+    """One snack: a fish on a plate."""
+    shaded_oval(d, s, (.08, .52, .92, .86), CREAM, CREAM_DARK, .04)
+    _fish(d, s, .46, .58, .26)
+
+
+def snack_bag(d, s):
+    """Five snacks: a paper bag of fish."""
+    shaded_rect(d, s, (.18, .3, .82, .9), .06, (226, 196, 150, 255), (196, 160, 112, 255), .05)
+    d.polygon([(s * .18, s * .3), (s * .3, s * .16), (s * .7, s * .16), (s * .82, s * .3)], fill=(240, 216, 176, 255))
+    _fish(d, s, .44, .14, .14)
+    d.rounded_rectangle([s * .3, s * .52, s * .7, s * .72], radius=s * .05, fill=CORAL)
+    _fish(d, s, .48, .62, .1, WHITE)
+
+
+def snack_crate(d, s):
+    """Ten snacks: a crate brimming with fish."""
+    for x, y in ((.3, .26), (.52, .2), (.7, .28), (.42, .32)):
+        _fish(d, s, x, y, .14)
+    shaded_rect(d, s, (.1, .34, .9, .9), .05, (214, 160, 110, 255), (180, 124, 80, 255), .05)
+    for y in (.52, .7):
+        d.line([(s * .12, s * y), (s * .88, s * y)], fill=(180, 124, 80, 255), width=int(s * .03))
+    d.rounded_rectangle([s * .36, s * .56, s * .64, s * .7], radius=s * .03, fill=CREAM)
+
+
+SHOP_ICONS = {"shop_snack_1": snack_one, "shop_snack_5": snack_bag, "shop_snack_10": snack_crate}
+
+
+NAV_ICONS = {"icon_nav_airport": nav_airport, "icon_nav_paw": nav_paw, "icon_nav_shop": nav_shop, "icon_nav_map": nav_map}
 
 
 
@@ -447,6 +499,8 @@ def main():
     for name, fn in ICONS.items():
         icon(name, fn)
     for name, fn in NAV_ICONS.items():
+        color_icon(name, fn)
+    for name, fn in SHOP_ICONS.items():
         color_icon(name, fn)
     print("UI kit written to", os.path.abspath(OUT))
 

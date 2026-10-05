@@ -22,13 +22,21 @@ namespace ASTeams.SingleLine.Import
         /// <summary>How many of the six greedy player styles failed, zero to six.</summary>
         public int GreedyFailures { get; }
 
+        /// <summary>
+        /// Steps a careful player typically takes to finish, see <see cref="CautiousPlayer"/>:
+        /// about one a square on a forgiving board, many more on one full of traps.
+        /// </summary>
+        public long PlayerSteps { get; }
+
         /// <summary>False when the solver could not finish, so the level must not ship.</summary>
         public bool IsSolvable { get; }
 
         public double GreedyFailureRate => GreedyFailures / (double)GreedyPlayer.StrategyCount;
 
-        public LevelFeatures(int cellCount, double averageDegree, long solverNodes, int greedyFailures, bool isSolvable)
+        public LevelFeatures(int cellCount, double averageDegree, long solverNodes, int greedyFailures, bool isSolvable,
+            long playerSteps = 0)
         {
+            PlayerSteps = playerSteps;
             CellCount = cellCount;
             AverageDegree = averageDegree;
             SolverNodes = solverNodes;
@@ -39,7 +47,7 @@ namespace ASTeams.SingleLine.Import
         public override string ToString()
         {
             return CellCount + " cells, degree " + AverageDegree.ToString("0.00") +
-                   ", " + SolverNodes + " nodes, " + GreedyFailures + "/6 greedy failures";
+                   ", " + SolverNodes + " nodes, " + GreedyFailures + "/6 greedy failures, " + PlayerSteps + " player steps";
         }
     }
 }

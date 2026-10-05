@@ -140,18 +140,18 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 357
-        width: 278
-        height: 357
+        y: 362
+        width: 281
+        height: 362
       alignment: 9
-      pivot: {x: 0.49972847, y: 0.0716479}
+      pivot: {x: 0.50506943, y: 0.07065829}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 5ab7444e1ab9da44e9a471d359c2a411
+      spriteID: 0622a1ca98716b84486fee8506455f4e
       internalID: 191521029
       vertices: []
       indices: 
@@ -161,19 +161,19 @@ TextureImporter:
       name: cat_muop_Idle_01
       rect:
         serializedVersion: 2
-        x: 278
-        y: 357
-        width: 278
-        height: 357
+        x: 281
+        y: 362
+        width: 281
+        height: 362
       alignment: 9
-      pivot: {x: 0.49972847, y: 0.0716479}
+      pivot: {x: 0.50506943, y: 0.07065829}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b925e65ccaf8692408ee8b97d160aa22
+      spriteID: 2905afc1892e85341ae310163449861d
       internalID: 722379684
       vertices: []
       indices: 
@@ -183,19 +183,19 @@ TextureImporter:
       name: cat_muop_Idle_02
       rect:
         serializedVersion: 2
-        x: 556
-        y: 357
-        width: 278
-        height: 357
+        x: 562
+        y: 362
+        width: 281
+        height: 362
       alignment: 9
-      pivot: {x: 0.49972847, y: 0.0716479}
+      pivot: {x: 0.50506943, y: 0.07065829}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 61ee47f4cbb132c48909b4c46885d585
+      spriteID: de4b5bccc0d89444a9cc7ff8a66cc5dd
       internalID: -1205462685
       vertices: []
       indices: 
@@ -205,19 +205,19 @@ TextureImporter:
       name: cat_muop_Idle_03
       rect:
         serializedVersion: 2
-        x: 834
-        y: 357
-        width: 278
-        height: 357
+        x: 843
+        y: 362
+        width: 281
+        height: 362
       alignment: 9
-      pivot: {x: 0.49972847, y: 0.0716479}
+      pivot: {x: 0.50506943, y: 0.07065829}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 173bc41d1cd482d41960681f73c5b5a0
+      spriteID: 05b173f33cc23224bb332cf6a32b9da6
       internalID: -884960752
       vertices: []
       indices: 
@@ -227,19 +227,19 @@ TextureImporter:
       name: cat_muop_Idle_04
       rect:
         serializedVersion: 2
-        x: 1112
-        y: 357
-        width: 278
-        height: 357
+        x: 1124
+        y: 362
+        width: 281
+        height: 362
       alignment: 9
-      pivot: {x: 0.49972847, y: 0.0716479}
+      pivot: {x: 0.50506943, y: 0.07065829}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 6e39a4ae9733e344eacbfccd53d25e40
+      spriteID: 52207f5df9553dd4a9cecc4181223f3a
       internalID: 1247029046
       vertices: []
       indices: 
@@ -249,19 +249,19 @@ TextureImporter:
       name: cat_muop_Idle_05
       rect:
         serializedVersion: 2
-        x: 1390
-        y: 357
-        width: 278
-        height: 357
+        x: 1405
+        y: 362
+        width: 281
+        height: 362
       alignment: 9
-      pivot: {x: 0.49972847, y: 0.0716479}
+      pivot: {x: 0.50506943, y: 0.07065829}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 378b57913a8b38742b84784931de5794
+      spriteID: d8a2a384aab03104ca10af80d652124e
       internalID: -508512014
       vertices: []
       indices: 
@@ -273,17 +273,17 @@ TextureImporter:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 278
-        height: 357
+        width: 281
+        height: 362
       alignment: 9
-      pivot: {x: 0.49972847, y: 0.0716479}
+      pivot: {x: 0.50506943, y: 0.07065829}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: c2bf2b76b0813af41912992da37ad4e8
+      spriteID: 5431834c4e9ff124d8c08ae3e27d9d8b
       internalID: -1366853913
       vertices: []
       indices: 
@@ -293,19 +293,19 @@ TextureImporter:
       name: cat_muop_Idle_07
       rect:
         serializedVersion: 2
-        x: 278
+        x: 281
         y: 0
-        width: 278
-        height: 357
+        width: 281
+        height: 362
       alignment: 9
-      pivot: {x: 0.49972847, y: 0.0716479}
+      pivot: {x: 0.50506943, y: 0.07065829}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 9d384c8a3e4c2f947a915514d3cbbeac
+      spriteID: 54ba840e0eb5b504197142a1362b6828
       internalID: -646136544
       vertices: []
       indices: 
@@ -315,19 +315,19 @@ TextureImporter:
       name: cat_muop_Idle_08
       rect:
         serializedVersion: 2
-        x: 556
+        x: 562
         y: 0
-        width: 278
-        height: 357
+        width: 281
+        height: 362
       alignment: 9
-      pivot: {x: 0.49972847, y: 0.0716479}
+      pivot: {x: 0.50506943, y: 0.07065829}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 51baf6e94f2799b40a261ea999d98a43
+      spriteID: bd833350af4b3d24fbfea5f039544798
       internalID: 1525248717
       vertices: []
       indices: 
@@ -337,19 +337,19 @@ TextureImporter:
       name: cat_muop_Idle_09
       rect:
         serializedVersion: 2
-        x: 834
+        x: 843
         y: 0
-        width: 278
-        height: 357
+        width: 281
+        height: 362
       alignment: 9
-      pivot: {x: 0.49972847, y: 0.0716479}
+      pivot: {x: 0.50506943, y: 0.07065829}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 9bbe314710783ca44ba02872a0911f4a
+      spriteID: 52afd0a1b8cfead44b49296fdc51ed5d
       internalID: 1690173177
       vertices: []
       indices: 

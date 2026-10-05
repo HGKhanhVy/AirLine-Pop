@@ -25,16 +25,31 @@ namespace ASTeams.SingleLine.Unity
         [SerializeField] private CatRoster airportCats;
         [SerializeField] private CatRoster roomCats;
 
-        [Tooltip("Optional. The route map: where the next flight goes, and the postcard album.")]
+        [Tooltip("Optional. The route map: where the next flight goes, and the stamp collection.")]
         [SerializeField] private DestinationCatalogSO destinations;
 
-        [SerializeField] private PostcardAlbumView album;
+        [SerializeField] private StampAlbumView album;
+
+        [Tooltip("Optional. The route map tab: every level on one flight route, replayable.")]
+        [SerializeField] private RouteMapView routeMap;
         [SerializeField] private SettingsPanelView settingsPanel;
+        [SerializeField] private ShopPresenter shop;
+        [SerializeField] private LiveryCatalogSO liveries;
+        [SerializeField] private SkinCatalogSO themes;
 
         [Header("Lounge")]
         [SerializeField] private CatCarePresenter carePresenter;
         [SerializeField] private ArrivalToastView arrivalToast;
         [SerializeField] private DeparturesBoardView departures;
+
+        [Header("Loyalty perks")]
+        [SerializeField] private AccessoryCatalogSO accessories;
+        [SerializeField] private LoungeWardrobePresenter wardrobeDresser;
+        [SerializeField] private CatWardrobePresenter wardrobePicker;
+        [SerializeField] private CatGiftPresenter giftPresenter;
+
+        [Header("VIP")]
+        [SerializeField] private VipGuestView vipGuest;
 
         private ProfileWallet wallet;
         private ISceneNavigator navigator;
@@ -43,6 +58,8 @@ namespace ASTeams.SingleLine.Unity
         public ICatCollectionService Collection { get; private set; }
 
         public ICatCareService Care { get; private set; }
+
+        public IVipFlightStore VipFlights { get; private set; }
 
         // Start rather than Awake: the SDK profile singleton loads its save in its own Awake.
         private void Start()
@@ -53,7 +70,16 @@ namespace ASTeams.SingleLine.Unity
 
             wallet = new ProfileWallet(profile);
             Collection = new CatCollectionService(store, catalog, economy);
-            Care = new CatCareService(store, Collection, economy, new LocalDayClock());
+            var clock = new LocalDayClock();
+            Care = new CatCareService(store, Collection, economy, clock);
+            var wardrobe = new CatWardrobeService(store, Collection, economy, accessories);
+            var gifts = new CatGiftService(store, Collection, economy, clock);
+            VipFlights = new ProfileVipFlightStore(profile);
+
+            if (vipGuest != null)
+            {
+                vipGuest.SetVisiting(VipFlights.IsGuestVisiting(clock.Today));
+            }
             navigator = new SdkSceneNavigator(UISceneController.Instance);
 
             int nextFlight = Math.Max(1, new UserProfileLevelProgressStore(profile).CurrentLevelNumber);
@@ -71,7 +97,18 @@ namespace ASTeams.SingleLine.Unity
 
             if (album != null)
             {
-                album.Initialize(destinations, nextFlight);
+                album.Initialize(destinations, nextFlight, VipFlights);
+            }
+
+            if (routeMap != null)
+            {
+                routeMap.Initialize(destinations, nextFlight, new PlayerPrefsRouteMapMemory());
+                routeMap.OnLevelChosen += HandleLevelChosen;
+            }
+
+            if (shop != null)
+            {
+                shop.Initialize(new ProfileLiveryService(liveries, profile), new ProfileSkinService(themes, profile), Care, economy, wallet);
             }
 
             if (settingsPanel != null)
@@ -94,7 +131,23 @@ namespace ASTeams.SingleLine.Unity
                 arrivalToast.Announce(arrived);
             }
 
+            if (wardrobeDresser != null)
+            {
+                wardrobeDresser.Initialize(wardrobe);
+            }
+
+            if (wardrobePicker != null)
+            {
+                wardrobePicker.Initialize(wardrobe);
+            }
+
+            if (giftPresenter != null)
+            {
+                giftPresenter.Initialize(gifts);
+            }
+
             airport.OnPlayRequested += HandlePlay;
+            tabs.OnTabChanged += HandleTabChanged;
             tabs.ShowInstant(HomeTab.Airport);
         }
 
@@ -106,6 +159,40 @@ namespace ASTeams.SingleLine.Unity
             {
                 airport.OnPlayRequested -= HandlePlay;
             }
+
+            if (routeMap != null)
+            {
+                routeMap.OnLevelChosen -= HandleLevelChosen;
+            }
+
+            if (tabs != null)
+            {
+                tabs.OnTabChanged -= HandleTabChanged;
+            }
+        }
+
+        private void HandleTabChanged(HomeTab tab)
+        {
+            if (routeMap == null)
+            {
+                return;
+            }
+
+            if (tab == HomeTab.Map)
+            {
+                routeMap.Show();
+            }
+            else
+            {
+                routeMap.Hide();
+            }
+        }
+
+        /// <summary>A level picked on the map: an earlier one is replayed, the current one played.</summary>
+        private void HandleLevelChosen(int level)
+        {
+            LevelLaunchRequest.Request(level);
+            HandlePlay();
         }
 
         private void HandlePlay()
@@ -134,15 +221,41 @@ namespace ASTeams.SingleLine.Unity
             roomCats = linkedRoomCats;
         }
 
-        public void EditorLinkRoutes(DestinationCatalogSO linkedDestinations, PostcardAlbumView linkedAlbum)
+        public void EditorLinkRoutes(DestinationCatalogSO linkedDestinations, StampAlbumView linkedAlbum)
         {
             destinations = linkedDestinations;
             album = linkedAlbum;
         }
 
+        public void EditorLinkRouteMap(RouteMapView linkedRouteMap)
+        {
+            routeMap = linkedRouteMap;
+        }
+
+        public void EditorLinkShop(ShopPresenter linkedShop, LiveryCatalogSO linkedLiveries, SkinCatalogSO linkedThemes)
+        {
+            themes = linkedThemes;
+            shop = linkedShop;
+            liveries = linkedLiveries;
+        }
+
         public void EditorLinkSettings(SettingsPanelView linkedSettings)
         {
             settingsPanel = linkedSettings;
+        }
+
+        public void EditorLinkVipGuest(VipGuestView linkedGuest)
+        {
+            vipGuest = linkedGuest;
+        }
+
+        public void EditorLinkPerks(AccessoryCatalogSO linkedAccessories, LoungeWardrobePresenter linkedDresser,
+            CatWardrobePresenter linkedPicker, CatGiftPresenter linkedGifts)
+        {
+            accessories = linkedAccessories;
+            wardrobeDresser = linkedDresser;
+            wardrobePicker = linkedPicker;
+            giftPresenter = linkedGifts;
         }
 
         public void EditorLinkLounge(CatCarePresenter linkedCare, ArrivalToastView linkedToast, DeparturesBoardView linkedDepartures)

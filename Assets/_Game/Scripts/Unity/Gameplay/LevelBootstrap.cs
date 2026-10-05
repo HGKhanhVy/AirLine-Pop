@@ -91,13 +91,29 @@ namespace ASTeams.SingleLine.Unity
                 progressStore.SaveCurrentLevel(savedLevel);
             }
 
-            if (!TryLoadLevelNumber(savedLevel))
+            int startLevel = StartLevel(savedLevel);
+
+            if (!TryLoadLevelNumber(startLevel))
             {
                 Debug.LogError(
-                    "No level " + savedLevel + " to load. Check the level config and run " +
+                    "No level " + startLevel + " to load. Check the level config and run " +
                     "Tools/Single Line/Level Importer if the chapter files are missing.",
                     this);
             }
+        }
+
+        /// <summary>
+        /// A level picked on the route map replays it; anything not yet reached, or no pick
+        /// at all, opens the saved level.
+        /// </summary>
+        private static int StartLevel(int savedLevel)
+        {
+            if (LevelLaunchRequest.TryTake(out int requested) && requested <= savedLevel)
+            {
+                return requested;
+            }
+
+            return savedLevel;
         }
 
         /// <summary>
@@ -277,6 +293,8 @@ namespace ASTeams.SingleLine.Unity
             gameStateService?.ResetToPlaying();
             GameplayEvents.RaiseLevelLoaded(currentLevelNumber, currentLevelId, level.Difficulty,
                 level.ActiveCellCount);
+            GameplayEvents.RaiseSpecialFlight(FlightName(level));
+            GameplayEvents.RaiseLevelRules(level.Rules);
 
             // A fresh board already stands on its start square, so the count starts at one.
             // Without this a label would read zero until the player's first move.
@@ -289,6 +307,13 @@ namespace ASTeams.SingleLine.Unity
         /// Says again everything a screen would have heard had it been listening when the
         /// level opened. Nothing is stored to answer this; the board reads its own state.
         /// </summary>
+        /// <summary>What the flight is billed as beside its number: its picture, VIP, or nothing.</summary>
+        private static string FlightName(LevelData level)
+        {
+            string picture = LevelTags.SpecialName(level);
+            return picture ?? (level.IsVip ? LevelTags.Vip : null);
+        }
+
         private void PublishSnapshot()
         {
             LevelData level = controller.Level;
@@ -297,6 +322,7 @@ namespace ASTeams.SingleLine.Unity
             {
                 GameplayEvents.RaiseLevelLoaded(currentLevelNumber, currentLevelId, level.Difficulty,
                     level.ActiveCellCount);
+                GameplayEvents.RaiseSpecialFlight(FlightName(level));
                 GameplayEvents.RaiseProgressChanged(controller.Progress, controller.Target);
                 GameplayEvents.RaiseStateChanged(controller.State, controller.State);
             }

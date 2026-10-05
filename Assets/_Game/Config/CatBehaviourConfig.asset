@@ -19,9 +19,36 @@ MonoBehaviour:
   walkClipSpeed: 0.36
   giveUpAfter: 5
   idleDuration: {x: 2, y: 5}
-  restDuration: {x: 8, y: 20}
-  playDuration: {x: 3, y: 6}
   wanderWeight: 5
   idleWeight: 3
-  restWeight: 1.5
-  playWeight: 1
+  routines:
+  - label: Waiting
+    pose: 1
+    weight: 2
+    duration: {x: 3, y: 6}
+    spot: 0
+    pokeEvery: 0
+  - label: Sightseeing
+    pose: 1
+    weight: 1.5
+    duration: {x: 3, y: 6}
+    spot: 3
+    pokeEvery: 0
+  - label: Rolling
+    pose: 2
+    weight: 1.6
+    duration: {x: 2, y: 3.5}
+    spot: 1
+    pokeEvery: 0.6
+  - label: Hopping
+    pose: 3
+    weight: 0.8
+    duration: {x: 1.6, y: 2.4}
+    spot: 0
+    pokeEvery: 0
+  - label: Dizzy
+    pose: 4
+    weight: 0.3
+    duration: {x: 2, y: 2.5}
+    spot: 0
+    pokeEvery: 0

@@ -77,14 +77,14 @@ namespace ASTeams.SingleLine.Core
                 return false;
             }
 
-            if (destination.Length < level.ActiveCellCount)
+            if (destination.Length < level.PathLength)
             {
                 throw new ArgumentException("Destination is too small for the solution.", nameof(destination));
             }
 
             PrepareFor(level);
 
-            visited[startCell] = true;
+            PathRules.Visit(level, visited, startCell, true);
             bool solved = Search(startCell, 0);
 
             LastNodeCount = nodeCount;
@@ -95,7 +95,7 @@ namespace ASTeams.SingleLine.Core
                 return false;
             }
 
-            length = level.ActiveCellCount;
+            length = level.PathLength;
             Array.Copy(path, destination, length);
             return true;
         }
@@ -159,13 +159,13 @@ namespace ASTeams.SingleLine.Core
             LastNodeCount = 0;
             LastRunHitBudget = false;
 
-            if (pathSoFar.Count == 0 || pathSoFar.Count > level.ActiveCellCount ||
+            if (pathSoFar.Count == 0 || pathSoFar.Count > level.PathLength ||
                 !PathRules.CanStart(level, pathSoFar[0]))
             {
                 return false;
             }
 
-            if (destination.Length < level.ActiveCellCount)
+            if (destination.Length < level.PathLength)
             {
                 throw new ArgumentException("Destination is too small for the solution.", nameof(destination));
             }
@@ -193,7 +193,7 @@ namespace ASTeams.SingleLine.Core
                 return false;
             }
 
-            length = level.ActiveCellCount;
+            length = level.PathLength;
             Array.Copy(path, destination, length);
             return true;
         }
@@ -243,7 +243,7 @@ namespace ASTeams.SingleLine.Core
             path[depth] = current;
             int visitedCount = depth + 1;
 
-            if (visitedCount == level.ActiveCellCount)
+            if (visitedCount == level.PathLength)
             {
                 return !level.HasFixedEnd || level.FixedEnd == current;
             }
@@ -262,14 +262,20 @@ namespace ASTeams.SingleLine.Core
             {
                 int next = candidates[baseIndex + i];
 
-                visited[next] = true;
+                // Nothing flies on from the runway, so landing there early can only dead-end.
+                if (level.HasFixedEnd && next == level.FixedEnd && visitedCount + 1 < level.PathLength)
+                {
+                    continue;
+                }
+
+                PathRules.Visit(level, visited, next, true);
 
                 if (IsRemainderReachable(next, visitedCount + 1) && Search(next, depth + 1))
                 {
                     return true;
                 }
 
-                visited[next] = false;
+                PathRules.Visit(level, visited, next, false);
 
                 if (isBudgetExhausted)
                 {
@@ -292,7 +298,8 @@ namespace ASTeams.SingleLine.Core
                     continue;
                 }
 
-                if (!level.IsActive(neighbor) || visited[neighbor])
+                if (!level.IsActive(neighbor) || visited[neighbor] || (level.IsFormation && visited[level.MirrorOf(neighbor)]) ||
+                    !PathRules.CanLeave(level, current, neighbor))
                 {
                     continue;
                 }
@@ -331,10 +338,14 @@ namespace ASTeams.SingleLine.Core
         /// the head and can never come back through it. Flooding from a single unvisited
         /// neighbour and comparing the count against the remainder detects both a split
         /// board and a cell that has been stranded with no unvisited neighbour.
+        ///
+        /// In a formation flight each step covers a square and its mirror, and the route only
+        /// has to reach one of every remaining pair, so the flood treats a square and its
+        /// mirror as one place.
         /// </summary>
-        private bool IsRemainderReachable(int head, int visitedCount)
+        private bool IsRemainderReachable(int head, int pathLength)
         {
-            int remaining = level.ActiveCellCount - visitedCount;
+            int remaining = level.ActiveCellCount - (level.IsFormation ? pathLength * 2 : pathLength);
 
             if (remaining <= 0)
             {
@@ -378,6 +389,17 @@ namespace ASTeams.SingleLine.Core
                 if (reached > remaining)
                 {
                     return false;
+                }
+
+                if (level.IsFormation)
+                {
+                    int mirror = level.MirrorOf(cell);
+
+                    if (!visited[mirror] && floodStamp[mirror] != floodGeneration)
+                    {
+                        floodStamp[mirror] = floodGeneration;
+                        floodStack[top++] = mirror;
+                    }
                 }
 
                 for (int direction = 0; direction < Grid.NeighborCount; direction++)

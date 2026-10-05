@@ -35,10 +35,9 @@ namespace ASTeams.SingleLine.Unity
         [Tooltip("How long the hint stays up. GDD 7.1 asks for 2.5 s or until the player moves.")]
         [SerializeField, Min(0.1f)] private float hintHold = 2.5f;
 
-        [Tooltip("How long the drag takes to cross one square. This is the speed of the " +
-                 "imaginary finger, so it wants to look like someone playing deliberately " +
-                 "rather than racing.")]
-        [SerializeField, Min(0.05f)] private float hintStepSeconds = 0.22f;
+        [Tooltip("How long the guide takes to hop from one square to the next: long enough " +
+                 "for each hop to read as its own beat, short enough not to drag.")]
+        [SerializeField, Min(0.05f)] private float hintStepSeconds = 0.45f;
 
         [Tooltip("Pause between one run and the next, so a repeat reads as the move being " +
                  "shown again rather than as a loop with no beginning.")]

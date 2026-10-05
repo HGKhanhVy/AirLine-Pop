@@ -39,11 +39,14 @@ def hexc(h):
 
 
 # Fur recolours: source palette colour -> new colour. Clothes and outline stay as drawn.
-MUN = {  # charcoal, from the peach cat in shutter shades
-    "f3cba8": "5a5664", "bb927b": "48444f", "c28862": "413d48", "9e6951": "35323b",
-    "a77d6b": "3d3944", "8e5b42": "2f2c34", "905e4a": "2f2c34", "ffbb56": "6e6979",
+# Regulars come from the pack's plain cats, with no glasses or hat of their own, so the
+# accessories they unlock sit on a bare head instead of over built-in props.
+MUN = {  # charcoal with a white eye patch, from the plain peach cat
+    "f3cba8": "6f6a7c", "bb927b": "5b5768", "c28862": "524e5e", "a77d6b": "56525f",
+    "8e5b42": "403c48", "9e6951": "47434f", "905e4a": "403c48", "ffbb56": "807b8d",
+    "f4e8c2": "e9e6ee",
 }
-TRO = {  # ash grey with white, from the cream cat in swimming goggles
+TRO = {  # ash grey with white, from the plain cream calico
     "f4e8c2": "eef0f4", "bca48b": "c3c8d3", "f9ab47": "a9b1c0", "bf7e40": "8a92a2",
     "c28862": "959dad", "9e6951": "7b8394", "905e4a": "6c7484", "8e5b42": "6c7484",
     "ffbb56": "dfe3ea",
@@ -53,8 +56,13 @@ REGULARS = {
     "bo": ("Character03", None),     # ginger, cap and backpack: the mascot
     "kem": ("Character07", None),    # cream calico with a blue backpack
     "muop": ("Character04", None),   # brown with a yellow backpack
-    "mun": ("Character14", MUN),     # black cat in shades
-    "tro": ("Character08", TRO),     # grey in goggles
+    "mun": ("Character09", MUN),     # black cat with a white eye patch
+    "tro": ("Character05", TRO),     # grey and white
+}
+
+# Visitors drawn the same way but never seated on the board: the VIP guest, crown and cape.
+GUESTS = {
+    "vip": ("Character06", None),
 }
 
 # Clip -> (pack animation, take every n-th frame, seconds, loops)
@@ -149,7 +157,7 @@ def main():
 
     # One crop for every cat and clip, so all frames share a size and a standing point.
     boxes = []
-    for character, _ in REGULARS.values():
+    for character, _ in list(REGULARS.values()) + list(GUESTS.values()):
         for animation, step, _, _ in CLIPS.values():
             for path in pick(frame_paths(pack, character, animation), step):
                 boxes.append(Image.open(path).getbbox())
@@ -171,7 +179,7 @@ def main():
         return img.resize((out_w, out_h), Image.LANCZOS)
 
     clips_meta = []
-    for breed, (character, mapping) in REGULARS.items():
+    for breed, (character, mapping) in list(REGULARS.items()) + list(GUESTS.items()):
         for clip, (animation, step, seconds, loop) in CLIPS.items():
             frames = [prepare(p, mapping) for p in pick(frame_paths(pack, character, animation), step)]
             cols = min(SHEET_COLUMNS, len(frames))
@@ -182,7 +190,8 @@ def main():
             sheet.save(os.path.join(MOTION, "cat_%s_%s.png" % (breed, clip)))
             if breed == "bo":
                 clips_meta.append({"name": clip, "count": len(frames), "columns": cols, "seconds": seconds, "loop": loop})
-        passengers(pack, breed, character, mapping, box, (gx, gy))
+        if breed in REGULARS:
+            passengers(pack, breed, character, mapping, box, (gx, gy))
         print("imported", breed, "from", character, flush=True)
 
     with open(os.path.join(MOTION, "cat_motion.json"), "w") as fh:
