@@ -14,7 +14,7 @@ namespace ASTeams.SingleLine.Data
         /// Zero means nothing was paid, which is normal when no economy is configured.
         ///
         /// <paramref name="isFirstClear"/> is true the first time a level is finished, so
-        /// the one off bonus GDD 8.1 gives a new level is paid once and never on a replay.
+        /// the full pay for a new level is given once; a replay pays far less, if anything.
         /// </summary>
         int AwardLevelReward(bool isFirstClear);
 

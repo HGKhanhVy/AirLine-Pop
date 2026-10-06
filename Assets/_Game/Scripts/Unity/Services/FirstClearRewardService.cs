@@ -6,8 +6,9 @@ using ASTeams.Template;
 namespace ASTeams.SingleLine.Unity
 {
     /// <summary>
-    /// GDD 6: a level pays its coins the first time it is finished and nothing on a replay.
-    /// The amount comes from <see cref="EconomyConfigSO"/>, so balancing never touches code.
+    /// GDD 6: a level pays its coins the first time it is finished. A replay pays a little,
+    /// a few times a day, see <see cref="ReplayAllowance"/>. The amounts come from
+    /// <see cref="EconomyConfigSO"/>, so balancing never touches code.
     ///
     /// Written straight into the profile, which saves on the spot: the coins are a
     /// checkpoint the moment the level is won, not a promise kept for the win screen.
@@ -17,9 +18,14 @@ namespace ASTeams.SingleLine.Unity
         private readonly UserProfileController profile;
         private readonly GameResultHandleService resultHandler;
         private readonly EconomyConfigSO economy;
+        private readonly ReplayAllowance replays;
+        private readonly IDayClock clock;
 
-        public FirstClearRewardService(UserProfileController profile, GameResultHandleService resultHandler, EconomyConfigSO economy)
+        public FirstClearRewardService(UserProfileController profile, GameResultHandleService resultHandler, EconomyConfigSO economy,
+            ReplayAllowance replays, IDayClock clock)
         {
+            this.replays = replays ?? throw new ArgumentNullException(nameof(replays));
+            this.clock = clock ?? throw new ArgumentNullException(nameof(clock));
             this.profile = profile ?? throw new ArgumentNullException(nameof(profile));
             this.economy = economy ?? throw new ArgumentNullException(nameof(economy));
             this.resultHandler = resultHandler;
@@ -29,7 +35,7 @@ namespace ASTeams.SingleLine.Unity
 
         public int AwardLevelReward(bool isFirstClear)
         {
-            int reward = isFirstClear ? economy.FirstClearCoins : 0;
+            int reward = isFirstClear ? economy.FirstClearCoins : replays.Claim(clock.Today);
 
             if (reward <= 0)
             {

@@ -249,7 +249,9 @@ namespace ASTeams.SingleLine.Unity
             }
 
             return economy != null
-                ? new FirstClearRewardService(profile, resultHandler, economy)
+                ? new FirstClearRewardService(profile, resultHandler, economy,
+                    new ReplayAllowance(new ProfileReplayRewardStore(profile), economy.ReplayCoins, economy.PaidReplaysPerDay),
+                    new LocalDayClock())
                 : (ILevelRewardService)new ProfileLevelRewardService(profile, resultHandler, firstClearBonus);
         }
 
@@ -399,6 +401,11 @@ namespace ASTeams.SingleLine.Unity
             if (progressStore != null && isFirstClear)
             {
                 progressStore.SaveCurrentLevel(savedNextLevel);
+            }
+
+            if (isFirstClear)
+            {
+                GameplayEvents.RaiseFirstClear(completedLevel);
             }
 
             GameplayEvents.RaiseLevelWon(completedLevel, completedLevelId);

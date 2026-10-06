@@ -6,12 +6,12 @@ namespace ASTeams.SingleLine.Unity
 {
     /// <summary>
     /// Runs the win beat of GDD 3. The board already plays the runway light wave and the
-    /// take-off the moment the level is won, and the reward is already saved by then; this
-    /// waits for that show, then brings in the reward card with the companion cat.
+    /// take-off the moment the level is won, and the reward is already saved by then.
     ///
-    /// A tap after the short guard skips straight to the card, and the card appears within
-    /// <see cref="maxDelay"/> whatever the board is doing, so a stalled animation never
-    /// hides the reward.
+    /// The reward card then comes in, with the cat that belongs to the moment, see
+    /// <see cref="WinMilestone"/>, within <see cref="maxDelay"/> whatever the board is doing.
+    /// It has no buttons: a few seconds later, or sooner on a tap, the next flight opens, so
+    /// playing on never needs a press. The way home is the pause menu.
     /// </summary>
     public sealed class WinSequenceController : MonoBehaviour
     {
@@ -27,44 +27,45 @@ namespace ASTeams.SingleLine.Unity
         [Tooltip("Taps before this are ignored, so the finishing drag cannot skip the show.")]
         [SerializeField, Min(0f)] private float skippableAfter = 0.4f;
 
+        [Tooltip("How long the card stays before the next flight opens, unless a tap brings it sooner.")]
+        [SerializeField, Min(0.5f)] private float cardSeconds = 3f;
+
         private CatPortraitStage stage;
-        private ISceneNavigator navigator;
         [Tooltip("Optional. The route map, for the destination, stamp and postcard on the win card.")]
         [SerializeField] private DestinationCatalogSO destinations;
 
         private int pendingCoins;
         private int passengersAboard;
+        private CatCatalogSO catalog;
         private Coroutine pending;
-        private bool isLeaving;
         private bool isVipFlight;
+        private bool isFirstClear;
 
-        public void Initialize(CatPortraitStage portraitStage, ISceneNavigator sceneNavigator)
+        public void Initialize(CatPortraitStage portraitStage, CatCatalogSO cats)
         {
             stage = portraitStage;
-            navigator = sceneNavigator;
+            catalog = cats;
             panel.SetPortrait(stage != null && stage.HasCat ? stage.Texture : null);
         }
 
         private void OnEnable()
         {
             GameplayEvents.OnCoinsAwarded += HandleCoinsAwarded;
+            GameplayEvents.OnFirstClear += HandleFirstClear;
             GameplayEvents.OnPassengersChanged += HandlePassengersChanged;
             GameplayEvents.OnLevelWon += HandleLevelWon;
             GameplayEvents.OnLevelLoaded += HandleLevelLoaded;
             GameplayEvents.OnLevelRules += HandleLevelRules;
-            panel.OnContinue += HandleContinue;
-            panel.OnHome += HandleHome;
         }
 
         private void OnDisable()
         {
             GameplayEvents.OnCoinsAwarded -= HandleCoinsAwarded;
+            GameplayEvents.OnFirstClear -= HandleFirstClear;
             GameplayEvents.OnPassengersChanged -= HandlePassengersChanged;
             GameplayEvents.OnLevelWon -= HandleLevelWon;
             GameplayEvents.OnLevelLoaded -= HandleLevelLoaded;
             GameplayEvents.OnLevelRules -= HandleLevelRules;
-            panel.OnContinue -= HandleContinue;
-            panel.OnHome -= HandleHome;
             StopPending();
         }
 
@@ -72,6 +73,11 @@ namespace ASTeams.SingleLine.Unity
         private void HandleCoinsAwarded(int amount, long balance)
         {
             pendingCoins = amount;
+        }
+
+        private void HandleFirstClear(int levelNumber)
+        {
+            isFirstClear = true;
         }
 
         private void HandleLevelRules(ASTeams.SingleLine.Core.LevelRule rules)
@@ -88,11 +94,14 @@ namespace ASTeams.SingleLine.Unity
         {
             StopPending();
             pause.SetLocked(true);
-            pending = StartCoroutine(ShowAfterCelebration(levelNumber, pendingCoins, passengersAboard));
+            CatBreedSO arrival = isFirstClear ? FindArrival(levelNumber) : null;
+            WinFlightSummary flight = Summarise(levelNumber, pendingCoins, arrival);
+            pending = StartCoroutine(ShowCard(flight, arrival));
             pendingCoins = 0;
+            isFirstClear = false;
         }
 
-        private IEnumerator ShowAfterCelebration(int levelNumber, int coins, int passengers)
+        private IEnumerator ShowCard(WinFlightSummary flight, CatBreedSO arrival)
         {
             float waited = 0f;
             float wait = Mathf.Min(panelDelay, maxDelay);
@@ -109,33 +118,119 @@ namespace ASTeams.SingleLine.Unity
                 yield return null;
             }
 
-            pending = null;
+            Feature(flight.Milestone, arrival);
+            panel.Show(flight);
 
-            if (stage != null)
+            // The card stays a moment, then the next flight opens; a tap gets there sooner.
+            waited = 0f;
+
+            while (waited < cardSeconds)
             {
-                // After a VIP flight His Majesty himself comes out to say well done.
-                stage.ShowGuest(isVipFlight);
-                stage.SetRendering(true);
-                stage.Play(CatAnimatorParams.Celebrate);
+                waited += Time.unscaledDeltaTime;
+
+                if (waited >= skippableAfter && WasTapped())
+                {
+                    break;
+                }
+
+                yield return null;
             }
 
-            panel.Show(Summarise(levelNumber, coins, passengers));
+            pending = null;
+            CloseCard();
+            GameplayEvents.RequestNextLevel();
         }
 
-        private WinFlightSummary Summarise(int flightNumber, int coins, int passengers)
+        /// <summary>The cat the card shows: His Majesty after a VIP flight, the newcomer when one arrives, else the companion.</summary>
+        private void Feature(WinMilestone milestone, CatBreedSO arrival)
         {
-            Destination destination = destinations != null ? destinations.ForFlight(flightNumber) : null;
-
-            if (destination == null)
+            if (stage == null)
             {
-                return new WinFlightSummary(flightNumber, coins, passengers, null, 0, 0, null, isVipFlight);
+                return;
             }
 
-            ASTeams.SingleLine.Core.DestinationSchedule schedule = destinations.Schedule;
-            Sprite postcard = schedule.CompletesPostcard(flightNumber) ? destination.Postcard : null;
+            if (milestone == WinMilestone.Vip)
+            {
+                stage.FeatureGuest();
+            }
+            else if (milestone == WinMilestone.Arrival)
+            {
+                stage.FeatureArrival(arrival.Prefab);
+            }
+            else
+            {
+                stage.FeatureCompanion();
+            }
 
-            return new WinFlightSummary(flightNumber, coins, passengers, destination.DisplayName,
-                schedule.StampOf(flightNumber), schedule.FlightsPerDestination, postcard, isVipFlight);
+            stage.SetRendering(true);
+            stage.Play(CatAnimatorParams.Celebrate);
+        }
+
+        /// <summary>
+        /// The regular who joins the lounge once this flight is flown. Asked only on a first
+        /// clear: a replay brings nobody new.
+        /// </summary>
+        private CatBreedSO FindArrival(int flightNumber)
+        {
+            if (catalog == null)
+            {
+                return null;
+            }
+
+            foreach (CatBreedSO breed in catalog.Breeds)
+            {
+                if (!breed.IsOwnedByDefault && breed.ArrivesAfterFlight == flightNumber && breed.Prefab != null)
+                {
+                    return breed;
+                }
+            }
+
+            return null;
+        }
+
+        private WinFlightSummary Summarise(int flightNumber, int coins, CatBreedSO arrival)
+        {
+            Destination destination = destinations != null ? destinations.ForFlight(flightNumber) : null;
+            Sprite postcard = null;
+            string place = null;
+            int stamp = 0;
+            int stampsNeeded = 0;
+
+            if (destination != null)
+            {
+                ASTeams.SingleLine.Core.DestinationSchedule schedule = destinations.Schedule;
+                postcard = schedule.CompletesPostcard(flightNumber) ? destination.Postcard : null;
+                place = destination.DisplayName;
+                stamp = schedule.StampOf(flightNumber);
+                stampsNeeded = schedule.FlightsPerDestination;
+            }
+
+            WinMilestone milestone = MilestoneOf(flightNumber, arrival, postcard);
+            return new WinFlightSummary(flightNumber, coins, passengersAboard, place, stamp, stampsNeeded, postcard,
+                milestone, arrival != null ? arrival.DisplayName : null);
+        }
+
+        /// <summary>The biggest reason this flight is worth stopping for, if any.</summary>
+        private WinMilestone MilestoneOf(int flightNumber, CatBreedSO arrival, Sprite postcard)
+        {
+            if (isVipFlight)
+            {
+                return WinMilestone.Vip;
+            }
+
+            if (arrival != null)
+            {
+                return WinMilestone.Arrival;
+            }
+
+            if (postcard != null)
+            {
+                return WinMilestone.Postcard;
+            }
+
+            bool closesChapter = flightNumber % ASTeams.SingleLine.Data.CampaignLevelAddress.LevelsPerChapter == 0 ||
+                flightNumber >= ASTeams.SingleLine.Data.CampaignLevelAddress.MaxLevelNumber;
+            return closesChapter ? WinMilestone.ChapterEnd : WinMilestone.None;
         }
 
         private void HandleLevelLoaded(int levelNumber, string levelId, int difficulty, int totalCells)
@@ -144,25 +239,9 @@ namespace ASTeams.SingleLine.Unity
             CloseCard();
         }
 
-        private void HandleContinue()
-        {
-            CloseCard();
-            GameplayEvents.RequestNextLevel();
-        }
-
-        private void HandleHome()
-        {
-            if (isLeaving)
-            {
-                return;
-            }
-
-            isLeaving = true;
-            navigator.GoHome();
-        }
-
         private void CloseCard()
         {
+
             if (panel.isActiveAndEnabled)
             {
                 panel.Hide();

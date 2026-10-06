@@ -7,9 +7,11 @@ using UnityEngine.UI;
 namespace ASTeams.SingleLine.Unity
 {
     /// <summary>
-    /// The reward card after a win (GDD 3, 9): the companion cat, the coins actually
-    /// earned counting up, Continue as the main button and Back to airport as the second.
-    /// A replay says plainly that there is no first-clear reward.
+    /// The reward card after a win (GDD 3, 9): the cat that belongs to the moment, what the
+    /// flight was, and the coins it earned counting up, always under the words: +0 on a
+    /// replay, which says plainly beneath that the ticket was already paid. It has no
+    /// buttons: the win sequence takes it away and opens the next flight a moment later.
+    /// Display only.
     /// </summary>
     public sealed class WinPanelView : MonoBehaviour
     {
@@ -19,8 +21,7 @@ namespace ASTeams.SingleLine.Unity
         [SerializeField] private GameObject rewardRow;
         [SerializeField] private TMP_Text rewardLabel;
         [SerializeField] private TMP_Text replayNote;
-        [SerializeField] private Button continueButton;
-        [SerializeField] private Button homeButton;
+
         [Tooltip("Optional. Takes the portrait's place on the flight that completes a postcard.")]
         [SerializeField] private Image postcardImage;
         [SerializeField, Min(0.01f)] private float countDuration = 0.6f;
@@ -28,8 +29,11 @@ namespace ASTeams.SingleLine.Unity
         private Tweener count;
         private int shown;
 
-        public event Action OnContinue;
-        public event Action OnHome;
+        /// <summary>The card has come in, for the moment it marks.</summary>
+        public event Action<WinMilestone> OnShown;
+
+        /// <summary>The reward count has climbed.</summary>
+        public event Action OnCoinsCounted;
 
         private void Awake()
         {
@@ -40,16 +44,8 @@ namespace ASTeams.SingleLine.Unity
             titleLabel.enableAutoSizing = true;
         }
 
-        private void OnEnable()
-        {
-            continueButton.onClick.AddListener(HandleContinue);
-            homeButton.onClick.AddListener(HandleHome);
-        }
-
         private void OnDisable()
         {
-            continueButton.onClick.RemoveListener(HandleContinue);
-            homeButton.onClick.RemoveListener(HandleHome);
             count?.Kill();
         }
 
@@ -65,10 +61,10 @@ namespace ASTeams.SingleLine.Unity
             ShowPostcard(flight.EarnedPostcard);
             int coins = flight.Coins;
             bool hasReward = coins > 0;
-            rewardRow.SetActive(hasReward);
+            rewardRow.SetActive(true);
             replayNote.gameObject.SetActive(!hasReward);
-            SetButtonsInteractable(true);
             modal.Show();
+            OnShown?.Invoke(flight.Milestone);
 
             shown = 0;
             rewardLabel.SetText("+0");
@@ -89,12 +85,17 @@ namespace ASTeams.SingleLine.Unity
 
         private string Title(in WinFlightSummary flight)
         {
-            if (flight.IsVip)
+            switch (flight.Milestone)
             {
-                string detail = flight.EarnedPostcard != null && !string.IsNullOrEmpty(flight.Destination)
-                    ? Localization.Format("win.postcard", flight.Destination)
-                    : Localization.Get("win.vipDetail");
-                return Localization.Format("win.vipTitle", flight.FlightNumber) + Detail(detail);
+                case WinMilestone.Vip:
+                    return Localization.Format("win.vipTitle", flight.FlightNumber) + Detail(PostcardOr(flight, "win.vipDetail"));
+
+                case WinMilestone.Arrival:
+                    return Localization.Format("win.arrivalTitle", flight.ArrivalName) + Detail(PostcardOr(flight, "win.arrivalDetail"));
+
+                case WinMilestone.ChapterEnd:
+                    int chapter = (flight.FlightNumber - 1) / ASTeams.SingleLine.Data.CampaignLevelAddress.LevelsPerChapter + 1;
+                    return Localization.Format("win.chapterTitle", chapter) + Detail(PostcardOr(flight, "win.chapterDetail"));
             }
 
             if (string.IsNullOrEmpty(flight.Destination))
@@ -110,6 +111,14 @@ namespace ASTeams.SingleLine.Unity
             }
 
             return title + Detail(Localization.Format("win.detail", flight.Passengers, flight.Stamp, flight.StampsNeeded));
+        }
+
+        /// <summary>The postcard line when this flight also earned one, which matters more; otherwise the milestone's own.</summary>
+        private static string PostcardOr(in WinFlightSummary flight, string key)
+        {
+            return flight.EarnedPostcard != null && !string.IsNullOrEmpty(flight.Destination)
+                ? Localization.Format("win.postcard", flight.Destination)
+                : Localization.Get(key);
         }
 
         /// <summary>The smaller second line under the title.</summary>
@@ -136,29 +145,12 @@ namespace ASTeams.SingleLine.Unity
         {
             shown = value;
             rewardLabel.SetText("+{0}", value);
-        }
-
-        private void SetButtonsInteractable(bool isInteractable)
-        {
-            continueButton.interactable = isInteractable;
-            homeButton.interactable = isInteractable;
-        }
-
-        private void HandleContinue()
-        {
-            SetButtonsInteractable(false);
-            OnContinue?.Invoke();
-        }
-
-        private void HandleHome()
-        {
-            SetButtonsInteractable(false);
-            OnHome?.Invoke();
+            OnCoinsCounted?.Invoke();
         }
 
 #if UNITY_EDITOR
         public void EditorLink(ModalPanel linkedModal, RawImage portrait, TMP_Text title, GameObject row,
-            TMP_Text reward, TMP_Text note, Button next, Button home)
+            TMP_Text reward, TMP_Text note)
         {
             modal = linkedModal;
             catPortrait = portrait;
@@ -166,8 +158,6 @@ namespace ASTeams.SingleLine.Unity
             rewardRow = row;
             rewardLabel = reward;
             replayNote = note;
-            continueButton = next;
-            homeButton = home;
         }
 
         public void EditorLinkPostcard(Image linkedPostcard)

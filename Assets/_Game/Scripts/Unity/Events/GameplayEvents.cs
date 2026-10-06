@@ -39,6 +39,12 @@ namespace ASTeams.SingleLine.Unity
         public static event Action<int, string> OnLevelWon;
 
         /// <summary>
+        /// The level just won had never been finished before. Raised just before
+        /// <see cref="OnLevelWon"/>; a replay pays a few coins too, so coins alone cannot tell.
+        /// </summary>
+        public static event Action<int> OnFirstClear;
+
+        /// <summary>
         /// How long the board is going to celebrate for, raised the moment the wave along
         /// the path starts. The wave's length depends on how many squares the level has,
         /// so a screen that waits for it has to be told rather than assume a number.
@@ -175,6 +181,11 @@ namespace ASTeams.SingleLine.Unity
             OnLevelWon?.Invoke(levelNumber, levelId);
         }
 
+        public static void RaiseFirstClear(int levelNumber)
+        {
+            OnFirstClear?.Invoke(levelNumber);
+        }
+
         public static void RaiseCoinsAwarded(int amount, long balance)
         {
             OnCoinsAwarded?.Invoke(amount, balance);
@@ -242,6 +253,7 @@ namespace ASTeams.SingleLine.Unity
             OnHintStarted = null;
             OnHintResolved = null;
             OnLevelWon = null;
+            OnFirstClear = null;
             OnCelebrationStarted = null;
             OnCoinsAwarded = null;
             OnCoinBalanceChanged = null;

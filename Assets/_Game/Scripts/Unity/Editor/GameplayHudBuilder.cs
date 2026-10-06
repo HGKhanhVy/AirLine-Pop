@@ -24,6 +24,9 @@ namespace ASTeams.SingleLine.Unity.EditorTools
         private const string GameplayPrefabPath = "Assets/_Game/Prefabs/SingleLineGameplay.prefab";
         private const string VipGuestPrefabPath = "Assets/_Game/Art/FlatCats/CatFlat_vip.prefab";
         private const string OldHudName = "Gameplay HUD";
+        private const string WinRevealClipPath = "Assets/_Game/Asset_Resources/AudioClip/sfx_reward.ogg";
+        private const string WinMilestoneClipPath = "Assets/_Game/Asset_Resources/AudioClip/gold completion.ogg";
+        private const string WinCoinClipPath = "Assets/_Game/Asset_Resources/AudioClip/gold 1_01.ogg";
 
         private static readonly Vector2 Reference = new Vector2(1080f, 1920f);
         private static readonly Vector3 StagePosition = new Vector3(0f, -500f, 0f);
@@ -104,9 +107,15 @@ namespace ASTeams.SingleLine.Unity.EditorTools
             WinSequenceController win = root.AddComponent<WinSequenceController>();
             win.EditorLink(winPanel, pause);
             DestinationInstaller.LinkWinRoutes(win, DestinationInstaller.BuildCatalog());
+            root.AddComponent<WinCardAudio>().EditorLink(winPanel, Clip(WinRevealClipPath), Clip(WinMilestoneClipPath), Clip(WinCoinClipPath));
             GameplayHudBootstrap bootstrap = root.AddComponent<GameplayHudBootstrap>();
             bootstrap.EditorLink(catalog, pause, win, stage, AssetDatabase.LoadAssetAtPath<CatView>(VipGuestPrefabPath));
             return root;
+        }
+
+        private static AudioClip Clip(string path)
+        {
+            return AssetDatabase.LoadAssetAtPath<AudioClip>(path);
         }
 
         // ---------------------------------------------------------------- HUD bars
@@ -335,9 +344,10 @@ namespace ASTeams.SingleLine.Unity.EditorTools
 
         private static WinPanelView BuildWinPanel(Transform canvas)
         {
-            // Low on the screen, so the upper half of the finished runway stays in view.
-            RectTransform card = Card("WinPanel", canvas, new Vector2(860f, 900f), out ModalPanel modal);
-            card.anchoredPosition = new Vector2(0f, -300f);
+            // Centred on the screen together with the cat standing on its top edge: the card
+            // sits a little below the middle so the cat above it balances the pair.
+            RectTransform card = Card("WinPanel", canvas, new Vector2(860f, 620f), out ModalPanel modal);
+            card.anchoredPosition = new Vector2(0f, -110f);
 
             // The cat stands on the card's top edge, half out of it.
             RectTransform portraitRect = UiBuilder.Rect("CatPortrait", card);
@@ -357,14 +367,12 @@ namespace ASTeams.SingleLine.Unity.EditorTools
             TMP_Text reward = UiBuilder.Label("Amount", row.transform, "+80", 96f, true);
             UiBuilder.Place(reward.rectTransform, new Vector2(0.5f, 0.5f), new Vector2(60f, 6f), new Vector2(280f, 130f));
 
-            TMP_Text note = UiBuilder.Text("ReplayNote", card, "win.replayNote", 42f, false);
-            UiBuilder.Place(note.rectTransform, new Vector2(0.5f, 1f), new Vector2(0f, -372f), new Vector2(780f, 80f));
-
-            Button next = WideButton("ContinueButton", card, "btn_orange", "common.continue", 210f, true);
-            Button home = WideButton("HomeButton", card, "btn_cream", "common.backToAirport", 50f, false);
+            // Under the coins, on a replay that pays nothing.
+            TMP_Text note = UiBuilder.Text("ReplayNote", card, "win.replayNote", 34f, false);
+            UiBuilder.Place(note.rectTransform, new Vector2(0.5f, 1f), new Vector2(0f, -510f), new Vector2(780f, 60f));
 
             WinPanelView view = modal.gameObject.AddComponent<WinPanelView>();
-            view.EditorLink(modal, portrait, title, row.gameObject, reward, note, next, home);
+            view.EditorLink(modal, portrait, title, row.gameObject, reward, note);
             DestinationInstaller.BuildWinPostcard(card, portrait.rectTransform, view);
             return view;
         }

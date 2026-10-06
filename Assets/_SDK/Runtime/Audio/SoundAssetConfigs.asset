@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp:ASTeams.Base:SoundAssetConfigs
   musics:
   - soundName: -1
-    clip: {fileID: 8300000, guid: 8f41b86f09ee7cd45a5662ead2ede12e, type: 3}
+    clip: {fileID: 8300000, guid: f963473cc10243e4ca02751040457440, type: 3}
     volume: 0.2
   sounds:
   - soundName: 1

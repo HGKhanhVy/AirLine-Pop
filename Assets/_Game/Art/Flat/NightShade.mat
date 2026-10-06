@@ -30,9 +30,15 @@ Material:
     m_Ints: []
     m_Floats:
     - _Darkness: 1
+    - _Flash: 0
     - _Flicker: 0.07
+    - _Fog: 0
     - _GlowStrength: 0.6
+    - _Rain: 0
+    - _WeatherScale: 1
     m_Colors:
+    - _FlashColor: {r: 0.26, g: 0.31, b: 0.5, a: 1}
+    - _FogColor: {r: 0.5, g: 0.56, b: 0.7, a: 1}
     - _GlowColor: {r: 1, g: 0.9, b: 0.62, a: 1}
     - _NightColor: {r: 0.03, g: 0.04, b: 0.11999995, a: 1}
   m_BuildTextureStacks: []

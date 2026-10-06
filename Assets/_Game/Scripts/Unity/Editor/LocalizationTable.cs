@@ -161,9 +161,13 @@ namespace ASTeams.SingleLine.Unity.EditorTools
             ("win.titleTo", "Flight {0} to {1}!", "Chuyến {0} tới {1}!"),
             ("win.detail", "{0} cat passengers · Stamp {1}/{2}", "{0} khách mèo · Tem {1}/{2}"),
             ("win.postcard", "Stamp and postcard from {0} added to your collection!", "Tem và bưu thiếp {0} đã về sổ tem!"),
+            ("win.arrivalTitle", "{0} is joining your lounge!", "{0} sẽ đến phòng chờ của bạn!"),
+            ("win.arrivalDetail", "A new regular · come and say hi", "Khách quen mới · ghé chào bé nhé"),
+            ("win.chapterTitle", "Chapter {0} complete!", "Hoàn thành chương {0}!"),
+            ("win.chapterDetail", "A new stretch of the route awaits", "Chặng bay mới đang chờ bạn"),
             ("win.vipTitle", "His Majesty is delighted with flight {0}!", "Hoàng thượng rất hài lòng với chuyến {0}!"),
             ("win.vipDetail", "He'll drop by your lounge · Gold seal on your stamp", "Ngài sẽ ghé phòng chờ · Tem được đóng dấu vàng"),
-            ("win.replayNote", "Ticket already earned for this flight", "Đã nhận tiền vé chuyến này rồi"),
+            ("win.replayNote", "Today's replay coins are all collected. More tomorrow!", "Hôm nay đã nhận đủ xu chơi lại, mai quay lại nhé!"),
         };
 
         private static Dictionary<string, string> english;

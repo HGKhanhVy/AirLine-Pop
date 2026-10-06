@@ -420,6 +420,18 @@ MonoBehaviour:
   - Key: win.postcard
     English: Stamp and postcard from {0} added to your collection!
     Vietnamese: "Tem v\xE0 b\u01B0u thi\u1EBFp {0} \u0111\xE3 v\u1EC1 s\u1ED5 tem!"
+  - Key: win.arrivalTitle
+    English: '{0} is joining your lounge!'
+    Vietnamese: "{0} s\u1EBD \u0111\u1EBFn ph\xF2ng ch\u1EDD c\u1EE7a b\u1EA1n!"
+  - Key: win.arrivalDetail
+    English: "A new regular \xB7 come and say hi"
+    Vietnamese: "Kh\xE1ch quen m\u1EDBi \xB7 gh\xE9 ch\xE0o b\xE9 nh\xE9"
+  - Key: win.chapterTitle
+    English: Chapter {0} complete!
+    Vietnamese: "Ho\xE0n th\xE0nh ch\u01B0\u01A1ng {0}!"
+  - Key: win.chapterDetail
+    English: A new stretch of the route awaits
+    Vietnamese: "Ch\u1EB7ng bay m\u1EDBi \u0111ang ch\u1EDD b\u1EA1n"
   - Key: win.vipTitle
     English: His Majesty is delighted with flight {0}!
     Vietnamese: "Ho\xE0ng th\u01B0\u1EE3ng r\u1EA5t h\xE0i l\xF2ng v\u1EDBi chuy\u1EBFn
@@ -429,8 +441,9 @@ MonoBehaviour:
     Vietnamese: "Ng\xE0i s\u1EBD gh\xE9 ph\xF2ng ch\u1EDD \xB7 Tem \u0111\u01B0\u1EE3c
       \u0111\xF3ng d\u1EA5u v\xE0ng"
   - Key: win.replayNote
-    English: Ticket already earned for this flight
-    Vietnamese: "\u0110\xE3 nh\u1EADn ti\u1EC1n v\xE9 chuy\u1EBFn n\xE0y r\u1ED3i"
+    English: Today's replay coins are all collected. More tomorrow!
+    Vietnamese: "H\xF4m nay \u0111\xE3 nh\u1EADn \u0111\u1EE7 xu ch\u01A1i l\u1EA1i,
+      mai quay l\u1EA1i nh\xE9!"
   - Key: destination.hanoi
     English: Hanoi
     Vietnamese: "H\xE0 N\u1ED9i"

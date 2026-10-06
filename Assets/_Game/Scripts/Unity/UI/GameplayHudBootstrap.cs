@@ -30,7 +30,7 @@ namespace ASTeams.SingleLine.Unity
             portraitStage.Initialize(FindCompanion(profile));
             portraitStage.InitializeGuest(vipGuest);
             pause.Initialize(settings, navigator);
-            win.Initialize(portraitStage, navigator);
+            win.Initialize(portraitStage, catalog);
         }
 
         private CatView FindCompanion(UserProfileController profile)

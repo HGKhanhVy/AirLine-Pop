@@ -6,7 +6,8 @@ namespace ASTeams.SingleLine.Unity.EditorTools
     /// <summary>
     /// Fits the gameplay prefab for night and formation flights: a wingman with its own
     /// mirrored line, copied from the player's line and plane so it always matches them,
-    /// and the dark of a night flight with the lights cut through it. Safe to rerun.
+    /// and the dark of a night flight with the lights cut through it and the weather it
+    /// flies through. Safe to rerun; the weather config, once made, is kept as it is.
     /// </summary>
     public static class NightFormationInstaller
     {
@@ -18,6 +19,14 @@ namespace ASTeams.SingleLine.Unity.EditorTools
 
         private const string ShadeMaterialPath = "Assets/_Game/Art/Flat/NightShade.mat";
         private const string ShadeShaderName = "AirLinePop/Night Shade";
+        private const string BoltMaterialPath = "Assets/_Game/Art/Flat/NightBolt.mat";
+        private const string BoltShaderName = "Universal Render Pipeline/2D/Sprite-Unlit-Default";
+        private const string WeatherConfigPath = "Assets/_Game/Config/NightWeather.asset";
+        private const int BoltPoints = 12;
+
+        // The first night flights only have mist while the dark is still new; rain and storms come later.
+        private const int FirstRainLevel = 87;
+        private const int FirstStormLevel = 127;
 
         [MenuItem("Tools/AirLine Pop/Install Night And Formation")]
         public static void InstallFromMenu()
@@ -155,7 +164,119 @@ namespace ASTeams.SingleLine.Unity.EditorTools
             SpriteRenderer guide = Sprite(root.transform, "Guide", guideArt, BoardSortingOrder.HintGuide);
             NightFlightView view = root.AddComponent<NightFlightView>();
             view.EditorLink(board, shade, bodies, guide);
+            view.EditorLinkWeather(BuildWeather(root.transform, view));
             return view;
+        }
+
+        private static NightWeatherView BuildWeather(Transform parent, NightFlightView night)
+        {
+            var root = new GameObject("Weather");
+            root.transform.SetParent(parent, false);
+
+            var lightningRoot = new GameObject("Lightning");
+            lightningRoot.transform.SetParent(root.transform, false);
+            NightLightningView lightning = lightningRoot.AddComponent<NightLightningView>();
+            lightning.EditorLink(Bolt(lightningRoot));
+
+            NightWeatherView weather = root.AddComponent<NightWeatherView>();
+            weather.EditorLink(WeatherConfig(), lightning);
+            BuildAudio(root.transform, night, weather, lightning);
+            return weather;
+        }
+
+        /// <summary>The night's sounds: a source each for the rain, the wind and the thunder.</summary>
+        private static void BuildAudio(Transform parent, NightFlightView night, NightWeatherView weather, NightLightningView lightning)
+        {
+            var root = new GameObject("Audio");
+            root.transform.SetParent(parent, false);
+
+            AudioSource rain = Source(root, GameAudioInstaller.RainPath, true);
+            AudioSource wind = Source(root, GameAudioInstaller.WindPath, true);
+            AudioSource thunder = Source(root, GameAudioInstaller.ThunderPath, false);
+            var torch = AssetDatabase.LoadAssetAtPath<AudioClip>(GameAudioInstaller.TorchPath);
+
+            NightAudio audio = root.AddComponent<NightAudio>();
+            audio.EditorLink(night, weather, lightning, rain, wind, thunder, torch);
+        }
+
+        private static AudioSource Source(GameObject owner, string clipPath, bool isLoop)
+        {
+            AudioSource source = owner.AddComponent<AudioSource>();
+            source.clip = AssetDatabase.LoadAssetAtPath<AudioClip>(clipPath);
+            source.loop = isLoop;
+            source.playOnAwake = false;
+            source.spatialBlend = 0f;
+            source.volume = 0f;
+            return source;
+        }
+
+        private static LineRenderer Bolt(GameObject owner)
+        {
+            LineRenderer bolt = owner.AddComponent<LineRenderer>();
+            bolt.sharedMaterial = BoltMaterial();
+            bolt.useWorldSpace = true;
+            bolt.positionCount = BoltPoints;
+            bolt.numCornerVertices = 2;
+            bolt.numCapVertices = 2;
+            bolt.sortingOrder = BoardSortingOrder.NightWeather;
+            bolt.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+            bolt.receiveShadows = false;
+            bolt.widthCurve = new AnimationCurve(new Keyframe(0f, 1f), new Keyframe(1f, 0.35f));
+
+            var colours = new Gradient();
+            colours.SetKeys(
+                new[] { new GradientColorKey(Color.white, 0f), new GradientColorKey(new Color(0.75f, 0.85f, 1f), 1f) },
+                new[] { new GradientAlphaKey(1f, 0f), new GradientAlphaKey(0.85f, 1f) });
+            bolt.colorGradient = colours;
+            bolt.enabled = false;
+            return bolt;
+        }
+
+        private static Material BoltMaterial()
+        {
+            var material = AssetDatabase.LoadAssetAtPath<Material>(BoltMaterialPath);
+
+            if (material == null)
+            {
+                material = new Material(Shader.Find(BoltShaderName));
+                AssetDatabase.CreateAsset(material, BoltMaterialPath);
+            }
+
+            return material;
+        }
+
+        /// <summary>The weather config, made with a first set of weathers if there is none yet.</summary>
+        private static NightWeatherConfigSO WeatherConfig()
+        {
+            var config = AssetDatabase.LoadAssetAtPath<NightWeatherConfigSO>(WeatherConfigPath);
+
+            if (config != null)
+            {
+                return config;
+            }
+
+            config = ScriptableObject.CreateInstance<NightWeatherConfigSO>();
+            config.EditorSetPresets(new[]
+            {
+                Weather("Night mist", 1, 0.55f, 0f, 0f),
+                Weather("Fog bank", 1, 0.85f, 0f, 0f),
+                Weather("Rain", FirstRainLevel, 0.25f, 0.8f, 0f),
+                Weather("Thunderstorm", FirstStormLevel, 0.2f, 1f, 6f)
+            });
+            AssetDatabase.CreateAsset(config, WeatherConfigPath);
+            return config;
+        }
+
+        private static NightWeatherPreset Weather(string name, int fromLevel, float fog, float rain, float lightningEvery)
+        {
+            return new NightWeatherPreset
+            {
+                name = name,
+                fromLevel = fromLevel,
+                fog = fog,
+                rain = rain,
+                lightningEvery = lightningEvery
+            };
         }
 
         private static SpriteRenderer Sprite(Transform parent, string name, Sprite sprite, int order)

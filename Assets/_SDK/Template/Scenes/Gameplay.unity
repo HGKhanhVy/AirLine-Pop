@@ -119,6 +119,59 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!21 &6649690
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: UI_Circle Cutout Overlay (Runtime)
+  m_Shader: {fileID: 4800000, guid: 5e935577fff76d2418e5d22e80d51f2d, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords: []
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _MainTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _BorderBlur: 0.0001
+    - _BorderWidth: 0.005
+    - _GlowIntensity: 0.5
+    - _GlowWaveSpeed: 0.5
+    - _GlowWaveTrail: 0.03
+    - _GlowWaveWidth: 0.003
+    - _HoleAspect: 1
+    - _HoleBlur: 0.0001
+    - _HoleRadius: 0.1
+    - _HoleRadiusPx: 120
+    - _MaskScaleX: 1
+    - _MaskScaleY: 1
+    - _ShapeType: 0
+    m_Colors:
+    - _BorderColor: {r: 1, g: 1, b: 1, a: 1}
+    - _CanvasSize: {r: 1080, g: 1920, b: 0, a: 0}
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _GlowColor: {r: 1, g: 1, b: 1, a: 1}
+    - _HoleCenter: {r: 0.5, g: 0.5, b: 0, a: 0}
+    - _HoleSizePx: {r: 120, g: 120, b: 0, a: 0}
+    - _MaskScaleXY: {r: 1, g: 1, b: 0, a: 0}
+    - _OverlayColor: {r: 0, g: 0, b: 0, a: 0.72}
+  m_BuildTextureStacks: []
+  m_AllowLocking: 1
 --- !u!1001 &179250735
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -196,59 +249,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4505938538132577968, guid: 63dfd7b17c121c849ac975ec98f15a9d, type: 3}
   m_PrefabInstance: {fileID: 179250735}
   m_PrefabAsset: {fileID: 0}
---- !u!21 &200964660
-Material:
-  serializedVersion: 8
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: UI_Circle Cutout Overlay (Runtime)
-  m_Shader: {fileID: 4800000, guid: 5e935577fff76d2418e5d22e80d51f2d, type: 3}
-  m_Parent: {fileID: 0}
-  m_ModifiedSerializedProperties: 0
-  m_ValidKeywords: []
-  m_InvalidKeywords: []
-  m_LightmapFlags: 4
-  m_EnableInstancingVariants: 0
-  m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
-  disabledShaderPasses: []
-  m_LockedProperties: 
-  m_SavedProperties:
-    serializedVersion: 3
-    m_TexEnvs:
-    - _MainTex:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    m_Ints: []
-    m_Floats:
-    - _BorderBlur: 0.0001
-    - _BorderWidth: 0.005
-    - _GlowIntensity: 0.5
-    - _GlowWaveSpeed: 0.5
-    - _GlowWaveTrail: 0.03
-    - _GlowWaveWidth: 0.003
-    - _HoleAspect: 1
-    - _HoleBlur: 0.0001
-    - _HoleRadius: 0.1
-    - _HoleRadiusPx: 120
-    - _MaskScaleX: 1
-    - _MaskScaleY: 1
-    - _ShapeType: 0
-    m_Colors:
-    - _BorderColor: {r: 1, g: 1, b: 1, a: 1}
-    - _CanvasSize: {r: 1080, g: 1920, b: 0, a: 0}
-    - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _GlowColor: {r: 1, g: 1, b: 1, a: 1}
-    - _HoleCenter: {r: 0.5, g: 0.5, b: 0, a: 0}
-    - _HoleSizePx: {r: 120, g: 120, b: 0, a: 0}
-    - _MaskScaleXY: {r: 1, g: 1, b: 0, a: 0}
-    - _OverlayColor: {r: 0, g: 0, b: 0, a: 0.72}
-  m_BuildTextureStacks: []
-  m_AllowLocking: 1
 --- !u!1 &366429670
 GameObject:
   m_ObjectHideFlags: 0
@@ -1014,7 +1014,39 @@ Material:
     - _OverlayColor: {r: 0, g: 0, b: 0, a: 0.72}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
---- !u!1001 &1370041256
+--- !u!224 &1568696276 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 1411567691779528734, guid: 0e0c42ecb726abd4d860f310df0e3beb, type: 3}
+  m_PrefabInstance: {fileID: 5314639271663559107}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1568696279 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6292035786581524714, guid: 0e0c42ecb726abd4d860f310df0e3beb, type: 3}
+  m_PrefabInstance: {fileID: 5314639271663559107}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5999c2db00db8a47bebabf7c81977fb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ASTeams.Base.Gameplay.UICombo
+--- !u!4 &1591018321 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7577760508129047593, guid: c4003b58d1d1fd34b93644a0bea669b1, type: 3}
+  m_PrefabInstance: {fileID: 1172407210881200051}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1591018322 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 941826698791317376, guid: c4003b58d1d1fd34b93644a0bea669b1, type: 3}
+  m_PrefabInstance: {fileID: 1172407210881200051}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5eec46e9822e1e647a9caf98f62a2e1f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ASTeams.Base.Gameplay.GameStateService
+--- !u!1001 &1623706900
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -1071,38 +1103,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9402f0707e57e114e9cf403a984f8782, type: 3}
---- !u!224 &1568696276 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 1411567691779528734, guid: 0e0c42ecb726abd4d860f310df0e3beb, type: 3}
-  m_PrefabInstance: {fileID: 5314639271663559107}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1568696279 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6292035786581524714, guid: 0e0c42ecb726abd4d860f310df0e3beb, type: 3}
-  m_PrefabInstance: {fileID: 5314639271663559107}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5999c2db00db8a47bebabf7c81977fb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ASTeams.Base.Gameplay.UICombo
---- !u!4 &1591018321 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 7577760508129047593, guid: c4003b58d1d1fd34b93644a0bea669b1, type: 3}
-  m_PrefabInstance: {fileID: 1172407210881200051}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1591018322 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 941826698791317376, guid: c4003b58d1d1fd34b93644a0bea669b1, type: 3}
-  m_PrefabInstance: {fileID: 1172407210881200051}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5eec46e9822e1e647a9caf98f62a2e1f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ASTeams.Base.Gameplay.GameStateService
 --- !u!1001 &1834727072
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2811,4 +2811,4 @@ SceneRoots:
   - {fileID: 818653696}
   - {fileID: 797582004}
   - {fileID: 1867162249}
-  - {fileID: 1370041256}
+  - {fileID: 1623706900}

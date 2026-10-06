@@ -6,18 +6,22 @@ namespace ASTeams.SingleLine.Unity
 {
     public sealed class GameplayAudioPresenter : MonoBehaviour
     {
-        [Tooltip("One tone per step, in rising order. GDD 11 asks the step sound to climb " +
-                 "with the path so a long line builds; the reference game ships the ladder " +
-                 "and this plays it rung by rung. Empty falls back to the single step sound.")]
+        [Tooltip("One note per step, in the order of the tune: arpeggios over a " +
+                 "chord progression, so every step is a new note and all of them belong " +
+                 "together. Empty falls back to the single step sound.")]
         [SerializeField] private AudioClip[] stepTones;
 
         [SerializeField, Range(0f, 1f)] private float stepVolume = 0.7f;
 
-        [Tooltip("The ladder plays through its own source so that a new note replaces the " +
-                 "one before it. The shared one-shot sources let notes pile up: measured " +
-                 "at an ordinary drag speed, three neighbouring semitones ring together " +
-                 "and the melody turns into a wash. One square, one note.")]
-        [SerializeField] private AudioSource stepSource;
+        [Tooltip("Each level starts the step tune this many notes further on, so different " +
+                 "levels play different parts of it rather than always its opening.")]
+        [SerializeField, Min(0)] private int stepShiftPerLevel = 16;
+
+        [Tooltip("The voices the tune is played on, in turn. Each note fades out on its own " +
+                 "instead of being cut by the next; with only a few voices the " +
+                 "oldest note gives way, so a fast drag never piles up into a wash. The notes " +
+                 "of one chord are what ring together, which is why that stays sweet.")]
+        [SerializeField] private AudioSource[] stepVoices = System.Array.Empty<AudioSource>();
 
         [Header("Board actions")]
         [Tooltip("Taking a step back. These four are wired as clips rather than through " +
@@ -41,6 +45,11 @@ namespace ASTeams.SingleLine.Unity
 
         [SerializeField, Range(0f, 1f)] private float actionVolume = 0.7f;
 
+        [Header("Passengers")]
+        [Tooltip("A cat passenger climbing aboard.")]
+        [SerializeField] private AudioClip passengerClip;
+        [SerializeField, Range(0f, 1f)] private float passengerVolume = 0.6f;
+
         [Header("Music")]
         [Tooltip("Starts the background loop when the board opens. The track and its " +
                  "volume come from the shared sound config, not from here.")]
@@ -48,10 +57,23 @@ namespace ASTeams.SingleLine.Unity
 
         private AudioController audioController;
         private int lastProgress;
+        private int lastAboard;
+        private int stepOffset;
+        private int nextVoice;
 
         private void OnEnable()
         {
             audioController = AudioController.Instance;
+
+            // Listen first: should the music fail to start, the board must still be heard.
+            GameplayEvents.OnLevelLoaded += HandleLevelLoaded;
+            GameplayEvents.OnProgressChanged += HandleProgressChanged;
+            GameplayEvents.OnPassengersChanged += HandlePassengersChanged;
+            GameplayEvents.OnInvalidMove += HandleInvalidMove;
+            GameplayEvents.OnStateChanged += HandleStateChanged;
+            GameplayEvents.OnUndoRequested += HandleUndoRequested;
+            GameplayEvents.OnRestartRequested += HandleRestartRequested;
+            GameplayEvents.OnHintRequested += HandleHintRequested;
 
             // Nothing in the game was starting the track. It is asked for here rather than
             // per level because the SDK restarts the music on every call, and a loop that
@@ -60,20 +82,13 @@ namespace ASTeams.SingleLine.Unity
             {
                 audioController?.PlayMusic(SoundName.Gameplay_Music);
             }
-
-            GameplayEvents.OnLevelLoaded += HandleLevelLoaded;
-            GameplayEvents.OnProgressChanged += HandleProgressChanged;
-            GameplayEvents.OnInvalidMove += HandleInvalidMove;
-            GameplayEvents.OnStateChanged += HandleStateChanged;
-            GameplayEvents.OnUndoRequested += HandleUndoRequested;
-            GameplayEvents.OnRestartRequested += HandleRestartRequested;
-            GameplayEvents.OnHintRequested += HandleHintRequested;
         }
 
         private void OnDisable()
         {
             GameplayEvents.OnLevelLoaded -= HandleLevelLoaded;
             GameplayEvents.OnProgressChanged -= HandleProgressChanged;
+            GameplayEvents.OnPassengersChanged -= HandlePassengersChanged;
             GameplayEvents.OnInvalidMove -= HandleInvalidMove;
             GameplayEvents.OnStateChanged -= HandleStateChanged;
             GameplayEvents.OnUndoRequested -= HandleUndoRequested;
@@ -84,7 +99,21 @@ namespace ASTeams.SingleLine.Unity
         private void HandleLevelLoaded(int levelNumber, string levelId, int difficulty, int totalCells)
         {
             lastProgress = 0;
+            lastAboard = 0;
+            int tuneLength = stepTones != null ? stepTones.Length : 0;
+            stepOffset = tuneLength > 0 ? (levelNumber - 1) * stepShiftPerLevel % tuneLength : 0;
             audioController?.PlaySound(SoundName.UI_LevelStart);
+        }
+
+        /// <summary>Only a passenger getting on is heard; one let off by an undo is not.</summary>
+        private void HandlePassengersChanged(int aboard, int total)
+        {
+            if (aboard > lastAboard && passengerClip != null)
+            {
+                audioController?.PlaySound(passengerClip, passengerVolume);
+            }
+
+            lastAboard = aboard;
         }
 
         private void HandleProgressChanged(int visitedCells, int totalCells)
@@ -98,9 +127,9 @@ namespace ASTeams.SingleLine.Unity
         }
 
         /// <summary>
-        /// The second square is the first step, so the ladder starts there. Past the top
-        /// rung it wraps back to the bottom and climbs again, the way the reference game
-        /// does: the clips are 24 notes of a scale, not 24 unrelated noises.
+        /// The second square is the first step, so the tune starts there. The clips are the
+        /// notes of one tune in order, so a drag plays the tune note by note; each
+        /// level starts it at its own place, and past the last note it goes round again.
         ///
         /// It used to clamp at the top instead, on the theory that dropping back would
         /// read as the path starting over. Counting the shipped levels shows why that was
@@ -124,7 +153,7 @@ namespace ASTeams.SingleLine.Unity
                 return;
             }
 
-            int rung = (visitedCells - 2) % stepTones.Length;
+            int rung = (stepOffset + visitedCells - 2) % stepTones.Length;
             AudioClip tone = stepTones[rung];
 
             if (tone == null)
@@ -132,19 +161,19 @@ namespace ASTeams.SingleLine.Unity
                 return;
             }
 
-            if (stepSource == null)
+            if (stepVoices.Length == 0)
             {
-                // No source of our own: the notes overlap, but a drag is still heard.
                 audioController.PlaySound(tone, stepVolume);
                 return;
             }
 
-            // Play, not PlayOneShot: this cuts whatever was still ringing, which is the
-            // whole point. The source is ours rather than the controller's, so the mute
-            // setting has to be honoured here too.
-            stepSource.clip = tone;
-            stepSource.volume = audioController.IsMuteSound ? 0f : stepVolume;
-            stepSource.Play();
+            // The voices are ours rather than the controller's, so the mute setting has to
+            // be honoured here too.
+            AudioSource voice = stepVoices[nextVoice];
+            nextVoice = (nextVoice + 1) % stepVoices.Length;
+            voice.clip = tone;
+            voice.volume = audioController.IsMuteSound ? 0f : stepVolume;
+            voice.Play();
         }
 
         /// <summary>

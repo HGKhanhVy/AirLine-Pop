@@ -294,7 +294,8 @@ namespace ASTeams.SingleLine.Unity
             }
 
             boardInput.AcceptsInput = false;
-            nightView.PlayPreview(session.Level.Solution, HandleNightFallen);
+            CampaignLevelAddress.TryGetLevelNumber(session.Level.Id, out int levelNumber);
+            nightView.PlayPreview(session.Level.Solution, levelNumber, HandleNightFallen);
         }
 
         /// <summary>

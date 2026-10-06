@@ -91,6 +91,9 @@ namespace ASTeams.SingleLine.Unity
 
         public const int Dust = 30;
 
+        /// <summary>A night flight's lightning, over the dark but under the planes.</summary>
+        public const int NightWeather = 33;
+
         /// <summary>The airplane flying the path, above the board but under the tutorial hand.</summary>
         public const int Airplane = 35;
 

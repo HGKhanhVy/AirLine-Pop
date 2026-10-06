@@ -72,6 +72,11 @@ namespace ASTeams.Base
 
         public void PlayMusic(SoundName soundName)
         {
+            if (assets == null)
+            {
+                return;
+            }
+
             var musicAsset = assets.GetMusic(soundName);
             if (musicAsset == null || musicAsset.clip == null) return;
 

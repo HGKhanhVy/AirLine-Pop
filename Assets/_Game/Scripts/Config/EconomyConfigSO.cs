@@ -12,6 +12,12 @@ namespace ASTeams.SingleLine.Unity
         [Header("Coins")]
         [SerializeField, Min(0)] private int firstClearCoins = 80;
 
+        [Tooltip("Coins for replaying a level already beaten.")]
+        [SerializeField, Min(0)] private int replayCoins = 10;
+
+        [Tooltip("How many replays pay each day. With the replay coins this caps a day of replaying at about one new level's worth.")]
+        [SerializeField, Min(0)] private int paidReplaysPerDay = 8;
+
         [Header("Food")]
         [SerializeField, Min(0)] private int foodPrice = 40;
 
@@ -41,6 +47,10 @@ namespace ASTeams.SingleLine.Unity
         [SerializeField, Range(1, 8)] private int maxVisibleCats = 4;
 
         public int FirstClearCoins => firstClearCoins;
+
+        public int ReplayCoins => replayCoins;
+
+        public int PaidReplaysPerDay => paidReplaysPerDay;
 
         public int FoodPrice => foodPrice;
 

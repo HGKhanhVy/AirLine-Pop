@@ -6,9 +6,8 @@ namespace ASTeams.SingleLine.Unity
     public readonly struct WinFlightSummary
     {
         public WinFlightSummary(int flightNumber, int coins, int passengers, string destination, int stamp,
-            int stampsNeeded, Sprite earnedPostcard, bool isVip)
+            int stampsNeeded, Sprite earnedPostcard, WinMilestone milestone, string arrivalName)
         {
-            IsVip = isVip;
             FlightNumber = flightNumber;
             Coins = coins;
             Passengers = passengers;
@@ -16,6 +15,8 @@ namespace ASTeams.SingleLine.Unity
             Stamp = stamp;
             StampsNeeded = stampsNeeded;
             EarnedPostcard = earnedPostcard;
+            Milestone = milestone;
+            ArrivalName = arrivalName;
         }
 
         public int FlightNumber { get; }
@@ -35,7 +36,10 @@ namespace ASTeams.SingleLine.Unity
         /// <summary>The destination's postcard when this flight completed it; otherwise null.</summary>
         public Sprite EarnedPostcard { get; }
 
-        /// <summary>True for a chapter's VIP flight, which His Majesty the VIP guest flew on.</summary>
-        public bool IsVip { get; }
+        /// <summary>Why this win is worth stopping for, if it is.</summary>
+        public WinMilestone Milestone { get; }
+
+        /// <summary>The name of the regular joining the lounge, for an <see cref="WinMilestone.Arrival"/>.</summary>
+        public string ArrivalName { get; }
     }
 }
