@@ -73,6 +73,7 @@ namespace ASTeams.SingleLine.Unity.EditorTools
 
                 so.FindProperty("passengerClip").objectReferenceValue = meow;
                 so.ApplyModifiedPropertiesWithoutUndo();
+                AddMusic(presenter.gameObject, music);
                 PrefabUtility.SaveAsPrefabAsset(contents, PrefabPath);
             }
             finally
@@ -82,6 +83,19 @@ namespace ASTeams.SingleLine.Unity.EditorTools
 
             SetGameplayMusic(music);
             return "Game audio installed: a " + tune.Length + " step tune, meow, music.";
+        }
+
+        /// <summary>The background music for a scene, on the given object; reused if it is already there.</summary>
+        public static void AddMusic(GameObject owner, AudioClip music)
+        {
+            SceneMusicPlayer player = owner.GetComponent<SceneMusicPlayer>();
+
+            if (player == null)
+            {
+                player = owner.AddComponent<SceneMusicPlayer>();
+            }
+
+            player.EditorLink(music);
         }
 
         /// <summary>The note clip for each step of the tune; empty if any note is missing.</summary>

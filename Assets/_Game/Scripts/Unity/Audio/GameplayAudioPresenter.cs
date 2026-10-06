@@ -11,7 +11,7 @@ namespace ASTeams.SingleLine.Unity
                  "together. Empty falls back to the single step sound.")]
         [SerializeField] private AudioClip[] stepTones;
 
-        [SerializeField, Range(0f, 1f)] private float stepVolume = 0.7f;
+        [SerializeField, Range(0f, 1f)] private float stepVolume = 0.25f;
 
         [Tooltip("Each level starts the step tune this many notes further on, so different " +
                  "levels play different parts of it rather than always its opening.")]
@@ -50,11 +50,6 @@ namespace ASTeams.SingleLine.Unity
         [SerializeField] private AudioClip passengerClip;
         [SerializeField, Range(0f, 1f)] private float passengerVolume = 0.6f;
 
-        [Header("Music")]
-        [Tooltip("Starts the background loop when the board opens. The track and its " +
-                 "volume come from the shared sound config, not from here.")]
-        [SerializeField] private bool isMusicOn = true;
-
         private AudioController audioController;
         private int lastProgress;
         private int lastAboard;
@@ -65,7 +60,6 @@ namespace ASTeams.SingleLine.Unity
         {
             audioController = AudioController.Instance;
 
-            // Listen first: should the music fail to start, the board must still be heard.
             GameplayEvents.OnLevelLoaded += HandleLevelLoaded;
             GameplayEvents.OnProgressChanged += HandleProgressChanged;
             GameplayEvents.OnPassengersChanged += HandlePassengersChanged;
@@ -74,14 +68,6 @@ namespace ASTeams.SingleLine.Unity
             GameplayEvents.OnUndoRequested += HandleUndoRequested;
             GameplayEvents.OnRestartRequested += HandleRestartRequested;
             GameplayEvents.OnHintRequested += HandleHintRequested;
-
-            // Nothing in the game was starting the track. It is asked for here rather than
-            // per level because the SDK restarts the music on every call, and a loop that
-            // begins again at every win is worse than no loop at all.
-            if (isMusicOn)
-            {
-                audioController?.PlayMusic(SoundName.Gameplay_Music);
-            }
         }
 
         private void OnDisable()

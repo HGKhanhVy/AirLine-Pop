@@ -108,6 +108,7 @@ namespace ASTeams.SingleLine.Unity.EditorTools
             BuildPerks(lounge, bootstrap, care, tapInput, viewer, ui, roomCats, airportCats);
             BuildVipGuest(roomCats.transform.parent, viewer, bootstrap);
             bootstrap.EditorLinkLounge(care, ui.ArrivalToast, departures);
+            GameAudioInstaller.AddMusic(new GameObject("Music"), AssetDatabase.LoadAssetAtPath<AudioClip>(GameAudioInstaller.MusicPath));
 
             EditorSceneManager.SaveScene(scene, ScenePath);
             RegisterInBuild();

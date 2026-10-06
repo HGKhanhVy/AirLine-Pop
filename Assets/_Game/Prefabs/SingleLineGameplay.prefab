@@ -15537,6 +15537,7 @@ GameObject:
   - component: {fileID: 8308609376341727635}
   - component: {fileID: 9130340158505866811}
   - component: {fileID: 6995737239122332868}
+  - component: {fileID: 5208212554761054807}
   m_Layer: 0
   m_Name: Game
   m_TagString: Untagged
@@ -15713,7 +15714,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 2e47ee7d8077fd44a8df62983c71a0f5, type: 3}
   - {fileID: 8300000, guid: 9898baba42058ec4ba7873f0280dadf0, type: 3}
   - {fileID: 8300000, guid: 9b7a64ebb476b0f4999f3f0b81ebe68f, type: 3}
-  stepVolume: 0.7
+  stepVolume: 0.25
   stepShiftPerLevel: 16
   stepVoices:
   - {fileID: 4542676709094699570}
@@ -15728,7 +15729,6 @@ MonoBehaviour:
   actionVolume: 0.7
   passengerClip: {fileID: 8300000, guid: d7bdfe6440b265e4486dc8dfc8c86b91, type: 3}
   passengerVolume: 0.6
-  isMusicOn: 1
 --- !u!114 &4891353049534945424
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16160,3 +16160,17 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &5208212554761054807
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9161449699214583546}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 04987c3172c2fee49aab843d513ca8f9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  music: {fileID: 8300000, guid: f963473cc10243e4ca02751040457440, type: 3}
+  volume: 0.5
