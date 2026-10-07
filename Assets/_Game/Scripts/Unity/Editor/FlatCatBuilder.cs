@@ -152,6 +152,11 @@ namespace ASTeams.SingleLine.Unity.EditorTools
                     CatAccessoryInstaller.AddTo(root, renderer, anchors);
                 }
 
+                if (id == VipRobeInstaller.GuestId)
+                {
+                    VipRobeInstaller.Dress(root);
+                }
+
                 GameObject saved = PrefabUtility.SaveAsPrefabAsset(root, ArtFolder + "/CatFlat_" + id + ".prefab");
                 return saved.GetComponent<CatView>();
             }

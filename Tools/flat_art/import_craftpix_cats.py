@@ -12,6 +12,7 @@ For every regular this writes, into Assets/_Game/Art/FlatCats:
 and the HUD's cat icon from Bơ's face.
 
     python Tools/flat_art/import_craftpix_cats.py [path to the unzipped pack]
+    python Tools/flat_art/import_craftpix_cats.py --dress    (only re-dress the guests)
 """
 import json
 import os
@@ -63,6 +64,11 @@ REGULARS = {
 # Visitors drawn the same way but never seated on the board: the VIP guest, crown and cape.
 GUESTS = {
     "vip": ("Character06", None),
+}
+
+# Guests dressed up after import, by id: His Majesty wears imperial yellow.
+DRESS = {
+    "vip": "royal_robe",
 }
 
 # Clip -> (pack animation, take every n-th frame, seconds, loops)
@@ -117,6 +123,76 @@ def recolour(img, mapping):
             if a:
                 px[x, y] = swap((r, g, b)) + (a,)
     return out
+
+
+def royal_robe(img):
+    """Dresses the VIP guest as His Majesty: the pack's teal hoodie turns imperial yellow
+    and the teal band of his crown turns red. Both are the same teal, so they are told
+    apart by shape: the band is a wide flat strip, the hoodie and its sleeves are not.
+    Shading is kept by carrying each pixel's brightness over. Safe to run twice."""
+    import numpy as np
+    from scipy import ndimage
+
+    a = np.asarray(img.convert("RGBA")).astype(np.float32) / 255
+    rgb = a[..., :3]
+    mx, mn = rgb.max(-1), rgb.min(-1)
+    d = mx - mn
+    sat = np.where(mx > 0, d / np.maximum(mx, 1e-6), 0)
+    hue = np.zeros_like(mx)
+    r, g, b = rgb[..., 0], rgb[..., 1], rgb[..., 2]
+    on = d > 1e-6
+    is_r = on & (mx == r)
+    is_g = on & (mx == g) & ~is_r
+    is_b = on & ~is_r & ~is_g
+    hue[is_r] = ((g - b)[is_r] / d[is_r]) % 6
+    hue[is_g] = (b - r)[is_g] / d[is_g] + 2
+    hue[is_b] = (r - g)[is_b] / d[is_b] + 4
+    hue *= 60
+    teal = (hue > 170) & (hue < 215) & (sat > 0.25) & (mx > 0.2) & (a[..., 3] > 0.05)
+    # Anti-aliased edges are a paler teal; they follow whichever part they border.
+    fringe = (hue > 165) & (hue < 220) & (sat > 0.1) & (a[..., 3] > 0.02)
+
+    labels, count = ndimage.label(teal)
+    if count == 0:
+        return img
+    sizes = ndimage.sum(teal, labels, range(1, count + 1))
+    largest = sizes.max()
+    band = np.zeros_like(teal)
+    robe = np.zeros_like(teal)
+    for i, (box, size) in enumerate(zip(ndimage.find_objects(labels), sizes)):
+        part = labels[box] == i + 1
+        tall = box[0].stop - box[0].start
+        wide = box[1].stop - box[1].start
+        (band if size < 0.3 * largest and wide > 1.8 * tall else robe)[box] |= part
+    grow = np.ones((3, 3), bool)
+    band |= fringe & ndimage.binary_dilation(band, grow, 2) & ~robe
+    robe |= fringe & ndimage.binary_dilation(robe, grow, 2) & ~band
+
+    def paint(mask, hue_deg, saturation, lift):
+        v = np.clip(mx[mask] * lift, 0, 1)
+        c = v * saturation
+        h = hue_deg / 60.0
+        x = c * (1 - abs(h % 2 - 1))
+        sector = int(h) % 6
+        parts = [(c, x, 0), (x, c, 0), (0, c, x), (0, x, c), (x, 0, c), (c, 0, x)][sector]
+        m = v - c
+        for k in range(3):
+            rgb[..., k][mask] = (parts[k] if not np.isscalar(parts[k]) else np.full_like(v, parts[k])) + m
+
+    paint(robe, 44.0, 0.78, 1.45)
+    paint(band, 356.0, 0.72, 1.25)
+    out = np.dstack([np.clip(rgb, 0, 1), a[..., 3:]])
+    return Image.fromarray((out * 255).astype(np.uint8), "RGBA")
+
+
+def dress_guest_sheets():
+    """Applies each guest's outfit to its imported sheets."""
+    for breed, outfit in DRESS.items():
+        for clip in CLIPS:
+            path = os.path.join(MOTION, "cat_%s_%s.png" % (breed, clip))
+            if os.path.exists(path):
+                globals()[outfit](Image.open(path)).save(path)
+        print("dressed", breed, "in", outfit, flush=True)
 
 
 # ------------------------------------------------------------------ frames
@@ -198,6 +274,7 @@ def main():
         json.dump({"frameWidth": out_w, "frameHeight": out_h, "pivotX": pivot_x, "pivotY": pivot_y,
                    "pixelsPerUnit": PIXELS_PER_UNIT, "clips": clips_meta}, fh, indent=1)
 
+    dress_guest_sheets()
     icon(pack)
 
 
@@ -247,4 +324,7 @@ def icon(pack):
 
 
 if __name__ == "__main__":
-    main()
+    if "--dress" in sys.argv:
+        dress_guest_sheets()
+    else:
+        main()

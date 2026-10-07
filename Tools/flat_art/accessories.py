@@ -23,6 +23,9 @@ LEAF_DARK = (92, 164, 104, 255)
 WHITE = (255, 255, 255, 255)
 SKY = (120, 196, 240, 255)
 RED = (236, 96, 96, 255)
+ROYAL_RED = (214, 62, 62, 255)
+CAPE_RED = (200, 52, 58, 255)
+CAPE_RED_DARK = (164, 36, 46, 255)
 
 
 def bow():
@@ -75,6 +78,51 @@ def crown():
     c.save("acc_crown")
 
 
+def royal_cape():
+    """His Majesty's cape, worn by the VIP guest only over his yellow robe: crimson with
+    gold edging and gold cloud swirls, hung from the shoulders behind the cat, showing at
+    the shoulders, down both sides and at the hem.
+
+    It is measured on the guest's standing drawing (the body spans x 67-222, the feet
+    reach y 330, the neck anchor is at 107, 261) and drawn so the canvas centre is that
+    neck point: the sprite's centre pivot then lands on the neck in every drawing, and
+    the cape sits centred on the body although the chin is turned to one side. trim()
+    leaves this one uncropped for that reason."""
+    c = Canvas(290, 140)
+    # Crimson outside so it stands apart from the yellow robe; the shoulders round off
+    # into the neck, which the body hides.
+    outline = [(122, 40), (244, 40), (262, 46), (274, 60), (284, 124), (260, 132), (225, 127), (183, 132),
+               (141, 127), (106, 132), (82, 124), (92, 60), (104, 46)]
+    c.poly(outline, CAPE_RED, line=5)
+    c.line([(148, 58), (136, 120)], CAPE_RED_DARK, 6)
+    c.line([(218, 58), (230, 120)], CAPE_RED_DARK, 6)
+    # A gold hem and gold edging down both fronts.
+    c.poly([(90, 113), (277, 113), (281, 123), (260, 128), (225, 123), (183, 128), (141, 123), (106, 128), (85, 123)], GOLD,
+           line=0, puffy=False)
+    c.line([(96, 62), (89, 112)], GOLD, 5)
+    c.line([(270, 62), (277, 112)], GOLD, 5)
+    for cx in (103, 263):
+        for dx, dy, r in ((-6, 0, 5), (0, -5, 6), (7, 0, 5)):
+            c.oval((cx + dx - r, 96 + dy - r, cx + dx + r, 96 + dy + r), GOLD, line=3, puffy=False)
+    c.save("acc_royal_cape")
+
+
+def royal_collar():
+    """The cape's collar, worn over the VIP guest's body: a crimson band with a gold rim
+    that runs across his shoulders along the line where his face meets his robe, and a
+    gold clasp under the chin. It joins the two sides of the cape, which the body hides
+    in the middle, into one garment. Drawn on the same canvas as the cape, centred on the
+    neck point, and left uncropped by trim()."""
+    c = Canvas(290, 140)
+    top = [(104, 56), (112, 57), (128, 59), (148, 65), (168, 66), (184, 64), (200, 61), (216, 55), (232, 48), (248, 41), (260, 37)]
+    bottom = [(262, 52), (248, 56), (232, 63), (216, 70), (200, 76), (184, 79), (168, 81), (148, 80), (128, 74), (112, 72), (102, 71)]
+    c.poly(top + bottom, CAPE_RED, line=4)
+    c.line([(x, y - 4) for x, y in reversed(bottom)], GOLD, 4)
+    c.oval((140, 63, 160, 83), GOLD, line=4, puffy=False)
+    c.oval((146, 69, 154, 77), GOLD_DARK, line=0, puffy=False)
+    c.save("acc_royal_collar")
+
+
 def gift_box():
     """The daily gift: a coral box tied with a gold ribbon and bow."""
     c = Canvas(120, 120)
@@ -94,6 +142,8 @@ def main():
     pilot_cap()
     flower_crown()
     crown()
+    royal_cape()
+    royal_collar()
     gift_box()
     trim()
     print("accessories written")
@@ -103,7 +153,8 @@ def trim():
     """Crops each drawing to what is drawn, so a bottom-centre pivot rests right on the head."""
     from PIL import Image
     for name in os.listdir(OUT):
-        if not name.endswith(".png"):
+        # The cape and its collar are drawn around the neck point and must keep their canvas.
+        if not name.endswith(".png") or name in ("acc_royal_cape.png", "acc_royal_collar.png"):
             continue
         path = os.path.join(OUT, name)
         img = Image.open(path)

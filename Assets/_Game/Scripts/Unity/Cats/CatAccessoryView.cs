@@ -17,6 +17,9 @@ namespace ASTeams.SingleLine.Unity
         [Tooltip("How far a hat sinks into the head, in the drawing's units, so it sits rather than floats.")]
         [SerializeField] private float sink = 0.03f;
 
+        [Tooltip("Optional. Worn from the start, for a cat who always dresses the same, such as His Majesty's robe.")]
+        [SerializeField] private AccessorySO wornFromStart;
+
         private Sprite lastBody;
         private bool isWearing;
         private AccessorySlot slot;
@@ -24,6 +27,11 @@ namespace ASTeams.SingleLine.Unity
         private void Awake()
         {
             accessory.enabled = false;
+
+            if (wornFromStart != null)
+            {
+                Wear(wornFromStart);
+            }
         }
 
         /// <summary>Puts an accessory on, or takes it off with null.</summary>
@@ -66,6 +74,11 @@ namespace ASTeams.SingleLine.Unity
             body = linkedBody;
             accessory = linkedAccessory;
             anchors = linkedAnchors;
+        }
+
+        public void EditorLinkWornFromStart(AccessorySO linkedItem)
+        {
+            wornFromStart = linkedItem;
         }
 #endif
     }
