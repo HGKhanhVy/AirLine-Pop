@@ -41,6 +41,9 @@ android {
         multiDexEnabled true
         minSdk **MINSDKVERSION**
         targetSdk 35
+        ndk {
+            debugSymbolLevel **DEBUGSYMBOLLEVEL**
+        }
         versionCode **VERSIONCODE**
         versionName '**VERSIONNAME**'
         

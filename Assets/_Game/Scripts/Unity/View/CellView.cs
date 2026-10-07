@@ -24,6 +24,9 @@ namespace ASTeams.SingleLine.Unity
         [SerializeField] private SpriteRenderer goalStarRenderer;
 
         [SerializeField] private SpriteRenderer goalHaloRenderer;
+
+        [Tooltip("The flat tile's goal star, used when the cell has no block animator.")]
+        [SerializeField] private GoalStarView goalStar;
         [SerializeField] private bool useConfiguredSprite;
         [SerializeField, Min(0.01f)] private float sourceVisualSize = 0.9f;
         [SerializeField, Min(0.1f)] private float startPulseDuration = 1.1f;
@@ -386,6 +389,12 @@ namespace ASTeams.SingleLine.Unity
         /// </summary>
         public void PlayGoalReveal()
         {
+            if (goalStar != null)
+            {
+                goalStar.Reveal();
+                return;
+            }
+
             if (goalMarker == null || blockAnimator == null)
             {
                 return;
@@ -400,6 +409,11 @@ namespace ASTeams.SingleLine.Unity
         public void HideGoalMarker()
         {
             isGoalRevealing = false;
+
+            if (goalStar != null)
+            {
+                goalStar.Hide();
+            }
 
             if (goalMarker != null)
             {

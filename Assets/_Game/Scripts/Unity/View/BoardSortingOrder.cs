@@ -89,6 +89,12 @@ namespace ASTeams.SingleLine.Unity
         /// <summary>What stays lit through a night flight: the runway lights, the gusts, the planes' glow.</summary>
         public const int NightLit = 23;
 
+        /// <summary>
+        /// The star on the square a level finishes on: lit through the night shade, under
+        /// the planes taking off from that square.
+        /// </summary>
+        public const int GoalStar = 24;
+
         public const int Dust = 30;
 
         /// <summary>A night flight's lightning, over the dark but under the planes.</summary>

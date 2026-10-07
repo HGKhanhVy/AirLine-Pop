@@ -29,27 +29,17 @@ namespace ASTeams.SingleLine.Unity
 
         private void HandleStarted()
         {
-            for (int i = 0; i < parts.Length; i++)
-            {
-                parts[i].Stop();
-                parts[i].Play();
-            }
+            LoadingAnimations.Restart(parts);
         }
 
         private void HandleReady()
         {
-            for (int i = 0; i < parts.Length; i++)
-            {
-                parts[i].Complete();
-            }
+            LoadingAnimations.Complete(parts);
         }
 
         private void HandleFinished()
         {
-            for (int i = 0; i < parts.Length; i++)
-            {
-                parts[i].Stop();
-            }
+            LoadingAnimations.Stop(parts);
         }
 
 #if UNITY_EDITOR

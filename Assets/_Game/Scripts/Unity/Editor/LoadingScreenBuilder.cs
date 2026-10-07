@@ -67,8 +67,6 @@ namespace ASTeams.SingleLine.Unity.EditorTools
 
         public static string Build()
         {
-            SpriteImport.Import(LoadingArt + "loading_track.png", 100f);
-            SpriteImport.Import(LoadingArt + "loading_bubble.png", 100f);
             GameObject managers = PrefabUtility.LoadPrefabContents(ManagersPath);
 
             try
@@ -117,6 +115,19 @@ namespace ASTeams.SingleLine.Unity.EditorTools
         private static void BuildScreen(Transform overlay, UISceneController controller)
         {
             RectTransform screen = UiBuilder.Stretch(UiBuilder.Rect(ScreenName, overlay));
+            LoadingAnimation[] parts = BuildContent(screen);
+            screen.gameObject.AddComponent<LoadingScreen>().EditorLink(controller, parts);
+        }
+
+        /// <summary>
+        /// Fills a full-screen rect with the sky, the cat chase and the captain's bubble, and
+        /// hands back the moving parts for whichever screen will drive them. The boot splash
+        /// reuses this so both screens stay one design.
+        /// </summary>
+        public static LoadingAnimation[] BuildContent(RectTransform screen)
+        {
+            SpriteImport.Import(LoadingArt + "loading_track.png", 100f);
+            SpriteImport.Import(LoadingArt + "loading_bubble.png", 100f);
             Image sky = screen.gameObject.AddComponent<Image>();
             sky.sprite = AssetDatabase.LoadAssetAtPath<Sprite>(MapArt + "map_sky.png");
             sky.raycastTarget = true;
@@ -129,8 +140,7 @@ namespace ASTeams.SingleLine.Unity.EditorTools
             BuildBubble(safe, out LoadingBob bob, out LoadingTips tips);
             parts.Add(bob);
             parts.Add(tips);
-
-            screen.gameObject.AddComponent<LoadingScreen>().EditorLink(controller, parts.ToArray());
+            return parts.ToArray();
         }
 
         /// <summary>Kept light on purpose: a few small clouds bobbing and a couple of paper planes gliding.</summary>

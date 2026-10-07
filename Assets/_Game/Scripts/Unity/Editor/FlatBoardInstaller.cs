@@ -181,6 +181,7 @@ namespace ASTeams.SingleLine.Unity.EditorTools
                 so.FindProperty("startPulseAlpha").floatValue = 0.7f;
                 so.FindProperty("flashPeakAlpha").floatValue = 0.55f;
                 so.ApplyModifiedPropertiesWithoutUndo();
+                GoalStarInstaller.AddTo(sizeRoot, view);
 
                 GameObject saved = PrefabUtility.SaveAsPrefabAsset(root, CellPrefabPath);
                 return saved.GetComponent<CellView>();
