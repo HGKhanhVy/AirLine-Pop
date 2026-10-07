@@ -7992,7 +7992,7 @@ MonoBehaviour:
   panelDelay: 1.8
   maxDelay: 4
   skippableAfter: 0.4
-  cardSeconds: 3
+  cardSeconds: 2.2
   destinations: {fileID: 11400000, guid: 474636d59cce8ad4aad2fff22ef0ece0, type: 2}
 --- !u!114 &903435881698493361
 MonoBehaviour:

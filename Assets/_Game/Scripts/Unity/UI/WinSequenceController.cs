@@ -28,7 +28,7 @@ namespace ASTeams.SingleLine.Unity
         [SerializeField, Min(0f)] private float skippableAfter = 0.4f;
 
         [Tooltip("How long the card stays before the next flight opens, unless a tap brings it sooner.")]
-        [SerializeField, Min(0.5f)] private float cardSeconds = 3f;
+        [SerializeField, Min(0.5f)] private float cardSeconds = 2.2f;
 
         private CatPortraitStage stage;
         [Tooltip("Optional. The route map, for the destination, stamp and postcard on the win card.")]
