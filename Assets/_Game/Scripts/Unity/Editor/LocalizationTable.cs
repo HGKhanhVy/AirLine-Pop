@@ -27,6 +27,14 @@ namespace ASTeams.SingleLine.Unity.EditorTools
             ("settings.vibration", "Vibration", "Rung"),
             ("settings.language", "Language", "Ngôn ngữ"),
 
+            // Privacy popup, asked once on the first launch.
+            ("consent.title", "Your privacy", "Quyền riêng tư"),
+            ("consent.intro", "A quick check before take-off!", "Kiểm tra nhanh trước khi cất cánh nhé!"),
+            ("consent.local", "Your progress stays on this phone", "Tiến trình được lưu ngay trên máy bạn"),
+            ("consent.noAccount", "No account, name or email needed", "Không cần tài khoản, tên hay email"),
+            ("consent.policy", "Privacy Policy", "Chính sách quyền riêng tư"),
+            ("consent.agree", "I agree", "Đồng ý"),
+
             // Loading screen: Captain Bơ talking while the cats chase the yarn round him.
             ("loading.tip.wings", "Let me check the wings first...", "Để Bơ kiểm tra cánh máy bay đã nha..."),
             ("loading.tip.bags", "Are all the bags on board?", "Hành lý lên khoang hết chưa nè?"),

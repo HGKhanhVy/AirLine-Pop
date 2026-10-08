@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e0526fda8de7ea45b58b5c0c961f3e5, type: 3}
   m_Name: SettingsConfig
   m_EditorClassIdentifier: 
-  privacyPolicyUrl: 
+  privacyPolicyUrl: https://airline-pop-policy.vercel.app/privacy.html

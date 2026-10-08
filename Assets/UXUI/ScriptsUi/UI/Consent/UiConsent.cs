@@ -7,6 +7,8 @@ using UnityEngine.UI;
 /// Privacy popup (GDD 12.3): asked once before the game starts, and reopened from the
 /// settings screen so the player can change the answer any time. The personalized ads
 /// switch starts off on a first answer, since consent may not be pre-ticked.
+/// The ads switch and Accept all are optional: while the game shows no ads the popup only
+/// asks the player to agree to the policy, which saves "no personalized ads".
 /// </summary>
 public class UiConsent : Uibase
 {
@@ -19,6 +21,8 @@ public class UiConsent : Uibase
     private IConsentService consent;
     private Action onAnswered;
     private bool allowsPersonalizedAds;
+
+    private bool HasAdsChoice => personalizedAdsToggle != null;
 
     public void Initialize(IConsentService consentService)
     {
@@ -35,24 +39,44 @@ public class UiConsent : Uibase
     public override void Show()
     {
         base.Show();
-        allowsPersonalizedAds = consent != null && consent.HasAnswered && consent.AllowsPersonalizedAds;
-        personalizedAdsToggle.SetIsOn(allowsPersonalizedAds);
+        allowsPersonalizedAds = HasAdsChoice && consent != null && consent.HasAnswered && consent.AllowsPersonalizedAds;
+
+        if (HasAdsChoice)
+        {
+            personalizedAdsToggle.SetIsOn(allowsPersonalizedAds);
+        }
     }
 
     private void OnEnable()
     {
-        personalizedAdsToggle.OnChanged += HandleToggleChanged;
         privacyPolicyButton.onClick.AddListener(OpenPrivacyPolicy);
         saveButton.onClick.AddListener(SaveChoice);
-        acceptAllButton.onClick.AddListener(AcceptAll);
+
+        if (HasAdsChoice)
+        {
+            personalizedAdsToggle.OnChanged += HandleToggleChanged;
+        }
+
+        if (acceptAllButton != null)
+        {
+            acceptAllButton.onClick.AddListener(AcceptAll);
+        }
     }
 
     private void OnDisable()
     {
-        personalizedAdsToggle.OnChanged -= HandleToggleChanged;
         privacyPolicyButton.onClick.RemoveListener(OpenPrivacyPolicy);
         saveButton.onClick.RemoveListener(SaveChoice);
-        acceptAllButton.onClick.RemoveListener(AcceptAll);
+
+        if (HasAdsChoice)
+        {
+            personalizedAdsToggle.OnChanged -= HandleToggleChanged;
+        }
+
+        if (acceptAllButton != null)
+        {
+            acceptAllButton.onClick.RemoveListener(AcceptAll);
+        }
     }
 
     private void HandleToggleChanged(bool isOn)
@@ -67,7 +91,11 @@ public class UiConsent : Uibase
 
     private void AcceptAll()
     {
-        personalizedAdsToggle.SetIsOn(true);
+        if (HasAdsChoice)
+        {
+            personalizedAdsToggle.SetIsOn(true);
+        }
+
         Answer(true);
     }
 
@@ -91,4 +119,18 @@ public class UiConsent : Uibase
 
         Application.OpenURL(config.PrivacyPolicyUrl);
     }
+
+#if UNITY_EDITOR
+    public void EditorLink(CanvasGroup linkedGroup, RectTransform linkedCard, SettingToggleView linkedToggle,
+        Button linkedPolicy, Button linkedSave, Button linkedAcceptAll, SettingsConfigSO linkedConfig)
+    {
+        canvasGroup = linkedGroup;
+        panel = linkedCard;
+        personalizedAdsToggle = linkedToggle;
+        privacyPolicyButton = linkedPolicy;
+        saveButton = linkedSave;
+        acceptAllButton = linkedAcceptAll;
+        config = linkedConfig;
+    }
+#endif
 }

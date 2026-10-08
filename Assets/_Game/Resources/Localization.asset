@@ -46,6 +46,25 @@ MonoBehaviour:
   - Key: settings.language
     English: Language
     Vietnamese: "Ng\xF4n ng\u1EEF"
+  - Key: consent.title
+    English: Your privacy
+    Vietnamese: "Quy\u1EC1n ri\xEAng t\u01B0"
+  - Key: consent.intro
+    English: A quick check before take-off!
+    Vietnamese: "Ki\u1EC3m tra nhanh tr\u01B0\u1EDBc khi c\u1EA5t c\xE1nh nh\xE9!"
+  - Key: consent.local
+    English: Your progress stays on this phone
+    Vietnamese: "Ti\u1EBFn tr\xECnh \u0111\u01B0\u1EE3c l\u01B0u ngay tr\xEAn m\xE1y
+      b\u1EA1n"
+  - Key: consent.noAccount
+    English: No account, name or email needed
+    Vietnamese: "Kh\xF4ng c\u1EA7n t\xE0i kho\u1EA3n, t\xEAn hay email"
+  - Key: consent.policy
+    English: Privacy Policy
+    Vietnamese: "Ch\xEDnh s\xE1ch quy\u1EC1n ri\xEAng t\u01B0"
+  - Key: consent.agree
+    English: I agree
+    Vietnamese: "\u0110\u1ED3ng \xFD"
   - Key: loading.tip.wings
     English: Let me check the wings first...
     Vietnamese: "\u0110\u1EC3 B\u01A1 ki\u1EC3m tra c\xE1nh m\xE1y bay \u0111\xE3
