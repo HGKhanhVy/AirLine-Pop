@@ -16,8 +16,6 @@
       <meta-data android:name="unityplayer.UnityActivity" android:value="true" />
       <meta-data android:name="unityplayer.ForwardNativeEventsToDalvik" android:value="false" />
     </activity>
-    <!-- FULLSCREEN FIX -->
-    <meta-data android:name="android.max_aspect" android:value="2.16" />
     <!-- 3rdParty MANIFEST: khoi phuc khi nao import Facebook / Adjust SDK.
          Chua co SDK ma khai bao provider thi Android crash ngay khi mo app.
     <activity android:name="com.facebook.unity.FBUnityLoginActivity" android:configChanges="fontScale|keyboard|keyboardHidden|locale|mnc|mcc|navigation|orientation|screenLayout|screenSize|smallestScreenSize|uiMode|touchscreen" android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen" />

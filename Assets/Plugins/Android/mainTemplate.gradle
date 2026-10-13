@@ -46,6 +46,7 @@ android {
         }
         versionCode **VERSIONCODE**
         versionName '**VERSIONNAME**'
+        consumerProguardFiles 'proguard-unity.txt'**USER_PROGUARD**
         
         **DEFAULT_CONFIG_SETUP**
     }

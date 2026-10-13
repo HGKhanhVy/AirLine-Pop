@@ -1,0 +1,6 @@
+# Project-specific R8 keep rules. Unity's own rules come from proguard-unity.txt.
+# Add the keep rules required by each native SDK (Ads, IAP, Firebase, Adjust...) when it is integrated.
+
+# Install Referrer is called from C# via JNI, so R8 cannot see its usage.
+-keep class com.android.installreferrer.** { *; }
+-dontwarn com.android.installreferrer.**
