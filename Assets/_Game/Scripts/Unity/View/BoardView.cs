@@ -246,6 +246,17 @@ namespace ASTeams.SingleLine.Unity
             Track(view);
         }
 
+        /// <summary>Tells a marked square how many times the path now crosses it, for the marks drawn on it.</summary>
+        public void SetCellPasses(int index, int passes)
+        {
+            CellView view = GetView(index);
+
+            if (view != null)
+            {
+                view.SetPassCount(passes);
+            }
+        }
+
         /// <summary>
         /// Presses a square down and lets it bounce back, for the moment the path reaches
         /// it. Driven from the controller rather than from the colour change, because

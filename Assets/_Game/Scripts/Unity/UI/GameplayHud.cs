@@ -161,6 +161,10 @@ namespace ASTeams.SingleLine.Unity
                 {
                     levelLabel.SetText(Localization.Get("gameplay.level"), levelNumber);
                 }
+                else if (specialName == DailyFlightCatalog.FlightName)
+                {
+                    levelLabel.text = Localization.Get("daily.title");
+                }
                 else
                 {
                     levelLabel.text = Localization.Format("gameplay.specialLevel", levelNumber, Localization.Get("special." + specialName));

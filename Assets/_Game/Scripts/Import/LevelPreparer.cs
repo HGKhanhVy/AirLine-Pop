@@ -44,7 +44,7 @@ namespace ASTeams.SingleLine.Import
                 // freshly solved one otherwise. Either way a full length solution is proof
                 // the board is playable; anything short means no solution exists or the
                 // search gave up, and the level cannot ship.
-                if (result.Solution.Count != level.ActiveCellCount)
+                if (result.Solution.Count != level.PathLength)
                 {
                     dropped.Add(level.Id);
                     continue;
@@ -108,7 +108,8 @@ namespace ASTeams.SingleLine.Import
             }
 
             return new LevelData(level.Id, level.Version, level.Grid, cells, level.FixedStart,
-                level.FixedEnd, ToArray(level.Solution), level.Difficulty, level.ThemeId, CopyTags(level.Tags), CopyWind(level.Wind));
+                level.FixedEnd, ToArray(level.Solution), level.Difficulty, level.ThemeId, CopyTags(level.Tags), CopyWind(level.Wind),
+                CopyMarks(level.Marks));
         }
 
         private static WindCell[] CopyWind(IReadOnlyList<WindCell> wind)
@@ -117,6 +118,17 @@ namespace ASTeams.SingleLine.Import
             for (int i = 0; i < wind.Count; i++)
             {
                 copy[i] = wind[i];
+            }
+
+            return copy;
+        }
+
+        private static CellMark[] CopyMarks(IReadOnlyList<CellMark> marks)
+        {
+            var copy = new CellMark[marks.Count];
+            for (int i = 0; i < marks.Count; i++)
+            {
+                copy[i] = marks[i];
             }
 
             return copy;

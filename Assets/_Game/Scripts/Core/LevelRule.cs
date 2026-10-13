@@ -27,6 +27,21 @@ namespace ASTeams.SingleLine.Core
         /// Not a condition of its own: the VIP flight closing a chapter, which mixes the
         /// others. Carried here so the screens that explain conditions can explain it too.
         /// </summary>
-        Vip = 16
+        Vip = 16,
+
+        /// <summary>Turbulence clouds: squares the plane must fly straight through.</summary>
+        Turbulence = 32,
+
+        /// <summary>Beacons: squares the plane must turn on.</summary>
+        Beacon = 64,
+
+        /// <summary>Overpasses: squares flown over twice, crossing the route already drawn.</summary>
+        Bridge = 128,
+
+        /// <summary>
+        /// Not a condition of its own either: the storm flight, the hardest of its city, which
+        /// pays double. Carried here so the screens that explain conditions can bill it.
+        /// </summary>
+        Storm = 256
     }
 }

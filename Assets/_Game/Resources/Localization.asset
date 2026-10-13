@@ -344,14 +344,12 @@ MonoBehaviour:
       m\u1ED9t l\u1EA7n, r\u1ED3i bay trong \u0111\xEAm. Ch\u1EC9 c\xF3 \u0111\xE8n
       m\xE1y bay soi \u0111\u01B0\u1EDDng."
   - Key: rule.formation.title
-    English: Formation
-    Vietnamese: "Bay \u0111\u1ED9i h\xECnh"
+    English: Fly together!
+    Vietnamese: "C\xF9ng bay n\xE0o"
   - Key: rule.formation.body
-    English: Two planes fly as mirror images. Cover your half and your wingman covers
-      the other.
-    Vietnamese: "Hai m\xE1y bay bay \u0111\u1ED1i x\u1EE9ng nh\u01B0 soi g\u01B0\u01A1ng.
-      Ph\u1EE7 k\xEDn n\u1EEDa c\u1EE7a b\u1EA1n, m\xE1y bay \u0111\u1ED3ng \u0111\u1ED9i
-      s\u1EBD ph\u1EE7 n\u1EEDa c\xF2n l\u1EA1i."
+    English: Your wingman mirrors every move you make. Cover both sides to win!
+    Vietnamese: "\u0110\u1ED3ng \u0111\u1ED9i bay theo b\u1EA1n nh\u01B0 soi g\u01B0\u01A1ng.
+      Bay k\xEDn c\u1EA3 hai b\xEAn l\xE0 th\u1EAFng!"
   - Key: rule.vip.title
     English: VIP flight
     Vietnamese: "Chuy\u1EBFn bay VIP"
@@ -368,13 +366,72 @@ MonoBehaviour:
     English: Wind
     Vietnamese: "Lu\u1ED3ng gi\xF3"
   - Key: rule.wind.body
-    English: Fly onto a windy square and the gust pushes you on the way its arrow
-      points.
-    Vietnamese: "Bay v\xE0o \xF4 c\xF3 gi\xF3, m\xE1y bay s\u1EBD b\u1ECB \u0111\u1EA9y
-      \u0111i ti\u1EBFp theo \u0111\xFAng h\u01B0\u1EDBng m\u0169i t\xEAn."
+    English: Fly onto a windy square and the gust blows your plane on to the next
+      square, the way its arrow points.
+    Vietnamese: "Bay v\xE0o \xF4 c\xF3 gi\xF3, m\xE1y bay s\u1EBD t\u1EF1 b\u1ECB
+      th\u1ED5i sang \xF4 k\u1EBF b\xEAn theo h\u01B0\u1EDBng m\u0169i t\xEAn."
   - Key: rule.gotIt
     English: Got it!
     Vietnamese: "\u0110\xE3 hi\u1EC3u!"
+  - Key: rule.turbulence.title
+    English: Turbulence
+    Vietnamese: "M\xE2y nhi\u1EC5u \u0111\u1ED9ng"
+  - Key: rule.turbulence.body
+    English: 'Fly straight through a storm cloud: no turning on its square.'
+    Vietnamese: "G\u1EB7p m\xE2y nhi\u1EC5u \u0111\u1ED9ng ph\u1EA3i bay th\u1EB3ng
+      qua, kh\xF4ng \u0111\u01B0\u1EE3c r\u1EBD tr\xEAn \xF4 m\xE2y."
+  - Key: rule.beacon.title
+    English: Beacon
+    Vietnamese: "\u0110\xE8n hi\u1EC7u"
+  - Key: rule.beacon.body
+    English: 'A beacon marks a corner: turn on its square, never fly straight on.'
+    Vietnamese: "\u0110\xE8n hi\u1EC7u \u0111\xE1nh d\u1EA5u kh\xFAc cua: t\u1EDBi
+      \xF4 c\xF3 \u0111\xE8n ph\u1EA3i r\u1EBD, kh\xF4ng \u0111\u01B0\u1EE3c bay
+      th\u1EB3ng."
+  - Key: rule.bridge.title
+    English: Overpass
+    Vietnamese: "C\u1EA7u v\u01B0\u1EE3t"
+  - Key: rule.bridge.body
+    English: Fly over an overpass twice, once each way across, straight over it both
+      times.
+    Vietnamese: "C\u1EA7u v\u01B0\u1EE3t ph\u1EA3i bay qua 2 l\u1EA7n, m\u1ED9t l\u1EA7n
+      d\u1ECDc v\xE0 m\u1ED9t l\u1EA7n ngang, l\u1EA7n n\xE0o c\u0169ng bay th\u1EB3ng."
+  - Key: rule.storm.title
+    English: Storm flight
+    Vietnamese: "Chuy\u1EBFn bay b\xE3o"
+  - Key: rule.storm.body
+    English: 'Each city''s toughest flight. Take your time: landing it pays double
+      coins!'
+    Vietnamese: "Chuy\u1EBFn kh\xF3 nh\u1EA5t c\u1EE7a m\u1ED7i th\xE0nh ph\u1ED1.
+      C\u1EE9 b\xECnh t\u0129nh: h\u1EA1 c\xE1nh th\xE0nh c\xF4ng \u0111\u01B0\u1EE3c
+      th\u01B0\u1EDFng g\u1EA5p \u0111\xF4i xu!"
+  - Key: special.storm
+    English: Storm
+    Vietnamese: "B\xE3o"
+  - Key: storm.banner
+    English: Storm ahead! Double coins
+    Vietnamese: "B\xE3o ph\xEDa tr\u01B0\u1EDBc! Th\u01B0\u1EDFng x2 xu"
+  - Key: win.stormBonus
+    English: "Storm beaten \xB7 +{0} coins"
+    Vietnamese: "V\u01B0\u1EE3t b\xE3o \xB7 +{0} xu"
+  - Key: daily.title
+    English: Daily flight
+    Vietnamese: "Chuy\u1EBFn bay h\u1EB1ng ng\xE0y"
+  - Key: daily.reward
+    English: +{0}
+    Vietnamese: +{0}
+  - Key: daily.done
+    English: Back tomorrow
+    Vietnamese: "Mai bay ti\u1EBFp"
+  - Key: daily.streak
+    English: '{0} days in a row'
+    Vietnamese: "{0} ng\xE0y li\xEAn ti\u1EBFp"
+  - Key: win.dailyTitle
+    English: Daily flight complete!
+    Vietnamese: "Ho\xE0n th\xE0nh chuy\u1EBFn bay h\u1EB1ng ng\xE0y!"
+  - Key: win.dailyDetail
+    English: "{0} days in a row \xB7 see you tomorrow"
+    Vietnamese: "{0} ng\xE0y li\xEAn ti\u1EBFp \xB7 mai bay ti\u1EBFp nh\xE9"
   - Key: special.heart
     English: Heart
     Vietnamese: "Tr\xE1i tim"
@@ -412,8 +469,8 @@ MonoBehaviour:
     English: Try a Restart
     Vietnamese: "Th\u1EED Ch\u01A1i l\u1EA1i nh\xE9"
   - Key: gameplay.hint.undo
-    English: Drag back {0} steps
-    Vietnamese: "K\xE9o l\xF9i {0} b\u01B0\u1EDBc"
+    English: "Wrong way \xB7 drag back {0} steps"
+    Vietnamese: "\u0110i sai r\u1ED3i \xB7 k\xE9o l\xF9i {0} b\u01B0\u1EDBc"
   - Key: hud.hint
     English: Hint
     Vietnamese: "G\u1EE3i \xFD"

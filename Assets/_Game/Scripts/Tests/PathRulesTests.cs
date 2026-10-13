@@ -5,9 +5,9 @@ namespace ASTeams.SingleLine.Core.Tests
 {
     public sealed class PathRulesTests
     {
-        private static bool[] NoneVisited(LevelData level)
+        private static byte[] NoneVisited(LevelData level)
         {
-            return new bool[level.Grid.CellCount];
+            return new byte[level.Grid.CellCount];
         }
 
         [Test]
@@ -33,55 +33,55 @@ namespace ASTeams.SingleLine.Core.Tests
         public void CanEnter_RejectsDiagonalSteps()
         {
             LevelData level = LevelSamples.CreateFullBoard(3, 3);
-            bool[] visited = NoneVisited(level);
+            byte[] visited = NoneVisited(level);
 
-            Assert.IsTrue(PathRules.CanEnter(level, visited, 4, 1), "up is orthogonal");
-            Assert.IsFalse(PathRules.CanEnter(level, visited, 4, 0), "0 sits diagonally from 4");
-            Assert.IsFalse(PathRules.CanEnter(level, visited, 4, 8));
+            Assert.IsTrue(PathRules.CanEnter(level, visited, LevelData.NoCell, 4, 1), "up is orthogonal");
+            Assert.IsFalse(PathRules.CanEnter(level, visited, LevelData.NoCell, 4, 0), "0 sits diagonally from 4");
+            Assert.IsFalse(PathRules.CanEnter(level, visited, LevelData.NoCell, 4, 8));
         }
 
         [Test]
         public void CanEnter_RejectsWrapAroundAcrossARowEdge()
         {
             LevelData level = LevelSamples.CreateFullBoard(6, 5);
-            bool[] visited = NoneVisited(level);
+            byte[] visited = NoneVisited(level);
 
             // 11 is the last column of row 1 and 12 the first column of row 2: their
             // indices differ by one but they are on opposite edges of the board.
-            Assert.IsFalse(PathRules.CanEnter(level, visited, 11, 12));
+            Assert.IsFalse(PathRules.CanEnter(level, visited, LevelData.NoCell, 11, 12));
         }
 
         [Test]
         public void CanEnter_RejectsAVisitedCell()
         {
             LevelData level = LevelSamples.CreateFullBoard(3, 3);
-            bool[] visited = NoneVisited(level);
-            visited[1] = true;
+            byte[] visited = NoneVisited(level);
+            visited[1] = 1;
 
-            Assert.IsFalse(PathRules.CanEnter(level, visited, 4, 1));
+            Assert.IsFalse(PathRules.CanEnter(level, visited, LevelData.NoCell, 4, 1));
         }
 
         [Test]
         public void CanEnter_RejectsAHole()
         {
             LevelData level = LevelSamples.CreateLevel442();
-            bool[] visited = NoneVisited(level);
+            byte[] visited = NoneVisited(level);
 
-            Assert.IsFalse(PathRules.CanEnter(level, visited, 9, 3), "3 is a hole above 9");
-            Assert.IsTrue(PathRules.CanEnter(level, visited, 9, 15));
+            Assert.IsFalse(PathRules.CanEnter(level, visited, LevelData.NoCell, 9, 3), "3 is a hole above 9");
+            Assert.IsTrue(PathRules.CanEnter(level, visited, LevelData.NoCell, 9, 15));
         }
 
         [Test]
         public void CountAvailableMoves_IgnoresHolesAndVisitedCells()
         {
             LevelData level = LevelSamples.CreateLevel442();
-            bool[] visited = NoneVisited(level);
+            byte[] visited = NoneVisited(level);
 
             // Cell 7 has neighbours 1 (up), 8 (right), 13 (down, a hole) and 6 (left).
-            Assert.AreEqual(3, PathRules.CountAvailableMoves(level, visited, 7));
+            Assert.AreEqual(3, PathRules.CountAvailableMoves(level, visited, LevelData.NoCell, 7));
 
-            visited[8] = true;
-            Assert.AreEqual(2, PathRules.CountAvailableMoves(level, visited, 7));
+            visited[8] = 1;
+            Assert.AreEqual(2, PathRules.CountAvailableMoves(level, visited, LevelData.NoCell, 7));
         }
 
         [Test]

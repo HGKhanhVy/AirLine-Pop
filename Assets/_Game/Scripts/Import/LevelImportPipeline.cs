@@ -116,6 +116,31 @@ namespace ASTeams.SingleLine.Import
             return report;
         }
 
+        /// <summary>
+        /// Only the first half of an import: parse, collapse duplicates, check and repair
+        /// solutions. For a caller that lays out the campaign its own way.
+        /// </summary>
+        public PreparedPool Prepare(IReadOnlyList<RawLevelFile> files, ImportReport report)
+        {
+            if (files == null)
+            {
+                throw new ArgumentNullException(nameof(files));
+            }
+
+            if (report == null)
+            {
+                throw new ArgumentNullException(nameof(report));
+            }
+
+            List<LevelData> parsed = Parse(SortById(files), report);
+            report.Parsed = parsed;
+            IReadOnlyList<LevelData> selected = selector.Select(parsed, report);
+            var preparer = new LevelPreparer(new LevelValidator(new WarnsdorffSolver(solverNodeBudget)));
+            PreparedPool pool = preparer.Prepare(selected);
+            report.Pool = pool;
+            return pool;
+        }
+
         private List<LevelData> Parse(List<RawLevelFile> files, ImportReport report)
         {
             var timer = Stopwatch.StartNew();

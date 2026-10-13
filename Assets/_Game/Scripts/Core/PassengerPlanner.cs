@@ -34,7 +34,7 @@ namespace ASTeams.SingleLine.Core
 
             for (int cell = 0; cell < level.Grid.CellCount; cell++)
             {
-                if (level.IsActive(cell) && cell != level.FixedStart)
+                if (level.IsActive(cell) && cell != level.FixedStart && !CarriesRule(level, cell))
                 {
                     candidates.Add(cell);
                 }
@@ -69,6 +69,15 @@ namespace ASTeams.SingleLine.Core
             }
 
             return new PassengerPlan(seats, seed);
+        }
+
+        /// <summary>
+        /// The runway, a gust or a cloud, beacon or overpass: a cat sitting there would hide
+        /// what the square asks of the player.
+        /// </summary>
+        private static bool CarriesRule(LevelData level, int cell)
+        {
+            return cell == level.FixedEnd || level.TryGetWind(cell, out _) || level.KindOf(cell) != CellKind.Plain;
         }
 
         /// <summary>

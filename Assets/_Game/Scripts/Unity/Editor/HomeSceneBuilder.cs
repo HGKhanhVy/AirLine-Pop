@@ -93,6 +93,7 @@ namespace ASTeams.SingleLine.Unity.EditorTools
             bootstrap.EditorLinkRoutes(ui.Routes, ui.Album);
             bootstrap.EditorLinkRouteMap(ui.RouteMap);
             bootstrap.EditorLinkSettings(ui.Settings);
+            bootstrap.EditorLinkDailyFlight(ui.DailyFlight);
             bootstrap.EditorLinkShop(ui.Shop, AssetDatabase.LoadAssetAtPath<LiveryCatalogSO>(ShopInstaller.CatalogPath),
                 AssetDatabase.LoadAssetAtPath<SkinCatalogSO>(ThemeInstaller.CatalogPath));
 
@@ -377,6 +378,7 @@ namespace ASTeams.SingleLine.Unity.EditorTools
         {
             public CoinCounterView Coins;
             public AirportPanelView Airport;
+            public DailyFlightPresenter DailyFlight;
             public BottomNavView Nav;
             public CanvasGroup AirportPanel;
             public CanvasGroup RoomPanel;
@@ -557,6 +559,7 @@ namespace ASTeams.SingleLine.Unity.EditorTools
             AirportPanelView view = panel.gameObject.AddComponent<AirportPanelView>();
             view.EditorLink(play, level, content);
             ui.Airport = view;
+            ui.DailyFlight = DailyFlightUiBuilder.Build(panel);
             return group;
         }
 

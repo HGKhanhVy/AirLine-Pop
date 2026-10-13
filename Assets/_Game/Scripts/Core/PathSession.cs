@@ -13,8 +13,12 @@ namespace ASTeams.SingleLine.Core
     public sealed class PathSession
     {
         private readonly LevelData level;
-        private readonly bool[] visited;
+        private readonly byte[] visits;
         private readonly int[] path;
+
+        // The wingman's square after each step of the player's route; it repeats while the wingman waits.
+        private readonly int[] wingPath;
+        private int wingCovered;
 
         private int length;
         private PathState state;
@@ -36,7 +40,13 @@ namespace ASTeams.SingleLine.Core
         public int Length => length;
 
         /// <summary>Squares covered so far, counting the wingman's in a formation flight.</summary>
-        public int CoveredCount => level.IsFormation ? length * 2 : length;
+        public int CoveredCount => length + wingCovered;
+
+        /// <summary>The wingman's square, or <see cref="LevelData.NoCell"/> outside a formation flight.</summary>
+        public int WingHead => length > 0 && level.IsFormation ? wingPath[length - 1] : LevelData.NoCell;
+
+        /// <summary>Cell drawn just before the head, or <see cref="LevelData.NoCell"/>.</summary>
+        private int Previous => length > 1 ? path[length - 2] : LevelData.NoCell;
 
         /// <summary>Last cell of the path, or <see cref="LevelData.NoCell"/> when empty.</summary>
         public int Head => length > 0 ? path[length - 1] : LevelData.NoCell;
@@ -45,14 +55,21 @@ namespace ASTeams.SingleLine.Core
         {
             this.level = level ?? throw new ArgumentNullException(nameof(level));
 
-            visited = new bool[level.Grid.CellCount];
+            visits = new byte[level.Grid.CellCount];
             path = new int[level.PathLength];
+            wingPath = new int[level.PathLength];
             state = PathState.Ready;
         }
 
         public bool IsVisited(int cell)
         {
-            return cell >= 0 && cell < visited.Length && visited[cell];
+            return VisitCount(cell) > 0;
+        }
+
+        /// <summary>Passes the route has made over the square: two once an overpass is crossed both ways.</summary>
+        public int VisitCount(int cell)
+        {
+            return cell >= 0 && cell < visits.Length ? visits[cell] : 0;
         }
 
         /// <summary>Cell drawn at <paramref name="step"/>, zero based.</summary>
@@ -64,6 +81,17 @@ namespace ASTeams.SingleLine.Core
             }
 
             return path[step];
+        }
+
+        /// <summary>The wingman's square after step <paramref name="step"/> of the player's route.</summary>
+        public int GetWingCell(int step)
+        {
+            if (step < 0 || step >= length)
+            {
+                throw new ArgumentOutOfRangeException(nameof(step), step, "Step is outside the drawn path.");
+            }
+
+            return wingPath[step];
         }
 
         public void CopyPathTo(int[] destination)
@@ -120,7 +148,7 @@ namespace ASTeams.SingleLine.Core
                 return MoveResult.Backtracked;
             }
 
-            if (!PathRules.CanEnter(level, visited, path[length - 1], cell))
+            if (!PathRules.CanEnter(level, visits, Previous, path[length - 1], cell))
             {
                 return MoveResult.Rejected;
             }
@@ -163,9 +191,14 @@ namespace ASTeams.SingleLine.Core
 
         private void Push(int cell)
         {
+            if (level.IsFormation)
+            {
+                MoveWingman(cell);
+            }
+
             path[length] = cell;
             length++;
-            PathRules.Visit(level, visited, cell, true);
+            PathRules.Visit(level, visits, cell, true);
             OnCellVisited?.Invoke(cell);
         }
 
@@ -173,8 +206,35 @@ namespace ASTeams.SingleLine.Core
         {
             length--;
             int cell = path[length];
-            PathRules.Visit(level, visited, cell, false);
+            PathRules.Visit(level, visits, cell, false);
+
+            if (level.IsFormation)
+            {
+                int wing = wingPath[length];
+
+                if (length == 0 || wing != wingPath[length - 1])
+                {
+                    PathRules.Visit(level, visits, wing, false);
+                    wingCovered--;
+                }
+            }
             OnCellUnvisited?.Invoke(cell);
+        }
+
+        /// <summary>Takes the wingman's step for the player's step onto <paramref name="cell"/>.</summary>
+        private void MoveWingman(int cell)
+        {
+            int wing = length == 0
+                ? Wingman.StartFor(level, cell)
+                : Wingman.Step(level, visits, wingPath[length - 1], path[length - 1], cell);
+
+            if (length == 0 || wing != wingPath[length - 1])
+            {
+                PathRules.Visit(level, visits, wing, true);
+                wingCovered++;
+            }
+
+            wingPath[length] = wing;
         }
 
         private void UpdateState()
@@ -185,11 +245,11 @@ namespace ASTeams.SingleLine.Core
             {
                 next = PathState.Ready;
             }
-            else if (PathRules.IsComplete(level, length, path[length - 1]))
+            else if (PathRules.IsComplete(level, length, path[length - 1], wingCovered))
             {
                 next = PathState.Won;
             }
-            else if (!PathRules.HasAnyMove(level, visited, path[length - 1]))
+            else if (length == level.PathLength || !PathRules.HasAnyMove(level, visits, Previous, path[length - 1]))
             {
                 next = PathState.Stuck;
             }

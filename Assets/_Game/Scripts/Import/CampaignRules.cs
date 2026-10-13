@@ -174,7 +174,7 @@ namespace ASTeams.SingleLine.Import
                 }
             }
 
-            if (!PathSequenceValidator.IsValid(result, result.Solution, new bool[result.Grid.CellCount], true))
+            if (!PathSequenceValidator.IsValid(result, result.Solution, new byte[result.Grid.CellCount], true))
             {
                 throw new InvalidOperationException("Rules " + rules + " broke the solution of " + level.Id + ".");
             }

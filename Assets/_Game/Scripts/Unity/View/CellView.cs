@@ -168,6 +168,7 @@ namespace ASTeams.SingleLine.Unity
         {
             CellIndex = cellIndex;
             IsVisited = false;
+            PassCount = 0;
             BaseLocalPosition = localPosition;
             transform.localPosition = localPosition;
             transform.localScale = Vector3.one;
@@ -217,6 +218,14 @@ namespace ASTeams.SingleLine.Unity
 
         /// <summary>True once the path covers this square.</summary>
         public bool IsVisited { get; private set; }
+
+        /// <summary>How many times the path crosses this square: up to two on an overpass, else at most one.</summary>
+        public int PassCount { get; private set; }
+
+        public void SetPassCount(int passes)
+        {
+            PassCount = passes;
+        }
 
         public void SetVisited(bool visited)
         {

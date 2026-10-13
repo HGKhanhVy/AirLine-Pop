@@ -52,7 +52,8 @@ namespace ASTeams.SingleLine.Unity
         public override void Play()
         {
             order ??= new int[runners.Length + 1];
-            firstFrames ??= FirstFrames();
+            // Worked out on every play rather than cached, so frames relinked by the builder are always read afresh.
+            firstFrames = FirstFrames();
             Show(0f);
             lap = DOTween.To(Angle, Show, FullTurn, lapSeconds).From(0f).SetEase(Ease.Linear)
                 .SetLoops(-1, LoopType.Restart).SetUpdate(true);
@@ -81,11 +82,23 @@ namespace ASTeams.SingleLine.Unity
 
             yarn.localRotation = Quaternion.Euler(0f, 0f, value * Mathf.Rad2Deg * 3f);
 
-            for (int i = 0; i < cats.Length; i++)
+            int animated = Mathf.Min(cats.Length, Mathf.Min(frameCounts.Length, frameSeconds.Length));
+
+            for (int i = 0; i < animated; i++)
             {
+                if (frameCounts[i] <= 0 || frameSeconds[i] <= 0f)
+                {
+                    continue;
+                }
+
                 // Each cat starts its cycle a little apart from the others.
                 int step = (Mathf.FloorToInt(seconds / frameSeconds[i]) + i * 3) % frameCounts[i];
-                cats[i].sprite = frames[firstFrames[i] + step];
+                int frame = firstFrames[i] + Mathf.Max(0, step);
+
+                if (frame < frames.Length)
+                {
+                    cats[i].sprite = frames[frame];
+                }
             }
 
             if (centreFrames.Length > 0)

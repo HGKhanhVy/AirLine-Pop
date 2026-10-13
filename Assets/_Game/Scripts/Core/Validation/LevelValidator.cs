@@ -64,7 +64,9 @@ namespace ASTeams.SingleLine.Core
                 issues.Add(new LevelIssue(LevelIssueCode.FixedEndNotActive, level.FixedEnd));
             }
 
-            bool connected = IsBoardConnected(level);
+            // A formation board is two halves that need not touch: the wingman's half is shaped
+            // by where the wingman can reach, and the replay below proves both halves fly.
+            bool connected = level.IsFormation || IsBoardConnected(level);
 
             if (!connected)
             {
@@ -90,9 +92,9 @@ namespace ASTeams.SingleLine.Core
 
         private LevelValidationResult SolveAndReport(LevelData level, List<LevelIssue> issues)
         {
-            if (solverBuffer == null || solverBuffer.Length < level.ActiveCellCount)
+            if (solverBuffer == null || solverBuffer.Length < level.PathLength)
             {
-                solverBuffer = new int[level.ActiveCellCount];
+                solverBuffer = new int[level.PathLength];
             }
 
             bool solved = solver.TrySolveAny(level, solverBuffer, out int length, out int _);
@@ -122,6 +124,18 @@ namespace ASTeams.SingleLine.Core
             IReadOnlyList<int> solution = level.Solution;
             bool valid = true;
 
+            if (level.IsFormation)
+            {
+                // The wingman's route is not a copy of the player's, so only a full replay tells.
+                if (!PathSequenceValidator.IsValid(level, solution, new byte[level.Grid.CellCount], true))
+                {
+                    issues.Add(new LevelIssue(LevelIssueCode.SolutionNotContinuous));
+                    return false;
+                }
+
+                return true;
+            }
+
             if (solution.Count != level.PathLength)
             {
                 issues.Add(new LevelIssue(LevelIssueCode.SolutionWrongLength));
@@ -129,6 +143,9 @@ namespace ASTeams.SingleLine.Core
             }
 
             Array.Clear(seen, 0, level.Grid.CellCount);
+
+            // An overpass is flown twice; only a third pass over it repeats a square.
+            bool[] crossedTwice = level.BridgeCount > 0 ? new bool[level.Grid.CellCount] : null;
 
             for (int step = 0; step < solution.Count; step++)
             {
@@ -140,7 +157,11 @@ namespace ASTeams.SingleLine.Core
                     return false;
                 }
 
-                if (seen[cell])
+                if (seen[cell] && crossedTwice != null && level.KindOf(cell) == CellKind.Bridge && !crossedTwice[cell])
+                {
+                    crossedTwice[cell] = true;
+                }
+                else if (seen[cell])
                 {
                     issues.Add(new LevelIssue(LevelIssueCode.SolutionRepeatsCell, cell));
                     valid = false;
@@ -148,11 +169,6 @@ namespace ASTeams.SingleLine.Core
                 }
 
                 seen[cell] = true;
-
-                if (level.IsFormation)
-                {
-                    seen[level.MirrorOf(cell)] = true;
-                }
 
                 if (step > 0 && !level.Grid.AreAdjacent(solution[step - 1], cell))
                 {

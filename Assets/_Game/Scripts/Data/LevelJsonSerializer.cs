@@ -106,7 +106,8 @@ namespace ASTeams.SingleLine.Data
                 Difficulty = level.Difficulty,
                 ThemeId = level.ThemeId,
                 Tags = level.Tags.Count == 0 ? null : ToArray(level.Tags),
-                Wind = level.HasWind ? FlattenWind(level.Wind) : null
+                Wind = level.HasWind ? FlattenWind(level.Wind) : null,
+                Marks = level.Marks.Count > 0 ? FlattenMarks(level.Marks) : null
             };
         }
 
@@ -121,6 +122,36 @@ namespace ASTeams.SingleLine.Data
             }
 
             return pairs;
+        }
+
+        private static int[] FlattenMarks(IReadOnlyList<CellMark> marks)
+        {
+            var pairs = new int[marks.Count * 2];
+
+            for (int i = 0; i < marks.Count; i++)
+            {
+                pairs[i * 2] = marks[i].Cell;
+                pairs[i * 2 + 1] = (int)marks[i].Kind;
+            }
+
+            return pairs;
+        }
+
+        private static CellMark[] ReadMarks(int[] pairs)
+        {
+            if (pairs == null || pairs.Length < 2)
+            {
+                return null;
+            }
+
+            var marks = new CellMark[pairs.Length / 2];
+
+            for (int i = 0; i < marks.Length; i++)
+            {
+                marks[i] = new CellMark(pairs[i * 2], (CellKind)pairs[i * 2 + 1]);
+            }
+
+            return marks;
         }
 
         private static WindCell[] ReadWind(int[] pairs)
@@ -158,7 +189,8 @@ namespace ASTeams.SingleLine.Data
                 dto.Difficulty,
                 dto.ThemeId,
                 dto.Tags,
-                ReadWind(dto.Wind));
+                ReadWind(dto.Wind),
+                ReadMarks(dto.Marks));
         }
 
         private static T[] ToArray<T>(IReadOnlyList<T> source)

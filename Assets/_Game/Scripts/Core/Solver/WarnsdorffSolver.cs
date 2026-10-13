@@ -26,8 +26,10 @@ namespace ASTeams.SingleLine.Core
         private readonly CancellationToken cancellationToken;
 
         private LevelData level;
-        private bool[] visited;
+        private byte[] visited;
         private int[] path;
+        private int[] wingPath;
+        private int wingCovered;
         private int[] candidates;
         private int[] candidateDegrees;
         private int[] floodStack;
@@ -85,6 +87,22 @@ namespace ASTeams.SingleLine.Core
             PrepareFor(level);
 
             PathRules.Visit(level, visited, startCell, true);
+            wingCovered = 0;
+
+            if (level.IsFormation)
+            {
+                int wing = Wingman.StartFor(level, startCell);
+
+                if (!level.IsActive(wing) || !level.IsOnWingSide(wing))
+                {
+                    return false;
+                }
+
+                PathRules.Visit(level, visited, wing, true);
+                wingPath[0] = wing;
+                wingCovered = 1;
+            }
+
             bool solved = Search(startCell, 0);
 
             LastNodeCount = nodeCount;
@@ -172,10 +190,13 @@ namespace ASTeams.SingleLine.Core
 
             PrepareFor(level);
 
-            if (!PathSequenceValidator.IsValid(level, pathSoFar, visited))
+            if (!PathSequenceValidator.IsValid(level, pathSoFar, visited, false, out int wingHead, out int covered))
             {
                 return false;
             }
+
+            wingPath[pathSoFar.Count - 1] = wingHead;
+            wingCovered = covered;
 
             for (int i = 0; i < pathSoFar.Count; i++)
             {
@@ -208,8 +229,9 @@ namespace ASTeams.SingleLine.Core
 
             if (visited == null || visited.Length < cellCount)
             {
-                visited = new bool[cellCount];
+                visited = new byte[cellCount];
                 path = new int[cellCount];
+                wingPath = new int[cellCount];
                 candidates = new int[cellCount * Grid.NeighborCount];
                 candidateDegrees = new int[cellCount * Grid.NeighborCount];
                 floodStack = new int[cellCount];
@@ -242,14 +264,15 @@ namespace ASTeams.SingleLine.Core
 
             path[depth] = current;
             int visitedCount = depth + 1;
+            int previous = depth > 0 ? path[depth - 1] : LevelData.NoCell;
 
             if (visitedCount == level.PathLength)
             {
-                return !level.HasFixedEnd || level.FixedEnd == current;
+                return PathRules.IsComplete(level, visitedCount, current, wingCovered);
             }
 
             int baseIndex = depth * Grid.NeighborCount;
-            int count = CollectCandidates(current, baseIndex);
+            int count = CollectCandidates(previous, current, baseIndex);
 
             if (count == 0)
             {
@@ -268,6 +291,7 @@ namespace ASTeams.SingleLine.Core
                     continue;
                 }
 
+                bool wingMoved = level.IsFormation && FlyWingman(depth, current, next);
                 PathRules.Visit(level, visited, next, true);
 
                 if (IsRemainderReachable(next, visitedCount + 1) && Search(next, depth + 1))
@@ -276,6 +300,12 @@ namespace ASTeams.SingleLine.Core
                 }
 
                 PathRules.Visit(level, visited, next, false);
+
+                if (wingMoved)
+                {
+                    PathRules.Visit(level, visited, wingPath[depth + 1], false);
+                    wingCovered--;
+                }
 
                 if (isBudgetExhausted)
                 {
@@ -286,7 +316,24 @@ namespace ASTeams.SingleLine.Core
             return false;
         }
 
-        private int CollectCandidates(int current, int baseIndex)
+        /// <summary>Records the wingman's square for step <paramref name="depth"/> + 1; true when it moved.</summary>
+        private bool FlyWingman(int depth, int current, int next)
+        {
+            int from = wingPath[depth];
+            int wing = Wingman.Step(level, visited, from, current, next);
+            wingPath[depth + 1] = wing;
+
+            if (wing == from)
+            {
+                return false;
+            }
+
+            PathRules.Visit(level, visited, wing, true);
+            wingCovered++;
+            return true;
+        }
+
+        private int CollectCandidates(int previous, int current, int baseIndex)
         {
             Grid grid = level.Grid;
             int count = 0;
@@ -298,14 +345,14 @@ namespace ASTeams.SingleLine.Core
                     continue;
                 }
 
-                if (!level.IsActive(neighbor) || visited[neighbor] || (level.IsFormation && visited[level.MirrorOf(neighbor)]) ||
-                    !PathRules.CanLeave(level, current, neighbor))
+                if (!level.IsActive(neighbor) || level.IsOnWingSide(neighbor) || !PathRules.IsOpen(level, visited, neighbor) ||
+                    !PathRules.CanLeave(level, previous, current, neighbor))
                 {
                     continue;
                 }
 
                 candidates[baseIndex + count] = neighbor;
-                candidateDegrees[baseIndex + count] = PathRules.CountAvailableMoves(level, visited, neighbor);
+                candidateDegrees[baseIndex + count] = PathRules.CountAvailableMoves(level, visited, current, neighbor);
                 count++;
             }
 
@@ -339,13 +386,18 @@ namespace ASTeams.SingleLine.Core
         /// neighbour and comparing the count against the remainder detects both a split
         /// board and a cell that has been stranded with no unvisited neighbour.
         ///
-        /// In a formation flight each step covers a square and its mirror, and the route only
-        /// has to reach one of every remaining pair, so the flood treats a square and its
-        /// mirror as one place.
+        /// In a formation flight the flood keeps to the player's half, and the wingman's half
+        /// can only be finished if no more of it is left than the player has steps left.
         /// </summary>
         private bool IsRemainderReachable(int head, int pathLength)
         {
-            int remaining = level.ActiveCellCount - (level.IsFormation ? pathLength * 2 : pathLength);
+            int remaining = level.PathLength - pathLength;
+
+            // Each step left can move the wingman at most one square.
+            if (level.IsFormation && level.WingSideCellCount - wingCovered > remaining)
+            {
+                return false;
+            }
 
             if (remaining <= 0)
             {
@@ -362,7 +414,7 @@ namespace ASTeams.SingleLine.Core
                     continue;
                 }
 
-                if (level.IsActive(neighbor) && !visited[neighbor])
+                if (level.IsActive(neighbor) && !level.IsOnWingSide(neighbor) && PathRules.IsOpen(level, visited, neighbor))
                 {
                     seed = neighbor;
                     break;
@@ -384,32 +436,23 @@ namespace ASTeams.SingleLine.Core
             while (top > 0)
             {
                 int cell = floodStack[--top];
-                reached++;
+
+                // An overpass crossed once still owes one pass, an untouched one two.
+                reached += level.CapacityOf(cell) - visited[cell];
 
                 if (reached > remaining)
                 {
                     return false;
                 }
 
-                if (level.IsFormation)
-                {
-                    int mirror = level.MirrorOf(cell);
-
-                    if (!visited[mirror] && floodStamp[mirror] != floodGeneration)
-                    {
-                        floodStamp[mirror] = floodGeneration;
-                        floodStack[top++] = mirror;
-                    }
-                }
-
-                for (int direction = 0; direction < Grid.NeighborCount; direction++)
+for (int direction = 0; direction < Grid.NeighborCount; direction++)
                 {
                     if (!grid.TryGetNeighbor(cell, (Direction)direction, out int neighbor))
                     {
                         continue;
                     }
 
-                    if (!level.IsActive(neighbor) || visited[neighbor])
+                    if (!level.IsActive(neighbor) || level.IsOnWingSide(neighbor) || visited[neighbor] >= level.CapacityOf(neighbor))
                     {
                         continue;
                     }

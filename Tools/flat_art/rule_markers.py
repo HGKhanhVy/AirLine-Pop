@@ -21,9 +21,9 @@ GUST_DARK = (120, 186, 226, 255)
 def runway():
     """
     The runway as a square of its own, built on the board tile's silhouette so it lines up
-    exactly with its neighbours: a tarmac face with threshold bars, a dashed centre line,
-    lamps down both edges and a coral chevron where the plane lands, under the tile's own
-    lip, glint and outline.
+    exactly with its neighbours: a tarmac face with threshold bars at both ends, lamps down
+    both edges and a coral touchdown target in the middle, under the tile's own lip, glint
+    and outline. Nothing on it points one way, so it reads as a place to land, not a direction.
     """
     from PIL import Image, ImageDraw
     tile_dir = OUT
@@ -38,18 +38,17 @@ def runway():
         return [x0 * k, y0 * k, x1 * k, y1 * k]
 
     d.rectangle(box(0, 0, size, size), fill=TARMAC)
-    for x in (70, 98, 146, 174):
-        d.rounded_rectangle(box(x - 7, 26, x + 7, 74), radius=4 * k, fill=WHITE)
-    for y in (96, 136):
-        d.rounded_rectangle(box(121, y, 135, y + 26), radius=5 * k, fill=WHITE)
+    # Threshold bars at both ends, so the square reads as a runway without pointing anywhere.
+    for x in (82, 108, 148, 174):
+        for y0, y1 in ((22, 52), (204, 234)):
+            d.rounded_rectangle(box(x - 7, y0, x + 7, y1), radius=4 * k, fill=WHITE)
     for y in (40, 92, 144, 196):
         for x in (30, 226):
             d.ellipse(box(x - 10, y - 10, x + 10, y + 10), fill=BROWN)
             d.ellipse(box(x - 6, y - 6, x + 6, y + 6), fill=LAMP)
-    chevron = [(96, 172), (128, 196), (160, 172), (160, 190), (128, 214), (96, 190)]
-    d.polygon([(x * k, y * k) for x, y in chevron], fill=BROWN)
-    inset = [(102, 182), (128, 202), (154, 182), (154, 188), (128, 208), (102, 188)]
-    d.polygon([(x * k, y * k) for x, y in inset], fill=CORAL)
+    # The touchdown target in the middle: where the flight has to come down.
+    for r, fill in ((62, BROWN), (56, WHITE), (44, CORAL), (30, WHITE), (16, CORAL)):
+        d.ellipse(box(128 - r, 128 - r, 128 + r, 128 + r), fill=fill)
     art = art.resize((size, size), Image.LANCZOS)
 
     tile = Image.new("RGBA", (size, size), (0, 0, 0, 0))

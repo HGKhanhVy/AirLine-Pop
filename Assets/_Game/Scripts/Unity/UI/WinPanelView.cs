@@ -22,6 +22,9 @@ namespace ASTeams.SingleLine.Unity
         [SerializeField] private TMP_Text rewardLabel;
         [SerializeField] private TMP_Text replayNote;
 
+        [Tooltip("Under the coins: what was paid on top, such as a storm or a streak.")]
+        [SerializeField] private TMP_Text bonusLabel;
+
         [Tooltip("Optional. Takes the portrait's place on the flight that completes a postcard.")]
         [SerializeField] private Image postcardImage;
         [SerializeField, Min(0.01f)] private float countDuration = 0.6f;
@@ -63,6 +66,7 @@ namespace ASTeams.SingleLine.Unity
             bool hasReward = coins > 0;
             rewardRow.SetActive(true);
             replayNote.gameObject.SetActive(!hasReward);
+            ShowBonus(hasReward ? flight.BonusLine : null);
             modal.Show();
             OnShown?.Invoke(flight.Milestone);
 
@@ -87,6 +91,9 @@ namespace ASTeams.SingleLine.Unity
         {
             switch (flight.Milestone)
             {
+                case WinMilestone.Daily:
+                    return Localization.Get("win.dailyTitle") + Detail(Localization.Format("win.dailyDetail", flight.DayStreak));
+
                 case WinMilestone.Vip:
                     return Localization.Format("win.vipTitle", flight.FlightNumber) + Detail(PostcardOr(flight, "win.vipDetail"));
 
@@ -127,6 +134,22 @@ namespace ASTeams.SingleLine.Unity
             return "\n<size=58%>" + line + "</size>";
         }
 
+        private void ShowBonus(string line)
+        {
+            if (bonusLabel == null)
+            {
+                return;
+            }
+
+            bool hasBonus = !string.IsNullOrEmpty(line);
+            bonusLabel.gameObject.SetActive(hasBonus);
+
+            if (hasBonus)
+            {
+                bonusLabel.text = line;
+            }
+        }
+
         /// <summary>The postcard replaces the cat on the card for the flight that earns it.</summary>
         private void ShowPostcard(Sprite postcard)
         {
@@ -158,6 +181,11 @@ namespace ASTeams.SingleLine.Unity
             rewardRow = row;
             rewardLabel = reward;
             replayNote = note;
+        }
+
+        public void EditorLinkBonus(TMP_Text linkedBonus)
+        {
+            bonusLabel = linkedBonus;
         }
 
         public void EditorLinkPostcard(Image linkedPostcard)

@@ -78,12 +78,14 @@ namespace ASTeams.SingleLine.Unity.EditorTools
 
             RectTransform top = BuildTopBar(safe, out Button pauseButton, out TMP_Text levelLabel);
             CanvasGroup stuck = BuildStuckBanner(safe);
+            FlightBonusUiBuilder.BuildNotice(safe);
             TMP_Text hintLabel = BuildHintLabel(safe);
             RectTransform bottom = BuildBottomBar(safe, out Button restartButton, out Button hintButton);
 
             PausePanelView pausePanel = BuildPausePanel(canvasObject.transform);
             RuleIntroBuilder.Build(canvasObject.transform);
             canvasObject.AddComponent<VipFlightRecorder>();
+            FlightBonusUiBuilder.AddPayer(root);
             WinPanelView winPanel = BuildWinPanel(canvasObject.transform);
             CatPortraitStage stage = BuildStage(root.transform);
 
@@ -373,6 +375,7 @@ namespace ASTeams.SingleLine.Unity.EditorTools
 
             WinPanelView view = modal.gameObject.AddComponent<WinPanelView>();
             view.EditorLink(modal, portrait, title, row.gameObject, reward, note);
+            FlightBonusUiBuilder.BuildWinBonus(card, view);
             DestinationInstaller.BuildWinPostcard(card, portrait.rectTransform, view);
             return view;
         }
@@ -444,6 +447,8 @@ namespace ASTeams.SingleLine.Unity.EditorTools
                 data.FindProperty("advancesAutomatically").boolValue = false;
                 data.ApplyModifiedPropertiesWithoutUndo();
             }
+
+            FlightBonusUiBuilder.InstallDailyRunner(prefab, economy);
 
             PrefabUtility.SaveAsPrefabAsset(prefab, GameplayPrefabPath);
             PrefabUtility.UnloadPrefabContents(prefab);

@@ -1,14 +1,27 @@
+using System;
+using UnityEngine;
+
 namespace ASTeams.SingleLine.Unity
 {
-    /// <summary>Drives a set of loading screen parts together, whichever screen holds them.</summary>
+    /// <summary>
+    /// Drives a set of loading screen parts together, whichever screen holds them.
+    ///
+    /// The parts run inside the scene controller's load coroutine, so an exception in one
+    /// would end that coroutine and leave the player stuck on the old scene. The parts are
+    /// only decoration: a failing one is logged and skipped, and the scene change goes on.
+    /// </summary>
     public static class LoadingAnimations
     {
         public static void Restart(LoadingAnimation[] parts)
         {
             for (int i = 0; i < parts.Length; i++)
             {
-                parts[i].Stop();
-                parts[i].Play();
+                LoadingAnimation part = parts[i];
+                Run(part, () =>
+                {
+                    part.Stop();
+                    part.Play();
+                });
             }
         }
 
@@ -16,7 +29,7 @@ namespace ASTeams.SingleLine.Unity
         {
             for (int i = 0; i < parts.Length; i++)
             {
-                parts[i].Complete();
+                Run(parts[i], parts[i].Complete);
             }
         }
 
@@ -24,7 +37,24 @@ namespace ASTeams.SingleLine.Unity
         {
             for (int i = 0; i < parts.Length; i++)
             {
-                parts[i].Stop();
+                Run(parts[i], parts[i].Stop);
+            }
+        }
+
+        private static void Run(LoadingAnimation part, Action action)
+        {
+            if (part == null)
+            {
+                return;
+            }
+
+            try
+            {
+                action();
+            }
+            catch (Exception exception)
+            {
+                Debug.LogException(exception, part);
             }
         }
     }

@@ -18,6 +18,22 @@ namespace ASTeams.SingleLine.Unity
         [Tooltip("How many replays pay each day. With the replay coins this caps a day of replaying at about one new level's worth.")]
         [SerializeField, Min(0)] private int paidReplaysPerDay = 8;
 
+        [Header("Storm flights")]
+        [Tooltip("Paid on top of the first-clear coins for landing a city's storm flight. Equal to the first-clear coins doubles them.")]
+        [SerializeField, Min(0)] private int stormBonusCoins = 80;
+
+        [Header("Daily flight")]
+        [Tooltip("The first flight the daily flight opens after, so new players meet the basics first.")]
+        [SerializeField, Min(1)] private int dailyFlightUnlockLevel = 15;
+
+        [SerializeField, Min(0)] private int dailyFlightCoins = 100;
+
+        [Tooltip("Extra coins for each day in a row the daily flight has been flown.")]
+        [SerializeField, Min(0)] private int dailyCoinsPerDayInRow = 20;
+
+        [Tooltip("Days in a row beyond this pay no more.")]
+        [SerializeField, Min(1)] private int dailyMaxDaysCounted = 7;
+
         [Header("Food")]
         [SerializeField, Min(0)] private int foodPrice = 40;
 
@@ -47,6 +63,16 @@ namespace ASTeams.SingleLine.Unity
         [SerializeField, Range(1, 8)] private int maxVisibleCats = 4;
 
         public int FirstClearCoins => firstClearCoins;
+
+        public int StormBonusCoins => stormBonusCoins;
+
+        public int DailyFlightUnlockLevel => dailyFlightUnlockLevel;
+
+        public int DailyFlightCoins => dailyFlightCoins;
+
+        public int DailyCoinsPerDayInRow => dailyCoinsPerDayInRow;
+
+        public int DailyMaxDaysCounted => dailyMaxDaysCounted;
 
         public int ReplayCoins => replayCoins;
 

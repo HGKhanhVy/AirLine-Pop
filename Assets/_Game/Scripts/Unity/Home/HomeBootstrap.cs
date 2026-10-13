@@ -51,6 +51,9 @@ namespace ASTeams.SingleLine.Unity
         [Header("VIP")]
         [SerializeField] private VipGuestView vipGuest;
 
+        [Tooltip("Optional. The daily flight's button on the airport.")]
+        [SerializeField] private DailyFlightPresenter dailyFlight;
+
         private ProfileWallet wallet;
         private ISceneNavigator navigator;
         private bool isLeaving;
@@ -146,6 +149,14 @@ namespace ASTeams.SingleLine.Unity
                 giftPresenter.Initialize(gifts);
             }
 
+            if (dailyFlight != null)
+            {
+                var dailyFlights = new DailyFlightService(new ProfileDailyFlightStore(profile), clock, economy.DailyFlightCoins,
+                    economy.DailyCoinsPerDayInRow, economy.DailyMaxDaysCounted);
+                dailyFlight.Initialize(dailyFlights, nextFlight > economy.DailyFlightUnlockLevel);
+                dailyFlight.OnPlayRequested += HandlePlay;
+            }
+
             airport.OnPlayRequested += HandlePlay;
             tabs.OnTabChanged += HandleTabChanged;
             tabs.ShowInstant(HomeTab.Airport);
@@ -163,6 +174,11 @@ namespace ASTeams.SingleLine.Unity
             if (routeMap != null)
             {
                 routeMap.OnLevelChosen -= HandleLevelChosen;
+            }
+
+            if (dailyFlight != null)
+            {
+                dailyFlight.OnPlayRequested -= HandlePlay;
             }
 
             if (tabs != null)
@@ -242,6 +258,11 @@ namespace ASTeams.SingleLine.Unity
         public void EditorLinkSettings(SettingsPanelView linkedSettings)
         {
             settingsPanel = linkedSettings;
+        }
+
+        public void EditorLinkDailyFlight(DailyFlightPresenter linkedDailyFlight)
+        {
+            dailyFlight = linkedDailyFlight;
         }
 
         public void EditorLinkVipGuest(VipGuestView linkedGuest)

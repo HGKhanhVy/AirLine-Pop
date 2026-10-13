@@ -87,7 +87,8 @@ namespace ASTeams.SingleLine.Unity
             lastProgress = 0;
             lastAboard = 0;
             int tuneLength = stepTones != null ? stepTones.Length : 0;
-            stepOffset = tuneLength > 0 ? (levelNumber - 1) * stepShiftPerLevel % tuneLength : 0;
+            // The daily flight carries no campaign number, so it starts the tune where the first flight does.
+            stepOffset = tuneLength > 0 ? (Mathf.Max(1, levelNumber) - 1) * stepShiftPerLevel % tuneLength : 0;
             audioController?.PlaySound(SoundName.UI_LevelStart);
         }
 

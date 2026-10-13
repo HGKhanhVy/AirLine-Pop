@@ -138,7 +138,11 @@ namespace ASTeams.SingleLine.Unity.EditorTools
                 return;
             }
 
-            foreach (LevelRule rule in new[] { LevelRule.Runway, LevelRule.Wind, LevelRule.Night, LevelRule.Formation, LevelRule.Vip })
+            foreach (LevelRule rule in new[]
+                     {
+                         LevelRule.Runway, LevelRule.Wind, LevelRule.Night, LevelRule.Formation, LevelRule.Vip, LevelRule.Turbulence,
+                         LevelRule.Beacon, LevelRule.Bridge, LevelRule.Storm
+                     })
             {
                 profile.SetParam("rule_seen_" + rule, false);
             }

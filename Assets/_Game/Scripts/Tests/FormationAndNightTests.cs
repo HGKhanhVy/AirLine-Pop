@@ -13,78 +13,113 @@ namespace ASTeams.SingleLine.Core.Tests
             return new LevelData("square", 1, new Grid(2, 2), new[] { 0, 1, 2, 3 }, 0, LevelData.NoCell, new[] { 0, 1, 3, 2 });
         }
 
-        // The same board in formation, 4 x 2, the player's half on the left:
-        //   0 1 | 2 3
-        //   4 5 | 6 7
-        private static LevelData Formation()
+        // A formation board, 6 x 2. The player's half on the left is full; the wingman's half on
+        // the right has only three squares, so the wingman has to wait its way across:
+        //   0 1 2 |  .  .  5
+        //   6 7 8 |  . 10 11
+        // From 0, a route like 0 6 7 8 2 1 takes the wingman over 5, 11 and 10; 0 1 2 8 7 6 leaves 10 behind.
+        private static readonly int[] Route = { 0, 6, 7, 8, 2, 1 };
+
+        private static LevelData Formation(int[] rightHalf = null)
         {
-            return new FormationVariant().Apply(Square());
+            var cells = new System.Collections.Generic.List<int> { 0, 1, 2, 6, 7, 8 };
+            cells.AddRange(rightHalf ?? new[] { 5, 10, 11 });
+            return new LevelData("formation", 1, new Grid(6, 2), cells.ToArray(), 0, LevelData.NoCell, Route,
+                tags: new[] { LevelTags.Formation });
         }
 
         [Test]
-        public void FormationSetsTheBoardBesideItsMirror()
+        public void TheHalvesAreCountedApart()
         {
             LevelData level = Formation();
 
             Assert.IsTrue(level.IsFormation);
-            Assert.AreEqual(4, level.Grid.Width);
-            Assert.AreEqual(8, level.ActiveCellCount);
-            Assert.AreEqual(4, level.PathLength);
-            Assert.AreEqual(3, level.MirrorOf(0));
-            Assert.AreEqual(6, level.MirrorOf(5));
-            CollectionAssert.AreEqual(new[] { 0, 1, 5, 4 }, level.Solution);
+            Assert.AreEqual(6, level.PlayerSideCellCount);
+            Assert.AreEqual(3, level.WingSideCellCount);
+            Assert.AreEqual(6, level.PathLength);
+            Assert.AreEqual(5, Wingman.StartFor(level, 0));
         }
 
         [Test]
-        public void TheWingmanCoversTheMirrorSquare()
+        public void TheWingmanWaitsWhereItsHalfIsBlocked()
         {
             var session = new PathSession(Formation());
 
             Assert.AreEqual(MoveResult.Started, session.Move(0));
-            Assert.IsTrue(session.IsVisited(3));
+            Assert.AreEqual(5, session.WingHead);
             Assert.AreEqual(2, session.CoveredCount);
 
+            // The player flies right, so the wingman would fly left onto 4: a hole, so it waits.
             Assert.AreEqual(MoveResult.Moved, session.Move(1));
-            Assert.IsTrue(session.IsVisited(2));
+            Assert.AreEqual(5, session.WingHead);
+            Assert.AreEqual(3, session.CoveredCount);
+        }
 
+        [Test]
+        public void UndoTakesTheWingmanBackToo()
+        {
+            var session = new PathSession(Formation());
+
+            foreach (int cell in new[] { 0, 6, 7 })
+            {
+                session.Move(cell);
+            }
+
+            Assert.AreEqual(10, session.WingHead);
             session.Undo();
-            Assert.IsFalse(session.IsVisited(2));
+            Assert.AreEqual(11, session.WingHead);
+            Assert.IsFalse(session.IsVisited(10));
         }
 
         [Test]
-        public void ThePlanesCannotCrossTheMiddle()
-        {
-            var session = new PathSession(Formation());
-            session.Move(0);
-            session.Move(1);
-
-            // Square 2 is where the wingman already is.
-            Assert.AreEqual(MoveResult.Rejected, session.Move(2));
-        }
-
-        [Test]
-        public void FlyingTheHalfWinsTheWholeBoard()
+        public void FlyingBothHalvesWins()
         {
             var session = new PathSession(Formation());
 
-            foreach (int cell in new[] { 0, 1, 5, 4 })
+            foreach (int cell in Route)
             {
                 session.Move(cell);
             }
 
             Assert.AreEqual(PathState.Won, session.State);
-            Assert.AreEqual(8, session.CoveredCount);
+            Assert.AreEqual(9, session.CoveredCount);
+        }
+
+        [Test]
+        public void CoveringOnlyYourHalfIsNotAWin()
+        {
+            var session = new PathSession(Formation());
+
+            foreach (int cell in new[] { 0, 1, 2, 8, 7, 6 })
+            {
+                session.Move(cell);
+            }
+
+            Assert.AreEqual(PathState.Stuck, session.State, "square 10 is left for the wingman");
+        }
+
+        [Test]
+        public void ThePlayerNeverFliesOntoTheWingmansHalf()
+        {
+            var session = new PathSession(Formation(new[] { 3, 5, 9, 10, 11 }));
+            session.Move(0);
+            session.Move(1);
+            session.Move(2);
+
+            Assert.AreEqual(MoveResult.Rejected, session.Move(3));
         }
 
         [Test]
         public void TheSolverAndValidatorUnderstandFormation()
         {
             LevelData level = Formation();
-            var path = new int[level.ActiveCellCount];
+            var path = new int[level.PathLength];
 
             Assert.IsTrue(new WarnsdorffSolver().TrySolve(level, 0, path, out int length));
-            Assert.AreEqual(4, length);
+            Assert.AreEqual(6, length);
+            Assert.IsTrue(PathSequenceValidator.IsValid(level, path, new byte[12], true));
             Assert.IsTrue(new LevelValidator(new WarnsdorffSolver()).Validate(level).IsValid);
+            Assert.IsFalse(PathSequenceValidator.IsValid(level, new[] { 0, 1, 2, 8, 7, 6 }, new byte[12], true));
         }
 
         [Test]
@@ -107,6 +142,7 @@ namespace ASTeams.SingleLine.Core.Tests
         public void TheNewConditionsSurviveTheJsonRoundTrip()
         {
             LevelData level = new NightVariant().Apply(Formation());
+            Assert.IsTrue(level.IsNight);
             LevelData copy = ASTeams.SingleLine.Data.LevelJsonSerializer.FromDto(ASTeams.SingleLine.Data.LevelJsonSerializer.ToDto(level));
 
             Assert.AreEqual(LevelRule.Night | LevelRule.Formation, copy.Rules);
@@ -117,10 +153,12 @@ namespace ASTeams.SingleLine.Core.Tests
         {
             RulePlan plan = RulePlan.Default;
 
-            Assert.AreEqual(67, plan.FirstLevelWith(LevelRule.Night));
-            Assert.AreEqual(154, plan.FirstLevelWith(LevelRule.Formation));
-            Assert.AreEqual(LevelRule.None, plan.RulesFor(77, false));
-            Assert.AreEqual(LevelRule.None, plan.RulesFor(67, true));
+            Assert.AreEqual(37, plan.FirstLevelWith(LevelRule.Night));
+            Assert.AreEqual(54, plan.FirstLevelWith(LevelRule.Formation));
+            Assert.AreEqual(LevelRule.Night, plan.RulesFor(47, false));
+            Assert.AreEqual(LevelRule.None, plan.RulesFor(57, false));
+            Assert.AreEqual(LevelRule.Formation, plan.RulesFor(74, false));
+            Assert.AreEqual(LevelRule.None, plan.RulesFor(37, true));
         }
 
         [Test]
@@ -128,9 +166,9 @@ namespace ASTeams.SingleLine.Core.Tests
         {
             RulePlan plan = RulePlan.Default;
 
-            Assert.AreEqual(LevelRule.Night, plan.RulesFor(267, false));
-            Assert.AreEqual(LevelRule.Night | LevelRule.Runway, plan.RulesFor(287, false));
-            Assert.AreEqual(LevelRule.Formation | LevelRule.Night, plan.RulesFor(294, false));
+            Assert.AreEqual(LevelRule.Night, plan.RulesFor(67, false));
+            Assert.AreEqual(LevelRule.Night | LevelRule.Runway, plan.RulesFor(87, false));
+            Assert.AreEqual(LevelRule.Formation | LevelRule.Night, plan.RulesFor(94, false));
         }
 
         [Test]
@@ -138,7 +176,7 @@ namespace ASTeams.SingleLine.Core.Tests
         {
             RulePlan plan = RulePlan.Default;
 
-            CollectionAssert.AreEqual(new[] { LevelRule.Runway }, plan.VipMixes(29, 1));
+            CollectionAssert.AreEqual(new[] { LevelRule.Runway | LevelRule.Wind, LevelRule.Wind, LevelRule.Runway }, plan.VipMixes(29, 1));
             CollectionAssert.Contains(plan.VipMixes(89, 3), LevelRule.Runway | LevelRule.Night);
             CollectionAssert.DoesNotContain(plan.VipMixes(400, 14), LevelRule.Formation | LevelRule.Runway);
             CollectionAssert.Contains(plan.VipMixes(400, 14), LevelRule.Formation | LevelRule.Night);

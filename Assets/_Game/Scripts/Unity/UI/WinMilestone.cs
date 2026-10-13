@@ -18,6 +18,8 @@ namespace ASTeams.SingleLine.Unity
         Postcard,
 
         /// <summary>The last flight of a chapter.</summary>
-        ChapterEnd
+        ChapterEnd,
+        /// <summary>The daily flight, landed for today.</summary>
+        Daily
     }
 }

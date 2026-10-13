@@ -67,7 +67,7 @@ namespace ASTeams.SingleLine.Import
 
             for (int i = 1; i < path.Count - 1; i++)
             {
-                if (path[i] != level.FixedEnd && NeighbourCount(level, path[i]) >= minNeighbours)
+                if (path[i] != level.FixedEnd && level.KindOf(path[i]) == CellKind.Plain && NeighbourCount(level, path[i]) >= minNeighbours)
                 {
                     found.Add(i);
                 }

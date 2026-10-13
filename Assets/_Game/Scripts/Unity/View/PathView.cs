@@ -140,21 +140,33 @@ namespace ASTeams.SingleLine.Unity
                 return;
             }
 
+            int count = 0;
+            int lastCell = LevelData.NoCell;
+
             for (int step = 0; step < session.Length; step++)
             {
-                int cell = session.GetCell(step);
-                Vector3 position = boardView.GetCellWorldPosition(isMirrored ? session.Level.MirrorOf(cell) : cell);
+                // The wingman's line follows its own route; while it waits, the same square repeats.
+                int cell = isMirrored ? session.GetWingCell(step) : session.GetCell(step);
+
+                if (isMirrored && cell == lastCell)
+                {
+                    continue;
+                }
+
+                Vector3 position = boardView.GetCellWorldPosition(cell);
                 position.z = -0.1f;
-                points[step] = position;
+                points[count] = position;
+                count++;
+                lastCell = cell;
             }
 
             line.startWidth = theme.PathWidth;
             line.endWidth = theme.PathWidth;
             ApplyDashScale();
-            SetPointCount(session.Length);
+            SetPointCount(count);
             SetAllPoints();
 
-            StartGrowth(session);
+            StartGrowth(count, lastCell);
         }
 
         /// <summary>The moving front of the path, where the newest segment has grown to so far.</summary>
@@ -198,21 +210,20 @@ namespace ASTeams.SingleLine.Unity
         /// Only a step forward grows. Undo and the rewind walk backwards, and a segment
         /// crawling after a path the player is deleting reads as lag rather than polish.
         /// </summary>
-        private void StartGrowth(PathSession session)
+        private void StartGrowth(int count, int head)
         {
-            int head = session.GetCell(session.Length - 1);
-            bool stepped = session.Length == previousLength + 1 && previousHead != LevelData.NoCell;
+            bool stepped = count == previousLength + 1 && previousHead != LevelData.NoCell;
 
-            previousLength = session.Length;
+            previousLength = count;
             previousHead = head;
 
-            if (!stepped || session.Length < 2)
+            if (!stepped || count < 2)
             {
                 growIndex = -1;
                 return;
             }
 
-            growIndex = session.Length - 1;
+            growIndex = count - 1;
             growFrom = points[growIndex - 1];
             growTo = points[growIndex];
             grownFor = 0f;

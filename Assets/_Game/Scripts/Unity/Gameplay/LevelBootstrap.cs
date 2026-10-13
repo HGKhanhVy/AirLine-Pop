@@ -54,6 +54,9 @@ namespace ASTeams.SingleLine.Unity
                  "clear only. Leave empty for the older base-plus-bonus rule above.")]
         [SerializeField] private EconomyConfigSO economy;
 
+        [Tooltip("Runs the daily flight when Home asked for it instead of the campaign.")]
+        [SerializeField] private DailyFlightRunner dailyFlight;
+
         private ILevelRepository repository;
         private ILevelProgressStore progressStore;
         private ILevelCatalog levelCatalog;
@@ -83,6 +86,12 @@ namespace ASTeams.SingleLine.Unity
             levelCatalog = CreateCatalog();
             progressStore = CreateProgressStore();
             rewardService = CreateRewardService();
+
+            if (dailyFlight != null && dailyFlight.TryBegin(out LevelData daily))
+            {
+                Present(daily, 0, daily.Id);
+                return;
+            }
 
             int savedLevel = Mathf.Clamp(progressStore.CurrentLevelNumber, 1, LastLevelNumber);
 
@@ -211,8 +220,17 @@ namespace ASTeams.SingleLine.Unity
         private void HandleNextLevelRequested()
         {
             CancelAdvance();
+
+            if (IsDailyFlight)
+            {
+                dailyFlight.ReturnHome();
+                return;
+            }
+
             LoadNext();
         }
+
+        private bool IsDailyFlight => dailyFlight != null && dailyFlight.IsActive;
 
         /// <summary>
         /// A skipped level counts as passed for the save, so relaunching does not bring
@@ -220,7 +238,7 @@ namespace ASTeams.SingleLine.Unity
         /// </summary>
         private void HandleSkipLevelRequested()
         {
-            if (currentLevelNumber >= LastLevelNumber)
+            if (IsDailyFlight || currentLevelNumber >= LastLevelNumber)
             {
                 return;
             }
@@ -283,13 +301,21 @@ namespace ASTeams.SingleLine.Unity
                 return false;
             }
 
+            if (!CampaignLevelAddress.TryGetLevelNumber(levelId, out int levelNumber))
+            {
+                levelNumber = 1;
+            }
+
+            Present(level, levelNumber, levelId);
+            return true;
+        }
+
+        /// <summary>Puts a level on the board and tells every screen about it.</summary>
+        private void Present(LevelData level, int levelNumber, string levelId)
+        {
             CancelAdvance();
             currentLevelId = levelId;
-
-            if (!CampaignLevelAddress.TryGetLevelNumber(levelId, out currentLevelNumber))
-            {
-                currentLevelNumber = 1;
-            }
+            currentLevelNumber = levelNumber;
 
             controller.Load(level);
             gameStateService?.ResetToPlaying();
@@ -302,18 +328,22 @@ namespace ASTeams.SingleLine.Unity
             // Without this a label would read zero until the player's first move.
             GameplayEvents.RaiseProgressChanged(controller.Progress, controller.Target);
             PublishBalance();
-            return true;
         }
 
         /// <summary>
         /// Says again everything a screen would have heard had it been listening when the
         /// level opened. Nothing is stored to answer this; the board reads its own state.
         /// </summary>
-        /// <summary>What the flight is billed as beside its number: its picture, VIP, or nothing.</summary>
-        private static string FlightName(LevelData level)
+        /// <summary>What the flight is billed as beside its number: the daily flight, its picture, VIP, storm, or nothing.</summary>
+        private string FlightName(LevelData level)
         {
+            if (IsDailyFlight)
+            {
+                return DailyFlightCatalog.FlightName;
+            }
+
             string picture = LevelTags.SpecialName(level);
-            return picture ?? (level.IsVip ? LevelTags.Vip : null);
+            return picture ?? (level.IsVip ? LevelTags.Vip : level.IsStorm ? LevelTags.Storm : null);
         }
 
         private void PublishSnapshot()
@@ -374,6 +404,11 @@ namespace ASTeams.SingleLine.Unity
         /// </summary>
         public bool LoadNext()
         {
+            if (IsDailyFlight)
+            {
+                return false;
+            }
+
             return currentLevelNumber < LastLevelNumber && TryLoadLevelNumber(currentLevelNumber + 1);
         }
 
@@ -381,6 +416,15 @@ namespace ASTeams.SingleLine.Unity
         {
             if (current != PathState.Won)
             {
+                return;
+            }
+
+            if (IsDailyFlight)
+            {
+                // The daily flight pays its own coins and leaves the campaign's position alone.
+                dailyFlight.Complete();
+                GameplayEvents.RaiseLevelWon(currentLevelNumber, currentLevelId);
+                gameStateService?.Win();
                 return;
             }
 

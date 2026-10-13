@@ -42,7 +42,7 @@ namespace ASTeams.SingleLine.Core
             int nodeBudget, int timeBudgetMilliseconds, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            var visited = new bool[level.Grid.CellCount];
+            var visited = new byte[level.Grid.CellCount];
             if (!PathSequenceValidator.IsValid(level, path, visited))
             {
                 return HintResult.RestartRequired;
@@ -53,7 +53,7 @@ namespace ASTeams.SingleLine.Core
                 budget.CancelAfter(timeBudgetMilliseconds);
                 ILevelSolver solver = solverFactory.Create(nodeBudget, budget.Token);
                 var prefix = new List<int>(path);
-                var solution = new int[level.ActiveCellCount];
+                var solution = new int[level.PathLength];
 
                 try
                 {
@@ -83,7 +83,7 @@ namespace ASTeams.SingleLine.Core
             return StoredSolutionFallback(level, path, steps, visited);
         }
 
-        private static HintResult StoredSolutionFallback(LevelData level, int[] path, int steps, bool[] visited)
+        private static HintResult StoredSolutionFallback(LevelData level, int[] path, int steps, byte[] visited)
         {
             if (!PathSequenceValidator.IsValid(level, level.Solution, visited, needsCompletion: true))
             {

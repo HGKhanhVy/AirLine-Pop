@@ -34,6 +34,9 @@ namespace ASTeams.SingleLine.Unity
         [Tooltip("Seconds between cells while the path rewinds. Small enough to read as one motion.")]
         [SerializeField, Min(0f)] private float rewindStepDelay = 0.025f;
 
+        [Tooltip("Seconds a gust holds the plane on its square before blowing it on to the next.")]
+        [SerializeField, Min(0f)] private float gustDelay = 0.12f;
+
         [Tooltip("Lets the player step back by dragging along the line onto the square behind " +
                  "the head. On: there is no Undo button, drawing back over the route erases it.")]
         [SerializeField] private bool allowsDragBacktrack = true;
@@ -51,6 +54,11 @@ namespace ASTeams.SingleLine.Unity
         private IHapticService haptics;
         private Coroutine rewind;
         private WaitForSeconds rewindWait;
+        private Coroutine gust;
+        private WaitForSeconds gustWait;
+
+        // The windy square the plane was just blown off; the finger is usually still over it.
+        private int blownFrom = LevelData.NoCell;
         private IHintService hintService;
         private CancellationTokenSource hintRequest;
         private bool isNightHeldForIntro;
@@ -75,10 +83,13 @@ namespace ASTeams.SingleLine.Unity
         /// <summary>Squares covered so far, the wingman's included on a formation flight.</summary>
         public int Progress => session == null ? 0 : session.CoveredCount;
 
-        public int Target => session == null ? 0 : session.Level.ActiveCellCount;
+        public int Target => session == null ? 0 : session.Level.CoverageTarget;
 
         /// <summary>The square the path ends on, where the airplane stands.</summary>
         public int Head => session == null ? LevelData.NoCell : session.Head;
+
+        /// <summary>Where a formation flight's wingman stands, or <see cref="LevelData.NoCell"/>.</summary>
+        public int WingHead => session == null ? LevelData.NoCell : session.WingHead;
 
         public bool IsVisited(int cell)
         {
@@ -94,6 +105,7 @@ namespace ASTeams.SingleLine.Unity
         private void Awake()
         {
             rewindWait = new WaitForSeconds(rewindStepDelay);
+            gustWait = new WaitForSeconds(gustDelay);
         }
 
         /// <summary>
@@ -116,7 +128,7 @@ namespace ASTeams.SingleLine.Unity
                 CancelHint();
             }
 
-            boardInput.AcceptsInput = enabled && rewind == null && State != PathState.Won && !IsNightPreviewing;
+            boardInput.AcceptsInput = enabled && rewind == null && gust == null && State != PathState.Won && !IsNightPreviewing;
         }
 
         public void SetHintService(IHintService service)
@@ -127,7 +139,7 @@ namespace ASTeams.SingleLine.Unity
 
         public async Task<bool> ShowHintAsync()
         {
-            if (session == null || IsHintPending || hintService == null || rewind != null || IsNightPreviewing ||
+            if (session == null || IsHintPending || hintService == null || rewind != null || gust != null || IsNightPreviewing ||
                 session.State == PathState.Won || session.Length == 0 || !isActiveAndEnabled)
             {
                 return false;
@@ -147,11 +159,10 @@ namespace ASTeams.SingleLine.Unity
                     return false;
                 }
 
-                // A hint that asks for undos first does not continue from where the player
-                // is standing, so the drag is given no starting square and begins on the
-                // first one it is pointing at.
-                boardFeedback.PlayHint(result.Steps,
-                    result.BacktrackCount > 0 ? LevelData.NoCell : session.Head);
+                // The hint always starts where the plane stands: onward when the route can
+                // still be finished from here, back along the route when it cannot.
+                result = AnchorToHead(result);
+                boardFeedback.PlayHint(result.Steps, session.Head);
                 OnHintReady?.Invoke(result);
                 GameplayEvents.RaiseHintResolved(result);
                 return !result.NeedsRestart && result.Steps.Count > 0;
@@ -181,6 +192,36 @@ namespace ASTeams.SingleLine.Unity
 
                 request.Dispose();
             }
+        }
+
+        /// <summary>
+        /// A hint that needs undos first is turned into the way back: the squares from the head
+        /// back to where the route can still be finished, which the guide flies in reverse. A
+        /// windy square is never a place to stop, since stepping back onto it takes its gust
+        /// back too, so the way back runs on past it.
+        /// </summary>
+        private HintResult AnchorToHead(HintResult result)
+        {
+            if (result.NeedsRestart || result.BacktrackCount <= 0)
+            {
+                return result;
+            }
+
+            int keep = Math.Max(1, session.Length - result.BacktrackCount);
+
+            while (keep > 1 && IsWindy(session.GetCell(keep - 1)))
+            {
+                keep--;
+            }
+
+            var wayBack = new int[session.Length - keep];
+
+            for (int i = 0; i < wayBack.Length; i++)
+            {
+                wayBack[i] = session.GetCell(session.Length - 2 - i);
+            }
+
+            return new HintResult(wayBack.Length, wayBack);
         }
 
         private void CancelHint()
@@ -223,6 +264,7 @@ namespace ASTeams.SingleLine.Unity
             GameplayEvents.OnRuleIntroChanged -= HandleRuleIntroChanged;
             CancelHint();
             CancelRewind();
+            CancelGust();
         }
 
         public void Load(LevelData level)
@@ -241,6 +283,7 @@ namespace ASTeams.SingleLine.Unity
             PathState previous = State;
 
             CancelRewind();
+            CancelGust();
             isNightHeldForIntro = false;
             session = new PathSession(level);
             session.OnStateChanged += HandleSessionStateChanged;
@@ -332,11 +375,12 @@ namespace ASTeams.SingleLine.Unity
         public bool Undo()
         {
             CancelHint();
-            if (session == null || rewind != null || !session.Undo())
+            if (session == null || rewind != null || gust != null || !session.Undo())
             {
                 return false;
             }
 
+            UnwindGusts();
             Refresh();
             return true;
         }
@@ -356,6 +400,7 @@ namespace ASTeams.SingleLine.Unity
             }
 
             CancelHint();
+            CancelGust();
             if (rewindStepDelay <= 0f)
             {
                 boardFeedback.Stop();
@@ -410,7 +455,7 @@ namespace ASTeams.SingleLine.Unity
 
         private void HandleCellEntered(int cell)
         {
-            if (session == null || rewind != null)
+            if (session == null || rewind != null || gust != null)
             {
                 return;
             }
@@ -420,13 +465,29 @@ namespace ASTeams.SingleLine.Unity
             // back onto it from the second square is an ordinary one-step backtrack.
             bool isTap = boardInput.IsReportingPress;
 
-            // In formation either half may be touched: the right half steers the wingman,
-            // which is the player's own route seen in the mirror.
+            // In formation only the player's own half is drawn on; the wingman follows by itself.
             LevelData level = session.Level;
 
-            if (level.IsFormation && level.Grid.ToColumn(cell) >= level.Grid.Width / 2)
+            if (level.IsOnWingSide(cell))
             {
-                cell = level.MirrorOf(cell);
+                return;
+            }
+
+            // After a gust the finger is still over the windy square, and moving on reaches the
+            // square the plane was blown to; neither is a move of its own.
+            if (blownFrom != LevelData.NoCell)
+            {
+                bool isLeftover = cell == blownFrom || cell == session.Head;
+
+                if (cell != blownFrom)
+                {
+                    blownFrom = LevelData.NoCell;
+                }
+
+                if (isLeftover)
+                {
+                    return;
+                }
             }
 
             if (isTap && session.Length > 1 && cell == session.GetCell(0))
@@ -451,6 +512,11 @@ namespace ASTeams.SingleLine.Unity
                 return;
             }
 
+            if (result == MoveResult.Backtracked)
+            {
+                UnwindGusts();
+            }
+
             Refresh();
 
             // Only a step forward is a new connection. Backtracking recolours cells too,
@@ -463,7 +529,82 @@ namespace ASTeams.SingleLine.Unity
                 // GDD 10 gives haptics to entering a cell and to winning, and to nothing
                 // else. Backtracking and refused moves answer with sound and motion only.
                 haptics?.Play(HapticStrength.Light);
+                StartGust(cell);
             }
+        }
+
+        /// <summary>
+        /// A plane that flies onto a windy square is blown on to the next square the way the
+        /// wind points, and on again if that square is windy too. The core rule already allows
+        /// only that one way out, so the gust simply takes the step for the player. A gust that
+        /// meets a square it cannot enter leaves the plane where it is, stuck.
+        /// </summary>
+        private void StartGust(int enteredCell)
+        {
+            if (session.State != PathState.Drawing || !IsWindy(session.Head))
+            {
+                return;
+            }
+
+            gust = StartCoroutine(GustRoutine(enteredCell));
+        }
+
+        private IEnumerator GustRoutine(int enteredCell)
+        {
+            boardInput.AcceptsInput = false;
+
+            while (session.State == PathState.Drawing && session.Level.TryGetWind(session.Head, out Direction wind) &&
+                   session.Level.Grid.TryGetNeighbor(session.Head, wind, out int downwind))
+            {
+                if (gustDelay > 0f)
+                {
+                    yield return gustWait;
+                }
+
+                if (session.Move(downwind) == MoveResult.Rejected)
+                {
+                    break;
+                }
+
+                blownFrom = enteredCell;
+                Refresh();
+                boardView.PopCell(session.Head);
+                haptics?.Play(HapticStrength.Light);
+            }
+
+            gust = null;
+            boardInput.AcceptsInput = rewind == null && session.State != PathState.Won && !IsNightPreviewing;
+        }
+
+        private void CancelGust()
+        {
+            if (gust != null)
+            {
+                StopCoroutine(gust);
+                gust = null;
+                boardInput.AcceptsInput = true;
+            }
+
+            blownFrom = LevelData.NoCell;
+        }
+
+        /// <summary>
+        /// Stepping back off a square the wind blew the plane onto takes the gust back too: the
+        /// plane never rests on a windy square, so it returns to where it flew in from.
+        /// </summary>
+        private void UnwindGusts()
+        {
+            while (session.Length > 1 && IsWindy(session.Head))
+            {
+                session.Undo();
+            }
+
+            blownFrom = LevelData.NoCell;
+        }
+
+        private bool IsWindy(int cell)
+        {
+            return session.Level.TryGetWind(cell, out _);
         }
 
         private void HandleSessionStateChanged(PathState previous, PathState current)
@@ -534,7 +675,7 @@ namespace ASTeams.SingleLine.Unity
 
             RepaintVisuals();
             OnPathChanged?.Invoke();
-            GameplayEvents.RaiseProgressChanged(session.CoveredCount, session.Level.ActiveCellCount);
+            GameplayEvents.RaiseProgressChanged(session.CoveredCount, session.Level.CoverageTarget);
         }
 
         /// <summary>
@@ -551,7 +692,7 @@ namespace ASTeams.SingleLine.Unity
 
             LevelData level = session.Level;
             int head = session.Head;
-            int wingHead = level.IsFormation && head != LevelData.NoCell ? level.MirrorOf(head) : LevelData.NoCell;
+            int wingHead = session.WingHead;
             int cellCount = level.Grid.CellCount;
 
             for (int index = 0; index < cellCount; index++)
@@ -560,6 +701,12 @@ namespace ASTeams.SingleLine.Unity
                 {
                     boardView.SetCellVisited(index, session.IsVisited(index), index == head || index == wingHead);
                 }
+            }
+
+            for (int i = 0; i < level.Marks.Count; i++)
+            {
+                int marked = level.Marks[i].Cell;
+                boardView.SetCellPasses(marked, session.VisitCount(marked));
             }
 
             Color lineColor = ColorForState(session.State);

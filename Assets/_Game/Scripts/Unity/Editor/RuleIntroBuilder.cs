@@ -17,6 +17,10 @@ namespace ASTeams.SingleLine.Unity.EditorTools
         public const string NightArt = "Assets/_Game/Art/Flat/rule_night.png";
         public const string FormationArt = "Assets/_Game/Art/Flat/rule_formation.png";
         public const string VipArt = "Assets/_Game/Art/Flat/rule_vip.png";
+        public const string TurbulenceArt = "Assets/_Game/Art/Flat/rule_turbulence.png";
+        public const string BeaconArt = "Assets/_Game/Art/Flat/rule_beacon.png";
+        public const string BridgeArt = "Assets/_Game/Art/Flat/rule_bridge.png";
+        public const string StormArt = "Assets/_Game/Art/Flat/rule_storm.png";
         private const string HolderName = "RuleIntro";
 
         public static RuleIntroPresenter Build(Transform canvas)
@@ -62,6 +66,10 @@ namespace ASTeams.SingleLine.Unity.EditorTools
                 Entry(LevelRule.Night, NightArt, "rule.night"),
                 Entry(LevelRule.Formation, FormationArt, "rule.formation"),
                 Entry(LevelRule.Vip, VipArt, "rule.vip"),
+                Entry(LevelRule.Turbulence, TurbulenceArt, "rule.turbulence"),
+                Entry(LevelRule.Beacon, BeaconArt, "rule.beacon"),
+                Entry(LevelRule.Bridge, BridgeArt, "rule.bridge"),
+                Entry(LevelRule.Storm, StormArt, "rule.storm"),
             });
             return presenter;
         }

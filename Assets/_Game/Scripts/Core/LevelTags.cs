@@ -15,6 +15,9 @@ namespace ASTeams.SingleLine.Core
         /// <summary>The VIP flight that closes a chapter, mixing the conditions learnt so far.</summary>
         public const string Vip = "vip";
 
+        /// <summary>A storm flight: the hardest of its city, billed in advance and paying double.</summary>
+        public const string Storm = "storm";
+
         public static bool Has(LevelData level, string tag)
         {
             if (level == null)

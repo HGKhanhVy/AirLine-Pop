@@ -6,8 +6,11 @@ namespace ASTeams.SingleLine.Unity
     public readonly struct WinFlightSummary
     {
         public WinFlightSummary(int flightNumber, int coins, int passengers, string destination, int stamp,
-            int stampsNeeded, Sprite earnedPostcard, WinMilestone milestone, string arrivalName)
+            int stampsNeeded, Sprite earnedPostcard, WinMilestone milestone, string arrivalName, string bonusLine = null,
+            int dayStreak = 0)
         {
+            BonusLine = bonusLine;
+            DayStreak = dayStreak;
             FlightNumber = flightNumber;
             Coins = coins;
             Passengers = passengers;
@@ -41,5 +44,11 @@ namespace ASTeams.SingleLine.Unity
 
         /// <summary>The name of the regular joining the lounge, for an <see cref="WinMilestone.Arrival"/>.</summary>
         public string ArrivalName { get; }
+
+        /// <summary>The coins paid on top, such as a storm or a streak, one line each; null when none were.</summary>
+        public string BonusLine { get; }
+
+        /// <summary>Days in a row the daily flight has been flown, for a <see cref="WinMilestone.Daily"/>.</summary>
+        public int DayStreak { get; }
     }
 }

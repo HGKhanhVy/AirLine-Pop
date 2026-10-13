@@ -10,14 +10,15 @@ using UnityEngine;
 namespace ASTeams.SingleLine.Unity.EditorTools
 {
     /// <summary>
-    /// Rebuilds the shipped campaign in one step: every reference pack scored and laid onto
-    /// the difficulty curve (hard and easy flights taking turns, each city closing on its
-    /// hardest flight), the hand-drawn picture boards pinned to their places, then the
+    /// Rebuilds the shipped campaign in one step: the reference packs and a batch of freshly
+    /// drawn boards measured and laid flight by flight onto absolute difficulty targets with
+    /// their conditions on, the hand-drawn picture boards pinned to their places, then the
     /// chapter files and the level config written out. One level per gate on the route map.
     /// </summary>
     public static class CampaignRebuilder
     {
         public const string SpecialFolder = "Assets/_Game/Asset_Resources/Level Data/special";
+        public const string DailyFlightFile = "Assets/_Game/Resources/" + DailyFlightCatalog.ResourcePath + ".json";
 
         [MenuItem("Tools/Single Line/Rebuild Campaign")]
         public static void RebuildFromMenu()
@@ -36,26 +37,40 @@ namespace ASTeams.SingleLine.Unity.EditorTools
                 return specialError;
             }
 
-            LevelImportPipeline pipeline = LevelImportPipeline.Create(CampaignMode.DifficultyCurve, ChapterLayout.FullRoute,
-                WarnsdorffSolver.DefaultNodeBudget, LevelPackOrder.Default, specials);
-            ImportReport report;
+            Campaign campaign;
+            int generatedCount;
+            List<LevelData> dailyFlights;
 
             try
             {
-                report = pipeline.Run(files, (step, progress) => EditorUtility.DisplayProgressBar("Rebuilding campaign", step, progress));
+                EditorUtility.DisplayProgressBar("Rebuilding campaign", "Checking the reference packs", 0f);
+                LevelImportPipeline pipeline = LevelImportPipeline.Create(CampaignMode.DifficultyCurve, ChapterLayout.FullRoute,
+                    WarnsdorffSolver.DefaultNodeBudget, LevelPackOrder.Default, specials);
+                var pool = new List<LevelData>(pipeline.Prepare(files, new ImportReport()).Levels);
+
+                EditorUtility.DisplayProgressBar("Rebuilding campaign", "Drawing new boards", 0.1f);
+                List<LevelData> generated = new GeneratedBoards().Generate(pool);
+                generatedCount = generated.Count;
+                pool.AddRange(generated);
+
+                EditorUtility.DisplayProgressBar("Rebuilding campaign", "Measuring every board", 0.15f);
+                var picker = new BoardPicker(BoardPicker.DefaultVariants, new ThoughtfulPlayer());
+                picker.Add(pool);
+
+                // Every flight is measured against an absolute target once its conditions are on.
+                campaign = CampaignPlanner.Default.Plan(picker, specials,
+                    progress => EditorUtility.DisplayProgressBar("Rebuilding campaign", "Placing flights", 0.3f + progress * 0.65f));
+                dailyFlights = new DailyFlightPlanner().Plan(picker);
+            }
+            catch (System.InvalidOperationException e)
+            {
+                return "Campaign not rebuilt: " + e.Message;
             }
             finally
             {
                 EditorUtility.ClearProgressBar();
             }
 
-            if (report.Campaign == null)
-            {
-                return "Campaign not rebuilt: " + report.CampaignError;
-            }
-
-            // The runway and the wind go on last, onto the finished order, from each level's own solution.
-            Campaign campaign = CampaignRules.Default.Apply(report.Campaign);
             ExportResult export = CampaignExporter.Export(campaign, CampaignExporter.DefaultOutputFolder);
 
             if (!export.IsSuccess)
@@ -63,10 +78,20 @@ namespace ASTeams.SingleLine.Unity.EditorTools
                 return "Campaign not exported: " + export.Error;
             }
 
+            WriteDailyFlights(dailyFlights);
             int count = LevelConfigBuilder.Rebuild(CampaignExporter.DefaultOutputFolder, LevelConfigBuilder.DefaultLevelFolder,
                 LevelConfigBuilder.DefaultConfigPath);
             return "Campaign rebuilt: " + count + " levels in " + export.ChapterCount + " chapters, " + specials.Count +
-                " picture boards, " + report.Campaign.RelaxedPlacements + " relaxed placements.\n" + Describe(campaign);
+                " picture boards, " + generatedCount + " boards drawn, " + dailyFlights.Count + " daily flights.\n" + Describe(campaign);
+        }
+
+        /// <summary>The daily flights sit in a file of their own, outside the campaign's chapter folder.</summary>
+        private static void WriteDailyFlights(List<LevelData> days)
+        {
+            string folder = Path.GetDirectoryName(DailyFlightFile);
+            Directory.CreateDirectory(folder);
+            File.WriteAllText(DailyFlightFile, ASTeams.SingleLine.Data.LevelJsonSerializer.SerializeChapter(DailyFlightPlanner.ChapterId, days));
+            AssetDatabase.ImportAsset(DailyFlightFile);
         }
 
         /// <summary>Reads every picture board and has the solver prove it can be flown in one line.</summary>
@@ -140,6 +165,16 @@ namespace ASTeams.SingleLine.Unity.EditorTools
                     if (placed.Level.HasWind)
                     {
                         text.Append('W');
+                    }
+
+                    if (placed.Level.Marks.Count > 0)
+                    {
+                        text.Append('M');
+                    }
+
+                    if (placed.Level.IsStorm)
+                    {
+                        text.Append('!');
                     }
 
                     number++;

@@ -33,93 +33,106 @@ namespace ASTeams.SingleLine.Core
         }
 
         /// <summary>
-        /// MOV-01 and MOV-02: the target must be an unvisited active cell that is
-        /// orthogonally adjacent to the head.
+        /// MOV-01 and MOV-02: the target must be an active square with a pass left that is
+        /// orthogonally adjacent to the head, and the head's own conditions must let the plane
+        /// go there. <paramref name="previous"/> is the square flown before the head, or
+        /// <see cref="LevelData.NoCell"/> at the start, since clouds and beacons judge the turn.
         /// </summary>
-        public static bool CanEnter(LevelData level, bool[] visited, int head, int target)
+        public static bool CanEnter(LevelData level, byte[] visits, int previous, int head, int target)
         {
             if (level == null)
             {
                 throw new ArgumentNullException(nameof(level));
             }
 
-            if (visited == null)
+            if (visits == null)
             {
-                throw new ArgumentNullException(nameof(visited));
+                throw new ArgumentNullException(nameof(visits));
             }
 
-            if (!level.IsActive(target) || IsCovered(level, visited, target))
+            if (!level.IsActive(target) || level.IsOnWingSide(target) || !IsOpen(level, visits, target))
             {
                 return false;
             }
 
-            return level.Grid.AreAdjacent(head, target) && CanLeave(level, head, target);
+            return level.Grid.AreAdjacent(head, target) && CanLeave(level, previous, head, target);
         }
 
         /// <summary>
-        /// Marks a square visited or not. In a formation flight the wingman flies the mirror
-        /// square at the same time, so both are marked together and the rest of the rules
-        /// read one mask for both planes.
+        /// Adds or removes one pass over a square. The wingman's squares go in the same mask, so
+        /// the rest of the rules read one mask for both planes.
         /// </summary>
-        public static void Visit(LevelData level, bool[] visited, int cell, bool isVisited)
+        public static void Visit(LevelData level, byte[] visits, int cell, bool isVisited)
         {
-            visited[cell] = isVisited;
-
-            if (level.IsFormation)
-            {
-                visited[level.MirrorOf(cell)] = isVisited;
-            }
+            visits[cell] = (byte)(isVisited ? visits[cell] + 1 : visits[cell] - 1);
         }
 
-        /// <summary>True when either plane has already flown over the square.</summary>
-        private static bool IsCovered(LevelData level, bool[] visited, int cell)
+        /// <summary>True when the route may still pass over the square: unflown, or an overpass crossed once.</summary>
+        public static bool IsOpen(LevelData level, byte[] visits, int cell)
         {
-            return visited[cell] || (level.IsFormation && visited[level.MirrorOf(cell)]);
+            return visits[cell] < level.CapacityOf(cell);
         }
 
         /// <summary>
-        /// The level's own conditions on leaving a square: nothing flies on from the runway,
-        /// and a square with wind only lets the plane go the way it blows. The solver asks
-        /// the same question, so the two can never disagree.
+        /// The level's own conditions on leaving a square: nothing flies on from the runway, a
+        /// square with wind only lets the plane go the way it blows, a cloud or an overpass
+        /// only straight on and a beacon only round a corner. The solver asks the same
+        /// question, so the two can never disagree.
         /// </summary>
-        public static bool CanLeave(LevelData level, int head, int target)
+        public static bool CanLeave(LevelData level, int previous, int head, int target)
+        {
+            return CanLeaveSquare(level, previous, head, target);
+        }
+
+        private static bool CanLeaveSquare(LevelData level, int previous, int head, int target)
         {
             if (level.HasFixedEnd && head == level.FixedEnd)
             {
                 return false;
             }
 
-            if (level.TryGetWind(head, out Direction wind))
+            if (level.TryGetWind(head, out Direction wind) &&
+                (!level.Grid.TryGetNeighbor(head, wind, out int downwind) || downwind != target))
             {
-                return level.Grid.TryGetNeighbor(head, wind, out int downwind) && downwind == target;
+                return false;
             }
 
-            return true;
+            CellKind kind = level.KindOf(head);
+
+            if (kind == CellKind.Plain || previous == LevelData.NoCell)
+            {
+                return true;
+            }
+
+            // Adjacent squares on one line differ by the same index step, so equal steps in and
+            // out mean the plane flew straight on.
+            bool isStraight = target - head == head - previous;
+            return kind == CellKind.Turn ? !isStraight : isStraight;
         }
 
         /// <summary>
         /// True when the head still has at least one legal continuation. Used to tell
         /// Drawing from Stuck (GDD 3.4) without allocating a neighbour list.
         /// </summary>
-        public static bool HasAnyMove(LevelData level, bool[] visited, int head)
+        public static bool HasAnyMove(LevelData level, byte[] visits, int previous, int head)
         {
-            return CountAvailableMoves(level, visited, head) > 0;
+            return CountAvailableMoves(level, visits, previous, head) > 0;
         }
 
         /// <summary>
-        /// Counts legal continuations from a cell. The solver orders its candidates by
-        /// this value, which is the Warnsdorff heuristic.
+        /// Counts legal continuations from a cell reached from <paramref name="previous"/>. The
+        /// solver orders its candidates by this value, which is the Warnsdorff heuristic.
         /// </summary>
-        public static int CountAvailableMoves(LevelData level, bool[] visited, int cell)
+        public static int CountAvailableMoves(LevelData level, byte[] visits, int previous, int cell)
         {
             if (level == null)
             {
                 throw new ArgumentNullException(nameof(level));
             }
 
-            if (visited == null)
+            if (visits == null)
             {
-                throw new ArgumentNullException(nameof(visited));
+                throw new ArgumentNullException(nameof(visits));
             }
 
             Grid grid = level.Grid;
@@ -132,7 +145,8 @@ namespace ASTeams.SingleLine.Core
                     continue;
                 }
 
-                if (level.IsActive(neighbor) && !IsCovered(level, visited, neighbor) && CanLeave(level, cell, neighbor))
+                if (level.IsActive(neighbor) && !level.IsOnWingSide(neighbor) && IsOpen(level, visits, neighbor) &&
+                    CanLeave(level, previous, cell, neighbor))
                 {
                     count++;
                 }
@@ -142,17 +156,26 @@ namespace ASTeams.SingleLine.Core
         }
 
         /// <summary>
-        /// MOV-07: every active cell covered and the end constraint satisfied. Takes the
-        /// length of the player's route, which in a formation flight covers two squares a step.
+        /// MOV-07: every square of the player's route covered and the end constraint satisfied.
+        /// Only for a level without a wingman; a formation flight also needs the wingman's half.
         /// </summary>
         public static bool IsComplete(LevelData level, int pathLength, int head)
+        {
+            return IsComplete(level, pathLength, head, 0);
+        }
+
+        /// <summary>
+        /// MOV-07 for any level: the player's route at full length, the end constraint met, and
+        /// in a formation flight every square of the wingman's half covered too.
+        /// </summary>
+        public static bool IsComplete(LevelData level, int pathLength, int head, int wingCovered)
         {
             if (level == null)
             {
                 throw new ArgumentNullException(nameof(level));
             }
 
-            if (pathLength != level.PathLength)
+            if (pathLength != level.PathLength || (level.IsFormation && wingCovered != level.WingSideCellCount))
             {
                 return false;
             }

@@ -50,6 +50,7 @@ namespace ASTeams.SingleLine.Unity
             }
 
             int head = gameplay.Head;
+            int wingHead = gameplay.WingHead;
             bool changed = false;
 
             for (int i = 0; i < plan.Count; i++)
@@ -75,7 +76,7 @@ namespace ASTeams.SingleLine.Unity
 
                 // A waiting cat hops when the plane pulls up beside it: it says "me next".
                 bool isNext = !isAboard && head != LevelData.NoCell &&
-                    (level.Grid.AreAdjacent(head, cell) || (level.IsFormation && level.Grid.AreAdjacent(level.MirrorOf(head), cell)));
+                    (level.Grid.AreAdjacent(head, cell) || (wingHead != LevelData.NoCell && level.Grid.AreAdjacent(wingHead, cell)));
                 view.SetExcited(i, isNext);
             }
 

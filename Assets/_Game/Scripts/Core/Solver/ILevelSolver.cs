@@ -25,7 +25,7 @@ namespace ASTeams.SingleLine.Core
         /// Searches for a solution that begins at <paramref name="startCell"/>.
         /// </summary>
         /// <param name="destination">
-        /// Buffer of at least <see cref="LevelData.ActiveCellCount"/> entries, filled
+        /// Buffer of at least <see cref="LevelData.PathLength"/> entries, filled
         /// with the solution on success.
         /// </param>
         /// <param name="length">Number of entries written, zero on failure.</param>

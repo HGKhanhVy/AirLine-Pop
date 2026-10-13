@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Text;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -40,6 +41,11 @@ namespace ASTeams.SingleLine.Unity
         private Coroutine pending;
         private bool isVipFlight;
         private bool isFirstClear;
+        private bool isDailyFlight;
+        private int dayStreak;
+
+        // Reused: a landing rarely pays more than two lines on top.
+        private readonly StringBuilder bonusLines = new StringBuilder(96);
 
         public void Initialize(CatPortraitStage portraitStage, CatCatalogSO cats)
         {
@@ -56,6 +62,8 @@ namespace ASTeams.SingleLine.Unity
             GameplayEvents.OnLevelWon += HandleLevelWon;
             GameplayEvents.OnLevelLoaded += HandleLevelLoaded;
             GameplayEvents.OnLevelRules += HandleLevelRules;
+            FlightBonusEvents.OnBonusLine += HandleBonusLine;
+            FlightBonusEvents.OnDailyCompleted += HandleDailyCompleted;
         }
 
         private void OnDisable()
@@ -66,13 +74,31 @@ namespace ASTeams.SingleLine.Unity
             GameplayEvents.OnLevelWon -= HandleLevelWon;
             GameplayEvents.OnLevelLoaded -= HandleLevelLoaded;
             GameplayEvents.OnLevelRules -= HandleLevelRules;
+            FlightBonusEvents.OnBonusLine -= HandleBonusLine;
+            FlightBonusEvents.OnDailyCompleted -= HandleDailyCompleted;
             StopPending();
         }
 
-        // Coins are paid, and announced, before the win itself is raised.
+        // Coins are paid, and announced, before the win itself is raised; a bonus adds to them.
         private void HandleCoinsAwarded(int amount, long balance)
         {
-            pendingCoins = amount;
+            pendingCoins += amount;
+        }
+
+        private void HandleBonusLine(string line)
+        {
+            if (bonusLines.Length > 0)
+            {
+                bonusLines.Append('\n');
+            }
+
+            bonusLines.Append(line);
+        }
+
+        private void HandleDailyCompleted(int days)
+        {
+            isDailyFlight = true;
+            dayStreak = days;
         }
 
         private void HandleFirstClear(int levelNumber)
@@ -95,10 +121,15 @@ namespace ASTeams.SingleLine.Unity
             StopPending();
             pause.SetLocked(true);
             CatBreedSO arrival = isFirstClear ? FindArrival(levelNumber) : null;
-            WinFlightSummary flight = Summarise(levelNumber, pendingCoins, arrival);
+            WinFlightSummary flight = isDailyFlight
+                ? new WinFlightSummary(levelNumber, pendingCoins, passengersAboard, null, 0, 0, null, WinMilestone.Daily, null,
+                    BonusText(), dayStreak)
+                : Summarise(levelNumber, pendingCoins, arrival);
             pending = StartCoroutine(ShowCard(flight, arrival));
             pendingCoins = 0;
             isFirstClear = false;
+            isDailyFlight = false;
+            bonusLines.Clear();
         }
 
         private IEnumerator ShowCard(WinFlightSummary flight, CatBreedSO arrival)
@@ -207,7 +238,12 @@ namespace ASTeams.SingleLine.Unity
 
             WinMilestone milestone = MilestoneOf(flightNumber, arrival, postcard);
             return new WinFlightSummary(flightNumber, coins, passengersAboard, place, stamp, stampsNeeded, postcard,
-                milestone, arrival != null ? arrival.DisplayName : null);
+                milestone, arrival != null ? arrival.DisplayName : null, BonusText());
+        }
+
+        private string BonusText()
+        {
+            return bonusLines.Length == 0 ? null : bonusLines.ToString();
         }
 
         /// <summary>The biggest reason this flight is worth stopping for, if any.</summary>
@@ -237,6 +273,8 @@ namespace ASTeams.SingleLine.Unity
         {
             StopPending();
             CloseCard();
+            pendingCoins = 0;
+            bonusLines.Clear();
         }
 
         private void CloseCard()

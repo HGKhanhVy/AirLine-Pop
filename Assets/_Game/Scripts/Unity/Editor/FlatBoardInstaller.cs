@@ -100,6 +100,7 @@ namespace ASTeams.SingleLine.Unity.EditorTools
             UpdateSkins();
             AssetDatabase.SaveAssets();
             prefabReport += "\n" + BoardRuleInstaller.Install();
+            prefabReport += "\n" + CellMarkInstaller.Install();
             prefabReport += "\n" + NightFormationInstaller.Install();
 
             return "Flat board installed.\n" + prefabReport;

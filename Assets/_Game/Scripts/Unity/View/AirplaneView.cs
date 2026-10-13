@@ -151,17 +151,18 @@ namespace ASTeams.SingleLine.Unity
                 return;
             }
 
-            bool isSteering = input != null && input.IsSteering;
+            // The wingman makes its own moves now, so it never follows the finger.
+            bool isSteering = !isWingman && input != null && input.IsSteering;
 
             if (isSteering)
             {
                 // The finger may leave the board; the airplane stays over the blocks.
                 Vector3 pointer = input.PointerWorldPosition;
 
-                // In formation the finger may be on either half; each plane flies its own.
+                // In formation the finger may stray onto the wingman's half; the plane stays on its own.
                 if (board != null && board.Level != null && board.Level.IsFormation)
                 {
-                    pointer = board.OntoHalf(pointer, isWingman);
+                    pointer = board.OntoHalf(pointer, false);
                 }
 
                 Steer(board != null ? OnTrack(pointer) : pointer, deltaTime);
