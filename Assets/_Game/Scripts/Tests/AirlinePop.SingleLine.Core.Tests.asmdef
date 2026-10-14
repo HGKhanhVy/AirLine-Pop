@@ -1,10 +1,10 @@
 {
-    "name": "ASTeams.SingleLine.Core.Tests",
-    "rootNamespace": "ASTeams.SingleLine.Core.Tests",
+    "name": "AirlinePop.SingleLine.Core.Tests",
+    "rootNamespace": "AirlinePop.SingleLine.Core.Tests",
     "references": [
-        "ASTeams.SingleLine.Core",
-        "ASTeams.SingleLine.Import",
-        "ASTeams.SingleLine.Data",
+        "AirlinePop.SingleLine.Core",
+        "AirlinePop.SingleLine.Import",
+        "AirlinePop.SingleLine.Data",
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner"
     ],

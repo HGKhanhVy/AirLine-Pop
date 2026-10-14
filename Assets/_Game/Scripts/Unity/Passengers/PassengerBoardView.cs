@@ -1,7 +1,7 @@
-using ASTeams.SingleLine.Core;
+using AirlinePop.SingleLine.Core;
 using UnityEngine;
 
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>
     /// Draws the cats waiting on the board.

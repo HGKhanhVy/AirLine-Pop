@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>
     /// Keeps the flat sky behind the board filling the whole view.

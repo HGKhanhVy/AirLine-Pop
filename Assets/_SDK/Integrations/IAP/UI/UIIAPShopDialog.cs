@@ -1,11 +1,11 @@
 #if IAP
 using UnityEngine;
-using ASTeams.Base.UI;
+using AirlinePop.Base.UI;
 using UnityEngine.UI;
 using Cysharp.Threading.Tasks;
-using ASTeams.Base.IAP;
-using ASTeams.Base.Ads;
-using ASTeams.Base.Data;
+using AirlinePop.Base.IAP;
+using AirlinePop.Base.Ads;
+using AirlinePop.Base.Data;
 
 public class UIIAPShopDialog : UIBaseDialog
 {

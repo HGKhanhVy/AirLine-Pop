@@ -1,6 +1,6 @@
 using System;
 
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>Days since 2000-01-01 on the device's local calendar.</summary>
     public sealed class LocalDayClock : IDayClock

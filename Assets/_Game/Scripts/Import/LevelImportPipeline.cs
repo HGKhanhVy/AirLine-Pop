@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using ASTeams.SingleLine.Core;
+using AirlinePop.SingleLine.Core;
 
-namespace ASTeams.SingleLine.Import
+namespace AirlinePop.SingleLine.Import
 {
     /// <summary>
     /// Runs the whole import in one place: parse, collapse duplicates, check and repair

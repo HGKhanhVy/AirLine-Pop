@@ -5,7 +5,7 @@ using System.IO;
 using UnityEditor.Build;
 using UnityEngine;
 
-namespace ASTeams.SingleLine.Editor
+namespace AirlinePop.SingleLine.Editor
 {
     /// <summary>
     /// Keeps the Unity MCP editor tooling out of player builds.

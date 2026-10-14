@@ -1,4 +1,4 @@
-namespace ASTeams.SingleLine.Core
+namespace AirlinePop.SingleLine.Core
 {
     /// <summary>What a marked square asks of the plane passing over it.</summary>
     public enum CellKind : byte

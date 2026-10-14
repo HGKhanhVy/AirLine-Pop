@@ -1,4 +1,4 @@
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>
     /// Named swatches of the world atlas (Tools/ui_kit/generate_world_palette.py): the

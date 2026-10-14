@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace ASTeams.SingleLine.Import
+namespace AirlinePop.SingleLine.Import
 {
     /// <summary>
     /// Ships the reference packs in their own order: pack by pack as

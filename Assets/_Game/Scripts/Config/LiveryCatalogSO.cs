@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>Every livery the shop sells, in shelf order; the first is the one players start with.</summary>
     [CreateAssetMenu(menuName = "AirLine Pop/Livery Catalog", fileName = "LiveryCatalog")]

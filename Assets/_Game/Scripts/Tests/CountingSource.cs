@@ -1,6 +1,6 @@
-using ASTeams.SingleLine.Data;
+using AirlinePop.SingleLine.Data;
 
-namespace ASTeams.SingleLine.Core.Tests
+namespace AirlinePop.SingleLine.Core.Tests
 {
     internal sealed class CountingSource : IChapterSource
     {

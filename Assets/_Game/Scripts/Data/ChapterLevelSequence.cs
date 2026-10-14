@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace ASTeams.SingleLine.Data
+namespace AirlinePop.SingleLine.Data
 {
     public sealed class ChapterLevelSequence : ILevelSequence
     {

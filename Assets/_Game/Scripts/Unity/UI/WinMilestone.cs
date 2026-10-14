@@ -1,4 +1,4 @@
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>
     /// What makes a win worth stopping for. The card after an ordinary flight moves on to the

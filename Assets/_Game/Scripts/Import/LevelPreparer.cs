@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
-using ASTeams.SingleLine.Core;
+using AirlinePop.SingleLine.Core;
 
-namespace ASTeams.SingleLine.Import
+namespace AirlinePop.SingleLine.Import
 {
     /// <summary>
     /// The gate every level passes before it can be scored or shipped: it must have a

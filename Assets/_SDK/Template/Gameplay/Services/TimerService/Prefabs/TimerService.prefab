@@ -43,7 +43,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 603becbcdc130a049aed227e86e5a73f, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ASTeams.Base.Gameplay.TimerService
+  m_EditorClassIdentifier: Assembly-CSharp::AirlinePop.Base.Gameplay.TimerService
   timeUpLoseSprite: {fileID: 21300000, guid: 9ad2bf1891696c4409dffe0c6f284298, type: 3}
   timeUpLoseText: TIME UP!
   reviveAddTimeSprite: {fileID: 21300000, guid: 9ad2bf1891696c4409dffe0c6f284298, type: 3}

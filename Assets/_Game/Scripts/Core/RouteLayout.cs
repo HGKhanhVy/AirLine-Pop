@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace ASTeams.SingleLine.Core
+namespace AirlinePop.SingleLine.Core
 {
     /// <summary>
     /// Lays the whole campaign out as one flight route climbing up the map.

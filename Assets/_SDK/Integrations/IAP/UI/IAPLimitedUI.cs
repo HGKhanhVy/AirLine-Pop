@@ -4,7 +4,7 @@ using System;
 using UnityEngine.UI;
 using DG.Tweening;
 
-namespace ASTeams.Base.IAP
+namespace AirlinePop.Base.IAP
 {
     public class IAPLimitedUI : MonoBehaviour
     {

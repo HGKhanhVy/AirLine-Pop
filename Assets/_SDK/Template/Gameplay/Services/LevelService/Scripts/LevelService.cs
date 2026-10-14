@@ -1,9 +1,9 @@
 ﻿using System;
-using ASTeams.Base.Data;
-using ASTeams.Base.Level;
+using AirlinePop.Base.Data;
+using AirlinePop.Base.Level;
 using UnityEngine;
 
-namespace ASTeams.Base.Gameplay
+namespace AirlinePop.Base.Gameplay
 {
     /// <summary>
     /// Service version of LevelController (drag-drop, no Singleton).

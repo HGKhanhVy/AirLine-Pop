@@ -1,6 +1,6 @@
 using System;
 
-namespace ASTeams.SingleLine.Core
+namespace AirlinePop.SingleLine.Core
 {
     /// <summary>One piece of player-facing text, written in each language the game supports.</summary>
     [Serializable]

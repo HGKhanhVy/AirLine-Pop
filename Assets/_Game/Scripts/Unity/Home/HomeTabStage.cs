@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>Where the camera goes and which panel shows for one Home tab.</summary>
     [Serializable]

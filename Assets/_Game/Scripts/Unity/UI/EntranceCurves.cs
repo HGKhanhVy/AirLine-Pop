@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>
     /// The motion things make as they arrive on screen.

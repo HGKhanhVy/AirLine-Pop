@@ -1,7 +1,7 @@
 using TMPro;
 using UnityEngine;
 
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>
     /// The title of a chapter on the route map: "Chapter 2 · Japan", over the start of the

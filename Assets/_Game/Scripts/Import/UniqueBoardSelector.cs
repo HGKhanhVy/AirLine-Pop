@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using ASTeams.SingleLine.Core;
+using AirlinePop.SingleLine.Core;
 
-namespace ASTeams.SingleLine.Import
+namespace AirlinePop.SingleLine.Import
 {
     /// <summary>
     /// Collapses rotations and mirrors so the pool holds each board shape once. This is

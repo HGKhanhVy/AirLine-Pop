@@ -1,7 +1,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace ASTeams.SingleLine.Unity.EditorTools
+namespace AirlinePop.SingleLine.Unity.EditorTools
 {
     /// <summary>
     /// Creates the accessories regulars unlock with loyalty and their catalog, from the art

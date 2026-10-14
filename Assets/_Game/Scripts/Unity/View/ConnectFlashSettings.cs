@@ -1,4 +1,4 @@
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     public readonly struct ConnectFlashSettings
     {

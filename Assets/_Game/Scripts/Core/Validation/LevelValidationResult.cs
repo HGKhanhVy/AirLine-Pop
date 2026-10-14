@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace ASTeams.SingleLine.Core
+namespace AirlinePop.SingleLine.Core
 {
     /// <summary>
     /// Outcome of validating one level. Carries every issue found rather than stopping

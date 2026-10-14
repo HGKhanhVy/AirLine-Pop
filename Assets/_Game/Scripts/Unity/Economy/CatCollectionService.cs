@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
-using ASTeams.SingleLine.Core;
+using AirlinePop.SingleLine.Core;
 
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     public sealed class CatCollectionService : ICatCollectionService
     {

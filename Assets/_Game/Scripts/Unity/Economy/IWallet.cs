@@ -1,6 +1,6 @@
 using System;
 
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>The coin balance, read-only; spending goes through the services that sell things.</summary>
     public interface IWallet

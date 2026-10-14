@@ -1,11 +1,11 @@
 using System.Collections;
-using ASTeams.Base;
-using ASTeams.Base.UI;
+using AirlinePop.Base;
+using AirlinePop.Base.UI;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
 
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>
     /// The win screen GDD 9.1 asks for: celebration, reward, next.

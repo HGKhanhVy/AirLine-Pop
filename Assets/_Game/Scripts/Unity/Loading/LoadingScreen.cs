@@ -1,7 +1,7 @@
-using ASTeams.Base.UI;
+using AirlinePop.Base.UI;
 using UnityEngine;
 
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>
     /// The fun screen on the scene change overlay: follows the SDK's scene controller and

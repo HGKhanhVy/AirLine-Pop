@@ -1,6 +1,6 @@
 using System;
 
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>
     /// Keeps the daily gifts in the cats' own saves: the day each one last brought a gift.

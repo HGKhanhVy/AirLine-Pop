@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace ASTeams.Base.Level
+namespace AirlinePop.Base.Level
 {
     public enum LevleType
     {
@@ -18,7 +18,7 @@ namespace ASTeams.Base.Level
         public LevleType type;
     }
 
-    [CreateAssetMenu(fileName = "LevelConfig", menuName = "ASTeams/Level Config", order = 1)]
+    [CreateAssetMenu(fileName = "LevelConfig", menuName = "AirlinePop/Level Config", order = 1)]
     public class LevelConfigSO : ScriptableObject
     {
         public List<LevelConfig> levels = new List<LevelConfig>();

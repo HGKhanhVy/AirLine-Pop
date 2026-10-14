@@ -1,7 +1,7 @@
-using ASTeams.SingleLine.Data;
+using AirlinePop.SingleLine.Data;
 using NUnit.Framework;
 
-namespace ASTeams.SingleLine.Core.Tests
+namespace AirlinePop.SingleLine.Core.Tests
 {
     public sealed class ChapterLevelSequenceTests
     {

@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace ASTeams.SingleLine.Core
+namespace AirlinePop.SingleLine.Core
 {
     /// <summary>
     /// Checks one level against the export gate in GDD 6.4. Depends on the

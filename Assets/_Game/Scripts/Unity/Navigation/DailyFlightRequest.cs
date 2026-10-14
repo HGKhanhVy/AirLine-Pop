@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>
     /// Carries the player's choice of today's daily flight over to the gameplay scene, which

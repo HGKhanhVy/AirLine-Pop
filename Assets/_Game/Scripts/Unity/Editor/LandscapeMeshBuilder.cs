@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace ASTeams.SingleLine.Unity.EditorTools
+namespace AirlinePop.SingleLine.Unity.EditorTools
 {
     /// <summary>
     /// Builds the painted tropical sea the board sits in: deep blue water with soft curved

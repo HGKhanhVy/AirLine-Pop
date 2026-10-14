@@ -1,4 +1,4 @@
-namespace ASTeams.SingleLine.Core
+namespace AirlinePop.SingleLine.Core
 {
     /// <summary>
     /// When a cat becomes a regular of the airline. Regulars are not bought: a cat joins

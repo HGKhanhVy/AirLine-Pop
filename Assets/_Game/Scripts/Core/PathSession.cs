@@ -1,6 +1,6 @@
 using System;
 
-namespace ASTeams.SingleLine.Core
+namespace AirlinePop.SingleLine.Core
 {
     /// <summary>
     /// Runtime state of one attempt at a level: the drawn path plus the state machine

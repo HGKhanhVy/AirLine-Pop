@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>
     /// Every colour and measurement the board is drawn with.

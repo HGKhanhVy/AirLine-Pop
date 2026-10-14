@@ -1,9 +1,9 @@
 using System;
-using ASTeams.Base.Analytics;
-using ASTeams.Template;
+using AirlinePop.Base.Analytics;
+using AirlinePop.Template;
 using UnityEngine;
 
-namespace ASTeams.Base.Gameplay
+namespace AirlinePop.Base.Gameplay
 {
     public enum GameState
     {

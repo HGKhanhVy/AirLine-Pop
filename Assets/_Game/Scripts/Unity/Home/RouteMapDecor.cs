@@ -1,9 +1,9 @@
 using System;
-using ASTeams.SingleLine.Core;
+using AirlinePop.SingleLine.Core;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>
     /// What fills the sky around the route: clouds all the way up, and between two airports

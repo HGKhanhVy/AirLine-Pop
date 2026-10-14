@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>Everything the win card says about the flight that just took off.</summary>
     public readonly struct WinFlightSummary

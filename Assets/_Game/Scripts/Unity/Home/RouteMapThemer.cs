@@ -1,8 +1,8 @@
-using ASTeams.Base.Data;
+using AirlinePop.Base.Data;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>
     /// Dresses the route map in the theme the player wears: its sky and its gate signs.

@@ -1,9 +1,9 @@
 using UnityEngine;
 using TMPro;
 using System;
-using ASTeams.Base.UI;
-using ASTeams.Base.Data;
-namespace ASTeams.Base.IAP
+using AirlinePop.Base.UI;
+using AirlinePop.Base.Data;
+namespace AirlinePop.Base.IAP
 
 {
     public class IAPLimitedButtonUI : MonoBehaviour

@@ -1,8 +1,8 @@
 using UnityEngine;
-using ASTeams.Base.UI;
+using AirlinePop.Base.UI;
 using TMPro;
 
-namespace ASTeams.Base.UI.Template
+namespace AirlinePop.Base.UI.Template
 {
     public class UIPopupSetting : UIBasePopup
     {

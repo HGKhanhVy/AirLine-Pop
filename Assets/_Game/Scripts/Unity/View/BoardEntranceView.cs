@@ -1,9 +1,9 @@
 using System.Collections.Generic;
-using ASTeams.SingleLine.Core;
+using AirlinePop.SingleLine.Core;
 using DG.Tweening;
 using UnityEngine;
 
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>
     /// Opens a new level by growing its squares out of nothing in a ripple that starts at

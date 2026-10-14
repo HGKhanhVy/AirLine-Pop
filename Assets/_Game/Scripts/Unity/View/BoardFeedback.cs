@@ -1,10 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
-using ASTeams.SingleLine.Core;
+using AirlinePop.SingleLine.Core;
 using DG.Tweening;
 using UnityEngine;
 
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>
     /// The board's reactions: a shake and a pulse when the player runs out of moves, and

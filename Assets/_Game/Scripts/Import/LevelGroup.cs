@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using ASTeams.SingleLine.Core;
+using AirlinePop.SingleLine.Core;
 
-namespace ASTeams.SingleLine.Import
+namespace AirlinePop.SingleLine.Import
 {
     /// <summary>
     /// One board shape and every file in the corpus that turned out to be a rotation or

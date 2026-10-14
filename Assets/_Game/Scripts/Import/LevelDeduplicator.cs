@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
-using ASTeams.SingleLine.Core;
+using AirlinePop.SingleLine.Core;
 
-namespace ASTeams.SingleLine.Import
+namespace AirlinePop.SingleLine.Import
 {
     /// <summary>
     /// Collapses a corpus down to one level per board shape. Across the 1059 ripped

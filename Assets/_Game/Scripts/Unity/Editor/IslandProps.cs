@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace ASTeams.SingleLine.Unity.EditorTools
+namespace AirlinePop.SingleLine.Unity.EditorTools
 {
     /// <summary>
     /// The kit the islands and the grass squares are dressed with, in the painted low poly

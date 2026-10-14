@@ -1,6 +1,6 @@
 using System;
 
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>
     /// One special flight a day, the same for everyone on that date. Flying it pays coins, a

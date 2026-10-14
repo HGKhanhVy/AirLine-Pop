@@ -1,4 +1,4 @@
-namespace ASTeams.SingleLine.Core
+namespace AirlinePop.SingleLine.Core
 {
     /// <summary>
     /// Outcome of a single input step. Rejected is a normal, non-destructive

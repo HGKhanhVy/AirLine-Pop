@@ -1,4 +1,4 @@
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>What a cat is doing on its own (GDD 4 behaviour table).</summary>
     public enum CatActivity

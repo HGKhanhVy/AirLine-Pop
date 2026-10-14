@@ -5,7 +5,7 @@ using System.Globalization;
 using System.Linq;
 using UnityEngine;
 
-namespace ASTeams.Base
+namespace AirlinePop.Base
 {
     public class GameUtils 
     {

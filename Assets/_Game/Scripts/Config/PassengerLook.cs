@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>One way a waiting cat can look: sitting, and happy as it hops aboard.</summary>
     [Serializable]

@@ -1,4 +1,4 @@
-namespace ASTeams.SingleLine.Data
+namespace AirlinePop.SingleLine.Data
 {
     /// <summary>
     /// Derives the level id straight from the numbering rule, so a scene opened on its

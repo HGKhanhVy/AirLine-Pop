@@ -1,4 +1,4 @@
-namespace ASTeams.SingleLine.Import
+namespace AirlinePop.SingleLine.Import
 {
     /// <summary>
     /// Raw measurements of one level, before they are weighed against the rest of the

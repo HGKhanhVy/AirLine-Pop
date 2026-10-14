@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using System.IO;
-using ASTeams.SingleLine.Data;
-using ASTeams.SingleLine.Import;
+using AirlinePop.SingleLine.Data;
+using AirlinePop.SingleLine.Import;
 using NUnit.Framework;
 using UnityEngine;
 
-namespace ASTeams.SingleLine.Core.Tests
+namespace AirlinePop.SingleLine.Core.Tests
 {
     public sealed class ShippedCampaignTests
     {
@@ -13,21 +13,17 @@ namespace ASTeams.SingleLine.Core.Tests
         private static readonly ChapterLayout Layout = ChapterLayout.FullRoute;
 
         /// <summary>
-        /// Onboarding grows the board from the smallest the pool holds, a three cell row.
-        /// Checking the shape rather than the source id keeps the test meaningful after an
-        /// export, which renames every level to its campaign id.
+        /// Onboarding opens on a three square board, the smallest the generator draws for it.
+        /// Checking the size rather than an id keeps the test meaningful after an export, which
+        /// renames every level to its campaign id.
         /// </summary>
         [Test]
-        public void TheCampaignOpensOnTheSmallestReferenceBoard()
+        public void TheCampaignOpensOnAThreeSquareBoard()
         {
             List<LevelData> first = ReadChapter("ch01");
-
-            Assert.That(first[0].Grid.Width, Is.EqualTo(3));
-            Assert.That(first[0].Grid.Height, Is.EqualTo(1));
             Assert.That(first[0].ActiveCellCount, Is.EqualTo(3));
         }
 
-        /// <summary>The onboarding flights never shrink: each board is at least as big as the last.</summary>
         [Test]
         public void TheOpeningLevelsGrowStepByStep()
         {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
-using ASTeams.Base.Data;
+using AirlinePop.Base.Data;
 
 [Serializable]
 public class BoosterConfig
@@ -31,7 +31,7 @@ public enum BoosterUseMode
     Interactive
 }
 
-[CreateAssetMenu(fileName = "BoosterConfig", menuName = "ASTeams/BoosterConfig")]
+[CreateAssetMenu(fileName = "BoosterConfig", menuName = "AirlinePop/BoosterConfig")]
 public class BoosterConfigSO : ScriptableObject
 {
     [SerializeField] public List<BoosterConfig> boosters = new List<BoosterConfig>();

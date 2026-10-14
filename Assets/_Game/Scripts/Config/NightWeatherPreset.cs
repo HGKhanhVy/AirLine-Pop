@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>
     /// One kind of weather a night flight can fly through: how thick the mist is, how hard

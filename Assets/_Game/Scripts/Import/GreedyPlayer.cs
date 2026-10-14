@@ -1,7 +1,7 @@
 using System;
-using ASTeams.SingleLine.Core;
+using AirlinePop.SingleLine.Core;
 
-namespace ASTeams.SingleLine.Import
+namespace AirlinePop.SingleLine.Import
 {
     /// <summary>
     /// Plays a level through the real <see cref="PathSession"/> using one fixed

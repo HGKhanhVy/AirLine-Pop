@@ -1,6 +1,6 @@
-using ASTeams.SingleLine.Core;
+using AirlinePop.SingleLine.Core;
 
-namespace ASTeams.SingleLine.Import
+namespace AirlinePop.SingleLine.Import
 {
     /// <summary>
     /// Outcome of parsing one level file pair. Carries the diagnostics the batch

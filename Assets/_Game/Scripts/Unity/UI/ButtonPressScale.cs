@@ -2,7 +2,7 @@ using DG.Tweening;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>Squashes a button while held and springs it back on release.</summary>
     public sealed class ButtonPressScale : MonoBehaviour, IPointerDownHandler, IPointerUpHandler

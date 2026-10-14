@@ -1,10 +1,10 @@
 using System.Collections.Generic;
-using ASTeams.SingleLine.Core;
-using ASTeams.SingleLine.Import;
+using AirlinePop.SingleLine.Core;
+using AirlinePop.SingleLine.Import;
 using UnityEditor;
 using UnityEngine;
 
-namespace ASTeams.SingleLine.Editor
+namespace AirlinePop.SingleLine.Editor
 {
     /// <summary>
     /// One window that runs the whole import and shows what it did, so producing the

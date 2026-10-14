@@ -1,4 +1,4 @@
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>
     /// Gives a new save what GDD 6 promises on day one: the free starter cat, placed in

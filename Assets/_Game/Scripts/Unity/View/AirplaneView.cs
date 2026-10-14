@@ -1,7 +1,7 @@
-using ASTeams.SingleLine.Core;
+using AirlinePop.SingleLine.Core;
 using UnityEngine;
 
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>
     /// The airplane is the player's pointer. At rest it stands on the runway square at the

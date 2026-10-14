@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>Free-roam timings and movement for cats (GDD 4, 11). Playtest starting points.</summary>
     [CreateAssetMenu(menuName = "AirLine Pop/Cat Behaviour Config", fileName = "CatBehaviourConfig")]

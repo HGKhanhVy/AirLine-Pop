@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>Repaints every face that samples <see cref="From"/> with <see cref="To"/>.</summary>
     [Serializable]

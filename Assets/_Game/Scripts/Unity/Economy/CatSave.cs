@@ -1,6 +1,6 @@
 using System;
 
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>
     /// Saved state of one owned cat (GDD 12: catId, name, bondXP, interactionDay,

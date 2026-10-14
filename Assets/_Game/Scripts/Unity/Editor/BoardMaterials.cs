@@ -2,7 +2,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.Rendering;
 
-namespace ASTeams.SingleLine.Unity.EditorTools
+namespace AirlinePop.SingleLine.Unity.EditorTools
 {
     /// <summary>The materials the board's 3D models are drawn with.</summary>
     public static class BoardMaterials

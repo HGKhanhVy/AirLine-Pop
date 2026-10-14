@@ -1,6 +1,6 @@
 using System;
 
-namespace ASTeams.SingleLine.Import
+namespace AirlinePop.SingleLine.Import
 {
     /// <summary>
     /// Shape of the difficulty curve the campaign is built onto.

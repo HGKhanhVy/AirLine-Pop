@@ -3,7 +3,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace ASTeams.SingleLine.Unity.EditorTools
+namespace AirlinePop.SingleLine.Unity.EditorTools
 {
     /// <summary>
     /// The gameplay HUD's pieces for what a landing earns on top: the notice that bills a

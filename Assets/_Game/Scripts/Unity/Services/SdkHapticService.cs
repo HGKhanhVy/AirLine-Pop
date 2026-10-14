@@ -1,6 +1,6 @@
-using ASTeams.Base;
+using AirlinePop.Base;
 
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>
     /// Haptics through the SDK's <see cref="VibrationController"/>.

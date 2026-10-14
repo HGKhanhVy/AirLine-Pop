@@ -1,7 +1,7 @@
 using System;
-using ASTeams.Base.Ads;
+using AirlinePop.Base.Ads;
 
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>
     /// Rewarded ads through the SDK's AdsController.

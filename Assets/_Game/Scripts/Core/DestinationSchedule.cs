@@ -1,6 +1,6 @@
 using System;
 
-namespace ASTeams.SingleLine.Core
+namespace AirlinePop.SingleLine.Core
 {
     /// <summary>
     /// Which destination each flight goes to, and how far along each postcard is.

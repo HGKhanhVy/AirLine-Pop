@@ -1,4 +1,4 @@
-namespace ASTeams.SingleLine.Core
+namespace AirlinePop.SingleLine.Core
 {
     /// <summary>
     /// The four orthogonal step directions (rule MOV-01 forbids diagonals).

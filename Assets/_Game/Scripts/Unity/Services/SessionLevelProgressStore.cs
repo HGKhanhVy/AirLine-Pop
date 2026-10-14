@@ -1,6 +1,6 @@
-using ASTeams.SingleLine.Data;
+using AirlinePop.SingleLine.Data;
 
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     public sealed class SessionLevelProgressStore : ILevelProgressStore
     {

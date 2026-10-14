@@ -1,9 +1,9 @@
-using ASTeams.Base;
-using ASTeams.Base.Data;
-using ASTeams.Base.UI;
+using AirlinePop.Base;
+using AirlinePop.Base.Data;
+using AirlinePop.Base.UI;
 using UnityEngine;
 
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>
     /// Composition root of the gameplay HUD: builds the settings and navigation services

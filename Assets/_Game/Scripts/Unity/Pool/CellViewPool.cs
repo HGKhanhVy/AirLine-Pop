@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>
     /// Recycles the squares a board is drawn from.

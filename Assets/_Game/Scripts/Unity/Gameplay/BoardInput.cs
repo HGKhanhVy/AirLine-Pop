@@ -9,7 +9,7 @@ using UnityEngine.InputSystem.Controls;
 // be named explicitly.
 using TouchPhase = UnityEngine.InputSystem.TouchPhase;
 
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>
     /// Turns a finger or a mouse into a stream of cell indices.

@@ -600,7 +600,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 169b04e5996316340b489b89220e9fee, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ASTeams.Base.UI.UIBaseButton
+  m_EditorClassIdentifier: Assembly-CSharp::AirlinePop.Base.UI.UIBaseButton
   onClick:
     m_PersistentCalls:
       m_Calls: []
@@ -923,7 +923,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e19da966f19319940bfc9e9c7cd51b89, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ASTeams.Base.Gameplay.BoosterUIBinder
+  m_EditorClassIdentifier: Assembly-CSharp::AirlinePop.Base.Gameplay.BoosterUIBinder
   buttons:
   - {fileID: 919871782830699498}
   guideView: {fileID: 7616911085259502528}
@@ -1097,7 +1097,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 320bf88207e6d4242ac9eb08f6299ec3, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ASTeams.Base.Gameplay.UIBoosterGuide
+  m_EditorClassIdentifier: Assembly-CSharp::AirlinePop.Base.Gameplay.UIBoosterGuide
   icon: {fileID: 3993444190980712324}
   titleTxt: {fileID: 5424352987628322617}
   descTxt: {fileID: 8880591502317034052}
@@ -1194,7 +1194,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bdcda82239031244a9ac2ea1fe92d8f5, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ASTeams.Base.Gameplay.BoosterArmedRouter
+  m_EditorClassIdentifier: Assembly-CSharp::AirlinePop.Base.Gameplay.BoosterArmedRouter
   actions: []
 --- !u!1 &7389865507609953554
 GameObject:
@@ -1243,7 +1243,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d7daa543320f787459826522486feeb9, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ASTeams.Base.Gameplay.BoosterInstantRouter
+  m_EditorClassIdentifier: Assembly-CSharp::AirlinePop.Base.Gameplay.BoosterInstantRouter
   actions: []
 --- !u!1001 &8169099675696975876
 PrefabInstance:

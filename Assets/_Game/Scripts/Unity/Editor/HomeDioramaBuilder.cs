@@ -1,7 +1,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace ASTeams.SingleLine.Unity.EditorTools
+namespace AirlinePop.SingleLine.Unity.EditorTools
 {
     /// <summary>
     /// Builds the Home airport (GDD 9: "3D airport in the middle") and the cat room in the

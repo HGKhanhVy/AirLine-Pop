@@ -1,7 +1,7 @@
-using ASTeams.SingleLine.Core;
+using AirlinePop.SingleLine.Core;
 using UnityEngine;
 
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>
     /// Decides when the HUD notice speaks: a storm flight is billed as it opens, once the card

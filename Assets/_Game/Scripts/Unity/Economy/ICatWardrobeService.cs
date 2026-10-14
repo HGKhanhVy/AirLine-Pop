@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>The accessories regulars can wear, which of them a cat has unlocked and what it has on.</summary>
     public interface ICatWardrobeService

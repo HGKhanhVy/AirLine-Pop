@@ -9,5 +9,5 @@
     The assembly is a dozen small classes, so preserving all of it costs almost nothing and
     survives someone adding a field to the DTO later.
   -->
-  <assembly fullname="ASTeams.SingleLine.Data" preserve="all"/>
+  <assembly fullname="AirlinePop.SingleLine.Data" preserve="all"/>
 </linker>

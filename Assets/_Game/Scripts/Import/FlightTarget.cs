@@ -1,6 +1,6 @@
 using System;
 
-namespace ASTeams.SingleLine.Import
+namespace AirlinePop.SingleLine.Import
 {
     /// <summary>A route length and a count of wrong turns per square, see <see cref="FlightTargets"/>.</summary>
     public readonly struct FlightTarget

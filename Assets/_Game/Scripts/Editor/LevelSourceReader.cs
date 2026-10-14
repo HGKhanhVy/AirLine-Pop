@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.IO;
-using ASTeams.SingleLine.Import;
+using AirlinePop.SingleLine.Import;
 
-namespace ASTeams.SingleLine.Editor
+namespace AirlinePop.SingleLine.Editor
 {
     /// <summary>
     /// Collects the reference game's level files off disk into the shape the pipeline

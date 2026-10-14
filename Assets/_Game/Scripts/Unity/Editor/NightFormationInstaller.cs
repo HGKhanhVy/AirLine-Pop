@@ -1,7 +1,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace ASTeams.SingleLine.Unity.EditorTools
+namespace AirlinePop.SingleLine.Unity.EditorTools
 {
     /// <summary>
     /// Fits the gameplay prefab for night and formation flights: a wingman with its own

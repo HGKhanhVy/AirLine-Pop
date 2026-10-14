@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>
     /// The reward card after a win (GDD 3, 9): the cat that belongs to the moment, what the
@@ -101,7 +101,7 @@ namespace ASTeams.SingleLine.Unity
                     return Localization.Format("win.arrivalTitle", flight.ArrivalName) + Detail(PostcardOr(flight, "win.arrivalDetail"));
 
                 case WinMilestone.ChapterEnd:
-                    int chapter = (flight.FlightNumber - 1) / ASTeams.SingleLine.Data.CampaignLevelAddress.LevelsPerChapter + 1;
+                    int chapter = (flight.FlightNumber - 1) / AirlinePop.SingleLine.Data.CampaignLevelAddress.LevelsPerChapter + 1;
                     return Localization.Format("win.chapterTitle", chapter) + Detail(PostcardOr(flight, "win.chapterDetail"));
             }
 

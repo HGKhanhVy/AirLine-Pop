@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
-using ASTeams.SingleLine.Core;
+using AirlinePop.SingleLine.Core;
 using NUnit.Framework;
 
-namespace ASTeams.SingleLine.Core.Tests
+namespace AirlinePop.SingleLine.Core.Tests
 {
     public sealed class ContinuationHintServiceTests
     {

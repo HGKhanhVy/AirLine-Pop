@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 using System.Drawing;
-using ASTeams.Base.Ads;
+using AirlinePop.Base.Ads;
 
 
 #if ADS

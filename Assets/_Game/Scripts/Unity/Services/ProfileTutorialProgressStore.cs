@@ -1,6 +1,6 @@
-using ASTeams.Base.Data;
+using AirlinePop.Base.Data;
 
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>
     /// Tutorial steps kept in the free-form data slot of the saved profile, beside the

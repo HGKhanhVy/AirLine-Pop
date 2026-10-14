@@ -1,9 +1,9 @@
 using System;
 using UnityEngine;
-using ASTeams.Base.UI;
-using ASTeams.Base.Data;
+using AirlinePop.Base.UI;
+using AirlinePop.Base.Data;
 
-namespace ASTeams.Base.Gameplay
+namespace AirlinePop.Base.Gameplay
 {
     public sealed class FeatureUnlockService : GameplayServiceBehaviour
     {

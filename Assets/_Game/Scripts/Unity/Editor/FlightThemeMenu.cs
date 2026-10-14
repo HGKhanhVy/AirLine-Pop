@@ -1,6 +1,6 @@
 using UnityEditor;
 
-namespace ASTeams.SingleLine.Unity.EditorTools
+namespace AirlinePop.SingleLine.Unity.EditorTools
 {
     /// <summary>One menu entry that applies the whole flight look.</summary>
     public static class FlightThemeMenu

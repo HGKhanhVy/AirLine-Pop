@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
-using ASTeams.Base.Data;
+using AirlinePop.Base.Data;
 
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>Liveries kept in the saved profile, the same way board skins are.</summary>
     public sealed class ProfileLiveryService : ILiveryService

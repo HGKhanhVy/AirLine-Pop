@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
-using ASTeams.Base.Data;
-using ASTeams.Base.UI;
-using ASTeams.Base.UI.Template;
+using AirlinePop.Base.Data;
+using AirlinePop.Base.UI;
+using AirlinePop.Base.UI.Template;
 
-namespace ASTeams.Base.Gameplay
+namespace AirlinePop.Base.Gameplay
 {
     public class BoosterService : GameplayServiceBehaviour
     {

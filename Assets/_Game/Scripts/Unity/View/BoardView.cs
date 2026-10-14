@@ -1,11 +1,11 @@
 using System.Collections.Generic;
-using ASTeams.SingleLine.Core;
+using AirlinePop.SingleLine.Core;
 using UnityEngine;
 
 // UnityEngine ships its own Grid, so the board geometry type has to be named explicitly.
-using Grid = ASTeams.SingleLine.Core.Grid;
+using Grid = AirlinePop.SingleLine.Core.Grid;
 
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>
     /// Draws a board and answers where things are on it.

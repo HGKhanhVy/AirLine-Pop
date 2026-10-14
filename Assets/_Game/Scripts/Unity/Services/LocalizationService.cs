@@ -1,8 +1,8 @@
 using System;
-using ASTeams.SingleLine.Core;
+using AirlinePop.SingleLine.Core;
 using UnityEngine;
 
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>
     /// Text in the player's chosen language. The choice is kept in PlayerPrefs; the first

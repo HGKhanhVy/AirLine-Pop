@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>What one slot of the wardrobe picker shows.</summary>
     public readonly struct WardrobeSlotModel

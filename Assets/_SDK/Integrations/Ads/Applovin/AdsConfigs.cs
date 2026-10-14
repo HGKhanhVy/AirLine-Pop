@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace ASTeams.Base.Ads
+namespace AirlinePop.Base.Ads
 {
     public enum AdBannerType
     {
@@ -16,7 +16,7 @@ namespace ASTeams.Base.Ads
         Bottom,
     }
 
-    [CreateAssetMenu(menuName = "ASTeams/AdsConfigs", fileName = "AdsConfigs")]
+    [CreateAssetMenu(menuName = "AirlinePop/AdsConfigs", fileName = "AdsConfigs")]
     public class AdsConfigs : ScriptableObject
     {
         public List<string> testDeviceIds = new List<string> { "96e23e80653bb28980d3f40beb58915c" };

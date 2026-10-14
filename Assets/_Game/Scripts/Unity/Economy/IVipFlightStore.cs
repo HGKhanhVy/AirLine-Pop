@@ -1,4 +1,4 @@
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>The VIP flights the player has landed, and when the last one was.</summary>
     public interface IVipFlightStore

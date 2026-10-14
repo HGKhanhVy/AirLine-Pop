@@ -1,7 +1,7 @@
-using ASTeams.Base.Assets;
+using AirlinePop.Base.Assets;
 using UnityEngine;
 
-namespace ASTeams.Base
+namespace AirlinePop.Base
 {
     public sealed class MaterialColorController : MonoSingleton<MaterialColorController>
     {

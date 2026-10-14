@@ -1,10 +1,10 @@
 using System;
-using ASTeams.SingleLine.Core;
+using AirlinePop.SingleLine.Core;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>
     /// The flight route map tab: the whole campaign as the airline's route, gate after gate,

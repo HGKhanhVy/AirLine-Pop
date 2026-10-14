@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
-using ASTeams.SingleLine.Core;
+using AirlinePop.SingleLine.Core;
 
-namespace ASTeams.SingleLine.Import
+namespace AirlinePop.SingleLine.Import
 {
     /// <summary>
     /// Draws new boards by flying a random route over an empty grid and keeping the squares it

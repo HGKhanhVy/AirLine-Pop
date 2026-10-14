@@ -11,7 +11,7 @@ using AppsFlyerSDK;
 
 using UnityEngine.Purchasing.Security;
 
-namespace ASTeams.Base.IAP
+namespace AirlinePop.Base.IAP
 {
     public class IAPController : MonoSingleton<IAPController>, IStoreListener
     {

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace ASTeams.Base.Gameplay
+namespace AirlinePop.Base.Gameplay
 {
     public enum FailType
     {
@@ -28,7 +28,7 @@ namespace ASTeams.Base.Gameplay
         public string reviveDescription = "Add 30 seconds to keep playing";
     }
 
-    [CreateAssetMenu(fileName = "FailTypeSO", menuName = "ASTeams/Gameplay/Fail Type Config")]
+    [CreateAssetMenu(fileName = "FailTypeSO", menuName = "AirlinePop/Gameplay/Fail Type Config")]
     public class FailTypeSO : ScriptableObject
     {
         [SerializeField] private List<FailTypeConfig> configs = new();

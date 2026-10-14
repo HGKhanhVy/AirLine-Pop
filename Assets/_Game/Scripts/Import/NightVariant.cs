@@ -1,7 +1,7 @@
 using System;
-using ASTeams.SingleLine.Core;
+using AirlinePop.SingleLine.Core;
 
-namespace ASTeams.SingleLine.Import
+namespace AirlinePop.SingleLine.Import
 {
     /// <summary>
     /// Makes a flight a night flight: the route is shown once, then the board goes dark and

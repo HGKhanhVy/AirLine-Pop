@@ -1,14 +1,14 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using ASTeams.Base;
-using ASTeams.Base.Analytics;
-using ASTeams.Base.Data;
-using ASTeams.Base.UI;
-using ASTeams.Base.Gameplay;
-using ASTeams.Base.UI.Template;
+using AirlinePop.Base;
+using AirlinePop.Base.Analytics;
+using AirlinePop.Base.Data;
+using AirlinePop.Base.UI;
+using AirlinePop.Base.Gameplay;
+using AirlinePop.Base.UI.Template;
 
-namespace ASTeams.Template
+namespace AirlinePop.Template
 {
     public class GameResultHandleService : GameplayServiceBehaviour
     {

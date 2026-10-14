@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using ASTeams.SingleLine.Core;
-using ASTeams.SingleLine.Data;
-using ASTeams.SingleLine.Import;
+using AirlinePop.SingleLine.Core;
+using AirlinePop.SingleLine.Data;
+using AirlinePop.SingleLine.Import;
 
 namespace CorpusCheck
 {

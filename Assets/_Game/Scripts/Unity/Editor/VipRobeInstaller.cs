@@ -1,7 +1,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace ASTeams.SingleLine.Unity.EditorTools
+namespace AirlinePop.SingleLine.Unity.EditorTools
 {
     /// <summary>
     /// Dresses the VIP guest as His Majesty: a crimson cape over his yellow robe, hung from

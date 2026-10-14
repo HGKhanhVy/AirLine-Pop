@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>
     /// What the rewards on top of a landing tell the screens: the extra lines a win card

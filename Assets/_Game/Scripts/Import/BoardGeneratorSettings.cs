@@ -1,4 +1,4 @@
-namespace ASTeams.SingleLine.Import
+namespace AirlinePop.SingleLine.Import
 {
     /// <summary>The grid and the limits one batch of <see cref="BoardGenerator"/> boards is drawn within.</summary>
     public readonly struct BoardGeneratorSettings

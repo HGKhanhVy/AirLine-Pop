@@ -1,9 +1,9 @@
-using ASTeams.Base.Data;
+using AirlinePop.Base.Data;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace ASTeams.Template
+namespace AirlinePop.Template
 {
     public class UIRewardIcon : MonoBehaviour
     {

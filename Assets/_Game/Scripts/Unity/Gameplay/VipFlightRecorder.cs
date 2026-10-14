@@ -1,8 +1,8 @@
-using ASTeams.Base.Data;
-using ASTeams.SingleLine.Core;
+using AirlinePop.Base.Data;
+using AirlinePop.SingleLine.Core;
 using UnityEngine;
 
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>Notes each VIP flight the player lands, for the gold seal on its stamp and the VIP guest's visit.</summary>
     public sealed class VipFlightRecorder : MonoBehaviour

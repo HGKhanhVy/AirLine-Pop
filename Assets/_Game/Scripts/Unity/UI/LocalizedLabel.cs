@@ -1,7 +1,7 @@
 using TMPro;
 using UnityEngine;
 
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>A label whose fixed text follows the chosen language, such as a button's name.</summary>
     public sealed class LocalizedLabel : MonoBehaviour

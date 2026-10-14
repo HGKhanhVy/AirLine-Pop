@@ -1,11 +1,11 @@
 ﻿using System;
-using ASTeams.Base.Gameplay;
-using ASTeams.Base.UI;
+using AirlinePop.Base.Gameplay;
+using AirlinePop.Base.UI;
 using UnityEngine;
 using DG.Tweening;
 using UnityEngine.UI;
 using TMPro;
-using ASTeams.Base;
+using AirlinePop.Base;
 
 public class UIGameFailPopup : UIBasePopup
 {

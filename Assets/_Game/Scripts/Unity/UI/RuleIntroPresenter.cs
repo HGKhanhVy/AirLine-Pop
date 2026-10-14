@@ -1,8 +1,8 @@
-using ASTeams.Base.Data;
-using ASTeams.SingleLine.Core;
+using AirlinePop.Base.Data;
+using AirlinePop.SingleLine.Core;
 using UnityEngine;
 
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>
     /// The first time a level brings in a rule the player has not met, explains it on a

@@ -1,4 +1,4 @@
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>What the cat menu shows about one regular right now.</summary>
     public readonly struct CatMenuModel

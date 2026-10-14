@@ -1,8 +1,8 @@
 #if IAP
-using ASTeams.Base.Ads;
+using AirlinePop.Base.Ads;
 using UnityEngine;
 
-namespace ASTeams.Base.IAP
+namespace AirlinePop.Base.IAP
 {
     public class IAPRemoteAdsUI : MonoBehaviour
     {

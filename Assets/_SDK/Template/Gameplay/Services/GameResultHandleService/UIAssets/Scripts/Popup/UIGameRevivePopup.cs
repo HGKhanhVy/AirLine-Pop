@@ -1,16 +1,16 @@
 using System;
-using ASTeams.Base;
-using ASTeams.Base.Ads;
-using ASTeams.Base.Data;
-using ASTeams.Base.Gameplay; // chứa IRevivePopupReceiver + RevivePopupData + FailType
-using ASTeams.Base.UI;
-using ASTeams.Base.UI.Template;
+using AirlinePop.Base;
+using AirlinePop.Base.Ads;
+using AirlinePop.Base.Data;
+using AirlinePop.Base.Gameplay; // chứa IRevivePopupReceiver + RevivePopupData + FailType
+using AirlinePop.Base.UI;
+using AirlinePop.Base.UI.Template;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-namespace ASTeams.Template
+namespace AirlinePop.Template
 {
     public class UIGameRevivePopup : UIBasePopup
     {

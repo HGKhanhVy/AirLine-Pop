@@ -1,15 +1,15 @@
 ﻿using Cysharp.Threading.Tasks;
 using DG.Tweening;
-using ASTeams.Base.Data;
-using ASTeams.Base.UI;
-using ASTeams.Base.UI.Template;
+using AirlinePop.Base.Data;
+using AirlinePop.Base.UI;
+using AirlinePop.Base.UI.Template;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SocialPlatforms.Impl;
 using UnityEngine.UI;
 
-namespace ASTeams.Base.Level
+namespace AirlinePop.Base.Level
 {
     public class UILevelButton : MonoBehaviour
     {

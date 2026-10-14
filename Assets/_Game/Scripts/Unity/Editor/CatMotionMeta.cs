@@ -1,6 +1,6 @@
 using System;
 
-namespace ASTeams.SingleLine.Unity.EditorTools
+namespace AirlinePop.SingleLine.Unity.EditorTools
 {
     /// <summary>
     /// The cat_motion.json written by Tools/flat_art/import_craftpix_cats.py: frame size and

@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>Which cats the player owns, which ones live in the room, and buying more.</summary>
     public interface ICatCollectionService

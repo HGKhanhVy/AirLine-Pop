@@ -5,9 +5,9 @@ using UnityEditor;
 #endif
 using UnityEngine;
 
-namespace ASTeams.Base.UI
+namespace AirlinePop.Base.UI
 {
-    [CreateAssetMenu(menuName = "ASTeams/UIPopupConfig", fileName = "UIPopupConfig")]
+    [CreateAssetMenu(menuName = "AirlinePop/UIPopupConfig", fileName = "UIPopupConfig")]
     public class UIPopupConfig : ScriptableObject
     {
         public List<UIBasePopup> popups = new List<UIBasePopup>();

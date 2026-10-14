@@ -4,7 +4,7 @@ using UnityEngine;
 using AnyThinkAds.Api;
 using AnyThinkAds.ThirdParty.LitJson;
 using UnityEngine.Events;
-using ASTeams.Base.Ads;
+using AirlinePop.Base.Ads;
 
 public class RewardVideoAdOperator : BaseAdOperator
 {

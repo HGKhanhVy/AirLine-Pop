@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace ASTeams.Base.Assets
+namespace AirlinePop.Base.Assets
 {
     public enum ColorType
     {
@@ -20,7 +20,7 @@ namespace ASTeams.Base.Assets
         Grey = 11
     }
 
-    [CreateAssetMenu(fileName = "MaterialColorDatabase", menuName = "ASTeams/Materials/Material Color Database")]
+    [CreateAssetMenu(fileName = "MaterialColorDatabase", menuName = "AirlinePop/Materials/Material Color Database")]
     public class MaterialColorDatabaseSO : ScriptableObject
     {
         [Serializable]

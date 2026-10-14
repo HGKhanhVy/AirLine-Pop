@@ -1,7 +1,7 @@
-using ASTeams.Base.Data;
-using ASTeams.SingleLine.Core;
+using AirlinePop.Base.Data;
+using AirlinePop.SingleLine.Core;
 
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>Keeps the rules already introduced in the saved profile, beside the player's other progress.</summary>
     public sealed class ProfileRuleIntroStore : IRuleIntroStore

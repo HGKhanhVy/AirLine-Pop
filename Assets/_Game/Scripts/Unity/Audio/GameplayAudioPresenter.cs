@@ -1,8 +1,8 @@
-using ASTeams.Base;
-using ASTeams.SingleLine.Core;
+using AirlinePop.Base;
+using AirlinePop.SingleLine.Core;
 using UnityEngine;
 
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     public sealed class GameplayAudioPresenter : MonoBehaviour
     {

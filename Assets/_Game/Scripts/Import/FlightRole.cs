@@ -1,4 +1,4 @@
-namespace ASTeams.SingleLine.Import
+namespace AirlinePop.SingleLine.Import
 {
     /// <summary>The part a flight plays in its city's rhythm of ten.</summary>
     public enum FlightRole

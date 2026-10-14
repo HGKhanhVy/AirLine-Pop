@@ -1,8 +1,8 @@
-using ASTeams.Base.Data;
-using ASTeams.Base.UI;
+using AirlinePop.Base.Data;
+using AirlinePop.Base.UI;
 using UnityEngine;
 
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>
     /// Hands the player their first skin for finishing the first chapter (GDD 2): the

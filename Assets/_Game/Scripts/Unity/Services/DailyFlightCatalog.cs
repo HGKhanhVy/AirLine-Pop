@@ -1,8 +1,8 @@
 using System.Collections.Generic;
-using ASTeams.SingleLine.Core;
-using ASTeams.SingleLine.Data;
+using AirlinePop.SingleLine.Core;
+using AirlinePop.SingleLine.Data;
 
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>The daily flights shipped in their own file, apart from the campaign's chapters.</summary>
     public static class DailyFlightCatalog

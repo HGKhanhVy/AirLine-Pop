@@ -1,9 +1,9 @@
 using System;
-using ASTeams.Base.Data;
-using ASTeams.Base.Gameplay;
-using ASTeams.SingleLine.Data;
+using AirlinePop.Base.Data;
+using AirlinePop.Base.Gameplay;
+using AirlinePop.SingleLine.Data;
 
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>
     /// Keeps the campaign position in the template's <see cref="LevelService"/> so the

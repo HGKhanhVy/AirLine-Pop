@@ -1,10 +1,10 @@
 using System.Collections.Generic;
-using ASTeams.Base.Data;
-using ASTeams.SingleLine.Core;
+using AirlinePop.Base.Data;
+using AirlinePop.SingleLine.Core;
 using DG.Tweening;
 using UnityEngine;
 
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>
     /// GDD 9.3 step 1: on the first level a hand drags the solution across the real

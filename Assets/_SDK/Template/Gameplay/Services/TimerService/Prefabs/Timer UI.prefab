@@ -194,7 +194,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 77b94735be08875448114dfeebc1f7ed, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ASTeams.Base.Gameplay.UITimer
+  m_EditorClassIdentifier: Assembly-CSharp::AirlinePop.Base.Gameplay.UITimer
   timeText: {fileID: 5198207242306787425}
   fillImage: {fileID: 0}
 --- !u!1 &5980494660593792300

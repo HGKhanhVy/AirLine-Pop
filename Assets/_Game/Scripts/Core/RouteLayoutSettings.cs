@@ -1,4 +1,4 @@
-namespace ASTeams.SingleLine.Core
+namespace AirlinePop.SingleLine.Core
 {
     /// <summary>The numbers that shape the route map; every distance is in map units.</summary>
     public readonly struct RouteLayoutSettings

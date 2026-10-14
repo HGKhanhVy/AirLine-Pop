@@ -2,14 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
-using ASTeams.Base.Analytics;
-using ASTeams.Base.Data;
-using ASTeams.Base.RemoteConfigs;
-using ASTeams.Base.UI;
+using AirlinePop.Base.Analytics;
+using AirlinePop.Base.Data;
+using AirlinePop.Base.RemoteConfigs;
+using AirlinePop.Base.UI;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace ASTeams.Base
+namespace AirlinePop.Base
 {
     public class LoadingController : MonoBehaviour
     {

@@ -1,4 +1,4 @@
-namespace ASTeams.SingleLine.Import
+namespace AirlinePop.SingleLine.Import
 {
     /// <summary>
     /// How much each measured signal counts toward the final difficulty. Exposed as data

@@ -1,10 +1,10 @@
-﻿using ASTeams.Base.UI;
-using ASTeams.Base;
+﻿using AirlinePop.Base.UI;
+using AirlinePop.Base;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Events;
 using DG.Tweening;
-using ASTeams.Base.Gameplay;
+using AirlinePop.Base.Gameplay;
 
 public class UIGameSettingPanel : MonoBehaviour
 {

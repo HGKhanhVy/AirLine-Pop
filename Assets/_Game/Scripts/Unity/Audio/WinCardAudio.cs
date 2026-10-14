@@ -1,7 +1,7 @@
-using ASTeams.Base;
+using AirlinePop.Base;
 using UnityEngine;
 
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>
     /// The sound of the win card: a reward chime as it comes in, a grander one for a flight

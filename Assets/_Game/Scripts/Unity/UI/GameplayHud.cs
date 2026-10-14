@@ -1,9 +1,9 @@
-using ASTeams.SingleLine.Core;
+using AirlinePop.SingleLine.Core;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>
     /// The gameplay screen furniture: which level this is, how much of it is covered, what

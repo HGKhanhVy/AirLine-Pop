@@ -4,7 +4,7 @@ using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace ASTeams.Base.UI
+namespace AirlinePop.Base.UI
 {
     [RequireComponent(typeof(Button))]
     public class UIBaseButton : MonoBehaviour,

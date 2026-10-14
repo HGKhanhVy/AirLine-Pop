@@ -1,14 +1,14 @@
 using System;
-using ASTeams.Base.Ads;
-using ASTeams.Base.Gameplay;
-using ASTeams.Base.Data;
-using ASTeams.Base.Level;
-using ASTeams.Base.UI;
-using ASTeams.Base.UI.Template;
+using AirlinePop.Base.Ads;
+using AirlinePop.Base.Gameplay;
+using AirlinePop.Base.Data;
+using AirlinePop.Base.Level;
+using AirlinePop.Base.UI;
+using AirlinePop.Base.UI.Template;
 using TMPro;
 using UnityEngine;
 
-namespace ASTeams.Base
+namespace AirlinePop.Base
 {
     public class UIGameLosePopup : UIBasePopup
     {

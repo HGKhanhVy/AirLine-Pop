@@ -1,15 +1,15 @@
 using System.Collections.Generic;
 using System.IO;
-using ASTeams.Base.Level;
-using ASTeams.SingleLine.Core;
-using ASTeams.SingleLine.Data;
-using ASTeams.SingleLine.Editor;
+using AirlinePop.Base.Level;
+using AirlinePop.SingleLine.Core;
+using AirlinePop.SingleLine.Data;
+using AirlinePop.SingleLine.Editor;
 using UnityEditor;
 using UnityEngine;
 
 // Lives outside the importer's assembly definition on purpose: the config and the level
 // assets are MonoBehaviour side types in Assembly-CSharp, which an asmdef cannot see.
-namespace ASTeams.SingleLine.Unity.EditorTools
+namespace AirlinePop.SingleLine.Unity.EditorTools
 {
     /// <summary>
     /// Rebuilds the one config that lists every level from the exported chapter files.

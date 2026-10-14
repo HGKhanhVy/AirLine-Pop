@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace ASTeams.Base.Gameplay
+namespace AirlinePop.Base.Gameplay
 {
     public enum FeatureType
     {
@@ -28,7 +28,7 @@ namespace ASTeams.Base.Gameplay
         [TextArea] public string featureDsc = "Describe the feature here...";
     }
 
-    [CreateAssetMenu(menuName = "ASTeams/Feature/Feature Unlock", fileName = "FeatureUnlockSO")]
+    [CreateAssetMenu(menuName = "AirlinePop/Feature/Feature Unlock", fileName = "FeatureUnlockSO")]
     public class FeatureUnlockSO : ScriptableObject
     {
         public List<FeatureUnlockConfig> config = new();

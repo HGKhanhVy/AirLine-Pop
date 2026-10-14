@@ -1,6 +1,6 @@
-using ASTeams.Base.UI;
+using AirlinePop.Base.UI;
 
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>
     /// The short notices a purchase or a restore ends with, shared by the store and the

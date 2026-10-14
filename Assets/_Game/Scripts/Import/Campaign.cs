@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace ASTeams.SingleLine.Import
+namespace AirlinePop.SingleLine.Import
 {
     /// <summary>
     /// The whole ordered set of chapters an import run produced, ready to be exported.

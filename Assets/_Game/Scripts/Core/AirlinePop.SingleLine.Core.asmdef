@@ -1,6 +1,6 @@
 {
-    "name": "ASTeams.SingleLine.Core",
-    "rootNamespace": "ASTeams.SingleLine.Core",
+    "name": "AirlinePop.SingleLine.Core",
+    "rootNamespace": "AirlinePop.SingleLine.Core",
     "references": [],
     "includePlatforms": [],
     "excludePlatforms": [],

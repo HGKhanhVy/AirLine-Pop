@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>Which liveries the player owns and which one the plane wears. Saved as it changes.</summary>
     public interface ILiveryService

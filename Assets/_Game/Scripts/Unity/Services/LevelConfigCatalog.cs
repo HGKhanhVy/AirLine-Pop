@@ -1,7 +1,7 @@
-using ASTeams.Base.Level;
-using ASTeams.SingleLine.Data;
+using AirlinePop.Base.Level;
+using AirlinePop.SingleLine.Data;
 
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>
     /// Reads the campaign order out of the team's <see cref="LevelConfigSO"/>, so the

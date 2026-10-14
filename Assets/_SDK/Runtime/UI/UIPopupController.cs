@@ -1,9 +1,9 @@
-using ASTeams.Base;
+using AirlinePop.Base;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace ASTeams.Base.UI
+namespace AirlinePop.Base.UI
 {
     public class UIPopupController : MonoSingleton<UIPopupController>
     {

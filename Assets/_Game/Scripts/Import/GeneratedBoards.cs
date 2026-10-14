@@ -1,18 +1,25 @@
 using System;
 using System.Collections.Generic;
-using ASTeams.SingleLine.Core;
+using AirlinePop.SingleLine.Core;
 
-namespace ASTeams.SingleLine.Import
+namespace AirlinePop.SingleLine.Import
 {
     /// <summary>
-    /// The fresh boards the campaign draws on next to the reference packs: a batch per grid
-    /// size, some swept tidily and some wandering, plus a batch carrying overpasses, which no
-    /// reference board has. Seeded, so a rebuild draws the same boards; a board identical to
-    /// one already in the pool, turned or mirrored, is dropped.
+    /// Every board the campaign is built from: tiny ones for the first flights, a batch per
+    /// grid size, some swept tidily and some wandering, and a batch carrying overpasses. All
+    /// drawn by <see cref="BoardGenerator"/>, so the game ships no board taken from elsewhere.
+    /// Seeded, so a rebuild draws the same boards; a board identical to one already drawn,
+    /// turned or mirrored, is dropped.
     /// </summary>
     public sealed class GeneratedBoards
     {
         public const int DefaultSeed = 20261013;
+
+        /// <summary>The first flights grow from three squares to ten, so these grids are drawn whole.</summary>
+        private static readonly (int Width, int Height)[] SmallSizes =
+            { (3, 1), (4, 1), (2, 2), (3, 2), (2, 3), (4, 2), (3, 3), (2, 4), (3, 4), (4, 3), (4, 4) };
+
+        private const int SmallAttempts = 60;
 
         private static readonly (int Width, int Height)[] PlainSizes =
             { (4, 5), (5, 5), (5, 6), (6, 6), (6, 7), (6, 8), (7, 7), (7, 8) };
@@ -47,6 +54,12 @@ namespace ASTeams.SingleLine.Import
             var random = new Random(seed);
             var boards = new List<LevelData>();
 
+            foreach ((int width, int height) in SmallSizes)
+            {
+                var settings = new BoardGeneratorSettings(width, height, 3, width * height, 1.0, 1.5);
+                Draw(settings, "gens", random, canonicalizer, seen, boards, SmallAttempts);
+            }
+
             foreach ((int width, int height) in PlainSizes)
             {
                 foreach (double bias in CornerBiases)
@@ -54,7 +67,7 @@ namespace ASTeams.SingleLine.Import
                     foreach (double fill in Fills)
                     {
                         var settings = new BoardGeneratorSettings(width, height, width * height / 2, width * height, fill, bias);
-                        Draw(settings, "gen", random, canonicalizer, seen, boards);
+                        Draw(settings, "gen", random, canonicalizer, seen, boards, attemptsPerBatch);
                     }
                 }
             }
@@ -64,7 +77,7 @@ namespace ASTeams.SingleLine.Import
                 foreach (double fill in Fills)
                 {
                     var settings = new BoardGeneratorSettings(width, height, width * height / 2, width * height, fill, 1.5, 1, 2, 0.3);
-                    Draw(settings, "genx", random, canonicalizer, seen, boards);
+                    Draw(settings, "genx", random, canonicalizer, seen, boards, attemptsPerBatch);
                 }
             }
 
@@ -72,17 +85,25 @@ namespace ASTeams.SingleLine.Import
         }
 
         private void Draw(BoardGeneratorSettings settings, string prefix, Random random, BoardCanonicalizer canonicalizer,
-            HashSet<BoardKey> seen, List<LevelData> boards)
+            HashSet<BoardKey> seen, List<LevelData> boards, int attempts)
         {
             var generator = new BoardGenerator(settings);
 
-            for (int attempt = 0; attempt < attemptsPerBatch; attempt++)
+            for (int attempt = 0; attempt < attempts; attempt++)
             {
                 string id = prefix + "_" + settings.Width + "x" + settings.Height + "_" + boards.Count.ToString("00000");
                 LevelData board = generator.TryGenerate(id, random);
 
-                // Overpass boards share a shape with plain ones, so only plain boards are deduplicated.
-                if (board == null || (board.BridgeCount == 0 && !seen.Add(canonicalizer.GetKey(board))))
+                if (board == null)
+                {
+                    continue;
+                }
+
+                // Overpass boards may share a shape with each other, but never with a plain board
+                // already drawn or with a board from the reference packs.
+                BoardKey key = canonicalizer.GetKey(board);
+
+                if (board.BridgeCount == 0 ? !seen.Add(key) : seen.Contains(key))
                 {
                     continue;
                 }

@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>The Home bottom bar (GDD 9: Home / Cats / Shop). Shows a selection; does not act on it.</summary>
     public sealed class BottomNavView : MonoBehaviour

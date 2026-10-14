@@ -1,6 +1,6 @@
 using System;
 
-namespace ASTeams.SingleLine.Import
+namespace AirlinePop.SingleLine.Import
 {
     /// <summary>
     /// Identity of a board shape that is stable under the eight symmetries of a

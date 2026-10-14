@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using System.IO;
-using ASTeams.SingleLine.Data;
-using ASTeams.SingleLine.Import;
+using AirlinePop.SingleLine.Data;
+using AirlinePop.SingleLine.Import;
 using UnityEditor;
 
-namespace ASTeams.SingleLine.Editor
+namespace AirlinePop.SingleLine.Editor
 {
     /// <summary>
     /// Writes an assembled campaign out as one json file per chapter.

@@ -1,7 +1,7 @@
-using ASTeams.Base.Data;
+using AirlinePop.Base.Data;
 using UnityEngine;
 
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>
     /// Paints a plane in the livery the player chose: the one flying the board, or the one

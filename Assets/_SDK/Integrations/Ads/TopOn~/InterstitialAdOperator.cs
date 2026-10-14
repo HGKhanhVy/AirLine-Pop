@@ -9,7 +9,7 @@ using UnityEngine.UI;
 using System;
 
 using AnyThinkAds.ThirdParty.LitJson;
-using ASTeams.Base.Ads;
+using AirlinePop.Base.Ads;
 
 
 public class InterstitialAdOperator : BaseAdOperator

@@ -1,8 +1,8 @@
 using System;
-using ASTeams.Base.Data;
-using ASTeams.SingleLine.Data;
+using AirlinePop.Base.Data;
+using AirlinePop.SingleLine.Data;
 
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     public sealed class UserProfileLevelProgressStore : ILevelProgressStore
     {

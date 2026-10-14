@@ -1,8 +1,8 @@
-using ASTeams.Base;
-using ASTeams.Base.Data;
+using AirlinePop.Base;
+using AirlinePop.Base.Data;
 using UnityEngine;
 
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>
     /// What the boot screen has to settle before the game proper starts: the consent

@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>A bundle of snacks sold in the shop: bigger packs cost less per snack.</summary>
     [Serializable]

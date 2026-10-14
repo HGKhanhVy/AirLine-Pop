@@ -1,9 +1,9 @@
-using ASTeams.SingleLine.Core;
+using AirlinePop.SingleLine.Core;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>
     /// The settings row that switches the game's language. Each language is named in its own

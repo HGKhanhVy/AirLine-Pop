@@ -1,6 +1,6 @@
 using System;
 
-namespace ASTeams.SingleLine.Core
+namespace AirlinePop.SingleLine.Core
 {
     /// <summary>
     /// Row-major board geometry. Index 0 is the top-left cell, index increases

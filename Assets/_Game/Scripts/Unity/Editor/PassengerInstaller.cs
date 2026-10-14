@@ -1,11 +1,11 @@
-using ASTeams.SingleLine.Core;
+using AirlinePop.SingleLine.Core;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.UI;
 
-namespace ASTeams.SingleLine.Unity.EditorTools
+namespace AirlinePop.SingleLine.Unity.EditorTools
 {
     /// <summary>
     /// Installs the pickup flight: waiting cats on the board and the "cats aboard" pill

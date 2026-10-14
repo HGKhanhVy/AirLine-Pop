@@ -1,7 +1,7 @@
-using ASTeams.Base;
+using AirlinePop.Base;
 using UnityEngine;
 
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>
     /// The sound of a night flight: the click of the torches coming on, rain and wind that

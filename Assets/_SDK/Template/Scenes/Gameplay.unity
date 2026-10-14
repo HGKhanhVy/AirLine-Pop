@@ -703,7 +703,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cb9d2a5df67ee4c4e9d2e7f268537317, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ASTeams.Base.Gameplay.GameController
+  m_EditorClassIdentifier: Assembly-CSharp::AirlinePop.Base.Gameplay.GameController
   _services:
   - {fileID: 179250736}
   - {fileID: 1591018322}
@@ -1086,7 +1086,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d5999c2db00db8a47bebabf7c81977fb, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ASTeams.Base.Gameplay.UICombo
+  m_EditorClassIdentifier: Assembly-CSharp::AirlinePop.Base.Gameplay.UICombo
 --- !u!4 &1591018321 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7577760508129047593, guid: c4003b58d1d1fd34b93644a0bea669b1, type: 3}
@@ -1102,7 +1102,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5eec46e9822e1e647a9caf98f62a2e1f, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ASTeams.Base.Gameplay.GameStateService
+  m_EditorClassIdentifier: Assembly-CSharp::AirlinePop.Base.Gameplay.GameStateService
 --- !u!1001 &1834727072
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1336,7 +1336,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 85a64a1eafd5dd6468ebf32abfabed87, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ASTeams.Base.Gameplay.ComboService
+  m_EditorClassIdentifier: Assembly-CSharp::AirlinePop.Base.Gameplay.ComboService
 --- !u!114 &2017650778 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8224331572579706424, guid: 12fbce6748c69a54eb61e1003797fd1f, type: 3}
@@ -1347,7 +1347,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 603becbcdc130a049aed227e86e5a73f, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ASTeams.Base.Gameplay.TimerService
+  m_EditorClassIdentifier: Assembly-CSharp::AirlinePop.Base.Gameplay.TimerService
 --- !u!1001 &32061990672185788
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1603,7 +1603,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0d67e89383f389748a047fc7af4df291, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ASTeams.Template.GameResultHandleService
+  m_EditorClassIdentifier: Assembly-CSharp::AirlinePop.Template.GameResultHandleService
 --- !u!1001 &2967769879789759146
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2166,7 +2166,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 77b94735be08875448114dfeebc1f7ed, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ASTeams.Base.Gameplay.UITimer
+  m_EditorClassIdentifier: Assembly-CSharp::AirlinePop.Base.Gameplay.UITimer
 --- !u!1001 &5612505709278667864
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2795,7 +2795,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8a76fb48ba4364f4bbbce50f7c607945, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ASTeams.Base.Gameplay.FeatureUnlockService
+  m_EditorClassIdentifier: Assembly-CSharp::AirlinePop.Base.Gameplay.FeatureUnlockService
 --- !u!4 &8155276827796967142 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 116211283707446386, guid: ff67514b5b326a943abdbd9fe3924828, type: 3}

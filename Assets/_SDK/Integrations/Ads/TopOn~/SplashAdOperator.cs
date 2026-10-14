@@ -7,7 +7,7 @@ using AnyThinkAds.Api;
 using UnityEngine.UI;
 using AnyThinkAds.ThirdParty.LitJson;
 using System.Security;
-using ASTeams.Base.Ads;
+using AirlinePop.Base.Ads;
 
 public class SplashAdOperator : BaseAdOperator
 {

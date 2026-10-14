@@ -3,11 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using ASTeams.SingleLine.Core;
-using ASTeams.SingleLine.Data;
+using AirlinePop.SingleLine.Core;
+using AirlinePop.SingleLine.Data;
 using UnityEngine;
 
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>
     /// Sits between the input, the rules and the views.

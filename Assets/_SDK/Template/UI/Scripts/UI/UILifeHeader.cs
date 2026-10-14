@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
 using TMPro; // dùng TextMeshPro
-using ASTeams.Base.Data;
-using ASTeams.Base.UI;
+using AirlinePop.Base.Data;
+using AirlinePop.Base.UI;
 
-namespace ASTeams.Base.UI.Template
+namespace AirlinePop.Base.UI.Template
 {
     public class UILifeHeader : MonoBehaviour
     {

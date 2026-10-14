@@ -1,4 +1,4 @@
-namespace ASTeams.SingleLine.Data
+namespace AirlinePop.SingleLine.Data
 {
     /// <summary>
     /// Where chapter files come from. The repository depends on this rather than on

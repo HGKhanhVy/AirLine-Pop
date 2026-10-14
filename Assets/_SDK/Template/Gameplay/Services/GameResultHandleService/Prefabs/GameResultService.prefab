@@ -44,7 +44,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0d67e89383f389748a047fc7af4df291, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ASTeams.Template.GameResultHandleService
+  m_EditorClassIdentifier: Assembly-CSharp::AirlinePop.Template.GameResultHandleService
   reviveActionRouter: {fileID: 1141341951424899035}
   failTypeSO: {fileID: 11400000, guid: 6ddd60cff08fa724d896ed7a32c6689b, type: 2}
 --- !u!1 &8746300693186068532

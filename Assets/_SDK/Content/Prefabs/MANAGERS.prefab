@@ -211,7 +211,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 85e40a0573b65e34c875435d44611e85, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ASTeams.Base.FXController
+  m_EditorClassIdentifier: Assembly-CSharp::AirlinePop.Base.FXController
   uiCanvas: {fileID: 9213461509248569373}
   autoFindCanvas: 1
   uiFxUseUnscaledTime: 1
@@ -1065,7 +1065,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 70c7ca78bb309ea45aa1d504d173c43f, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ASTeams.Base.Data.UserProfileController
+  m_EditorClassIdentifier: Assembly-CSharp::AirlinePop.Base.Data.UserProfileController
   userData:
     id: 
     country: 
@@ -2273,7 +2273,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 70e648ff09b81a5428e2b8ef6e530b59, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ASTeams.Base.MaterialColorController
+  m_EditorClassIdentifier: Assembly-CSharp::AirlinePop.Base.MaterialColorController
   database: {fileID: 11400000, guid: ba8042f92ddb58c499c98d6c44b823ba, type: 2}
 --- !u!1 &4066301832458527525
 GameObject:
@@ -4625,7 +4625,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ace4eb448dab0ba4ca1df83941c660f5, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ASTeams.Base.ConfigController
+  m_EditorClassIdentifier: Assembly-CSharp::AirlinePop.Base.ConfigController
   gameConfig: {fileID: 11400000, guid: 09ded9599a5b15348a3c80c01002d40c, type: 2}
 --- !u!1 &6937347009059154690
 GameObject:
@@ -5098,7 +5098,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 187cfa04b177a0d4ab505f68c51c2c73, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ASTeams.Base.UI.UILoadingController
+  m_EditorClassIdentifier: Assembly-CSharp::AirlinePop.Base.UI.UILoadingController
   root: {fileID: 1164230315710147126}
   bg: {fileID: 0}
   fadeInDur: 0.25
@@ -5762,5 +5762,5 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f14623e7833842a4eb8a67f0d567deb6, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ASTeams.Base.UI.UIDialogController
+  m_EditorClassIdentifier: Assembly-CSharp::AirlinePop.Base.UI.UIDialogController
   config: {fileID: 11400000, guid: fb60e4df1ff9bb94dbfe5df8a236777b, type: 2}

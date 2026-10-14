@@ -1,9 +1,9 @@
-using ASTeams.Template;
+using AirlinePop.Template;
 using UnityEngine;
-using ASTeams.Base;
-namespace ASTeams.Template
+using AirlinePop.Base;
+namespace AirlinePop.Template
 {
-    [CreateAssetMenu(fileName = "RewardSpriteListSO", menuName = "ASTeams/Reward Sprite List SO")]
+    [CreateAssetMenu(fileName = "RewardSpriteListSO", menuName = "AirlinePop/Reward Sprite List SO")]
     public class RWSpriteListSO : ScriptableObject
     {
         public RewardSpriteSO[] rewardSpriteSOs;

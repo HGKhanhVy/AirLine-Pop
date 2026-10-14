@@ -1,11 +1,11 @@
-using ASTeams.SingleLine.Core;
+using AirlinePop.SingleLine.Core;
 using UnityEditor;
 using UnityEngine;
 
 // UnityEngine ships its own Grid, so the board geometry type has to be named explicitly.
-using Grid = ASTeams.SingleLine.Core.Grid;
+using Grid = AirlinePop.SingleLine.Core.Grid;
 
-namespace ASTeams.SingleLine.Editor
+namespace AirlinePop.SingleLine.Editor
 {
     /// <summary>
     /// Draws a level the way the player will see it, with the solution laid over it.

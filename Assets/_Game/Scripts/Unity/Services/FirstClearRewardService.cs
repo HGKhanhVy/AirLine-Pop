@@ -1,9 +1,9 @@
 using System;
-using ASTeams.Base.Data;
-using ASTeams.SingleLine.Data;
-using ASTeams.Template;
+using AirlinePop.Base.Data;
+using AirlinePop.SingleLine.Data;
+using AirlinePop.Template;
 
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>
     /// GDD 6: a level pays its coins the first time it is finished. A replay pays a little,

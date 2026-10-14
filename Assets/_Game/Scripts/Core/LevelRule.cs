@@ -1,6 +1,6 @@
 using System;
 
-namespace ASTeams.SingleLine.Core
+namespace AirlinePop.SingleLine.Core
 {
     /// <summary>The extra conditions a level can add on top of covering every square.</summary>
     [Flags]

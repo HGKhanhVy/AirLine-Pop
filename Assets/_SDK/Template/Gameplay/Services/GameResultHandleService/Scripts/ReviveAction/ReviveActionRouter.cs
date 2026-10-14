@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using ASTeams.Base.Gameplay;
+using AirlinePop.Base.Gameplay;
 using UnityEngine;
 
 public sealed class ReviveActionRouter : MonoBehaviour

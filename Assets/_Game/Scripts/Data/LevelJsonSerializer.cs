@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
-using ASTeams.SingleLine.Core;
+using AirlinePop.SingleLine.Core;
 using Newtonsoft.Json;
 
-namespace ASTeams.SingleLine.Data
+namespace AirlinePop.SingleLine.Data
 {
     /// <summary>
     /// Converts between the runtime level model and the exported chapter files.

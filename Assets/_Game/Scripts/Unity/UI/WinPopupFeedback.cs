@@ -1,7 +1,7 @@
-using ASTeams.Base;
+using AirlinePop.Base;
 using UnityEngine;
 
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>
     /// What the win screen sounds and feels like, kept out of the screen itself so the

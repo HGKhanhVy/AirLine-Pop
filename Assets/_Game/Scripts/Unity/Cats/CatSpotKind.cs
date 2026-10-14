@@ -1,4 +1,4 @@
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>Places in a room a cat can go to on purpose.</summary>
     public enum CatSpotKind

@@ -2,10 +2,10 @@
 using System.Collections;
 using TMPro;
 using UnityEngine;
-using ASTeams.Base.Data;
-using ASTeams.Base.UI;
+using AirlinePop.Base.Data;
+using AirlinePop.Base.UI;
 
-namespace ASTeams.Base.UI.Template
+namespace AirlinePop.Base.UI.Template
 {
     public class UICoinHeader : MonoBehaviour
     {

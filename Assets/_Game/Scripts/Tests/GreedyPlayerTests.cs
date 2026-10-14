@@ -1,8 +1,8 @@
-using ASTeams.SingleLine.Core;
-using ASTeams.SingleLine.Import;
+using AirlinePop.SingleLine.Core;
+using AirlinePop.SingleLine.Import;
 using NUnit.Framework;
 
-namespace ASTeams.SingleLine.Core.Tests
+namespace AirlinePop.SingleLine.Core.Tests
 {
     public sealed class GreedyPlayerTests
     {

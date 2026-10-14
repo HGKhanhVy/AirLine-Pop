@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace ASTeams.SingleLine.Import
+namespace AirlinePop.SingleLine.Import
 {
     /// <summary>Builds the tag arrays a level is copied with.</summary>
     public static class TagList

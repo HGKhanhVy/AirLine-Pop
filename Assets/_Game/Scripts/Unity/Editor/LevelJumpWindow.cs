@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 using System.IO;
-using ASTeams.SingleLine.Core;
-using ASTeams.SingleLine.Data;
+using AirlinePop.SingleLine.Core;
+using AirlinePop.SingleLine.Data;
 using UnityEditor;
 using UnityEngine;
 
-namespace ASTeams.SingleLine.Unity.EditorTools
+namespace AirlinePop.SingleLine.Unity.EditorTools
 {
     /// <summary>
     /// Opens any flight straight away while the Gameplay scene is playing, with the night,
@@ -130,7 +130,7 @@ namespace ASTeams.SingleLine.Unity.EditorTools
         /// <summary>Lets the cards explaining night, formation and VIP flights show again, to see them once more.</summary>
         private static void ForgetRuleCards()
         {
-            var profile = ASTeams.Base.Data.UserProfileController.Instance;
+            var profile = AirlinePop.Base.Data.UserProfileController.Instance;
 
             if (profile == null)
             {

@@ -1,10 +1,10 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using ASTeams.Base.Data;
-using ASTeams.Base.UI;
+using AirlinePop.Base.Data;
+using AirlinePop.Base.UI;
 
-namespace ASTeams.Base.Gameplay
+namespace AirlinePop.Base.Gameplay
 {
     public class UIBoosterGuide : MonoBehaviour
     {

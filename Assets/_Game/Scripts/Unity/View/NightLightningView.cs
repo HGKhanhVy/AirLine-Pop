@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>
     /// Lightning on a stormy night flight. Every few seconds the sky flashes and, for a

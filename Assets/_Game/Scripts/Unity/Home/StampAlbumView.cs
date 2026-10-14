@@ -1,10 +1,10 @@
-using ASTeams.SingleLine.Core;
+using AirlinePop.SingleLine.Core;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>
     /// The stamp book: one country to a page (a long country runs over several), turned with

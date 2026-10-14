@@ -1,7 +1,7 @@
 using System;
-using ASTeams.Base.Data;
+using AirlinePop.Base.Data;
 
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>
     /// Keeps the collection inside the SDK profile's parameter blob. The profile saves

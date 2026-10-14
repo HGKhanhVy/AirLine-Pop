@@ -1,5 +1,5 @@
 using System;
-using ASTeams.Base.Gameplay;
+using AirlinePop.Base.Gameplay;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -127,7 +127,7 @@ public class OnboardingService : GameplayServiceBehaviour
         ClearActiveState();
     }
 
-    private void HandleServiceLevelLoaded(int levelNumber, ASTeams.Base.Level.LevelConfig _)
+    private void HandleServiceLevelLoaded(int levelNumber, AirlinePop.Base.Level.LevelConfig _)
     {
         _pendingLevelIndex = Mathf.Max(0, levelNumber - 1);
         _awaitingRuntimeBootstrap = true;

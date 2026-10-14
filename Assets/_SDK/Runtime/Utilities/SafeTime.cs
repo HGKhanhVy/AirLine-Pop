@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Threading;
 
-namespace ASTeams.Base.Utils
+namespace AirlinePop.Base.Utils
 {
     /// <summary>
     /// SafeTime đảm bảo luôn có thể lấy Time.realtimeSinceStartup từ bất kỳ thread nào.

@@ -1,6 +1,6 @@
-using ASTeams.SingleLine.Core;
+using AirlinePop.SingleLine.Core;
 
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>Remembers which level rules the player has already been shown.</summary>
     public interface IRuleIntroStore

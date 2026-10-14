@@ -1,4 +1,4 @@
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>When the daily flight was last flown, and how many days in a row it has been.</summary>
     public interface IDailyFlightStore

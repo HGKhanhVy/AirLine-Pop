@@ -1,5 +1,5 @@
 using UnityEngine;
-using ASTeams.Base.UI;
+using AirlinePop.Base.UI;
 using System;
 
 public class UIIAPSpecialPopup : UIBasePopup

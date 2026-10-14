@@ -3,7 +3,7 @@ using System.Text;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>
     /// Runs the win beat of GDD 3. The board already plays the runway light wave and the
@@ -106,9 +106,9 @@ namespace ASTeams.SingleLine.Unity
             isFirstClear = true;
         }
 
-        private void HandleLevelRules(ASTeams.SingleLine.Core.LevelRule rules)
+        private void HandleLevelRules(AirlinePop.SingleLine.Core.LevelRule rules)
         {
-            isVipFlight = (rules & ASTeams.SingleLine.Core.LevelRule.Vip) != 0;
+            isVipFlight = (rules & AirlinePop.SingleLine.Core.LevelRule.Vip) != 0;
         }
 
         private void HandlePassengersChanged(int aboard, int total)
@@ -229,7 +229,7 @@ namespace ASTeams.SingleLine.Unity
 
             if (destination != null)
             {
-                ASTeams.SingleLine.Core.DestinationSchedule schedule = destinations.Schedule;
+                AirlinePop.SingleLine.Core.DestinationSchedule schedule = destinations.Schedule;
                 postcard = schedule.CompletesPostcard(flightNumber) ? destination.Postcard : null;
                 place = destination.DisplayName;
                 stamp = schedule.StampOf(flightNumber);
@@ -264,8 +264,8 @@ namespace ASTeams.SingleLine.Unity
                 return WinMilestone.Postcard;
             }
 
-            bool closesChapter = flightNumber % ASTeams.SingleLine.Data.CampaignLevelAddress.LevelsPerChapter == 0 ||
-                flightNumber >= ASTeams.SingleLine.Data.CampaignLevelAddress.MaxLevelNumber;
+            bool closesChapter = flightNumber % AirlinePop.SingleLine.Data.CampaignLevelAddress.LevelsPerChapter == 0 ||
+                flightNumber >= AirlinePop.SingleLine.Data.CampaignLevelAddress.MaxLevelNumber;
             return closesChapter ? WinMilestone.ChapterEnd : WinMilestone.None;
         }
 

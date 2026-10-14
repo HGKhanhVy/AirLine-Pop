@@ -1,9 +1,9 @@
-﻿using ASTeams.Base.UI;
+﻿using AirlinePop.Base.UI;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace ASTeams.Base.Gameplay
+namespace AirlinePop.Base.Gameplay
 {
     public sealed class UINewFeaturePopup : UIBasePopup
     {

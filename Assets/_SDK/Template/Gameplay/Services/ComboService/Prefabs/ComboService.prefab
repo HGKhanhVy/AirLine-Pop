@@ -43,7 +43,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 85a64a1eafd5dd6468ebf32abfabed87, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ASTeams.Base.Gameplay.ComboService
+  m_EditorClassIdentifier: Assembly-CSharp::AirlinePop.Base.Gameplay.ComboService
   comboWindowSeconds: 3
   maxCombo: 99
   baseStarPerHit: 1

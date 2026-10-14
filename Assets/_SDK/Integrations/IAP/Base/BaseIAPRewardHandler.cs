@@ -1,7 +1,7 @@
 ﻿#if IAP
 using UnityEngine;
 
-namespace ASTeams.Base.IAP
+namespace AirlinePop.Base.IAP
 {
     /// <summary>
     /// Base class cho mọi reward handler – tự đăng ký với IAPController.

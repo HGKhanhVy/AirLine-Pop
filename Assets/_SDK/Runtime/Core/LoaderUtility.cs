@@ -6,7 +6,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace ASTeams.Base
+namespace AirlinePop.Base
 {
     public class LoaderUtility : MonoSingleton<LoaderUtility>
     {

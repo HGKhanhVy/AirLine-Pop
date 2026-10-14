@@ -1,6 +1,6 @@
 using System.Threading;
 
-namespace ASTeams.SingleLine.Core
+namespace AirlinePop.SingleLine.Core
 {
     public sealed class WarnsdorffSolverFactory : ILevelSolverFactory
     {

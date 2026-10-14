@@ -1,4 +1,4 @@
-namespace ASTeams.SingleLine.Data
+namespace AirlinePop.SingleLine.Data
 {
     /// <summary>
     /// Answers which level a campaign number refers to.

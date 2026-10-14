@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using ASTeams.Base.Data;
+using AirlinePop.Base.Data;
 using UnityEngine;
 
-namespace ASTeams.Template
+namespace AirlinePop.Template
 {
 
-    [CreateAssetMenu(fileName = "RewardSpriteSO", menuName = "ASTeams/Reward Sprite SO", order = 0)]
+    [CreateAssetMenu(fileName = "RewardSpriteSO", menuName = "AirlinePop/Reward Sprite SO", order = 0)]
     public class RewardSpriteSO : ScriptableObject
     {
         [Serializable]

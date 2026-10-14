@@ -1,4 +1,4 @@
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>
     /// One way a cat answers being touched in the lounge: a roll, a nuzzle, a happy hop.

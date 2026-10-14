@@ -2,7 +2,7 @@ using DG.Tweening;
 using TMPro;
 using UnityEngine;
 
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>The coin pill: counts up or down to the balance with a small pop (GDD 6: updates at once).</summary>
     public sealed class CoinCounterView : MonoBehaviour

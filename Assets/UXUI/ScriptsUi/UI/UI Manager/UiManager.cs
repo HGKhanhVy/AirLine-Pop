@@ -1,8 +1,8 @@
-﻿using ASTeams.Base;
-using ASTeams.Base.Ads;
-using ASTeams.Base.Data;
-using ASTeams.Base.UI;
-using ASTeams.SingleLine.Unity;
+﻿using AirlinePop.Base;
+using AirlinePop.Base.Ads;
+using AirlinePop.Base.Data;
+using AirlinePop.Base.UI;
+using AirlinePop.SingleLine.Unity;
 using Sirenix.OdinInspector;
 using UnityEngine;
 

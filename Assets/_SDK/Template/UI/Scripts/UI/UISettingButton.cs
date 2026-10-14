@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
-using ASTeams.Base.UI;
-using ASTeams.Template;
-using ASTeams.Base.Gameplay; // nếu bạn đang dùng hệ thống UIBasePopup, UIPopupController
+using AirlinePop.Base.UI;
+using AirlinePop.Template;
+using AirlinePop.Base.Gameplay; // nếu bạn đang dùng hệ thống UIBasePopup, UIPopupController
 
-namespace ASTeams.Base.UI.Template
+namespace AirlinePop.Base.UI.Template
 {
     public class UISettingButton : MonoBehaviour
     {

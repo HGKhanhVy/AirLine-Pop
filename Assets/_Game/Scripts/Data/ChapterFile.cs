@@ -1,6 +1,6 @@
 using Newtonsoft.Json;
 
-namespace ASTeams.SingleLine.Data
+namespace AirlinePop.SingleLine.Data
 {
     /// <summary>
     /// One exported chapter file. A chapter is the unit of loading: thirty levels is a

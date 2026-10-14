@@ -1,6 +1,6 @@
-using ASTeams.Base.Data;
+using AirlinePop.Base.Data;
 
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>Keeps the daily flight's record in the saved profile, beside the player's other progress.</summary>
     public sealed class ProfileDailyFlightStore : IDailyFlightStore

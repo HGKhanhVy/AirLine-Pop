@@ -1,4 +1,4 @@
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>What the store sells (GDD 12.3). Coin and hint packs wait until the economy is proven.</summary>
     public enum StoreProduct

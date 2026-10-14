@@ -1,4 +1,4 @@
-namespace ASTeams.SingleLine.Data
+namespace AirlinePop.SingleLine.Data
 {
     public interface ILevelSequence
     {

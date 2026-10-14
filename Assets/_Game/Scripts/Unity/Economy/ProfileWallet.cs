@@ -1,7 +1,7 @@
 using System;
-using ASTeams.Base.Data;
+using AirlinePop.Base.Data;
 
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>
     /// The SDK profile's coin balance, announced whenever the profile saves, so a label

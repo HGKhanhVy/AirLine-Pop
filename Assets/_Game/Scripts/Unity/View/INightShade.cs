@@ -1,4 +1,4 @@
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>The weather the dark of a night flight is drawn with, each from 0 to 1.</summary>
     public interface INightShade

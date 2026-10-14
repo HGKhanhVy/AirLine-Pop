@@ -1,7 +1,7 @@
 using DG.Tweening;
 using UnityEngine;
 
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>Slow side-to-side float for a scenery cloud; a looping tween, no per-frame script.</summary>
     public sealed class CloudDrift : MonoBehaviour

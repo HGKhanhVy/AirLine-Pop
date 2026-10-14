@@ -1,7 +1,7 @@
-using ASTeams.Base.Ads;
+using AirlinePop.Base.Ads;
 using UnityEngine;
 
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>
     /// Decides when a level break is allowed to carry an interstitial, per GDD 12.2.

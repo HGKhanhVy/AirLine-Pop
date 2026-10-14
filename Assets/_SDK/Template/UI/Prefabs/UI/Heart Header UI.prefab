@@ -51,7 +51,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2c426f0e15c6ef046958372a302bb11d, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ASTeams.Base.UI.Template.UILifeHeader
+  m_EditorClassIdentifier: Assembly-CSharp::AirlinePop.Base.UI.Template.UILifeHeader
   infinityGo: {fileID: 2882739812783737509}
   plusBtn: {fileID: 8361409915186594795}
   liveText: {fileID: 2251325621990918385}

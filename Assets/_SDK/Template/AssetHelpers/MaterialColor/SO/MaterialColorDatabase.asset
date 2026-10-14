@@ -11,7 +11,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de19a1a559e608d449ac473119f236b0, type: 3}
   m_Name: MaterialColorDatabase
-  m_EditorClassIdentifier: Assembly-CSharp::ASTeams.Base.Assets.MaterialColorDatabaseSO
+  m_EditorClassIdentifier: Assembly-CSharp::AirlinePop.Base.Assets.MaterialColorDatabaseSO
   entries:
   - colorType: 0
     material: {fileID: 2100000, guid: 8259aaab84d56a1459d76ed9fde696df, type: 2}

@@ -1,10 +1,10 @@
-using ASTeams.Base.UI;
+using AirlinePop.Base.UI;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace ASTeams.SingleLine.Unity.EditorTools
+namespace AirlinePop.SingleLine.Unity.EditorTools
 {
     /// <summary>
     /// Builds the loading screen onto the SDK's scene change overlay in MANAGERS: on a plain

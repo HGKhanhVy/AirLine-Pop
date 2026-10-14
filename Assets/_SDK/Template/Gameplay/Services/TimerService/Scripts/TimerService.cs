@@ -1,10 +1,10 @@
 ﻿using System;
-using ASTeams.Base.Data;
-using ASTeams.Base.Level;
-using ASTeams.Template;
+using AirlinePop.Base.Data;
+using AirlinePop.Base.Level;
+using AirlinePop.Template;
 using UnityEngine;
 
-namespace ASTeams.Base.Gameplay
+namespace AirlinePop.Base.Gameplay
 {
     public sealed class TimerService : GameplayServiceBehaviour
     {

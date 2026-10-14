@@ -1,5 +1,5 @@
 ﻿using System;
-namespace ASTeams.Base.Gameplay
+namespace AirlinePop.Base.Gameplay
 {
     public interface IReviveAction
     {

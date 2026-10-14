@@ -1,9 +1,9 @@
-﻿using ASTeams.Base.Analytics;
-using ASTeams.Base.Utils;
+﻿using AirlinePop.Base.Analytics;
+using AirlinePop.Base.Utils;
 using UnityEngine;
 using UnityEngine.Events;
 using System.Collections.Generic;
-using ASTeams.Base.Data;
+using AirlinePop.Base.Data;
 
 
 #if TOPON
@@ -11,7 +11,7 @@ using AnyThinkAds.Api;
 using AnyThinkAds.ThirdParty;
 #endif
 
-namespace ASTeams.Base.Ads
+namespace AirlinePop.Base.Ads
 {
 #if TOPON
     public class AdsController : MonoSingleton<AdsController>, ATSDKInitListener

@@ -1,8 +1,8 @@
-using ASTeams.Base.Ads;
+using AirlinePop.Base.Ads;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>
     /// Skip: watch a rewarded ad, then pass over the current level. The button is locked

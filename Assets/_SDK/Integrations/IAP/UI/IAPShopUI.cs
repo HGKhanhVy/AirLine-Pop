@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
-using ASTeams.Base.IAP;
+using AirlinePop.Base.IAP;
 using Cysharp.Threading.Tasks;
 
-namespace ASTeams.Base.IAP
+namespace AirlinePop.Base.IAP
 {
 /// <summary>
 /// IAP shop: chứa các IAPButtonUI và hỗ trợ scroll tới product tương ứng.

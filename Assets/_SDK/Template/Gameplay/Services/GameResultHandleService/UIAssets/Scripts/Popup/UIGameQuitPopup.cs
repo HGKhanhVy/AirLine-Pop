@@ -2,10 +2,10 @@
 using UnityEngine.UI;
 using TMPro;
 using System;
-using ASTeams.Base.UI;
+using AirlinePop.Base.UI;
 using UnityEngine.Events;
-using ASTeams.Base.Ads;
-using ASTeams.Base.Data;
+using AirlinePop.Base.Ads;
+using AirlinePop.Base.Data;
 
 public class UIGameQuitPopup : UIBasePopup
 {

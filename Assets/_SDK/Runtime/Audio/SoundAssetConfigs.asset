@@ -11,7 +11,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1fa766b157bfbfb4a838b4b76346f867, type: 3}
   m_Name: SoundAssetConfigs
-  m_EditorClassIdentifier: Assembly-CSharp:ASTeams.Base:SoundAssetConfigs
+  m_EditorClassIdentifier: Assembly-CSharp:AirlinePop.Base:SoundAssetConfigs
   musics:
   - soundName: -1
     clip: {fileID: 8300000, guid: f963473cc10243e4ca02751040457440, type: 3}

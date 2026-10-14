@@ -1,6 +1,6 @@
-﻿using ASTeams.Base.Analytics;
-using ASTeams.Base.Data;
-using ASTeams.Base.RemoteConfigs;
+﻿using AirlinePop.Base.Analytics;
+using AirlinePop.Base.Data;
+using AirlinePop.Base.RemoteConfigs;
 using UnityEngine;
 using UnityEngine.Events;
 using System.Collections.Generic;
@@ -10,14 +10,14 @@ using AppsFlyerSDK;
 #if APPLOVIN
 using static MaxSdkCallbacks;
 #endif
-using ASTeams.Base.UI;
+using AirlinePop.Base.UI;
 #if FIREBASE
 using Firebase.Analytics;
 #endif
 using System;
 
 
-namespace ASTeams.Base.Ads
+namespace AirlinePop.Base.Ads
 {
     public class AdsController : MonoSingleton<AdsController>
     {

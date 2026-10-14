@@ -1,7 +1,7 @@
 using TMPro;
 using UnityEngine;
 
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>
     /// Says what a win paid, at the place the player looks for it.

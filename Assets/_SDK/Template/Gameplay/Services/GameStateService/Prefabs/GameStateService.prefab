@@ -43,4 +43,4 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5eec46e9822e1e647a9caf98f62a2e1f, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ASTeams.Base.Gameplay.GameStateService
+  m_EditorClassIdentifier: Assembly-CSharp::AirlinePop.Base.Gameplay.GameStateService

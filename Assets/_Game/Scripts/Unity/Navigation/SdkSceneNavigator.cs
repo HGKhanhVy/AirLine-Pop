@@ -1,7 +1,7 @@
-using ASTeams.Base.UI;
+using AirlinePop.Base.UI;
 using UnityEngine.SceneManagement;
 
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>
     /// Scene changes through the SDK's scene controller, which covers the screen, loads

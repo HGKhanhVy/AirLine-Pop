@@ -1,4 +1,4 @@
-namespace ASTeams.SingleLine.Core
+namespace AirlinePop.SingleLine.Core
 {
     /// <summary>A square carrying a <see cref="CellKind"/> other than plain.</summary>
     public readonly struct CellMark

@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>Turns a horizontal swipe across the book into a page turn: right to left turns on.</summary>
     public sealed class PageSwipe : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler

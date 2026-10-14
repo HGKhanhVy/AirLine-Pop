@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-namespace ASTeams.Base.UI
+namespace AirlinePop.Base.UI
 {
     public abstract class UIBasePopup : MonoBehaviour
     {

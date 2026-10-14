@@ -1,4 +1,4 @@
-namespace ASTeams.SingleLine.Import
+namespace AirlinePop.SingleLine.Import
 {
     /// <summary>How an import decides the order the shipped levels are played in.</summary>
     public enum CampaignMode

@@ -1,6 +1,6 @@
-using ASTeams.SingleLine.Core;
+using AirlinePop.SingleLine.Core;
 
-namespace ASTeams.SingleLine.Import
+namespace AirlinePop.SingleLine.Import
 {
     /// <summary>The flight on which a condition is first met, flown on its own there.</summary>
     public readonly struct RuleOpening

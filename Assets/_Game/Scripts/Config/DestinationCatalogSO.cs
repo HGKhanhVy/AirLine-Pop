@@ -1,7 +1,7 @@
-using ASTeams.SingleLine.Core;
+using AirlinePop.SingleLine.Core;
 using UnityEngine;
 
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>
     /// Every destination in flying order. Each takes <see cref="FlightsPerDestination"/>

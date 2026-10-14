@@ -1,7 +1,7 @@
-using ASTeams.SingleLine.Data;
+using AirlinePop.SingleLine.Data;
 using UnityEngine;
 
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>
     /// Reads chapter files shipped under a Resources folder.

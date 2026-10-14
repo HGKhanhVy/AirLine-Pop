@@ -1,4 +1,4 @@
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>Where on a cat an accessory is worn.</summary>
     public enum AccessorySlot

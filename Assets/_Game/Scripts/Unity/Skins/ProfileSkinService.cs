@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
-using ASTeams.Base.Data;
+using AirlinePop.Base.Data;
 
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>
     /// Skins kept in the saved profile. Ownership uses the same key the Starter Pack

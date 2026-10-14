@@ -1,8 +1,8 @@
 using System;
-using ASTeams.SingleLine.Core;
+using AirlinePop.SingleLine.Core;
 using UnityEngine;
 
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>How the card that introduces one level rule looks: its picture and its words.</summary>
     [Serializable]

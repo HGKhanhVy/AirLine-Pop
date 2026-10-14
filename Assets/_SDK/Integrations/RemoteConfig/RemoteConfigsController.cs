@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace ASTeams.Base.RemoteConfigs
+namespace AirlinePop.Base.RemoteConfigs
 {
     public class RemoteConfigsController : MonoSingleton<RemoteConfigsController>
     {

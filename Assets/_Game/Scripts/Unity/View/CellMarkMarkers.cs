@@ -1,8 +1,8 @@
-using ASTeams.SingleLine.Core;
+using AirlinePop.SingleLine.Core;
 using DG.Tweening;
 using UnityEngine;
 
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>
     /// Draws the clouds, beacons and overpasses of a level on its squares. A mark fades once

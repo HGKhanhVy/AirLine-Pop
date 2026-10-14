@@ -1,4 +1,4 @@
-namespace ASTeams.SingleLine.Core
+namespace AirlinePop.SingleLine.Core
 {
     /// <summary>The tags a level can carry and how to read them.</summary>
     public static class LevelTags

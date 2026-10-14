@@ -1,11 +1,11 @@
 using UnityEngine;
 
-namespace ASTeams.Base
+namespace AirlinePop.Base
 {
     /// <summary>
     /// Game configuration - Adjust these values to tune your game
     /// </summary>
-    [CreateAssetMenu(fileName = "GameConfig", menuName = "ASTeams/Base/Game Config")]
+    [CreateAssetMenu(fileName = "GameConfig", menuName = "AirlinePop/Base/Game Config")]
     public class GameConfig : ScriptableObject
     {
         [Header("Levels")]

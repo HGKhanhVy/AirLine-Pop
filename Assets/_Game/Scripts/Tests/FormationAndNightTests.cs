@@ -1,7 +1,7 @@
-using ASTeams.SingleLine.Import;
+using AirlinePop.SingleLine.Import;
 using NUnit.Framework;
 
-namespace ASTeams.SingleLine.Core.Tests
+namespace AirlinePop.SingleLine.Core.Tests
 {
     public sealed class FormationAndNightTests
     {
@@ -143,7 +143,7 @@ namespace ASTeams.SingleLine.Core.Tests
         {
             LevelData level = new NightVariant().Apply(Formation());
             Assert.IsTrue(level.IsNight);
-            LevelData copy = ASTeams.SingleLine.Data.LevelJsonSerializer.FromDto(ASTeams.SingleLine.Data.LevelJsonSerializer.ToDto(level));
+            LevelData copy = AirlinePop.SingleLine.Data.LevelJsonSerializer.FromDto(AirlinePop.SingleLine.Data.LevelJsonSerializer.ToDto(level));
 
             Assert.AreEqual(LevelRule.Night | LevelRule.Formation, copy.Rules);
         }

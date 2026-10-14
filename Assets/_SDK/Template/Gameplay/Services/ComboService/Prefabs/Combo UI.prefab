@@ -59,7 +59,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d5999c2db00db8a47bebabf7c81977fb, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ASTeams.Base.Gameplay.UICombo
+  m_EditorClassIdentifier: Assembly-CSharp::AirlinePop.Base.Gameplay.UICombo
   comboText: {fileID: 5647703514041877902}
   starTotalText: {fileID: 8699136653342096423}
   timerFill: {fileID: 8722543468623853889}
@@ -76,7 +76,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c9f6f4ec23165a34e8c8ead205348720, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ASTeams.Base.Gameplay.UIStarFlyEmitter
+  m_EditorClassIdentifier: Assembly-CSharp::AirlinePop.Base.Gameplay.UIStarFlyEmitter
   targetRoot: {fileID: 5050391596878298247}
   starIconPrefab: {fileID: 8941311497754596462}
   starIconTarget: {fileID: 4896151256397107533}

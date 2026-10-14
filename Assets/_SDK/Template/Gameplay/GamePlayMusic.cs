@@ -1,7 +1,7 @@
-using ASTeams.Base;
+using AirlinePop.Base;
 using UnityEngine;
 
-namespace ASTeams.Template
+namespace AirlinePop.Template
 {
     public class GamePlayMusic : MonoBehaviour
     {

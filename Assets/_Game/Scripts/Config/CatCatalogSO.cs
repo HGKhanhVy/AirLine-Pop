@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>Every cat the game knows, in shop order.</summary>
     [CreateAssetMenu(menuName = "AirLine Pop/Cat Catalog", fileName = "CatCatalog")]

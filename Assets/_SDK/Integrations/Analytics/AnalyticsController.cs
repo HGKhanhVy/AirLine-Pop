@@ -12,7 +12,7 @@ using Firebase.Analytics;
 using GameAnalyticsSDK;
 #endif
 
-namespace ASTeams.Base.Analytics
+namespace AirlinePop.Base.Analytics
 {
     // ================= ENUM =================
 

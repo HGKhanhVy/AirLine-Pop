@@ -1,6 +1,6 @@
-using ASTeams.SingleLine.Core;
+using AirlinePop.SingleLine.Core;
 
-namespace ASTeams.SingleLine.Import
+namespace AirlinePop.SingleLine.Import
 {
     /// <summary>A board handed out by <see cref="BoardPicker"/>, conditions on, with its measured wrong turns.</summary>
     public readonly struct PickedBoard

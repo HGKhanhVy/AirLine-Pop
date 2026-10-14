@@ -1,7 +1,7 @@
-namespace ASTeams.SingleLine.Import
+namespace AirlinePop.SingleLine.Import
 {
     /// <summary>
-    /// Why a level file could not be turned into a <see cref="ASTeams.SingleLine.Core.LevelData"/>.
+    /// Why a level file could not be turned into a <see cref="AirlinePop.SingleLine.Core.LevelData"/>.
     /// Only structural failures live here; a level that parses but is unsolvable or has
     /// a broken solution is reported by the validator instead.
     /// </summary>

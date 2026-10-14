@@ -1,11 +1,11 @@
-using ASTeams.Base.Analytics;
+using AirlinePop.Base.Analytics;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-namespace ASTeams.Base.Data
+namespace AirlinePop.Base.Data
 {
     [System.Serializable]
     public class LifeData

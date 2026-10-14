@@ -1,10 +1,10 @@
 ﻿#if IAP
 using UnityEngine;
 using TMPro;
-using ASTeams.Base.UI;
+using AirlinePop.Base.UI;
 using UnityEngine.Purchasing;
 
-namespace ASTeams.Base.IAP
+namespace AirlinePop.Base.IAP
 {
     public class IAPButtonUI : MonoBehaviour
     {

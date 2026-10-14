@@ -1,7 +1,7 @@
-using ASTeams.Base.Data;
+using AirlinePop.Base.Data;
 using UnityEngine;
 
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>
     /// Paints the board with the theme the player wears: the tiles and the start pad, and

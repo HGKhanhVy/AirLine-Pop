@@ -1,5 +1,5 @@
-using ASTeams.Base.Ads;
-using ASTeams.Base.Gameplay;
+using AirlinePop.Base.Ads;
+using AirlinePop.Base.Gameplay;
 using UnityEngine;
 
 public sealed class TimeUpReviveAction : MonoBehaviour, IReviveAction

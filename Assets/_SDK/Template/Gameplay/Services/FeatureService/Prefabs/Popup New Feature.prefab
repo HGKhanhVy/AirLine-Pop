@@ -313,7 +313,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4a9c2ef1935742c498ca71a481a326d9, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ASTeams.Base.Gameplay.UINewFeaturePopup
+  m_EditorClassIdentifier: Assembly-CSharp::AirlinePop.Base.Gameplay.UINewFeaturePopup
   canvasGroup: {fileID: 6523462369743394608}
   panel: {fileID: 2537429157663901808}
   closeBtns: []

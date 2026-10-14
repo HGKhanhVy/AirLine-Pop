@@ -1,12 +1,12 @@
 using System.Collections.Generic;
 using System.Text;
-using ASTeams.Base.UI;
+using AirlinePop.Base.UI;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace ASTeams.SingleLine.Unity.EditorTools
+namespace AirlinePop.SingleLine.Unity.EditorTools
 {
     /// <summary>
     /// Gives every Button in the build scenes and in the game's prefabs the shared press

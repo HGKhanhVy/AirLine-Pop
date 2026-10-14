@@ -1,10 +1,10 @@
-using ASTeams.SingleLine.Core;
+using AirlinePop.SingleLine.Core;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace ASTeams.SingleLine.Unity.EditorTools
+namespace AirlinePop.SingleLine.Unity.EditorTools
 {
     /// <summary>
     /// Builds the card that introduces a level rule the first time the player meets it: the

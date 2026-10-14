@@ -43,7 +43,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8a76fb48ba4364f4bbbce50f7c607945, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ASTeams.Base.Gameplay.FeatureUnlockService
+  m_EditorClassIdentifier: Assembly-CSharp::AirlinePop.Base.Gameplay.FeatureUnlockService
   featureSO: {fileID: 11400000, guid: 33ddc018816ec5046b3e0ff1326194ca, type: 2}
   showPopupOnUnlockLevel: 1
   logDebug: 0

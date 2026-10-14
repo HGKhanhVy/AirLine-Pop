@@ -1,13 +1,13 @@
-using ASTeams.Base.Data;
-using ASTeams.Base.UI;
-using ASTeams.Base.UI.Template;
-using ASTeams.Template;
+using AirlinePop.Base.Data;
+using AirlinePop.Base.UI;
+using AirlinePop.Base.UI.Template;
+using AirlinePop.Template;
 using TMPro;
 using UnityEngine;
 using DG.Tweening;
 using UnityEngine.UI;
 
-namespace ASTeams.Base.Gameplay
+namespace AirlinePop.Base.Gameplay
 {
     /// <summary>
     /// After all features in FeatureUnlockSO are unlocked, takes over the

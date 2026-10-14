@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections;
-using ASTeams.Base;
-using ASTeams.Base.Data;
-using ASTeams.Base.UI;
-using ASTeams.Base.UI.Template;
-using ASTeams.Base.Gameplay;
+using AirlinePop.Base;
+using AirlinePop.Base.Data;
+using AirlinePop.Base.UI;
+using AirlinePop.Base.UI.Template;
+using AirlinePop.Base.Gameplay;
 using TMPro;
 using UnityEngine;
 using DG.Tweening;
 
-namespace ASTeams.Template
+namespace AirlinePop.Template
 {
     public class UIGameWinPopup : UIBasePopup
     {

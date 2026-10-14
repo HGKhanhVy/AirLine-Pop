@@ -1,11 +1,11 @@
 using Newtonsoft.Json;
 
-namespace ASTeams.SingleLine.Data
+namespace AirlinePop.SingleLine.Data
 {
     /// <summary>
     /// On-disk shape of one level, matching the JSON example in GDD 6.3 field for field.
     ///
-    /// Kept separate from <see cref="ASTeams.SingleLine.Core.LevelData"/> on purpose: the
+    /// Kept separate from <see cref="AirlinePop.SingleLine.Core.LevelData"/> on purpose: the
     /// runtime model is free to change shape, gain lookup masks or drop fields, without
     /// breaking a build that shipped with data already on players' devices.
     /// </summary>

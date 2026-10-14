@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>Every accessory a regular can wear, in the order the wardrobe shows them.</summary>
     [CreateAssetMenu(menuName = "AirLine Pop/Accessory Catalog", fileName = "AccessoryCatalog")]

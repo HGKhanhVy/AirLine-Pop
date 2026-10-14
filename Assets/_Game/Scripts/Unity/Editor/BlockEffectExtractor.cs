@@ -5,7 +5,7 @@ using UnityEngine;
 
 // Outside the importer's assembly definition on purpose: it reaches the effect player,
 // which is an Assembly-CSharp type an asmdef cannot see.
-namespace ASTeams.SingleLine.Unity.EditorTools
+namespace AirlinePop.SingleLine.Unity.EditorTools
 {
     /// <summary>
     /// Lifts the reference block's particles out of OneLineBlock into prefabs of their

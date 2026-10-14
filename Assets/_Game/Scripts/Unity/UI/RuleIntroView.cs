@@ -3,7 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>The popup card that explains one level rule: its picture, a title, a line of text and a button.</summary>
     public sealed class RuleIntroView : MonoBehaviour

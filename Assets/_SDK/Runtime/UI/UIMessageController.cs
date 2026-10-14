@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-namespace ASTeams.Base.UI
+namespace AirlinePop.Base.UI
 {
     [System.Serializable]
     public class UINoti

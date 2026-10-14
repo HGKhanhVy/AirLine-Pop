@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace ASTeams.Base
+namespace AirlinePop.Base
 {
     public enum SoundName
     {
@@ -50,7 +50,7 @@ namespace ASTeams.Base
         public float volume = 1f;
     }
 
-    [CreateAssetMenu(menuName = "ASTeams/SoundAssetConfigs", fileName = "SoundAssetConfigs")]
+    [CreateAssetMenu(menuName = "AirlinePop/SoundAssetConfigs", fileName = "SoundAssetConfigs")]
     public class SoundAssetConfigs : ScriptableObject
     {
         public List<SoundAsset> musics;

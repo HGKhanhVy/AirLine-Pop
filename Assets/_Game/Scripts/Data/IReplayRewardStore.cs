@@ -1,4 +1,4 @@
-namespace ASTeams.SingleLine.Data
+namespace AirlinePop.SingleLine.Data
 {
     /// <summary>Remembers how many replays have paid coins, and on which day.</summary>
     public interface IReplayRewardStore

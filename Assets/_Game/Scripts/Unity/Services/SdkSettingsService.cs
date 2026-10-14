@@ -1,7 +1,7 @@
-using ASTeams.Base;
-using ASTeams.Base.Data;
+using AirlinePop.Base;
+using AirlinePop.Base.Data;
 
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>
     /// Settings kept where the SDK already keeps them: the audio and vibration

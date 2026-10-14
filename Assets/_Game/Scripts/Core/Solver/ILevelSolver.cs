@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace ASTeams.SingleLine.Core
+namespace AirlinePop.SingleLine.Core
 {
     /// <summary>
     /// Finds a Hamiltonian path over the active cells of a level. Abstracted so the

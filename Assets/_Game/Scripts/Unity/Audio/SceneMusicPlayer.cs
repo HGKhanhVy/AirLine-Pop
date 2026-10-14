@@ -1,7 +1,7 @@
-using ASTeams.Base;
+using AirlinePop.Base;
 using UnityEngine;
 
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>
     /// Starts a scene's background music. The track is held here rather than looked up in

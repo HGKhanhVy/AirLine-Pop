@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace ASTeams.Base
+namespace AirlinePop.Base
 {
     public sealed class FXController : MonoSingleton<FXController>
     {

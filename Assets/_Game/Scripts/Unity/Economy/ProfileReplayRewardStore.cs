@@ -1,8 +1,8 @@
 using System;
-using ASTeams.Base.Data;
-using ASTeams.SingleLine.Data;
+using AirlinePop.Base.Data;
+using AirlinePop.SingleLine.Data;
 
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>Keeps the day's paid replays in the saved profile, so closing the game does not reset them.</summary>
     public sealed class ProfileReplayRewardStore : IReplayRewardStore

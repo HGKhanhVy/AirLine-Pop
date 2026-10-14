@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
-using ASTeams.SingleLine.Import;
+using AirlinePop.SingleLine.Import;
 using NUnit.Framework;
 
-namespace ASTeams.SingleLine.Core.Tests
+namespace AirlinePop.SingleLine.Core.Tests
 {
     public sealed class GeneratedCampaignTests
     {

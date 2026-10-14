@@ -1,9 +1,9 @@
 using System.Linq;
-using ASTeams.Base;
+using AirlinePop.Base;
 using UnityEditor;
 using UnityEngine;
 
-namespace ASTeams.SingleLine.Unity.EditorTools
+namespace AirlinePop.SingleLine.Unity.EditorTools
 {
     /// <summary>
     /// Wires the game's own sounds: the tune the path plays note by note, on soft bubble plips, the

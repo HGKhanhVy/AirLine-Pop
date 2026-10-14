@@ -1,8 +1,8 @@
 ﻿#if IAP
 using Cysharp.Threading.Tasks;
-using ASTeams.Base.Ads;
-using ASTeams.Base.Data;
-using ASTeams.Base.Analytics;
+using AirlinePop.Base.Ads;
+using AirlinePop.Base.Data;
+using AirlinePop.Base.Analytics;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using AppsFlyerSDK;
 #endif
 
-namespace ASTeams.Base.IAP
+namespace AirlinePop.Base.IAP
 {
     public class DefaultIAPRewardHandler : BaseIAPRewardHandler
     {

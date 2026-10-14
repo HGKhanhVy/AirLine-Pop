@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>The looks waiting cats are dressed in. Adding a breed here adds it to every flight.</summary>
     [CreateAssetMenu(menuName = "AirLine Pop/Passenger Looks", fileName = "PassengerLooks")]

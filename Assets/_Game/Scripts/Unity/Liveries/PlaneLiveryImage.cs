@@ -1,8 +1,8 @@
-using ASTeams.Base.Data;
+using AirlinePop.Base.Data;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>
     /// The UI twin of <see cref="PlaneLiveryView"/>: shows the plane the player chose in an

@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
-using ASTeams.Base.UI;
-using ASTeams.Base.Gameplay;
-using ASTeams.Base.Data;
+using AirlinePop.Base.UI;
+using AirlinePop.Base.Gameplay;
+using AirlinePop.Base.Data;
 
 public class UIBoosterButton : MonoBehaviour
 {

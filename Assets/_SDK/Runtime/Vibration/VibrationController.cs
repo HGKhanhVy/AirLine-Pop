@@ -1,11 +1,11 @@
 using System;
 using System.Collections;
 using Cysharp.Threading.Tasks;
-using ASTeams.Base.Data;
+using AirlinePop.Base.Data;
 using UnityEngine;
 using CandyCoded.HapticFeedback;
 
-namespace ASTeams.Base
+namespace AirlinePop.Base
 {
     public class VibrationController : MonoSingleton<VibrationController>
     {

@@ -1,6 +1,6 @@
 using System;
 
-namespace ASTeams.SingleLine.Core
+namespace AirlinePop.SingleLine.Core
 {
     /// <summary>A point on the route map, in map units: X across, Y up from the first level.</summary>
     public readonly struct RouteVector

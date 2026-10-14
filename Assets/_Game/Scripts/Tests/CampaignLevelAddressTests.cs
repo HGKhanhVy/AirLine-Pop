@@ -1,7 +1,7 @@
-using ASTeams.SingleLine.Data;
+using AirlinePop.SingleLine.Data;
 using NUnit.Framework;
 
-namespace ASTeams.SingleLine.Tests
+namespace AirlinePop.SingleLine.Tests
 {
     public sealed class CampaignLevelAddressTests
     {

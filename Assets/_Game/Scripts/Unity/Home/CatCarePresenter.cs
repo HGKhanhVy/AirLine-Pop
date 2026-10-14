@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>
     /// Runs caring for a regular. A touch only holds the cat still to react (see

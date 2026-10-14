@@ -1,10 +1,10 @@
 using System.Collections.Generic;
-using ASTeams.Base.Data;
-using ASTeams.Base.UI;
-using ASTeams.SingleLine.Core;
+using AirlinePop.Base.Data;
+using AirlinePop.Base.UI;
+using AirlinePop.SingleLine.Core;
 using UnityEngine;
 
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>
     /// Runs the daily flight when Home asked for it: picks today's board, pays the day's coins

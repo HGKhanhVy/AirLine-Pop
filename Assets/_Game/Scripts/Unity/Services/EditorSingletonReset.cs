@@ -1,10 +1,10 @@
 #if UNITY_EDITOR
 using System;
 using System.Reflection;
-using ASTeams.Base;
+using AirlinePop.Base;
 using UnityEngine;
 
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>
     /// Editor-only repair for the SDK singletons when Domain Reload is off.

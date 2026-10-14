@@ -1,6 +1,6 @@
 using System;
 
-namespace ASTeams.SingleLine.Import
+namespace AirlinePop.SingleLine.Import
 {
     /// <summary>
     /// Where a level sat in the reference data: which pack folder it came from and the

@@ -3,12 +3,12 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
-using ASTeams.Base.UI;
-using ASTeams.Base.Ads;
-using ASTeams.Base.Analytics;
+using AirlinePop.Base.UI;
+using AirlinePop.Base.Ads;
+using AirlinePop.Base.Analytics;
 using Cysharp.Threading.Tasks;
-using ASTeams.Base;
-using ASTeams.Base.RemoteConfigs;
+using AirlinePop.Base;
+using AirlinePop.Base.RemoteConfigs;
 
 public class FreeCoinButtonUI : MonoBehaviour
 {

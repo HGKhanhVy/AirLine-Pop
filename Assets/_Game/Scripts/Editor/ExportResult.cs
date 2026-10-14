@@ -1,4 +1,4 @@
-namespace ASTeams.SingleLine.Editor
+namespace AirlinePop.SingleLine.Editor
 {
     /// <summary>Outcome of writing a campaign to disk.</summary>
     public readonly struct ExportResult

@@ -1,6 +1,6 @@
 using System;
 
-namespace ASTeams.SingleLine.Data
+namespace AirlinePop.SingleLine.Data
 {
     public static class CampaignLevelAddress
     {

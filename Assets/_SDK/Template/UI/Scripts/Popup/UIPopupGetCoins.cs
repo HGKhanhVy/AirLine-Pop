@@ -1,8 +1,8 @@
 ﻿using TMPro;
 using UnityEngine;
-using ASTeams.Base.Data;
-using ASTeams.Base.Ads;
-namespace ASTeams.Base.UI.Template
+using AirlinePop.Base.Data;
+using AirlinePop.Base.Ads;
+namespace AirlinePop.Base.UI.Template
 {
     public class UIPopupGetCoins : UIBasePopup
     {

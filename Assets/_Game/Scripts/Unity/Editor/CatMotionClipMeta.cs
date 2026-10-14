@@ -1,6 +1,6 @@
 using System;
 
-namespace ASTeams.SingleLine.Unity.EditorTools
+namespace AirlinePop.SingleLine.Unity.EditorTools
 {
     /// <summary>One drawn clip in cat_motion.json: its frames, laid out row by row on one sheet.</summary>
     [Serializable]

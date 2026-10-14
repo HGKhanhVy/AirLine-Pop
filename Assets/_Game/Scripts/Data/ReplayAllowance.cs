@@ -1,6 +1,6 @@
 using System;
 
-namespace ASTeams.SingleLine.Data
+namespace AirlinePop.SingleLine.Data
 {
     /// <summary>
     /// The small pay for replaying a level already beaten. Only so many replays pay each

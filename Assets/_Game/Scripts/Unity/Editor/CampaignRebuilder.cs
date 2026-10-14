@@ -1,19 +1,20 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using ASTeams.SingleLine.Core;
-using ASTeams.SingleLine.Editor;
-using ASTeams.SingleLine.Import;
+using AirlinePop.SingleLine.Core;
+using AirlinePop.SingleLine.Editor;
+using AirlinePop.SingleLine.Import;
 using UnityEditor;
 using UnityEngine;
 
-namespace ASTeams.SingleLine.Unity.EditorTools
+namespace AirlinePop.SingleLine.Unity.EditorTools
 {
     /// <summary>
-    /// Rebuilds the shipped campaign in one step: the reference packs and a batch of freshly
-    /// drawn boards measured and laid flight by flight onto absolute difficulty targets with
-    /// their conditions on, the hand-drawn picture boards pinned to their places, then the
-    /// chapter files and the level config written out. One level per gate on the route map.
+    /// Rebuilds the shipped campaign in one step: boards drawn by our own generator, measured
+    /// and laid flight by flight onto absolute difficulty targets with their conditions on, the
+    /// hand-drawn picture boards pinned to their places, then the chapter files and the level
+    /// config written out. One level per gate on the route map. No board from any other game
+    /// is used.
     /// </summary>
     public static class CampaignRebuilder
     {
@@ -30,8 +31,6 @@ namespace ASTeams.SingleLine.Unity.EditorTools
 
         public static string Rebuild()
         {
-            List<RawLevelFile> files = LevelSourceReader.Read(LevelSourceReader.DefaultSourceFolder);
-
             if (!TryReadSpecials(out List<SpecialLevel> specials, out string specialError))
             {
                 return specialError;
@@ -43,15 +42,12 @@ namespace ASTeams.SingleLine.Unity.EditorTools
 
             try
             {
-                EditorUtility.DisplayProgressBar("Rebuilding campaign", "Checking the reference packs", 0f);
-                LevelImportPipeline pipeline = LevelImportPipeline.Create(CampaignMode.DifficultyCurve, ChapterLayout.FullRoute,
-                    WarnsdorffSolver.DefaultNodeBudget, LevelPackOrder.Default, specials);
-                var pool = new List<LevelData>(pipeline.Prepare(files, new ImportReport()).Levels);
+                EditorUtility.DisplayProgressBar("Rebuilding campaign", "Drawing boards", 0f);
 
-                EditorUtility.DisplayProgressBar("Rebuilding campaign", "Drawing new boards", 0.1f);
-                List<LevelData> generated = new GeneratedBoards().Generate(pool);
-                generatedCount = generated.Count;
-                pool.AddRange(generated);
+                // The reference packs are read only so that no drawn board, turned or mirrored,
+                // happens to match one of them; none of their boards is ever shipped.
+                List<LevelData> pool = new GeneratedBoards().Generate(ReadReferenceBoards());
+                generatedCount = pool.Count;
 
                 EditorUtility.DisplayProgressBar("Rebuilding campaign", "Measuring every board", 0.15f);
                 var picker = new BoardPicker(BoardPicker.DefaultVariants, new ThoughtfulPlayer());
@@ -85,12 +81,30 @@ namespace ASTeams.SingleLine.Unity.EditorTools
                 " picture boards, " + generatedCount + " boards drawn, " + dailyFlights.Count + " daily flights.\n" + Describe(campaign);
         }
 
+        private static List<LevelData> ReadReferenceBoards()
+        {
+            var parser = new LevelTextParser();
+            var boards = new List<LevelData>();
+
+            foreach (RawLevelFile file in LevelSourceReader.Read(LevelSourceReader.DefaultSourceFolder))
+            {
+                LevelParseResult result = parser.Parse(file.Id, file.LevelText, file.TutorialText);
+
+                if (result.IsSuccess)
+                {
+                    boards.Add(result.Level);
+                }
+            }
+
+            return boards;
+        }
+
         /// <summary>The daily flights sit in a file of their own, outside the campaign's chapter folder.</summary>
         private static void WriteDailyFlights(List<LevelData> days)
         {
             string folder = Path.GetDirectoryName(DailyFlightFile);
             Directory.CreateDirectory(folder);
-            File.WriteAllText(DailyFlightFile, ASTeams.SingleLine.Data.LevelJsonSerializer.SerializeChapter(DailyFlightPlanner.ChapterId, days));
+            File.WriteAllText(DailyFlightFile, AirlinePop.SingleLine.Data.LevelJsonSerializer.SerializeChapter(DailyFlightPlanner.ChapterId, days));
             AssetDatabase.ImportAsset(DailyFlightFile);
         }
 

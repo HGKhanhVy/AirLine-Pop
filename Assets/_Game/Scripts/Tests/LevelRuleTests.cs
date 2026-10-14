@@ -1,7 +1,7 @@
-using ASTeams.SingleLine.Import;
+using AirlinePop.SingleLine.Import;
 using NUnit.Framework;
 
-namespace ASTeams.SingleLine.Core.Tests
+namespace AirlinePop.SingleLine.Core.Tests
 {
     public sealed class LevelRuleTests
     {
@@ -84,7 +84,7 @@ namespace ASTeams.SingleLine.Core.Tests
         public void WindSurvivesTheJsonRoundTrip()
         {
             LevelData level = Board(fixedEnd: 3, wind: new[] { new WindCell(1, Direction.Right) });
-            LevelData copy = ASTeams.SingleLine.Data.LevelJsonSerializer.FromDto(ASTeams.SingleLine.Data.LevelJsonSerializer.ToDto(level));
+            LevelData copy = AirlinePop.SingleLine.Data.LevelJsonSerializer.FromDto(AirlinePop.SingleLine.Data.LevelJsonSerializer.ToDto(level));
 
             Assert.AreEqual(3, copy.FixedEnd);
             Assert.IsTrue(copy.TryGetWind(1, out Direction direction));

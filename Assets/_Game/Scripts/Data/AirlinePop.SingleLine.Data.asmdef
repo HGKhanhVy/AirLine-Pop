@@ -1,14 +1,16 @@
 {
-    "name": "ASTeams.SingleLine.Import",
-    "rootNamespace": "ASTeams.SingleLine.Import",
+    "name": "AirlinePop.SingleLine.Data",
+    "rootNamespace": "AirlinePop.SingleLine.Data",
     "references": [
-        "ASTeams.SingleLine.Core"
+        "AirlinePop.SingleLine.Core"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
-    "overrideReferences": false,
-    "precompiledReferences": [],
+    "overrideReferences": true,
+    "precompiledReferences": [
+        "Newtonsoft.Json.dll"
+    ],
     "autoReferenced": true,
     "defineConstraints": [],
     "versionDefines": [],

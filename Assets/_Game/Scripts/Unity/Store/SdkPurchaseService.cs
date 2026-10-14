@@ -1,11 +1,11 @@
 using System;
-using ASTeams.Base.Ads;
-using ASTeams.Base.Data;
+using AirlinePop.Base.Ads;
+using AirlinePop.Base.Data;
 #if IAP
-using ASTeams.Base.IAP;
+using AirlinePop.Base.IAP;
 #endif
 
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>
     /// Purchases through the SDK's IAP controller.

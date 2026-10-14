@@ -1,6 +1,6 @@
-using ASTeams.Base.Data;
+using AirlinePop.Base.Data;
 
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>
     /// Consent kept in the saved profile beside the settings (GDD 14). Whether the player

@@ -1,6 +1,6 @@
 using System;
 
-namespace ASTeams.SingleLine.Import
+namespace AirlinePop.SingleLine.Import
 {
     /// <summary>
     /// What each flight of the campaign should feel like, on an absolute scale: how long the

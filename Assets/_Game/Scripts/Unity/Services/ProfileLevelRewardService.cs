@@ -1,10 +1,10 @@
 using System;
-using ASTeams.Base;
-using ASTeams.Base.Data;
-using ASTeams.SingleLine.Data;
-using ASTeams.Template;
+using AirlinePop.Base;
+using AirlinePop.Base.Data;
+using AirlinePop.SingleLine.Data;
+using AirlinePop.Template;
 
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>
     /// Pays the level reward into the player's profile, using the amount the team's

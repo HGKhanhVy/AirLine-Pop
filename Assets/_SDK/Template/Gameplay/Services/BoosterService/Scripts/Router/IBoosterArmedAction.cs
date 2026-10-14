@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
-using ASTeams.Base.Data;
+using AirlinePop.Base.Data;
 
-namespace ASTeams.Base.Gameplay
+namespace AirlinePop.Base.Gameplay
 {
     public interface IBoosterArmedAction
     {

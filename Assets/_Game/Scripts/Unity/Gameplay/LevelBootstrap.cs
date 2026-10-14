@@ -1,15 +1,15 @@
 using System.Collections;
 using System.Threading.Tasks;
-using ASTeams.Base;
-using ASTeams.Base.Data;
-using ASTeams.Base.Gameplay;
-using ASTeams.Base.Level;
-using ASTeams.SingleLine.Core;
-using ASTeams.SingleLine.Data;
-using ASTeams.Template;
+using AirlinePop.Base;
+using AirlinePop.Base.Data;
+using AirlinePop.Base.Gameplay;
+using AirlinePop.Base.Level;
+using AirlinePop.SingleLine.Core;
+using AirlinePop.SingleLine.Data;
+using AirlinePop.Template;
 using UnityEngine;
 
-namespace ASTeams.SingleLine.Unity
+namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>
     /// Composition root for Single Line gameplay. It owns repository and progression

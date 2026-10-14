@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.Purchasing;
 
 
-namespace ASTeams.Base.IAP
+namespace AirlinePop.Base.IAP
 {
     [Serializable]
     public class IAPSettings
