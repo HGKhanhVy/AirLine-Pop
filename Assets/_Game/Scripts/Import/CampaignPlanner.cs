@@ -67,7 +67,7 @@ namespace AirlinePop.SingleLine.Import
                 }
                 else if (role == FlightRole.Onboarding)
                 {
-                    placed = PlaceOnboarding(picker, number, id);
+                    placed = PlaceOnboarding(picker, number, id, plan.RulesFor(number, false));
                 }
                 else
                 {
@@ -110,10 +110,19 @@ namespace AirlinePop.SingleLine.Import
             return "ch" + (chapterIndex + 1).ToString("00");
         }
 
-        private PlacedLevel PlaceOnboarding(BoardPicker picker, int number, string id)
+        private PlacedLevel PlaceOnboarding(BoardPicker picker, int number, string id, LevelRule rules)
         {
             int limit = onboardingMinCells +
                 (int)Math.Round((number - 1) * (onboardingMaxCells - onboardingMinCells) / (double)Math.Max(1, plan.OnboardingCount - 1));
+
+            // An opening flight shows its condition on a board about this size, as easy as can be.
+            if (rules != LevelRule.None &&
+                picker.TryPick(new FlightTarget(limit, 1.0), new[] { rules }, (rules & LevelRule.Bridge) != 0, null, out PickedBoard opening))
+            {
+                LevelData shown = opening.Level.WithIdentity(id, 1);
+                BoardPicker.Verify(shown);
+                return new PlacedLevel(shown, opening.Trials, 1);
+            }
 
             if (!picker.TryPickOnboarding(onboardingMinCells, limit, out PickedBoard picked))
             {

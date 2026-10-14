@@ -153,12 +153,13 @@ namespace AirlinePop.SingleLine.Core.Tests
         {
             RulePlan plan = RulePlan.Default;
 
-            Assert.AreEqual(37, plan.FirstLevelWith(LevelRule.Night));
-            Assert.AreEqual(54, plan.FirstLevelWith(LevelRule.Formation));
-            Assert.AreEqual(LevelRule.Night, plan.RulesFor(47, false));
-            Assert.AreEqual(LevelRule.None, plan.RulesFor(57, false));
-            Assert.AreEqual(LevelRule.Formation, plan.RulesFor(74, false));
-            Assert.AreEqual(LevelRule.None, plan.RulesFor(37, true));
+            Assert.AreEqual(18, plan.FirstLevelWith(LevelRule.Night));
+            Assert.AreEqual(22, plan.FirstLevelWith(LevelRule.Formation));
+            Assert.AreEqual(LevelRule.Night, plan.RulesFor(27, false));
+            Assert.AreEqual(LevelRule.None, plan.RulesFor(17, false));
+            Assert.AreEqual(LevelRule.Formation, plan.RulesFor(34, false));
+            Assert.AreEqual(LevelRule.None, plan.RulesFor(24, false));
+            Assert.AreEqual(LevelRule.None, plan.RulesFor(18, true));
         }
 
         [Test]
@@ -176,7 +177,8 @@ namespace AirlinePop.SingleLine.Core.Tests
         {
             RulePlan plan = RulePlan.Default;
 
-            CollectionAssert.AreEqual(new[] { LevelRule.Runway | LevelRule.Wind, LevelRule.Wind, LevelRule.Runway }, plan.VipMixes(29, 1));
+            CollectionAssert.Contains(plan.VipMixes(9, 1), LevelRule.Runway | LevelRule.Wind);
+            CollectionAssert.DoesNotContain(plan.VipMixes(9, 1), LevelRule.Beacon, "the beacon only opens on flight 12");
             CollectionAssert.Contains(plan.VipMixes(89, 3), LevelRule.Runway | LevelRule.Night);
             CollectionAssert.DoesNotContain(plan.VipMixes(400, 14), LevelRule.Formation | LevelRule.Runway);
             CollectionAssert.Contains(plan.VipMixes(400, 14), LevelRule.Formation | LevelRule.Night);

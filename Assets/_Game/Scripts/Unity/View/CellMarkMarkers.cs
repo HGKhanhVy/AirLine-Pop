@@ -107,6 +107,10 @@ namespace AirlinePop.SingleLine.Unity
 
                 Transform markTransform = marker.transform;
                 markTransform.position = board.GetCellWorldPosition(mark.Cell);
+
+                // A beacon's arrow is drawn pointing up and turned the way it points, like the wind's.
+                float degrees = mark.Kind == CellKind.Beacon ? -90f * (int)mark.Direction : 0f;
+                markTransform.rotation = Quaternion.Euler(0f, 0f, degrees);
                 markTransform.localScale = Vector3.one * scale;
                 marker.gameObject.SetActive(true);
 
@@ -120,7 +124,7 @@ namespace AirlinePop.SingleLine.Unity
         {
             switch (kind)
             {
-                case CellKind.Turn:
+                case CellKind.Beacon:
                     return beaconSprite;
                 case CellKind.Bridge:
                     return bridgeSprite;

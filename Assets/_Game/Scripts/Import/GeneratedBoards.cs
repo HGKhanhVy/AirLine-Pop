@@ -24,7 +24,8 @@ namespace AirlinePop.SingleLine.Import
         private static readonly (int Width, int Height)[] PlainSizes =
             { (4, 5), (5, 5), (5, 6), (6, 6), (6, 7), (6, 8), (7, 7), (7, 8) };
 
-        private static readonly (int Width, int Height)[] BridgeSizes = { (5, 6), (6, 6), (6, 7), (6, 8), (7, 8) };
+        private static readonly (int Width, int Height)[] BridgeSizes =
+            { (3, 3), (4, 3), (3, 4), (4, 4), (5, 6), (6, 6), (6, 7), (6, 8), (7, 8) };
 
         private static readonly double[] CornerBiases = { 0.0, 1.5, 4.0 };
         private static readonly double[] Fills = { 0.75, 1.0 };

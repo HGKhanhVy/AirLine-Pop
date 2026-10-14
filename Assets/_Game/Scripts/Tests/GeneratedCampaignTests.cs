@@ -70,7 +70,7 @@ namespace AirlinePop.SingleLine.Core.Tests
             var generator = new BoardGenerator(new BoardGeneratorSettings(6, 6, 20, 36, 1.0, 1.5));
             var random = new Random(3);
 
-            foreach (CellKind kind in new[] { CellKind.Straight, CellKind.Turn })
+            foreach (CellKind kind in new[] { CellKind.Straight, CellKind.Beacon })
             {
                 var variant = new MarkVariant(kind);
                 int marked = 0;

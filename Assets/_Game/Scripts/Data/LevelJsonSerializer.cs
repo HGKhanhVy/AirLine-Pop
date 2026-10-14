@@ -126,29 +126,30 @@ namespace AirlinePop.SingleLine.Data
 
         private static int[] FlattenMarks(IReadOnlyList<CellMark> marks)
         {
-            var pairs = new int[marks.Count * 2];
+            var triples = new int[marks.Count * 3];
 
             for (int i = 0; i < marks.Count; i++)
             {
-                pairs[i * 2] = marks[i].Cell;
-                pairs[i * 2 + 1] = (int)marks[i].Kind;
+                triples[i * 3] = marks[i].Cell;
+                triples[i * 3 + 1] = (int)marks[i].Kind;
+                triples[i * 3 + 2] = (int)marks[i].Direction;
             }
 
-            return pairs;
+            return triples;
         }
 
-        private static CellMark[] ReadMarks(int[] pairs)
+        private static CellMark[] ReadMarks(int[] triples)
         {
-            if (pairs == null || pairs.Length < 2)
+            if (triples == null || triples.Length < 3)
             {
                 return null;
             }
 
-            var marks = new CellMark[pairs.Length / 2];
+            var marks = new CellMark[triples.Length / 3];
 
             for (int i = 0; i < marks.Length; i++)
             {
-                marks[i] = new CellMark(pairs[i * 2], (CellKind)pairs[i * 2 + 1]);
+                marks[i] = new CellMark(triples[i * 3], (CellKind)triples[i * 3 + 1], (Direction)triples[i * 3 + 2]);
             }
 
             return marks;

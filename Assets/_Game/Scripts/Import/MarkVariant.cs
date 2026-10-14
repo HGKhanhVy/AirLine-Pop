@@ -5,10 +5,12 @@ using AirlinePop.SingleLine.Core;
 namespace AirlinePop.SingleLine.Import
 {
     /// <summary>
-    /// Puts turbulence clouds or beacons on squares where the solution already flies straight
-    /// on or turns, so the solution still flies. Squares open on three or four sides are chosen
-    /// first: there the mark rules out real alternatives, while on a corridor it would only
-    /// repeat what the board already says.
+    /// Puts turbulence clouds on squares where the solution flies straight on, or beacons
+    /// pointing the way the solution leaves the square, so the solution still flies. Squares
+    /// open on three or four sides are chosen first: there the mark rules out real
+    /// alternatives, while on a corridor it would only repeat what the board already says.
+    /// A beacon is a one-way passage, flown in from its tail and out along its arrow, so it goes
+    /// where the solution flies straight through, pointing the way the solution travels.
     /// </summary>
     public sealed class MarkVariant : ILevelVariant
     {
@@ -20,7 +22,7 @@ namespace AirlinePop.SingleLine.Import
 
         public MarkVariant(CellKind kind, int maxMarks = 5)
         {
-            if (kind != CellKind.Straight && kind != CellKind.Turn)
+            if (kind != CellKind.Straight && kind != CellKind.Beacon)
             {
                 throw new ArgumentOutOfRangeException(nameof(kind), kind, "Only clouds and beacons are laid onto a solution.");
             }
@@ -60,7 +62,7 @@ namespace AirlinePop.SingleLine.Import
                     continue;
                 }
 
-                marks.Add(new CellMark(cell, kind));
+                marks.Add(new CellMark(cell, kind, ExitOf(level, cell)));
                 added++;
             }
 
@@ -85,13 +87,37 @@ namespace AirlinePop.SingleLine.Import
 
                 bool isStraight = path[i + 1] - cell == cell - path[i - 1];
 
-                if (isStraight == (kind == CellKind.Straight))
+                if (isStraight)
                 {
                     found.Add(cell);
                 }
             }
 
             return found;
+        }
+
+        /// <summary>The way the solution leaves the square, which a beacon on it points.</summary>
+        private static Direction ExitOf(LevelData level, int cell)
+        {
+            IReadOnlyList<int> path = level.Solution;
+
+            for (int i = 0; i < path.Count - 1; i++)
+            {
+                if (path[i] != cell)
+                {
+                    continue;
+                }
+
+                for (int direction = 0; direction < Grid.NeighborCount; direction++)
+                {
+                    if (level.Grid.TryGetNeighbor(cell, (Direction)direction, out int next) && next == path[i + 1])
+                    {
+                        return (Direction)direction;
+                    }
+                }
+            }
+
+            return Direction.Up;
         }
 
         private static int OpenSides(LevelData level, int cell)

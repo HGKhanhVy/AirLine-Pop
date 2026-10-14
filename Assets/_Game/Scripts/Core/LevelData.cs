@@ -35,6 +35,9 @@ namespace AirlinePop.SingleLine.Core
         private readonly CellMark[] marks;
         private readonly CellKind[] kindByCell;
 
+        // Per square: the beacon's direction; read only where the square is a beacon.
+        private readonly Direction[] beaconByCell;
+
         public string Id { get; }
 
         public int Version { get; }
@@ -214,6 +217,7 @@ namespace AirlinePop.SingleLine.Core
 
             this.marks = marks == null ? EmptyMarks : (CellMark[])marks.Clone();
             kindByCell = new CellKind[grid.CellCount];
+            beaconByCell = new Direction[grid.CellCount];
 
             for (int i = 0; i < this.marks.Length; i++)
             {
@@ -230,7 +234,16 @@ namespace AirlinePop.SingleLine.Core
                 }
 
                 kindByCell[mark.Cell] = mark.Kind;
+                beaconByCell[mark.Cell] = mark.Direction;
             }
+        }
+
+        /// <summary>True when the square is a beacon, and which way its arrow points.</summary>
+        public bool TryGetBeacon(int cell, out Direction direction)
+        {
+            bool isBeacon = KindOf(cell) == CellKind.Beacon;
+            direction = isBeacon ? beaconByCell[cell] : Direction.Up;
+            return isBeacon;
         }
 
         /// <summary>What the square asks of the plane; plain for most.</summary>
@@ -256,7 +269,7 @@ namespace AirlinePop.SingleLine.Core
                     case CellKind.Straight:
                         rules |= LevelRule.Turbulence;
                         break;
-                    case CellKind.Turn:
+                    case CellKind.Beacon:
                         rules |= LevelRule.Beacon;
                         break;
                     case CellKind.Bridge:

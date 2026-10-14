@@ -6,30 +6,34 @@ namespace AirlinePop.SingleLine.Import
 {
     /// <summary>
     /// Which extra conditions each flight of the campaign gets, and the part it plays in its
-    /// city. A new condition opens about every ten flights early on, so a player meets
-    /// something new long before plain boards wear thin. The city where a moving condition
-    /// opens practises it on every climb after its first flight; later cities rotate through
-    /// everything learnt so far, with plain boards in between.
+    /// city. The opening stretch is a tour of the airline: about every three or four flights a
+    /// new condition opens (runway, wind, turbulence, beacon, overpass, night, flying together)
+    /// and a moving one is flown again on the next few flights, so what sets the game apart shows
+    /// within its first minutes without piling up. After that the climbs rotate through
+    /// everything learnt, with plain boards in between.
     ///
     /// Each city of ten runs climb, climb, climb, rest, climb, climb, rest, climb, storm,
     /// landing. The rest slots take the night and formation flights, a change of pace (formation
-    /// flights are aimed as hard as a climb, see CampaignPlanner); the storm is the
-    /// city's hardest flight and, once enough conditions are known, mixes two of them.
+    /// flights are aimed as hard as a climb, see CampaignPlanner); the storm is the city's
+    /// hardest flight and, once enough conditions are known, mixes two of them.
     /// </summary>
     public sealed class RulePlan
     {
         public static readonly RulePlan Default = new RulePlan(new[]
         {
-            new RuleOpening(LevelRule.Runway, 12),
-            new RuleOpening(LevelRule.Wind, 22),
-            new RuleOpening(LevelRule.Night, 37),
-            new RuleOpening(LevelRule.Turbulence, 42),
-            new RuleOpening(LevelRule.Formation, 54),
-            new RuleOpening(LevelRule.Beacon, 62),
-            new RuleOpening(LevelRule.Bridge, 72)
+            new RuleOpening(LevelRule.Runway, 2),
+            new RuleOpening(LevelRule.Wind, 5),
+            new RuleOpening(LevelRule.Turbulence, 8),
+            new RuleOpening(LevelRule.Beacon, 12),
+            new RuleOpening(LevelRule.Bridge, 15),
+            new RuleOpening(LevelRule.Night, 18),
+            new RuleOpening(LevelRule.Formation, 22)
         }, 10, 81);
 
         public const int FlightsPerCity = 10;
+
+        /// <summary>Flights after a moving condition opens that keep practising it, before anything else.</summary>
+        private const int PracticeFlights = 3;
 
         // Slots within a city of ten, counted from zero.
         private const int FormationSlot = 3;
@@ -49,7 +53,7 @@ namespace AirlinePop.SingleLine.Import
         private readonly int onboardingCount;
         private readonly int pairsFrom;
 
-        /// <summary>The first flights, plain and growing a step at a time.</summary>
+        /// <summary>The first flights: small boards growing a step at a time, each opening one condition.</summary>
         public int OnboardingCount => onboardingCount;
 
         public RulePlan(RuleOpening[] openings, int onboardingCount, int pairsFrom)
@@ -96,7 +100,7 @@ namespace AirlinePop.SingleLine.Import
 
         public LevelRule RulesFor(int levelNumber, bool isSpecial)
         {
-            if (isSpecial || levelNumber <= onboardingCount)
+            if (isSpecial)
             {
                 return LevelRule.None;
             }
@@ -110,9 +114,24 @@ namespace AirlinePop.SingleLine.Import
             }
 
             int city = (levelNumber - 1) / FlightsPerCity;
+            FlightRole role = RoleOf(levelNumber);
+            LevelRule practised = Practised(levelNumber);
+
+            // Fresh from its opening, a moving condition is flown again a few times before the
+            // next one comes, on every flight but the breathers.
+            if (practised != LevelRule.None && role != FlightRole.Rest && role != FlightRole.Landing)
+            {
+                return practised;
+            }
+
+            if (levelNumber <= onboardingCount)
+            {
+                return LevelRule.None;
+            }
+
             int slot = (levelNumber - 1) % FlightsPerCity;
 
-            switch (RoleOf(levelNumber))
+            switch (role)
             {
                 case FlightRole.Rest:
                     return RestRules(levelNumber, city, slot);
@@ -149,19 +168,9 @@ namespace AirlinePop.SingleLine.Import
             return isPaired ? LevelRule.Night | LevelRule.Runway : LevelRule.Night;
         }
 
-        /// <summary>
-        /// The city where a moving condition opens practises it on every climb after its first
-        /// flight; elsewhere the climbs rotate through what is known, a plain board among them.
-        /// </summary>
+        /// <summary>The climbs rotate through what is known, a plain board among them.</summary>
         private LevelRule ClimbRules(int levelNumber, int city, int slot)
         {
-            LevelRule opening = OpenedInCityBefore(levelNumber, city);
-
-            if (opening != LevelRule.None)
-            {
-                return opening;
-            }
-
             List<LevelRule> known = KnownMoves(levelNumber);
 
             if (known.Count == 0)
@@ -183,13 +192,6 @@ namespace AirlinePop.SingleLine.Import
                 return LevelRule.None;
             }
 
-            LevelRule opening = OpenedInCityBefore(levelNumber, city);
-
-            if (opening != LevelRule.None)
-            {
-                return opening;
-            }
-
             if (levelNumber < pairsFrom || known.Count < 2)
             {
                 return known[known.Count - 1];
@@ -209,20 +211,30 @@ namespace AirlinePop.SingleLine.Import
             return pairs[city % pairs.Count];
         }
 
-        /// <summary>The moving condition that opened earlier in this same city, or none.</summary>
-        private LevelRule OpenedInCityBefore(int levelNumber, int city)
+        /// <summary>
+        /// The moving condition opened within the last few flights, if no other condition has
+        /// opened since; none otherwise.
+        /// </summary>
+        private LevelRule Practised(int levelNumber)
         {
+            RuleOpening latest = default;
+            bool found = false;
+
             for (int i = 0; i < openings.Length; i++)
             {
-                int opened = openings[i].LevelNumber;
-
-                if ((opened - 1) / FlightsPerCity == city && opened < levelNumber && IsMoveRule(openings[i].Rule))
+                if (openings[i].LevelNumber < levelNumber && (!found || openings[i].LevelNumber > latest.LevelNumber))
                 {
-                    return openings[i].Rule;
+                    latest = openings[i];
+                    found = true;
                 }
             }
 
-            return LevelRule.None;
+            if (!found || !IsMoveRule(latest.Rule) || levelNumber - latest.LevelNumber > PracticeFlights)
+            {
+                return LevelRule.None;
+            }
+
+            return latest.Rule;
         }
 
         private List<LevelRule> KnownMoves(int levelNumber)

@@ -28,7 +28,7 @@ namespace AirlinePop.SingleLine.Import
         /// <summary>Formation first, since it rebuilds the board the others are laid onto; night last, since it only marks it.</summary>
         public static IReadOnlyList<ILevelVariant> DefaultVariants => new ILevelVariant[]
         {
-            new FormationVariant(), new MarkVariant(CellKind.Straight), new MarkVariant(CellKind.Turn), new WindVariant(),
+            new FormationVariant(), new MarkVariant(CellKind.Straight), new MarkVariant(CellKind.Beacon), new WindVariant(),
             new RunwayVariant(), new NightVariant()
         };
 

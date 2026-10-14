@@ -384,10 +384,9 @@ MonoBehaviour:
     English: Beacon
     Vietnamese: "\u0110\xE8n hi\u1EC7u"
   - Key: rule.beacon.body
-    English: 'A beacon marks a corner: turn on its square, never fly straight on.'
-    Vietnamese: "\u0110\xE8n hi\u1EC7u \u0111\xE1nh d\u1EA5u kh\xFAc cua: t\u1EDBi
-      \xF4 c\xF3 \u0111\xE8n ph\u1EA3i r\u1EBD, kh\xF4ng \u0111\u01B0\u1EE3c bay
-      th\u1EB3ng."
+    English: Fly into a beacon from its tail and out the way its arrow points.
+    Vietnamese: "Bay v\xE0o \u0111\xE8n hi\u1EC7u t\u1EEB ph\xEDa \u0111u\xF4i \u0111\xE8n,
+      r\u1ED3i bay ra theo h\u01B0\u1EDBng m\u0169i t\xEAn."
   - Key: rule.bridge.title
     English: Overpass
     Vietnamese: "C\u1EA7u v\u01B0\u1EE3t"

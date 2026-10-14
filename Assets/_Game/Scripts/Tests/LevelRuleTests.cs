@@ -65,17 +65,18 @@ namespace AirlinePop.SingleLine.Core.Tests
         {
             RulePlan plan = RulePlan.Default;
 
-            Assert.AreEqual(LevelRule.None, plan.RulesFor(5, false), "onboarding stays plain");
-            Assert.AreEqual(LevelRule.None, plan.RulesFor(11, false));
-            Assert.AreEqual(LevelRule.Runway, plan.RulesFor(12, false), "a condition opens on its own");
-            Assert.AreEqual(LevelRule.Runway, plan.RulesFor(13, false), "and its city practises it");
-            Assert.AreEqual(LevelRule.Runway, plan.RulesFor(19, false), "the storm too");
+            Assert.AreEqual(LevelRule.None, plan.RulesFor(1, false), "the first flight only teaches drawing");
+            Assert.AreEqual(LevelRule.Runway, plan.RulesFor(2, false), "a condition opens on its own");
+            Assert.AreEqual(LevelRule.Runway, plan.RulesFor(4, false), "and is flown a few more times");
+            Assert.AreEqual(LevelRule.Wind, plan.RulesFor(5, false), "before the next one opens");
+            Assert.AreEqual(LevelRule.Turbulence, plan.RulesFor(11, false));
+            Assert.AreEqual(LevelRule.None, plan.RulesFor(14, false), "rests stay breathers");
+            Assert.AreNotEqual(LevelRule.None, plan.RulesFor(19, false), "the storm carries a condition");
             Assert.AreEqual(LevelRule.None, plan.RulesFor(20, false), "the landing stays plain");
-            Assert.AreEqual(LevelRule.None, plan.RulesFor(22, true));
-            Assert.AreEqual(LevelRule.Wind, plan.RulesFor(22, false));
-            Assert.AreEqual(12, plan.FirstLevelWith(LevelRule.Runway));
-            Assert.AreEqual(22, plan.FirstLevelWith(LevelRule.Wind));
-            Assert.AreEqual(72, plan.FirstLevelWith(LevelRule.Bridge));
+            Assert.AreEqual(LevelRule.None, plan.RulesFor(12, true));
+            Assert.AreEqual(2, plan.FirstLevelWith(LevelRule.Runway));
+            Assert.AreEqual(5, plan.FirstLevelWith(LevelRule.Wind));
+            Assert.AreEqual(15, plan.FirstLevelWith(LevelRule.Bridge));
             Assert.AreEqual(FlightRole.Storm, plan.RoleOf(89));
             Assert.AreEqual(FlightRole.Rest, plan.RoleOf(84));
         }

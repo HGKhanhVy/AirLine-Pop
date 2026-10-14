@@ -19,8 +19,6 @@ CLOUD_SHADE = (176, 188, 218, 255)
 STORM = (92, 104, 150, 255)
 STORM_DEEP = (70, 80, 124, 255)
 BOLT = (255, 214, 92, 255)
-BEACON = (255, 156, 84, 255)
-BEACON_GLOW = (255, 224, 150, 255)
 POLE = (150, 160, 186, 255)
 ARROW = (240, 124, 108, 255)
 DECK = (170, 182, 210, 255)
@@ -31,6 +29,8 @@ MINT = (150, 222, 196, 255)
 CORAL = (240, 124, 108, 255)
 CALENDAR = (255, 250, 240, 255)
 STORM_CLOUD = (196, 204, 226, 255)
+LAMP = (255, 214, 92, 255)
+ARROW_LIGHT = (250, 170, 150, 255)
 CHEEK = (246, 170, 170, 255)
 
 
@@ -81,27 +81,31 @@ def mark_cloud():
     c.save("mark_cloud")
 
 
-def corner_arrow(c, x, y, fill, width=20, head=28, reach=(232, 236)):
-    """An arrow that comes up from the bottom to (x, y) and turns right there: the turn a beacon asks for."""
-    end_x, bottom = reach
-    path = [(x, bottom), (x, y), (end_x - head, y)]
-    c.line(path, BROWN, width + 12)
-    c.line(path, fill, width)
-    c.poly([(end_x + 4, y), (end_x - head, y - head), (end_x - head, y + head)], fill, line=6, puffy=False)
+def chevron(c, cx, cy, w, h, fill, line=6):
+    """A plump upward chevron, w wide, h tall, centred on (cx, cy)."""
+    t = h * 0.55
+    pts = [(cx, cy - h / 2), (cx + w / 2, cy - h / 2 + w / 2), (cx + w / 2, cy - h / 2 + w / 2 + t),
+           (cx, cy - h / 2 + t), (cx - w / 2, cy - h / 2 + w / 2 + t), (cx - w / 2, cy - h / 2 + w / 2)]
+    c.poly(pts, fill, line=line, puffy=False)
 
 
-def beacon_light(c, x, y, r):
-    """The beacon itself: a soft glow, an orange lamp and a glint."""
-    c.oval((x - r * 1.7, y - r * 1.7, x + r * 1.7, y + r * 1.7), BEACON_GLOW, line=0, puffy=False)
-    c.oval((x - r, y - r, x + r, y + r), BEACON, line=6, puffy=False)
-    c.oval((x - r * 0.55, y - r * 0.6, x - r * 0.05, y - r * 0.1), WHITE, line=0, puffy=False)
+def approach_lights(c, cx, bottom, scale=1.0):
+    """
+    A beacon drawn like an airport's approach lights: a row of lamps leading in from the tail,
+    growing towards the middle, then two chevrons pointing the way out. Drawn pointing up.
+    """
+    for dy, r in ((0, 9), (-26, 11), (-54, 13)):
+        y = bottom + dy * scale
+        rr = r * scale
+        c.oval((cx - rr, y - rr, cx + rr, y + rr), LAMP, line=5, puffy=False)
+    chevron(c, cx, bottom - 118 * scale, 120 * scale, 74 * scale, ARROW)
+    chevron(c, cx, bottom - 174 * scale, 120 * scale, 74 * scale, ARROW_LIGHT)
 
 
 def mark_beacon():
-    """Beacon: an arrow turning a corner, with the beacon lit right where it turns."""
+    """Beacon on a board square, pointing up; turned on the board to the way it points."""
     c = Canvas(256, 256)
-    corner_arrow(c, 84, 120, ARROW)
-    beacon_light(c, 84, 120, 36)
+    approach_lights(c, 128, 236)
     c.save("mark_beacon")
 
 
@@ -135,8 +139,7 @@ def rule_turbulence():
 def rule_beacon():
     c = Canvas(256, 256)
     card(c, MINT)
-    corner_arrow(c, 88, 118, ARROW, 18, 26, (214, 214))
-    beacon_light(c, 88, 118, 32)
+    approach_lights(c, 128, 210, 0.82)
     c.save("rule_beacon")
 
 

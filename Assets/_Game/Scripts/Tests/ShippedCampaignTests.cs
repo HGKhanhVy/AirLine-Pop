@@ -29,15 +29,13 @@ namespace AirlinePop.SingleLine.Core.Tests
         {
             List<LevelData> first = ReadChapter("ch01");
 
+            // Counted by the player's own route: an overpass adds a pass, a formation board a second half.
             for (int i = 0; i < Layout.OnboardingLevelCount; i++)
             {
-                Assert.That(first[i].ActiveCellCount, Is.InRange(Layout.OnboardingMinCells, Layout.OnboardingMaxCells), first[i].Id);
-
-                if (i > 0)
-                {
-                    Assert.That(first[i].ActiveCellCount, Is.GreaterThanOrEqualTo(first[i - 1].ActiveCellCount), first[i].Id);
-                }
+                Assert.That(first[i].PathLength, Is.InRange(Layout.OnboardingMinCells, Layout.OnboardingMaxCells), first[i].Id);
             }
+
+            Assert.That(first[Layout.OnboardingLevelCount - 1].PathLength, Is.GreaterThan(first[0].PathLength));
         }
 
         [Test]

@@ -27,15 +27,31 @@ namespace AirlinePop.SingleLine.Core.Tests
         }
 
         [Test]
-        public void ABeaconMakesThePlaneTurn()
+        public void ABeaconIsFlownInFromItsTailAndOutAlongItsArrow()
         {
-            LevelData level = Board(3, new[] { new CellMark(4, CellKind.Turn) });
+            // The beacon on 4 points down: in from 1 above it, out to 7 below it.
+            LevelData level = Board(1, new[] { new CellMark(4, CellKind.Beacon, Direction.Down) });
             var visits = new byte[9];
-            visits[3] = visits[4] = 1;
+            visits[1] = 1;
 
-            Assert.IsFalse(PathRules.CanEnter(level, visits, 3, 4, 5));
-            Assert.IsTrue(PathRules.CanEnter(level, visits, 3, 4, 1));
-            Assert.IsTrue(PathRules.CanEnter(level, visits, 3, 4, 7));
+            Assert.IsTrue(PathRules.CanEnter(level, visits, LevelData.NoCell, 1, 4), "in from the tail");
+            Assert.IsFalse(PathRules.CanEnter(level, visits, 0, 3, 4), "not in from the side");
+
+            visits[4] = 1;
+            Assert.IsTrue(PathRules.CanEnter(level, visits, 1, 4, 7), "out along the arrow");
+            Assert.IsFalse(PathRules.CanEnter(level, visits, 1, 4, 5));
+            Assert.IsFalse(PathRules.CanEnter(level, visits, 1, 4, 3));
+            Assert.AreEqual(LevelRule.Beacon, level.Rules & LevelRule.Beacon);
+        }
+
+        [Test]
+        public void ABeaconSurvivesTheJsonRoundTrip()
+        {
+            LevelData level = Board(3, new[] { new CellMark(4, CellKind.Beacon, Direction.Left) });
+            LevelData copy = AirlinePop.SingleLine.Data.LevelJsonSerializer.FromDto(AirlinePop.SingleLine.Data.LevelJsonSerializer.ToDto(level));
+
+            Assert.IsTrue(copy.TryGetBeacon(4, out Direction direction));
+            Assert.AreEqual(Direction.Left, direction);
         }
 
         [Test]

@@ -74,14 +74,22 @@ namespace AirlinePop.SingleLine.Core
         }
 
         /// <summary>
-        /// The level's own conditions on leaving a square: nothing flies on from the runway, a
-        /// square with wind only lets the plane go the way it blows, a cloud or an overpass
-        /// only straight on and a beacon only round a corner. The solver asks the same
+        /// The level's own conditions on a step from <paramref name="head"/> to
+        /// <paramref name="target"/>: nothing flies on from the runway, a square with wind only
+        /// lets the plane go the way it blows, a beacon is flown in from its tail and out along
+        /// its arrow, and a cloud or an overpass only straight on. The solver asks the same
         /// question, so the two can never disagree.
         /// </summary>
         public static bool CanLeave(LevelData level, int previous, int head, int target)
         {
-            return CanLeaveSquare(level, previous, head, target);
+            return CanArrive(level, head, target) && CanLeaveSquare(level, previous, head, target);
+        }
+
+        /// <summary>A beacon is only entered from its tail: the step onto it already heads the way its arrow points.</summary>
+        private static bool CanArrive(LevelData level, int head, int target)
+        {
+            return !level.TryGetBeacon(target, out Direction beacon) ||
+                (level.Grid.TryGetNeighbor(head, beacon, out int ahead) && ahead == target);
         }
 
         private static bool CanLeaveSquare(LevelData level, int previous, int head, int target)
@@ -97,6 +105,11 @@ namespace AirlinePop.SingleLine.Core
                 return false;
             }
 
+            if (level.TryGetBeacon(head, out Direction beacon))
+            {
+                return level.Grid.TryGetNeighbor(head, beacon, out int lit) && lit == target;
+            }
+
             CellKind kind = level.KindOf(head);
 
             if (kind == CellKind.Plain || previous == LevelData.NoCell)
@@ -105,9 +118,8 @@ namespace AirlinePop.SingleLine.Core
             }
 
             // Adjacent squares on one line differ by the same index step, so equal steps in and
-            // out mean the plane flew straight on.
-            bool isStraight = target - head == head - previous;
-            return kind == CellKind.Turn ? !isStraight : isStraight;
+            // out mean the plane flew straight on. Clouds and overpasses both ask for that.
+            return target - head == head - previous;
         }
 
         /// <summary>

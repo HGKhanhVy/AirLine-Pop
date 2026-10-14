@@ -49,7 +49,10 @@ namespace AirlinePop.SingleLine.Data
         [JsonProperty("wind", NullValueHandling = NullValueHandling.Ignore)]
         public int[] Wind { get; set; }
 
-        /// <summary>Marked squares as pairs: cell, kind (1 cloud, 2 beacon, 3 overpass), cell, kind...</summary>
+        /// <summary>
+        /// Marked squares as triples: cell, kind (1 cloud, 2 beacon, 3 overpass), direction (0 up,
+        /// 1 right, 2 down, 3 left; a beacon's arrow, 0 for the others), cell, kind, direction...
+        /// </summary>
         [JsonProperty("marks", NullValueHandling = NullValueHandling.Ignore)]
         public int[] Marks { get; set; }
     }
