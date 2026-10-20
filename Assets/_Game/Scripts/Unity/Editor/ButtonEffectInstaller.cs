@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Text;
-using AirlinePop.Base.UI;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -17,9 +16,8 @@ namespace AirlinePop.SingleLine.Unity.EditorTools
     /// filled in, and settings chosen by hand are left alone. New screens should be run
     /// through this once instead of being wired button by button.
     ///
-    /// Skipped on purpose: buttons driven by the SDK's UIBaseButton (it animates and
-    /// plays its own click), and buttons inside prefab instances, which are handled in
-    /// their own prefab so scenes do not collect overrides.
+    /// Skipped on purpose: buttons inside prefab instances, which are handled in their own
+    /// prefab so scenes do not collect overrides.
     /// </summary>
     public static class ButtonEffectInstaller
     {
@@ -117,18 +115,12 @@ namespace AirlinePop.SingleLine.Unity.EditorTools
 
                 result.Total++;
 
-                if (button.GetComponent<UIBaseButton>() != null)
-                {
-                    result.SdkButtons++;
-                    continue;
-                }
-
-                var effect = button.GetComponent<UIButtonEffect>();
+                var effect = button.GetComponent<ButtonFeedback>();
                 bool isNew = effect == null;
 
                 if (isNew)
                 {
-                    effect = button.gameObject.AddComponent<UIButtonEffect>();
+                    effect = button.gameObject.AddComponent<ButtonFeedback>();
                     result.Added++;
                 }
 
@@ -203,7 +195,6 @@ namespace AirlinePop.SingleLine.Unity.EditorTools
             public int Total;
             public int Added;
             public int Wired;
-            public int SdkButtons;
             public int Centered;
 
             public bool HasChanges => Added > 0 || Wired > 0 || Centered > 0;
@@ -211,7 +202,7 @@ namespace AirlinePop.SingleLine.Unity.EditorTools
             public override string ToString()
             {
                 return Total + " buttons, " + Added + " added, " + Wired + " wired, " +
-                       Centered + " pivots centred, " + SdkButtons + " left to the SDK";
+                       Centered + " pivots centred";
             }
         }
     }

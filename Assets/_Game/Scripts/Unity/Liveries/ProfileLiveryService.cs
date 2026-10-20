@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using AirlinePop.Base.Data;
 
 namespace AirlinePop.SingleLine.Unity
 {
@@ -11,9 +10,9 @@ namespace AirlinePop.SingleLine.Unity
         private const string EquippedKey = "equippedLivery";
 
         private readonly LiveryCatalogSO catalog;
-        private readonly UserProfileController profile;
+        private readonly PlayerProfile profile;
 
-        public ProfileLiveryService(LiveryCatalogSO catalog, UserProfileController profile)
+        public ProfileLiveryService(LiveryCatalogSO catalog, PlayerProfile profile)
         {
             this.catalog = catalog;
             this.profile = profile;
@@ -38,7 +37,7 @@ namespace AirlinePop.SingleLine.Unity
                     return null;
                 }
 
-                LiverySO saved = catalog.Find(profile == null ? null : profile.GetParam<string>(EquippedKey));
+                LiverySO saved = catalog.Find(profile == null ? null : profile.Get<string>(EquippedKey));
                 return saved != null && IsOwned(saved) ? saved : catalog.Default;
             }
         }
@@ -50,18 +49,18 @@ namespace AirlinePop.SingleLine.Unity
                 return false;
             }
 
-            return livery.IsOwnedByDefault || (profile != null && profile.GetParam<bool>(OwnedPrefix + livery.Id));
+            return livery.IsOwnedByDefault || (profile != null && profile.Get<bool>(OwnedPrefix + livery.Id));
         }
 
         public bool TryBuy(LiverySO livery)
         {
-            if (livery == null || IsOwned(livery) || profile == null || !profile.UseCoin(livery.Price))
+            if (livery == null || IsOwned(livery) || profile == null || profile.Coins < livery.Price)
             {
                 return false;
             }
 
-            profile.SetParam(OwnedPrefix + livery.Id, true);
-            GameplayEvents.RaiseCoinBalanceChanged(profile.userData.coin);
+            profile.Set(OwnedPrefix + livery.Id, true, -livery.Price);
+            GameplayEvents.RaiseCoinBalanceChanged(profile.Coins);
             Announce();
             return true;
         }
@@ -73,7 +72,7 @@ namespace AirlinePop.SingleLine.Unity
                 return;
             }
 
-            profile.SetParam(EquippedKey, livery.Id);
+            profile.Set(EquippedKey, livery.Id);
             Announce();
         }
 

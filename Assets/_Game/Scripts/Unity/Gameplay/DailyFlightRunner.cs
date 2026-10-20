@@ -1,6 +1,4 @@
 using System.Collections.Generic;
-using AirlinePop.Base.Data;
-using AirlinePop.Base.UI;
 using AirlinePop.SingleLine.Core;
 using UnityEngine;
 
@@ -39,9 +37,9 @@ namespace AirlinePop.SingleLine.Unity
                 return false;
             }
 
-            service = new DailyFlightService(new ProfileDailyFlightStore(UserProfileController.Instance), new LocalDayClock(),
+            service = new DailyFlightService(new ProfileDailyFlightStore(PlayerProfile.Instance), new LocalDayClock(),
                 economy.DailyFlightCoins, economy.DailyCoinsPerDayInRow, economy.DailyMaxDaysCounted);
-            navigator = new SdkSceneNavigator(UISceneController.Instance);
+            navigator = new SceneNavigator(SceneTransition.Instance);
             level = flights[service.FlightIndexFor(flights.Count)];
             IsActive = true;
             return true;
@@ -51,12 +49,12 @@ namespace AirlinePop.SingleLine.Unity
         public void Complete()
         {
             int coins = service.Complete(out int dayStreak);
-            UserProfileController profile = UserProfileController.Instance;
+            PlayerProfile profile = PlayerProfile.Instance;
 
             if (coins > 0 && profile != null)
             {
-                profile.AddCoin(coins);
-                long balance = profile.userData == null ? 0 : profile.userData.coin;
+                profile.AddCoins(coins);
+                long balance = profile.Coins;
                 GameplayEvents.RaiseCoinsAwarded(coins, balance);
                 GameplayEvents.RaiseCoinBalanceChanged(balance);
             }

@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2825724a05d0fdb41bb39f5283d39b19, type: 3}
   m_Name: UiSoundConfig
   m_EditorClassIdentifier: 
+  buttonClick: {fileID: 8300000, guid: 231e65dbe8f3826489301ee8249b7682, type: 3}
+  buttonClickVolume: 1
   popupOpen: {fileID: 0}
   popupOpenVolume: 0.35
   popupClose: {fileID: 0}

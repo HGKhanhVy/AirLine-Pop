@@ -1,5 +1,3 @@
-using AirlinePop.Base.Data;
-using AirlinePop.Base.UI;
 using UnityEngine;
 
 namespace AirlinePop.SingleLine.Unity
@@ -16,7 +14,7 @@ namespace AirlinePop.SingleLine.Unity
 
         private void Awake()
         {
-            skins = new ProfileSkinService(catalog, UserProfileController.Instance);
+            skins = new ProfileSkinService(catalog, PlayerProfile.Instance);
         }
 
         private void OnEnable()
@@ -39,7 +37,7 @@ namespace AirlinePop.SingleLine.Unity
             }
 
             skins.Grant(reward);
-            UIMessageController.Instance?.ShowNoti("New skin unlocked: " + reward.DisplayName, "top");
+            FlightBonusEvents.RaiseBonusLine(Localization.Format("win.themeUnlocked", reward.DisplayName));
         }
     }
 }

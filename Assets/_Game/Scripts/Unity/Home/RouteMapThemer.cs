@@ -1,4 +1,3 @@
-using AirlinePop.Base.Data;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -29,7 +28,7 @@ namespace AirlinePop.SingleLine.Unity
 
         private void Apply()
         {
-            SkinSO theme = new ProfileSkinService(catalog, UserProfileController.Instance).Equipped;
+            SkinSO theme = new ProfileSkinService(catalog, PlayerProfile.Instance).Equipped;
 
             if (theme == null)
             {

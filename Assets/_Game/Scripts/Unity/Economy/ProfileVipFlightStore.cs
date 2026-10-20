@@ -1,4 +1,3 @@
-using AirlinePop.Base.Data;
 
 namespace AirlinePop.SingleLine.Unity
 {
@@ -11,9 +10,9 @@ namespace AirlinePop.SingleLine.Unity
         // How many days after the landing the guest stays: that day and the next.
         private const int VisitDays = 1;
 
-        private readonly UserProfileController profile;
+        private readonly PlayerProfile profile;
 
-        public ProfileVipFlightStore(UserProfileController profile)
+        public ProfileVipFlightStore(PlayerProfile profile)
         {
             this.profile = profile;
         }
@@ -25,13 +24,13 @@ namespace AirlinePop.SingleLine.Unity
                 return;
             }
 
-            profile.SetParam(FlightPrefix + levelNumber, true);
-            profile.SetParam(DayKey, day);
+            profile.Set(FlightPrefix + levelNumber, true);
+            profile.Set(DayKey, day);
         }
 
         public bool HasFlown(int levelNumber)
         {
-            return profile != null && profile.GetParam<bool>(FlightPrefix + levelNumber);
+            return profile != null && profile.Get<bool>(FlightPrefix + levelNumber);
         }
 
         public bool IsGuestVisiting(int today)
@@ -41,7 +40,7 @@ namespace AirlinePop.SingleLine.Unity
                 return false;
             }
 
-            int day = profile.GetParam<int>(DayKey);
+            int day = profile.Get<int>(DayKey);
             return day > 0 && today >= day && today - day <= VisitDays;
         }
     }

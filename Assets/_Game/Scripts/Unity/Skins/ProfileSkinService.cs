@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using AirlinePop.Base.Data;
 
 namespace AirlinePop.SingleLine.Unity
 {
@@ -14,9 +13,9 @@ namespace AirlinePop.SingleLine.Unity
         private const string EquippedKey = "equippedTheme";
 
         private readonly SkinCatalogSO catalog;
-        private readonly UserProfileController profile;
+        private readonly PlayerProfile profile;
 
-        public ProfileSkinService(SkinCatalogSO catalog, UserProfileController profile)
+        public ProfileSkinService(SkinCatalogSO catalog, PlayerProfile profile)
         {
             this.catalog = catalog;
             this.profile = profile;
@@ -41,7 +40,7 @@ namespace AirlinePop.SingleLine.Unity
                     return null;
                 }
 
-                SkinSO saved = catalog.Find(profile == null ? null : profile.GetParam<string>(EquippedKey));
+                SkinSO saved = catalog.Find(profile == null ? null : profile.Get<string>(EquippedKey));
 
                 // A skin the player no longer owns, or one taken out of the catalogue,
                 // must not leave the board unpainted.
@@ -56,18 +55,18 @@ namespace AirlinePop.SingleLine.Unity
                 return false;
             }
 
-            return skin.IsOwnedByDefault || (profile != null && profile.GetParam<bool>(OwnedPrefix + skin.Id));
+            return skin.IsOwnedByDefault || (profile != null && profile.Get<bool>(OwnedPrefix + skin.Id));
         }
 
         public bool TryBuy(SkinSO skin)
         {
-            if (skin == null || IsOwned(skin) || !skin.IsSoldInShop || profile == null || !profile.UseCoin(skin.Price))
+            if (skin == null || IsOwned(skin) || !skin.IsSoldInShop || profile == null || !profile.TrySpend(skin.Price))
             {
                 return false;
             }
 
             Grant(skin);
-            GameplayEvents.RaiseCoinBalanceChanged(profile.userData.coin);
+            GameplayEvents.RaiseCoinBalanceChanged(profile.Coins);
             return true;
         }
 
@@ -78,7 +77,7 @@ namespace AirlinePop.SingleLine.Unity
                 return;
             }
 
-            profile.SetParam(OwnedPrefix + skin.Id, true);
+            profile.Set(OwnedPrefix + skin.Id, true);
             Announce();
         }
 
@@ -89,7 +88,7 @@ namespace AirlinePop.SingleLine.Unity
                 return;
             }
 
-            profile.SetParam(EquippedKey, skin.Id);
+            profile.Set(EquippedKey, skin.Id);
             Announce();
         }
 

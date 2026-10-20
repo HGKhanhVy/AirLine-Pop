@@ -4,7 +4,7 @@ using UnityEngine;
 namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>
-    /// The one localization service for the whole game, like the SDK's audio and save
+    /// The one localization service for the whole game, like the audio and save
     /// services: every scene and every label reads the same language. Created on first use
     /// from the table in Resources, loaded once.
     /// </summary>

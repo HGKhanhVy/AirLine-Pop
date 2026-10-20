@@ -20,7 +20,7 @@ namespace AirlinePop.SingleLine.Unity.EditorTools
     public static class GameplayHudBuilder
     {
         public const string PrefabPath = "Assets/_Game/UI/AirlineHud.prefab";
-        private const string ScenePath = "Assets/_SDK/Template/Scenes/Gameplay.unity";
+        private const string ScenePath = "Assets/_Game/Scenes/Gameplay.unity";
         private const string GameplayPrefabPath = "Assets/_Game/Prefabs/SingleLineGameplay.prefab";
         private const string VipGuestPrefabPath = "Assets/_Game/Art/FlatCats/CatFlat_vip.prefab";
         private const string OldHudName = "Gameplay HUD";

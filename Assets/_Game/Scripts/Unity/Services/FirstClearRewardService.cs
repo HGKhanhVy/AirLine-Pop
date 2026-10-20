@@ -1,7 +1,5 @@
 using System;
-using AirlinePop.Base.Data;
 using AirlinePop.SingleLine.Data;
-using AirlinePop.Template;
 
 namespace AirlinePop.SingleLine.Unity
 {
@@ -15,23 +13,21 @@ namespace AirlinePop.SingleLine.Unity
     /// </summary>
     public sealed class FirstClearRewardService : ILevelRewardService
     {
-        private readonly UserProfileController profile;
-        private readonly GameResultHandleService resultHandler;
+        private readonly PlayerProfile profile;
         private readonly EconomyConfigSO economy;
         private readonly ReplayAllowance replays;
         private readonly IDayClock clock;
 
-        public FirstClearRewardService(UserProfileController profile, GameResultHandleService resultHandler, EconomyConfigSO economy,
+        public FirstClearRewardService(PlayerProfile profile, EconomyConfigSO economy,
             ReplayAllowance replays, IDayClock clock)
         {
             this.replays = replays ?? throw new ArgumentNullException(nameof(replays));
             this.clock = clock ?? throw new ArgumentNullException(nameof(clock));
             this.profile = profile ?? throw new ArgumentNullException(nameof(profile));
             this.economy = economy ?? throw new ArgumentNullException(nameof(economy));
-            this.resultHandler = resultHandler;
         }
 
-        public long Balance => profile.userData == null ? 0 : profile.userData.coin;
+        public long Balance => profile.Coins;
 
         public int AwardLevelReward(bool isFirstClear)
         {
@@ -42,14 +38,7 @@ namespace AirlinePop.SingleLine.Unity
                 return 0;
             }
 
-            profile.AddCoin(reward);
-
-            // The template's own win flow would pay again unless told this one already did.
-            if (resultHandler != null)
-            {
-                resultHandler.MarkWinCoinsGranted();
-            }
-
+            profile.AddCoins(reward);
             return reward;
         }
     }

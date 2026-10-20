@@ -1,4 +1,3 @@
-using AirlinePop.Base;
 using UnityEngine;
 
 namespace AirlinePop.SingleLine.Unity
@@ -26,12 +25,12 @@ namespace AirlinePop.SingleLine.Unity
         [Tooltip("The count climbs by many coins a frame; this is the shortest gap between two rings.")]
         [SerializeField, Min(0.02f)] private float coinInterval = 0.07f;
 
-        private AudioController audioController;
+        private GameAudio audioController;
         private float lastCoinTime;
 
         private void OnEnable()
         {
-            audioController = AudioController.Instance;
+            audioController = GameAudio.Instance;
             panel.OnShown += HandleShown;
             panel.OnCoinsCounted += HandleCoinsCounted;
         }

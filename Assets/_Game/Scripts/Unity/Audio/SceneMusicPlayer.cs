@@ -1,13 +1,10 @@
-using AirlinePop.Base;
 using UnityEngine;
 
 namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>
-    /// Starts a scene's background music. The track is held here rather than looked up in
-    /// the SDK's sound config, so it plays even where that config is missing, such as a
-    /// scene opened on its own in the editor. Asking for the track already playing leaves
-    /// it running, so music shared by two scenes carries on across the switch.
+    /// Starts a scene's background music. Asking for the track already playing leaves it
+    /// running, so music shared by two scenes carries on across the switch.
     /// </summary>
     public sealed class SceneMusicPlayer : MonoBehaviour
     {
@@ -16,7 +13,7 @@ namespace AirlinePop.SingleLine.Unity
 
         private void Start()
         {
-            AudioController audioController = AudioController.Instance;
+            GameAudio audioController = GameAudio.Instance;
 
             if (audioController != null)
             {

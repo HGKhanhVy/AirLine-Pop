@@ -1,15 +1,14 @@
-using AirlinePop.Base.UI;
 using UnityEngine;
 
 namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>
-    /// The fun screen on the scene change overlay: follows the SDK's scene controller and
+    /// The fun screen on the scene cover: follows the scene transition and
     /// drives its parts only while a change is under way.
     /// </summary>
     public sealed class LoadingScreen : MonoBehaviour
     {
-        [SerializeField] private UISceneController sceneController;
+        [SerializeField] private SceneTransition sceneController;
         [SerializeField] private LoadingAnimation[] parts = new LoadingAnimation[0];
 
         private void OnEnable()
@@ -43,7 +42,7 @@ namespace AirlinePop.SingleLine.Unity
         }
 
 #if UNITY_EDITOR
-        public void EditorLink(UISceneController linkedController, LoadingAnimation[] linkedParts)
+        public void EditorLink(SceneTransition linkedController, LoadingAnimation[] linkedParts)
         {
             sceneController = linkedController;
             parts = linkedParts;

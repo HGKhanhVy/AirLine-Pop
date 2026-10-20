@@ -1,4 +1,3 @@
-using AirlinePop.Base.Data;
 using AirlinePop.SingleLine.Core;
 using UnityEngine;
 
@@ -33,7 +32,7 @@ namespace AirlinePop.SingleLine.Unity
 
         private void HandleFirstClear(int levelNumber)
         {
-            UserProfileController profile = UserProfileController.Instance;
+            PlayerProfile profile = PlayerProfile.Instance;
 
             if (!isStormFlight || economy == null || profile == null || economy.StormBonusCoins <= 0)
             {
@@ -41,10 +40,10 @@ namespace AirlinePop.SingleLine.Unity
             }
 
             int bonus = economy.StormBonusCoins;
-            profile.AddCoin(bonus);
+            profile.AddCoins(bonus);
             FlightBonusEvents.RaiseBonusLine(Localization.Format("win.stormBonus", bonus));
 
-            long balance = profile.userData == null ? 0 : profile.userData.coin;
+            long balance = profile.Coins;
             GameplayEvents.RaiseCoinsAwarded(bonus, balance);
             GameplayEvents.RaiseCoinBalanceChanged(balance);
         }

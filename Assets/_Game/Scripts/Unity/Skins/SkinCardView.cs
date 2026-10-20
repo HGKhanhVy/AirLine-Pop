@@ -34,7 +34,7 @@ namespace AirlinePop.SingleLine.Unity
         [Header("Action")]
         [SerializeField] private Button actionButton;
         [SerializeField] private Image actionBackground;
-        [SerializeField] private UIButtonEffect actionEffect;
+        [SerializeField] private ButtonFeedback actionEffect;
 
         [Header("Worn")]
         [Tooltip("Ring shown around the card the player is wearing.")]

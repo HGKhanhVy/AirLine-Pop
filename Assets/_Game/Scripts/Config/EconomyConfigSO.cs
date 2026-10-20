@@ -10,6 +10,9 @@ namespace AirlinePop.SingleLine.Unity
     public sealed class EconomyConfigSO : ScriptableObject
     {
         [Header("Coins")]
+        [Tooltip("Coins a brand new save starts with.")]
+        [SerializeField, Min(0)] private int startingCoins = 160;
+
         [SerializeField, Min(0)] private int firstClearCoins = 80;
 
         [Tooltip("Coins for replaying a level already beaten.")]
@@ -61,6 +64,8 @@ namespace AirlinePop.SingleLine.Unity
 
         [Header("Room")]
         [SerializeField, Range(1, 8)] private int maxVisibleCats = 4;
+
+        public int StartingCoins => startingCoins;
 
         public int FirstClearCoins => firstClearCoins;
 

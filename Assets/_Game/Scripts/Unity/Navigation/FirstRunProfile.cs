@@ -1,15 +1,10 @@
-using AirlinePop.Base;
-using AirlinePop.Base.Data;
 using UnityEngine;
 
 namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>
-    /// What the boot screen has to settle before the game proper starts: the consent
-    /// answer, and the values a brand new save needs.
-    ///
-    /// The template does both inside its own loading scene, which this game does not use;
-    /// the splash screen is the one boot screen GDD 9.1 asks for, and it calls in here.
+    /// What the boot screen settles before the game proper starts: the consent answer,
+    /// and the starting coins of a brand new save.
     /// </summary>
     public static class FirstRunProfile
     {
@@ -22,15 +17,20 @@ namespace AirlinePop.SingleLine.Unity
         /// <summary>The key the first build wrote. Read once so old installs are not asked twice.</summary>
         private const string LegacyConsentKey = "HasAcceptedConsent";
 
+        private const string SeededParam = "seeded";
+
+        // Saves from earlier builds mark their first launch with this instead.
+        private const string LegacySeededParam = "firstTime";
+
         /// <summary>
         /// True once the player has answered. An install from the first build answered into
         /// PlayerPrefs, so that answer is carried over rather than asked again.
         /// </summary>
         public static bool HasConsent()
         {
-            UserProfileController profile = UserProfileController.Instance;
+            PlayerProfile profile = PlayerProfile.Instance;
 
-            if (profile != null && profile.GetParam<bool>(ConsentParam))
+            if (profile.Get<bool>(ConsentParam))
             {
                 return true;
             }
@@ -40,50 +40,26 @@ namespace AirlinePop.SingleLine.Unity
                 return false;
             }
 
-            profile?.SetParam(ConsentParam, true);
+            profile.Set(ConsentParam, true);
             return true;
         }
 
         public static void AcceptConsent()
         {
-            UserProfileController.Instance?.SetParam(ConsentParam, true);
+            PlayerProfile.Instance.Set(ConsentParam, true);
         }
 
-        /// <summary>
-        /// A save that has never been played needs the numbers the template's services read
-        /// through the profile's parameter blob. The profile itself already fills in coins
-        /// and level when it creates a user; these are the rest.
-        /// </summary>
-        public static void Seed()
+        /// <summary>Gives a save that has never been played its starting coins, once.</summary>
+        public static void Seed(int startingCoins)
         {
-            UserProfileController profile = UserProfileController.Instance;
+            PlayerProfile profile = PlayerProfile.Instance;
 
-            if (profile == null || profile.GetParam<bool>("firstTime"))
+            if (profile.Get<bool>(SeededParam) || profile.Get<bool>(LegacySeededParam))
             {
                 return;
             }
 
-            GameConfig config = ConfigController.Instance == null ? null : ConfigController.Instance.GameConfig;
-
-            profile.SetParam("firstTime", true);
-            profile.SetParam("currentLevel", 1);
-            profile.SetParam("adsTicket", 0);
-            profile.SetParam("winStreak", 0);
-            profile.SetParam("openedWinStreakCount", 0);
-
-            if (config != null)
-            {
-                profile.SetParam("timeToAddLife", config.refillLifeTime);
-                profile.SetParam("coin", config.startCoin);
-                profile.SetParam("life", config.maxLife);
-            }
-
-            profile.SetParam("booster_1", 3);
-            profile.SetParam("booster_2", 3);
-            profile.SetParam("booster_3", 3);
-            profile.SetParam("booster_1_tutorial", false);
-            profile.SetParam("booster_2_tutorial", false);
-            profile.SetParam("booster_3_tutorial", false);
+            profile.Set(SeededParam, true, startingCoins);
         }
     }
 }

@@ -1,4 +1,3 @@
-using AirlinePop.Base.Data;
 using UnityEngine;
 
 namespace AirlinePop.SingleLine.Unity
@@ -29,7 +28,7 @@ namespace AirlinePop.SingleLine.Unity
 
         private void Awake()
         {
-            skins = new ProfileSkinService(catalog, UserProfileController.Instance);
+            skins = new ProfileSkinService(catalog, PlayerProfile.Instance);
         }
 
         private void OnEnable()

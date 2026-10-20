@@ -11,13 +11,14 @@ namespace AirlinePop.SingleLine.Unity.EditorTools
     /// Rebuilds the privacy popup on the boot splash in the AirLine Pop kit: a cream card with
     /// Captain Bơ standing on its top edge, plain-words facts about the player's data, the
     /// policy link and one Agree button. The game shows no ads yet, so the personalized ads
-    /// switch is left out. Replaces the template's dark panel; the popup's behaviour stays in
-    /// <see cref="UiConsent"/>. Safe to rerun.
+    /// switch is left out. The popup's behaviour lives in <see cref="ConsentPopup"/>. Safe to
+    /// rerun.
     /// </summary>
     public static class ConsentPopupBuilder
     {
-        private const string ScenePath = "Assets/UXUI/Resources/UI/Splash.unity";
+        private const string ScenePath = "Assets/_Game/Scenes/Splash.unity";
         private const string ConfigPath = "Assets/_Game/Config/SettingsConfig.asset";
+        private const string SoundsPath = "Assets/_Game/Config/UiSoundConfig.asset";
         private const string CaptainPath = "Assets/_Game/Art/FlatCats/passenger_bo_happy.png";
 
         private static readonly Vector2 CardSize = new Vector2(840f, 860f);
@@ -51,11 +52,11 @@ namespace AirlinePop.SingleLine.Unity.EditorTools
 
             try
             {
-                UiConsent popup = FindPopup(scene);
+                ConsentPopup popup = FindPopup(scene);
 
                 if (popup == null)
                 {
-                    return "No UiConsent in " + ScenePath + "; popup not built.";
+                    return "No ConsentPopup in " + ScenePath + "; popup not built.";
                 }
 
                 BuildContent(popup);
@@ -72,7 +73,7 @@ namespace AirlinePop.SingleLine.Unity.EditorTools
             }
         }
 
-        private static void BuildContent(UiConsent popup)
+        private static void BuildContent(ConsentPopup popup)
         {
             var root = (RectTransform)popup.transform;
             ClearChildren(root);
@@ -101,7 +102,8 @@ namespace AirlinePop.SingleLine.Unity.EditorTools
             Button agree = BuildAgreeButton(card.rectTransform);
 
             SettingsConfigSO config = AssetDatabase.LoadAssetAtPath<SettingsConfigSO>(ConfigPath);
-            popup.EditorLink(group, card.rectTransform, null, policy, agree, null, config);
+            popup.EditorLink(group, card.rectTransform, policy, agree, config,
+                AssetDatabase.LoadAssetAtPath<UiSoundConfigSO>(SoundsPath));
             EditorUtility.SetDirty(popup);
         }
 
@@ -198,11 +200,11 @@ namespace AirlinePop.SingleLine.Unity.EditorTools
             }
         }
 
-        private static UiConsent FindPopup(Scene scene)
+        private static ConsentPopup FindPopup(Scene scene)
         {
             foreach (GameObject root in scene.GetRootGameObjects())
             {
-                UiConsent popup = root.GetComponentInChildren<UiConsent>(true);
+                ConsentPopup popup = root.GetComponentInChildren<ConsentPopup>(true);
 
                 if (popup != null)
                 {

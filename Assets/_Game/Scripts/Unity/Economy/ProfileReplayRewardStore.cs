@@ -1,5 +1,4 @@
 using System;
-using AirlinePop.Base.Data;
 using AirlinePop.SingleLine.Data;
 
 namespace AirlinePop.SingleLine.Unity
@@ -10,21 +9,21 @@ namespace AirlinePop.SingleLine.Unity
         private const string DayKey = "replay_day";
         private const string PaidKey = "replay_paid";
 
-        private readonly UserProfileController profile;
+        private readonly PlayerProfile profile;
 
-        public ProfileReplayRewardStore(UserProfileController profile)
+        public ProfileReplayRewardStore(PlayerProfile profile)
         {
             this.profile = profile ?? throw new ArgumentNullException(nameof(profile));
         }
 
-        public int Day => profile.GetParam<int>(DayKey);
+        public int Day => profile.Get<int>(DayKey);
 
-        public int PaidCount => profile.GetParam<int>(PaidKey);
+        public int PaidCount => profile.Get<int>(PaidKey);
 
         public void Save(int day, int paidCount)
         {
-            profile.SetParam(DayKey, day);
-            profile.SetParam(PaidKey, paidCount);
+            profile.Set(DayKey, day);
+            profile.Set(PaidKey, paidCount);
         }
     }
 }

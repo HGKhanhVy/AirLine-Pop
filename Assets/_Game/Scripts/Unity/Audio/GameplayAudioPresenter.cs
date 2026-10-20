@@ -1,4 +1,3 @@
-using AirlinePop.Base;
 using AirlinePop.SingleLine.Core;
 using UnityEngine;
 
@@ -8,7 +7,7 @@ namespace AirlinePop.SingleLine.Unity
     {
         [Tooltip("One note per step, in the order of the tune: arpeggios over a " +
                  "chord progression, so every step is a new note and all of them belong " +
-                 "together. Empty falls back to the single step sound.")]
+                 "together.")]
         [SerializeField] private AudioClip[] stepTones;
 
         [SerializeField, Range(0f, 1f)] private float stepVolume = 0.25f;
@@ -24,9 +23,11 @@ namespace AirlinePop.SingleLine.Unity
         [SerializeField] private AudioSource[] stepVoices = System.Array.Empty<AudioSource>();
 
         [Header("Board actions")]
-        [Tooltip("Taking a step back. These four are wired as clips rather than through " +
-                 "SoundName because the shared enum lives in the SDK and has no entry for " +
-                 "undo, restart or a hint; naming them here keeps the SDK untouched.")]
+        [Tooltip("A new board opening.")]
+        [SerializeField] private AudioClip levelStartClip;
+        [SerializeField, Range(0f, 1f)] private float levelStartVolume = 0.3f;
+
+        [Tooltip("Taking a step back.")]
         [SerializeField] private AudioClip undoClip;
 
         [SerializeField] private AudioClip restartClip;
@@ -50,7 +51,7 @@ namespace AirlinePop.SingleLine.Unity
         [SerializeField] private AudioClip passengerClip;
         [SerializeField, Range(0f, 1f)] private float passengerVolume = 0.6f;
 
-        private AudioController audioController;
+        private GameAudio audioController;
         private int lastProgress;
         private int lastAboard;
         private int stepOffset;
@@ -58,7 +59,7 @@ namespace AirlinePop.SingleLine.Unity
 
         private void OnEnable()
         {
-            audioController = AudioController.Instance;
+            audioController = GameAudio.Instance;
 
             GameplayEvents.OnLevelLoaded += HandleLevelLoaded;
             GameplayEvents.OnProgressChanged += HandleProgressChanged;
@@ -89,7 +90,7 @@ namespace AirlinePop.SingleLine.Unity
             int tuneLength = stepTones != null ? stepTones.Length : 0;
             // The daily flight carries no campaign number, so it starts the tune where the first flight does.
             stepOffset = tuneLength > 0 ? (Mathf.Max(1, levelNumber) - 1) * stepShiftPerLevel % tuneLength : 0;
-            audioController?.PlaySound(SoundName.UI_LevelStart);
+            audioController?.PlaySound(levelStartClip, levelStartVolume);
         }
 
         /// <summary>Only a passenger getting on is heard; one let off by an undo is not.</summary>
@@ -136,7 +137,6 @@ namespace AirlinePop.SingleLine.Unity
 
             if (stepTones == null || stepTones.Length == 0)
             {
-                audioController.PlaySound(SoundName.UI_Progress);
                 return;
             }
 
@@ -159,7 +159,7 @@ namespace AirlinePop.SingleLine.Unity
             AudioSource voice = stepVoices[nextVoice];
             nextVoice = (nextVoice + 1) % stepVoices.Length;
             voice.clip = tone;
-            voice.volume = audioController.IsMuteSound ? 0f : stepVolume;
+            voice.volume = audioController.IsSoundOn ? stepVolume : 0f;
             voice.Play();
         }
 

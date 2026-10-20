@@ -13,7 +13,7 @@ namespace AirlinePop.SingleLine.Unity.EditorTools
     /// </summary>
     public static class MobileBuildSizeInstaller
     {
-        private static readonly string[] ArtFolders = { "Assets/_Game", "Assets/UXUI", "Assets/_SDK" };
+        private static readonly string[] ArtFolders = { "Assets/_Game" };
 
         [MenuItem("Tools/AirLine Pop/Shrink Mobile Build")]
         public static void InstallFromMenu()

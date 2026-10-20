@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.IO;
-using AirlinePop.Base.Level;
 using AirlinePop.SingleLine.Core;
 using AirlinePop.SingleLine.Data;
 using AirlinePop.SingleLine.Editor;
@@ -24,10 +23,6 @@ namespace AirlinePop.SingleLine.Unity.EditorTools
         public const string DefaultLevelFolder = "Assets/_Game/Config/Levels";
         public const string DefaultConfigPath = "Assets/_Game/Config/SingleLineLevelConfig.asset";
 
-        /// <summary>Highest importer rating still shown as Easy, then Hard, then SuperHard.</summary>
-        private const int EasyCeiling = 4;
-        private const int HardCeiling = 7;
-
         [MenuItem("Tools/Single Line/Rebuild Level Config")]
         public static void RebuildFromMenu()
         {
@@ -47,8 +42,8 @@ namespace AirlinePop.SingleLine.Unity.EditorTools
 
             EnsureFolder(levelFolder);
 
-            LevelConfigSO config = LoadOrCreate<LevelConfigSO>(configPath);
-            config.levels.Clear();
+            LevelOrderSO config = LoadOrCreate<LevelOrderSO>(configPath);
+            var definitions = new List<SingleLineLevelSO>(ordered.Count);
 
             for (int i = 0; i < ordered.Count; i++)
             {
@@ -59,13 +54,10 @@ namespace AirlinePop.SingleLine.Unity.EditorTools
                 SingleLineLevelSO definition = LoadOrCreate<SingleLineLevelSO>(assetPath);
                 Write(definition, ordered[i], levelNumber, chapterIds[i]);
 
-                config.levels.Add(new LevelConfig
-                {
-                    second = 0,
-                    levelDefinition = definition,
-                    type = ToLevelType(ordered[i].Difficulty)
-                });
+                definitions.Add(definition);
             }
+
+            config.EditorSetLevels(definitions);
 
             RemoveStaleDefinitions(levelFolder, ordered.Count);
 
@@ -117,15 +109,6 @@ namespace AirlinePop.SingleLine.Unity.EditorTools
             EditorUtility.SetDirty(definition);
         }
 
-        private static LevleType ToLevelType(int difficulty)
-        {
-            if (difficulty <= EasyCeiling)
-            {
-                return LevleType.Easy;
-            }
-
-            return difficulty <= HardCeiling ? LevleType.Hard : LevleType.SuperHard;
-        }
 
         /// <summary>
         /// A shorter campaign must not leave the levels it dropped lying in the folder,

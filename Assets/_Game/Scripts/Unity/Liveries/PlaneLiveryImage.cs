@@ -1,4 +1,3 @@
-using AirlinePop.Base.Data;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -29,7 +28,7 @@ namespace AirlinePop.SingleLine.Unity
 
         private void Apply()
         {
-            LiverySO livery = new ProfileLiveryService(catalog, UserProfileController.Instance).Equipped;
+            LiverySO livery = new ProfileLiveryService(catalog, PlayerProfile.Instance).Equipped;
             Sprite sprite = livery == null ? null : isParked ? livery.PlaneParked : livery.PlaneTopDown;
 
             if (sprite != null)

@@ -13020,7 +13020,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8586453238773501841, guid: b038c43d04655c143aabc2fee945e244, type: 3}
       propertyPath: m_Name
-      value: MANAGERS
+      value: AppRoot
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

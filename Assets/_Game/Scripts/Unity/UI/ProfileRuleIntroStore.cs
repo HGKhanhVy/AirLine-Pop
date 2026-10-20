@@ -1,4 +1,3 @@
-using AirlinePop.Base.Data;
 using AirlinePop.SingleLine.Core;
 
 namespace AirlinePop.SingleLine.Unity
@@ -8,21 +7,21 @@ namespace AirlinePop.SingleLine.Unity
     {
         private const string KeyPrefix = "rule_seen_";
 
-        private readonly UserProfileController profile;
+        private readonly PlayerProfile profile;
 
-        public ProfileRuleIntroStore(UserProfileController profile)
+        public ProfileRuleIntroStore(PlayerProfile profile)
         {
             this.profile = profile;
         }
 
         public bool HasSeen(LevelRule rule)
         {
-            return profile != null && profile.GetParam<bool>(KeyPrefix + rule);
+            return profile != null && profile.Get<bool>(KeyPrefix + rule);
         }
 
         public void MarkSeen(LevelRule rule)
         {
-            profile?.SetParam(KeyPrefix + rule, true);
+            profile?.Set(KeyPrefix + rule, true);
         }
     }
 }

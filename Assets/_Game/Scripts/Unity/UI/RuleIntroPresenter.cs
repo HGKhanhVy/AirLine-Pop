@@ -1,4 +1,3 @@
-using AirlinePop.Base.Data;
 using AirlinePop.SingleLine.Core;
 using UnityEngine;
 
@@ -18,7 +17,7 @@ namespace AirlinePop.SingleLine.Unity
 
         private void OnEnable()
         {
-            store ??= new ProfileRuleIntroStore(UserProfileController.Instance);
+            store ??= new ProfileRuleIntroStore(PlayerProfile.Instance);
             GameplayEvents.OnLevelRules += HandleLevelRules;
             view.OnClosed += ShowNext;
         }

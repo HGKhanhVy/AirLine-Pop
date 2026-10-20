@@ -1,4 +1,3 @@
-using AirlinePop.Base;
 using UnityEngine;
 
 namespace AirlinePop.SingleLine.Unity
@@ -36,15 +35,15 @@ namespace AirlinePop.SingleLine.Unity
         [Tooltip("Seconds between the flash and the thunder, picked between these each time.")]
         [SerializeField] private Vector2 thunderDelay = new Vector2(0.2f, 1f);
 
-        private AudioController audioController;
+        private GameAudio audioController;
         private float rain;
         private float wind;
 
-        private bool IsMuted => audioController != null && audioController.IsMuteSound;
+        private bool IsMuted => audioController != null && !audioController.IsSoundOn;
 
         private void OnEnable()
         {
-            audioController = AudioController.Instance;
+            audioController = GameAudio.Instance;
             night.OnTorchesOn += HandleTorchesOn;
             weather.OnRainChanged += HandleRainChanged;
             weather.OnFogChanged += HandleFogChanged;

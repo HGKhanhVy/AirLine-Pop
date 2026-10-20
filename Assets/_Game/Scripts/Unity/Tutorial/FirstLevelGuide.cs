@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using AirlinePop.Base.Data;
 using AirlinePop.SingleLine.Core;
 using DG.Tweening;
 using UnityEngine;
@@ -38,7 +37,7 @@ namespace AirlinePop.SingleLine.Unity
 
         private void Awake()
         {
-            progress = new ProfileTutorialProgressStore(UserProfileController.Instance);
+            progress = new ProfileTutorialProgressStore(PlayerProfile.Instance);
         }
 
         private void OnEnable()

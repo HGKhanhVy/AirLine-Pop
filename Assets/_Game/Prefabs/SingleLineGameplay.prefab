@@ -16652,7 +16652,6 @@ GameObject:
   - component: {fileID: 1808359818743480302}
   - component: {fileID: 5369164027905730817}
   - component: {fileID: 4891353049534945424}
-  - component: {fileID: 2544141247327577434}
   - component: {fileID: 4542676709094699570}
   - component: {fileID: 7229759553939837357}
   - component: {fileID: 8308609376341727635}
@@ -16737,15 +16736,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   controller: {fileID: 490432196145728844}
-  gameStateService: {fileID: 0}
   levelConfig: {fileID: 11400000, guid: da175ddc371ebbe2a5e8c953fac630bd, type: 2}
-  levelService: {fileID: 0}
-  resultHandler: {fileID: 0}
-  vibration: {fileID: 0}
-  fallbackLevelNumber: 1
   advancesAutomatically: 0
   delayAfterWin: 0.9
-  firstClearBonus: 20
   economy: {fileID: 11400000, guid: 6d561e8d5ad0d324b84376b5d92afb2f, type: 2}
   dailyFlight: {fileID: 6544961883994521512}
 --- !u!114 &1808359818743480302
@@ -16845,6 +16838,8 @@ MonoBehaviour:
   - {fileID: 8308609376341727635}
   - {fileID: 9130340158505866811}
   - {fileID: 6995737239122332868}
+  levelStartClip: {fileID: 8300000, guid: 925d0519879f5be4c9f7bcdf68deba4b, type: 3}
+  levelStartVolume: 0.3
   undoClip: {fileID: 8300000, guid: 441dc771f544a834bb51e0a5273961f6, type: 3}
   restartClip: {fileID: 8300000, guid: a88493d2c8b6e574b99f5e82fcdfb265, type: 3}
   hintClip: {fileID: 8300000, guid: f63ff2a00bd0f7f4ba3d83bd8600cd08, type: 3}
@@ -16868,21 +16863,6 @@ MonoBehaviour:
   showDelay: 0.9
   holdAfterWave: 0.2
   skippableAfter: 0.4
---- !u!114 &2544141247327577434
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9161449699214583546}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b52110758f99ce041818de7b85569fd7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  quietLevels: 5
-  quietSeconds: 600
-  levelsPerBreak: 3
 --- !u!82 &4542676709094699570
 AudioSource:
   m_ObjectHideFlags: 0

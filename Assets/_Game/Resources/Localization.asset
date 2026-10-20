@@ -413,6 +413,9 @@ MonoBehaviour:
   - Key: win.stormBonus
     English: "Storm beaten \xB7 +{0} coins"
     Vietnamese: "V\u01B0\u1EE3t b\xE3o \xB7 +{0} xu"
+  - Key: win.themeUnlocked
+    English: "New theme · {0}"
+    Vietnamese: "Giao diện mới · {0}"
   - Key: daily.title
     English: Daily flight
     Vietnamese: "Chuy\u1EBFn bay h\u1EB1ng ng\xE0y"

@@ -23,7 +23,7 @@ namespace AirlinePop.SingleLine.Unity.EditorTools
     {
         public const string ScenePath = "Assets/_Game/Scenes/Home.unity";
         private const string ConfigFolder = "Assets/_Game/Config";
-        private const string ManagersPrefabPath = "Assets/_SDK/Content/Prefabs/MANAGERS.prefab";
+        private const string ManagersPrefabPath = "Assets/_Game/Prefabs/AppRoot.prefab";
 
         // Far enough from the airport that its wide lawn never shows above the lounge wall.
         private static readonly Vector3 RoomOrigin = new Vector3(90f, 0f, 0f);

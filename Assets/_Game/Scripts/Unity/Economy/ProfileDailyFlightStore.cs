@@ -1,4 +1,3 @@
-using AirlinePop.Base.Data;
 
 namespace AirlinePop.SingleLine.Unity
 {
@@ -8,16 +7,16 @@ namespace AirlinePop.SingleLine.Unity
         private const string DayKey = "daily_day";
         private const string StreakKey = "daily_streak";
 
-        private readonly UserProfileController profile;
+        private readonly PlayerProfile profile;
 
-        public ProfileDailyFlightStore(UserProfileController profile)
+        public ProfileDailyFlightStore(PlayerProfile profile)
         {
             this.profile = profile;
         }
 
-        public int LastFlownDay => profile == null ? 0 : profile.GetParam<int>(DayKey);
+        public int LastFlownDay => profile == null ? 0 : profile.Get<int>(DayKey);
 
-        public int DayStreak => profile == null ? 0 : profile.GetParam<int>(StreakKey);
+        public int DayStreak => profile == null ? 0 : profile.Get<int>(StreakKey);
 
         public void Save(int day, int dayStreak)
         {
@@ -26,8 +25,8 @@ namespace AirlinePop.SingleLine.Unity
                 return;
             }
 
-            profile.SetParam(DayKey, day);
-            profile.SetParam(StreakKey, dayStreak);
+            profile.Set(DayKey, day);
+            profile.Set(StreakKey, dayStreak);
         }
     }
 }

@@ -1,4 +1,3 @@
-using AirlinePop.Base.Data;
 using AirlinePop.SingleLine.Core;
 using UnityEngine;
 
@@ -13,7 +12,7 @@ namespace AirlinePop.SingleLine.Unity
 
         private void OnEnable()
         {
-            store ??= new ProfileVipFlightStore(UserProfileController.Instance);
+            store ??= new ProfileVipFlightStore(PlayerProfile.Instance);
             clock ??= new LocalDayClock();
             GameplayEvents.OnLevelRules += HandleLevelRules;
             GameplayEvents.OnLevelWon += HandleLevelWon;

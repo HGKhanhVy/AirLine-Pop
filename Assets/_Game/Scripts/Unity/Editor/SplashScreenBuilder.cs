@@ -6,19 +6,16 @@ using UnityEngine.SceneManagement;
 namespace AirlinePop.SingleLine.Unity.EditorTools
 {
     /// <summary>
-    /// Puts the cat loading screen on the boot splash in place of the template's
-    /// "Block Fill Puzzle" logo, so the first thing a player sees is the game's own art.
-    /// The template pieces are only switched off, and the consent popup stays above.
-    /// Safe to rerun.
+    /// Puts the cat loading screen on the boot splash, so the first thing a player sees is
+    /// the game's own art, and links the boot flow to the consent popup above it. Safe to
+    /// rerun.
     /// </summary>
     public static class SplashScreenBuilder
     {
-        private const string ScenePath = "Assets/UXUI/Resources/UI/Splash.unity";
+        private const string ScenePath = "Assets/_Game/Scenes/Splash.unity";
+        private const string EconomyPath = "Assets/_Game/Config/EconomyConfig.asset";
         private const string CanvasName = "Splash";
         private const string ScreenName = "Cat Loading Screen";
-
-        // The template's logo, its own background and its block loading icon.
-        private static readonly string[] TemplatePieces = { "BG", "LOGO", "LoadingIcon", "LoadingText" };
 
         [MenuItem("Tools/AirLine Pop/Build Splash Screen")]
         public static void BuildFromMenu()
@@ -44,12 +41,12 @@ namespace AirlinePop.SingleLine.Unity.EditorTools
                     return "No '" + CanvasName + "' canvas in " + ScenePath + "; splash not built.";
                 }
 
-                HideTemplate(canvas);
+                ClearEarlierBuild(canvas);
                 RectTransform screen = UiBuilder.Stretch(UiBuilder.Rect(ScreenName, canvas));
                 screen.SetAsFirstSibling();
                 LoadingAnimation[] parts = LoadingScreenBuilder.BuildContent(screen);
                 screen.gameObject.AddComponent<SplashLoadingScreen>().EditorLink(parts);
-                UnlinkTemplateIcon(scene);
+                LinkBoot(scene);
 
                 EditorSceneManager.MarkSceneDirty(scene);
                 EditorSceneManager.SaveScene(scene);
@@ -64,7 +61,7 @@ namespace AirlinePop.SingleLine.Unity.EditorTools
             }
         }
 
-        private static void HideTemplate(Transform canvas)
+        private static void ClearEarlierBuild(Transform canvas)
         {
             for (int i = canvas.childCount - 1; i >= 0; i--)
             {
@@ -74,27 +71,27 @@ namespace AirlinePop.SingleLine.Unity.EditorTools
                 {
                     Object.DestroyImmediate(child.gameObject);
                 }
-                else if (System.Array.IndexOf(TemplatePieces, child.name) >= 0)
-                {
-                    child.gameObject.SetActive(false);
-                }
             }
         }
 
-        /// <summary>The loader would keep swapping frames on the hidden block icon; the cats replace it.</summary>
-        private static void UnlinkTemplateIcon(Scene scene)
+        private static void LinkBoot(Scene scene)
         {
-            Transform holder = FindRoot(scene, "LoadingManager");
+            SplashBoot boot = null;
+            ConsentPopup consent = null;
 
-            if (holder == null)
+            foreach (GameObject root in scene.GetRootGameObjects())
+            {
+                boot = boot != null ? boot : root.GetComponentInChildren<SplashBoot>(true);
+                consent = consent != null ? consent : root.GetComponentInChildren<ConsentPopup>(true);
+            }
+
+            if (boot == null)
             {
                 return;
             }
 
-            LoadingManager loader = holder.GetComponent<LoadingManager>();
-            loader.loadingIcon = null;
-            loader.loadingFrames = new Sprite[0];
-            EditorUtility.SetDirty(loader);
+            boot.EditorLink(consent, AssetDatabase.LoadAssetAtPath<EconomyConfigSO>(EconomyPath));
+            EditorUtility.SetDirty(boot);
         }
 
         private static Transform FindRoot(Scene scene, string name)

@@ -1,4 +1,3 @@
-using AirlinePop.Base.Data;
 using UnityEngine;
 
 namespace AirlinePop.SingleLine.Unity
@@ -28,7 +27,7 @@ namespace AirlinePop.SingleLine.Unity
 
         private void Apply()
         {
-            LiverySO livery = new ProfileLiveryService(catalog, UserProfileController.Instance).Equipped;
+            LiverySO livery = new ProfileLiveryService(catalog, PlayerProfile.Instance).Equipped;
 
             if (livery == null)
             {

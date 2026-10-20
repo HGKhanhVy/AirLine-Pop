@@ -1,13 +1,10 @@
-using AirlinePop.Base;
-using AirlinePop.Base.Data;
-using AirlinePop.Base.UI;
 using UnityEngine;
 
 namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>
     /// Composition root of the gameplay HUD: builds the settings and navigation services
-    /// over the SDK singletons, finds the player's companion cat in the save, and hands
+    /// over the app's audio, haptics and scene cover, finds the player's companion cat in the save, and hands
     /// them to the pause and win controllers. The views below never look anything up.
     /// </summary>
     public sealed class GameplayHudBootstrap : MonoBehaviour
@@ -20,12 +17,12 @@ namespace AirlinePop.SingleLine.Unity
         [Tooltip("His Majesty the VIP guest, shown on the win card after a VIP flight.")]
         [SerializeField] private CatView vipGuest;
 
-        // Start rather than Awake: the SDK singletons load their saves in their own Awake.
+        // Start rather than Awake: the app root's services register in their own Awake.
         private void Start()
         {
-            UserProfileController profile = UserProfileController.Instance;
-            var settings = new SdkSettingsService(AudioController.Instance, VibrationController.Instance, profile);
-            var navigator = new SdkSceneNavigator(UISceneController.Instance);
+            PlayerProfile profile = PlayerProfile.Instance;
+            var settings = new SettingsService(GameAudio.Instance, DeviceHaptics.Instance);
+            var navigator = new SceneNavigator(SceneTransition.Instance);
 
             portraitStage.Initialize(FindCompanion(profile));
             portraitStage.InitializeGuest(vipGuest);
@@ -33,7 +30,7 @@ namespace AirlinePop.SingleLine.Unity
             win.Initialize(portraitStage, catalog);
         }
 
-        private CatView FindCompanion(UserProfileController profile)
+        private CatView FindCompanion(PlayerProfile profile)
         {
             if (profile == null || catalog == null)
             {

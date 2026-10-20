@@ -1,4 +1,3 @@
-using AirlinePop.Base.Data;
 
 namespace AirlinePop.SingleLine.Unity
 {
@@ -10,23 +9,23 @@ namespace AirlinePop.SingleLine.Unity
     {
         private const string KeyPrefix = "tutorial_";
 
-        private readonly UserProfileController profile;
+        private readonly PlayerProfile profile;
 
-        public ProfileTutorialProgressStore(UserProfileController profile)
+        public ProfileTutorialProgressStore(PlayerProfile profile)
         {
             this.profile = profile;
         }
 
         public bool IsDone(string stepId)
         {
-            return profile != null && profile.GetParam<bool>(KeyPrefix + stepId);
+            return profile != null && profile.Get<bool>(KeyPrefix + stepId);
         }
 
         public void MarkDone(string stepId)
         {
             if (profile != null)
             {
-                profile.SetParam(KeyPrefix + stepId, true);
+                profile.Set(KeyPrefix + stepId, true);
             }
         }
     }

@@ -21,7 +21,7 @@ namespace AirlinePop.SingleLine.Editor
     /// its NuGet DLLs from its own manifest, so editing either by hand is undone on the next
     /// compile. Filtering at build time is the one place the decision sticks.
     ///
-    /// Nothing under _Game, _SDK or UXUI references these assemblies, so dropping them cannot
+    /// Nothing under _Game references these assemblies, so dropping them cannot
     /// leave a dangling reference. The editor keeps them: this callback only runs for players.
     /// </summary>
     public sealed class McpPlayerAssemblyFilter : IFilterBuildAssemblies

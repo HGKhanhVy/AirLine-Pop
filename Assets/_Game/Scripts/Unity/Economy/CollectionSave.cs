@@ -4,8 +4,8 @@ using System.Collections.Generic;
 namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>
-    /// Everything the cat-room economy saves besides the coin balance, which the SDK
-    /// profile keeps (GDD 12: wallet and inventory, cat instances, equipment).
+    /// Everything the cat-room economy saves besides the coin balance, which the
+    /// player profile keeps (GDD 12: wallet and inventory, cat instances, equipment).
     /// </summary>
     [Serializable]
     public sealed class CollectionSave

@@ -67,7 +67,7 @@ namespace AirlinePop.SingleLine.Unity.EditorTools
         {
             if (!EditorApplication.isPlaying)
             {
-                EditorGUILayout.HelpBox("Open the Gameplay scene (Assets/_SDK/Template/Scenes/Gameplay.unity) and press Play, then pick a flight.",
+                EditorGUILayout.HelpBox("Open the Gameplay scene (Assets/_Game/Scenes/Gameplay.unity) and press Play, then pick a flight.",
                     MessageType.Info);
             }
 
@@ -130,13 +130,7 @@ namespace AirlinePop.SingleLine.Unity.EditorTools
         /// <summary>Lets the cards explaining night, formation and VIP flights show again, to see them once more.</summary>
         private static void ForgetRuleCards()
         {
-            var profile = AirlinePop.Base.Data.UserProfileController.Instance;
-
-            if (profile == null)
-            {
-                Debug.LogWarning("Level Jump: the rule cards are remembered in the profile, which only loads in Play mode.");
-                return;
-            }
+            PlayerProfile profile = PlayerProfile.Instance;
 
             foreach (LevelRule rule in new[]
                      {
@@ -144,7 +138,7 @@ namespace AirlinePop.SingleLine.Unity.EditorTools
                          LevelRule.Beacon, LevelRule.Bridge, LevelRule.Storm
                      })
             {
-                profile.SetParam("rule_seen_" + rule, false);
+                profile.Set("rule_seen_" + rule, false);
             }
         }
     }

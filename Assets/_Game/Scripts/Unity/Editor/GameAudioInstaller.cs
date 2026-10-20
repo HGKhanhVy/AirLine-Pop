@@ -1,5 +1,4 @@
 using System.Linq;
-using AirlinePop.Base;
 using UnityEditor;
 using UnityEngine;
 
@@ -23,7 +22,6 @@ namespace AirlinePop.SingleLine.Unity.EditorTools
         public const string MeowPath = AudioFolder + "Sfx/meow.ogg";
 
         private const string PrefabPath = "Assets/_Game/Prefabs/SingleLineGameplay.prefab";
-        private const string SoundConfigPath = "Assets/_SDK/Runtime/Audio/SoundAssetConfigs.asset";
         private const int StepVoiceCount = 4;
 
         // The tune the path plays, as note names: arpeggios over C, G, Am and F, four notes
@@ -81,7 +79,6 @@ namespace AirlinePop.SingleLine.Unity.EditorTools
                 PrefabUtility.UnloadPrefabContents(contents);
             }
 
-            SetGameplayMusic(music);
             return "Game audio installed: a " + tune.Length + " step tune, meow, music.";
         }
 
@@ -137,20 +134,6 @@ namespace AirlinePop.SingleLine.Unity.EditorTools
             }
         }
 
-        private static void SetGameplayMusic(AudioClip music)
-        {
-            var config = AssetDatabase.LoadAssetAtPath<SoundAssetConfigs>(SoundConfigPath);
-            SoundAsset entry = config != null ? config.GetMusic(SoundName.Gameplay_Music) : null;
-
-            if (entry == null)
-            {
-                return;
-            }
-
-            entry.clip = music;
-            EditorUtility.SetDirty(config);
-            AssetDatabase.SaveAssetIfDirty(config);
-        }
 
         /// <summary>
         /// Long loops stream from disk instead of sitting decoded in memory; the short notes

@@ -1,12 +1,7 @@
 using System.Collections;
 using System.Threading.Tasks;
-using AirlinePop.Base;
-using AirlinePop.Base.Data;
-using AirlinePop.Base.Gameplay;
-using AirlinePop.Base.Level;
 using AirlinePop.SingleLine.Core;
 using AirlinePop.SingleLine.Data;
-using AirlinePop.Template;
 using UnityEngine;
 
 namespace AirlinePop.SingleLine.Unity
@@ -18,26 +13,10 @@ namespace AirlinePop.SingleLine.Unity
     public sealed class LevelBootstrap : MonoBehaviour
     {
         [SerializeField] private GameplayController controller;
-        [SerializeField] private GameStateService gameStateService;
 
         [Tooltip("The one config that lists every level. Leave empty to fall back on the " +
                  "ch<chapter>_<slot> numbering rule, which an isolated scene needs.")]
-        [SerializeField] private LevelConfigSO levelConfig;
-
-        [Tooltip("From the Gameplay scene services. Keeps the template flow on the same " +
-                 "level number gameplay is on.")]
-        [SerializeField] private LevelService levelService;
-
-        [Tooltip("From the Gameplay scene services. Only needed so the reward is not paid " +
-                 "twice when the template's own win flow is switched on.")]
-        [SerializeField] private GameResultHandleService resultHandler;
-
-        [Tooltip("From the persistent MANAGERS prefab. Leave empty to play without haptics.")]
-        [SerializeField] private VibrationController vibration;
-
-        [Tooltip("Used only when UserProfileController is unavailable in an isolated Editor run.")]
-        [SerializeField, Range(1, CampaignLevelAddress.MaxLevelNumber)]
-        private int fallbackLevelNumber = 1;
+        [SerializeField] private LevelOrderSO levelConfig;
 
         [Tooltip("Open the next level on its own after a win. Turn this off when a win " +
                  "screen owns the moment; it then raises RequestNextLevel on the channel.")]
@@ -46,12 +25,8 @@ namespace AirlinePop.SingleLine.Unity
         [Tooltip("Seconds to admire a finished board before the next one opens.")]
         [SerializeField, Min(0f)] private float delayAfterWin = 0.9f;
 
-        [Tooltip("Paid on top of the level reward the first time a level is finished. " +
-                 "GDD 8.1 puts it at 20 coins; the base reward lives in the team's GameConfig.")]
-        [SerializeField, Min(0)] private int firstClearBonus = 20;
-
-        [Tooltip("When set, rewards follow the cat-room economy (GDD 6): coins on the first " +
-                 "clear only. Leave empty for the older base-plus-bonus rule above.")]
+        [Tooltip("Rewards follow the cat-room economy (GDD 6): coins on the first clear, " +
+                 "a little for a replay. Leave empty to play without an economy.")]
         [SerializeField] private EconomyConfigSO economy;
 
         [Tooltip("Runs the daily flight when Home asked for it instead of the campaign.")]
@@ -75,10 +50,7 @@ namespace AirlinePop.SingleLine.Unity
             repository = new ChapterLevelRepository(new ResourcesChapterSource());
             advanceDelay = new WaitForSeconds(delayAfterWin);
 
-            VibrationController hapticController = vibration != null
-                ? vibration
-                : VibrationController.Instance;
-            controller.SetHaptics(hapticController == null ? null : new SdkHapticService(hapticController));
+            controller.SetHaptics(DeviceHaptics.Instance);
             controller.SetHintService(new ContinuationHintService(new WarnsdorffSolverFactory()));
             controller.OnStateChanged += HandleStateChanged;
 
@@ -149,23 +121,9 @@ namespace AirlinePop.SingleLine.Unity
             return new CampaignAddressCatalog();
         }
 
-        /// <summary>
-        /// One owner for the campaign position, in this order: the template's level
-        /// service when the scene has one, the profile alone when it does not, and an
-        /// in-memory value when neither exists so a bare scene still runs.
-        /// </summary>
-        private ILevelProgressStore CreateProgressStore()
+        private static ILevelProgressStore CreateProgressStore()
         {
-            UserProfileController profile = UserProfileController.Instance;
-
-            if (profile == null)
-            {
-                return new SessionLevelProgressStore(fallbackLevelNumber);
-            }
-
-            return levelService != null
-                ? (ILevelProgressStore)new LevelServiceProgressStore(levelService, profile)
-                : new UserProfileLevelProgressStore(profile);
+            return new UserProfileLevelProgressStore(PlayerProfile.Instance);
         }
 
         private void OnDestroy()
@@ -254,23 +212,18 @@ namespace AirlinePop.SingleLine.Unity
             LoadNext();
         }
 
-        /// <summary>
-        /// Nothing is paid when no profile is loaded, which is the case for a scene opened
-        /// on its own; the board still plays, it just has no economy behind it.
-        /// </summary>
+        /// <summary>Without an economy config the board still plays, it just pays nothing.</summary>
         private ILevelRewardService CreateRewardService()
         {
-            UserProfileController profile = UserProfileController.Instance;
-            if (profile == null)
+            if (economy == null)
             {
                 return null;
             }
 
-            return economy != null
-                ? new FirstClearRewardService(profile, resultHandler, economy,
-                    new ReplayAllowance(new ProfileReplayRewardStore(profile), economy.ReplayCoins, economy.PaidReplaysPerDay),
-                    new LocalDayClock())
-                : (ILevelRewardService)new ProfileLevelRewardService(profile, resultHandler, firstClearBonus);
+            PlayerProfile profile = PlayerProfile.Instance;
+            return new FirstClearRewardService(profile, economy,
+                new ReplayAllowance(new ProfileReplayRewardStore(profile), economy.ReplayCoins, economy.PaidReplaysPerDay),
+                new LocalDayClock());
         }
 
         private void AwardLevelReward(bool isFirstClear)
@@ -318,7 +271,6 @@ namespace AirlinePop.SingleLine.Unity
             currentLevelNumber = levelNumber;
 
             controller.Load(level);
-            gameStateService?.ResetToPlaying();
             GameplayEvents.RaiseLevelLoaded(currentLevelNumber, currentLevelId, level.Difficulty,
                 level.ActiveCellCount);
             GameplayEvents.RaiseSpecialFlight(FlightName(level));
@@ -424,7 +376,6 @@ namespace AirlinePop.SingleLine.Unity
                 // The daily flight pays its own coins and leaves the campaign's position alone.
                 dailyFlight.Complete();
                 GameplayEvents.RaiseLevelWon(currentLevelNumber, currentLevelId);
-                gameStateService?.Win();
                 return;
             }
 
@@ -453,7 +404,6 @@ namespace AirlinePop.SingleLine.Unity
             }
 
             GameplayEvents.RaiseLevelWon(completedLevel, completedLevelId);
-            gameStateService?.Win();
 
             CancelAdvance();
 

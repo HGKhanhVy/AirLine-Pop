@@ -1,4 +1,3 @@
-using AirlinePop.Base.UI;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
@@ -7,15 +6,14 @@ using UnityEngine.UI;
 namespace AirlinePop.SingleLine.Unity.EditorTools
 {
     /// <summary>
-    /// Builds the loading screen onto the SDK's scene change overlay in MANAGERS: on a plain
+    /// Builds the loading screen onto the scene cover in the app root prefab: on a plain
     /// sky, Captain Bơ stands in the middle of a little track cracking jokes in a speech
     /// bubble while four cats hop and tumble after a ball of yarn round him, under a few small
-    /// clouds and paper planes. Replaces the overlay's plain
-    /// "Loading.." text. Safe to rerun.
+    /// clouds and paper planes. Safe to rerun.
     /// </summary>
     public static class LoadingScreenBuilder
     {
-        private const string ManagersPath = "Assets/_SDK/Content/Prefabs/MANAGERS.prefab";
+        private const string ManagersPath = "Assets/_Game/Prefabs/AppRoot.prefab";
         private const string ScreenName = "Loading Screen";
         private const string MapArt = "Assets/_Game/Art/RouteMap/";
         private const string LoadingArt = "Assets/_Game/Art/Loading/";
@@ -71,11 +69,11 @@ namespace AirlinePop.SingleLine.Unity.EditorTools
 
             try
             {
-                var controller = managers.GetComponentInChildren<UISceneController>(true);
+                var controller = managers.GetComponentInChildren<SceneTransition>(true);
 
                 if (controller == null)
                 {
-                    return "No scene controller in MANAGERS; loading screen not built.";
+                    return "No scene transition in the app root; loading screen not built.";
                 }
 
                 var so = new SerializedObject(controller);
@@ -94,7 +92,7 @@ namespace AirlinePop.SingleLine.Unity.EditorTools
             }
         }
 
-        /// <summary>Drops an earlier build and hides the SDK's own pieces under the new screen.</summary>
+        /// <summary>Drops an earlier build and hides anything else on the cover.</summary>
         private static void ClearOverlay(Transform overlay)
         {
             for (int i = overlay.childCount - 1; i >= 0; i--)
@@ -112,7 +110,7 @@ namespace AirlinePop.SingleLine.Unity.EditorTools
             }
         }
 
-        private static void BuildScreen(Transform overlay, UISceneController controller)
+        private static void BuildScreen(Transform overlay, SceneTransition controller)
         {
             RectTransform screen = UiBuilder.Stretch(UiBuilder.Rect(ScreenName, overlay));
             LoadingAnimation[] parts = BuildContent(screen);

@@ -1,21 +1,16 @@
-using AirlinePop.Base.Level;
 using AirlinePop.SingleLine.Data;
 
 namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>
-    /// Reads the campaign order out of the team's <see cref="LevelConfigSO"/>, so the
-    /// list a designer edits in the Inspector is the list the game plays.
-    ///
-    /// Entries that hold something other than a Single Line level are skipped rather
-    /// than guessed at: the config is shared with the rest of the template, and a slot
-    /// filled in by another feature must not silently become a board here.
+    /// Reads the campaign order out of the <see cref="LevelOrderSO"/>. An empty slot or a
+    /// level without an id is reported as missing rather than guessed at.
     /// </summary>
     public sealed class LevelConfigCatalog : ILevelCatalog
     {
-        private readonly LevelConfigSO config;
+        private readonly LevelOrderSO config;
 
-        public LevelConfigCatalog(LevelConfigSO config)
+        public LevelConfigCatalog(LevelOrderSO config)
         {
             this.config = config;
         }
@@ -25,16 +20,9 @@ namespace AirlinePop.SingleLine.Unity
         public bool TryGetLevelId(int levelNumber, out string levelId)
         {
             levelId = null;
+            SingleLineLevelSO definition = config == null ? null : config.GetLevel(levelNumber - 1);
 
-            if (config == null || levelNumber < 1 || levelNumber > config.LevelCount)
-            {
-                return false;
-            }
-
-            LevelConfig entry = config.GetLevelByIndex(levelNumber - 1);
-
-            if (entry == null || !(entry.levelDefinition is SingleLineLevelSO definition) ||
-                string.IsNullOrEmpty(definition.LevelId))
+            if (definition == null || string.IsNullOrEmpty(definition.LevelId))
             {
                 return false;
             }

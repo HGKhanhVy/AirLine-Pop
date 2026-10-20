@@ -1,8 +1,5 @@
 using System;
 using System.Collections.Generic;
-using AirlinePop.Base;
-using AirlinePop.Base.Data;
-using AirlinePop.Base.UI;
 using UnityEngine;
 
 namespace AirlinePop.SingleLine.Unity
@@ -64,10 +61,10 @@ namespace AirlinePop.SingleLine.Unity
 
         public IVipFlightStore VipFlights { get; private set; }
 
-        // Start rather than Awake: the SDK profile singleton loads its save in its own Awake.
+        // Start rather than Awake: the app root's services register in their own Awake.
         private void Start()
         {
-            UserProfileController profile = UserProfileController.Instance;
+            PlayerProfile profile = PlayerProfile.Instance;
             var store = new ProfileCollectionStore(profile);
             CollectionSeeder.EnsureSeeded(store, catalog, economy);
 
@@ -83,7 +80,7 @@ namespace AirlinePop.SingleLine.Unity
             {
                 vipGuest.SetVisiting(VipFlights.IsGuestVisiting(clock.Today));
             }
-            navigator = new SdkSceneNavigator(UISceneController.Instance);
+            navigator = new SceneNavigator(SceneTransition.Instance);
 
             int nextFlight = Math.Max(1, new UserProfileLevelProgressStore(profile).CurrentLevelNumber);
 
@@ -116,7 +113,7 @@ namespace AirlinePop.SingleLine.Unity
 
             if (settingsPanel != null)
             {
-                settingsPanel.Initialize(new SdkSettingsService(AudioController.Instance, VibrationController.Instance, profile));
+                settingsPanel.Initialize(new SettingsService(GameAudio.Instance, DeviceHaptics.Instance));
             }
 
             if (departures != null)
