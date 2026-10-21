@@ -16,7 +16,7 @@ namespace AirlinePop.SingleLine.Unity
     {
         [SerializeField] private GameplayEffect effect;
 
-        [Tooltip("Particle prefab, taken from Asset_Resources. Leave empty to play nothing.")]
+        [Tooltip("Particle prefab. Leave empty to play nothing.")]
         [SerializeField] private ParticleSystem prefab;
 
         [Tooltip("How many bursts of this effect may run at the same time.")]

@@ -1393,7 +1393,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 0261001482d6e8a499327925da6f4c9c, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 8fc0fcf7efefb9743abc1c3223213ad7, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -1838,7 +1838,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: b1498e7798b93054282f9c9004b8adfc, type: 2}
+  - {fileID: 2100000, guid: fd6b3e796cea4561ab5891756ac214fe, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -5010,7 +5010,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: b1498e7798b93054282f9c9004b8adfc, type: 2}
+  - {fileID: 2100000, guid: fd6b3e796cea4561ab5891756ac214fe, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -12412,7 +12412,7 @@ ParticleSystemRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 2314820b5090b8e4998316ab36b192dc, type: 2}
+  - {fileID: 2100000, guid: b59c9842b568414d8ed940ab72f8fa78, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -16838,13 +16838,13 @@ MonoBehaviour:
   - {fileID: 8308609376341727635}
   - {fileID: 9130340158505866811}
   - {fileID: 6995737239122332868}
-  levelStartClip: {fileID: 8300000, guid: 925d0519879f5be4c9f7bcdf68deba4b, type: 3}
+  levelStartClip: {fileID: 8300000, guid: 5a0bdd6b48d54b69859bc6e67a168768, type: 3}
   levelStartVolume: 0.3
-  undoClip: {fileID: 8300000, guid: 441dc771f544a834bb51e0a5273961f6, type: 3}
-  restartClip: {fileID: 8300000, guid: a88493d2c8b6e574b99f5e82fcdfb265, type: 3}
-  hintClip: {fileID: 8300000, guid: f63ff2a00bd0f7f4ba3d83bd8600cd08, type: 3}
-  winCelebrationClip: {fileID: 8300000, guid: 96451839bda0bcd4a8f126ba7b29d2cb, type: 3}
-  deadEndClip: {fileID: 8300000, guid: 1f6a73fdf8f0fcd46a700e4acbf525c0, type: 3}
+  undoClip: {fileID: 8300000, guid: 18d55f7700a3446689f80f14ce757948, type: 3}
+  restartClip: {fileID: 8300000, guid: 8cdfb9bfec9c4c028a1b962d87323e0c, type: 3}
+  hintClip: {fileID: 8300000, guid: c9769db480eb4311a1b47d45c2900811, type: 3}
+  winCelebrationClip: {fileID: 8300000, guid: 25be689d717a4defaf6c2fb470f4677b, type: 3}
+  deadEndClip: {fileID: 8300000, guid: 7666e88ce7cd49f9ac79c45abcae28cb, type: 3}
   actionVolume: 0.7
   passengerClip: {fileID: 8300000, guid: d7bdfe6440b265e4486dc8dfc8c86b91, type: 3}
   passengerVolume: 0.6

@@ -11,8 +11,7 @@ namespace AirlinePop.SingleLine.Unity.EditorTools
             string report = BoardLightingInstaller.Install()
                 + "\n\n" + FlightPathInstaller.Install()
                 + "\n\n" + BlockTileInstaller.Install()
-                + "\n\n" + IslandWorldInstaller.Install()
-                + "\n\n" + HudStyleInstaller.Install();
+                + "\n\n" + IslandWorldInstaller.Install();
             EditorUtility.DisplayDialog("AirLine Pop", report, "OK");
         }
     }

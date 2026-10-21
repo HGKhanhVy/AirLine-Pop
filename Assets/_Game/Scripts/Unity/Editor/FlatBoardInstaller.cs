@@ -19,7 +19,7 @@ namespace AirlinePop.SingleLine.Unity.EditorTools
         private const string CellPrefabPath = "Assets/_Game/Prefabs/CellFlat.prefab";
         private const string ThemePath = "Assets/_Game/Config/Theme.asset";
         private const string SkinFolder = "Assets/_Game/Config/Skins";
-        private const string SolidLineMaterialPath = "Assets/_Game/Asset_Resources/Material/mat_line.mat";
+        private const string SolidLineMaterialPath = "Assets/_Game/Art/Fx/path_line.mat";
         private const string RouteMaterialPath = ArtFolder + "/mat_runway_dash.mat";
         private const string SurfaceMaterialPath = ArtFolder + "/mat_runway_surface.mat";
 

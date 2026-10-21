@@ -24,9 +24,9 @@ namespace AirlinePop.SingleLine.Unity.EditorTools
         private const string GameplayPrefabPath = "Assets/_Game/Prefabs/SingleLineGameplay.prefab";
         private const string VipGuestPrefabPath = "Assets/_Game/Art/FlatCats/CatFlat_vip.prefab";
         private const string OldHudName = "Gameplay HUD";
-        private const string WinRevealClipPath = "Assets/_Game/Asset_Resources/AudioClip/sfx_reward.ogg";
-        private const string WinMilestoneClipPath = "Assets/_Game/Asset_Resources/AudioClip/gold completion.ogg";
-        private const string WinCoinClipPath = "Assets/_Game/Asset_Resources/AudioClip/gold 1_01.ogg";
+        private const string WinRevealClipPath = "Assets/_Game/Audio/Sfx/card_reveal.ogg";
+        private const string WinMilestoneClipPath = "Assets/_Game/Audio/Sfx/milestone.ogg";
+        private const string WinCoinClipPath = "Assets/_Game/Audio/Sfx/coin.ogg";
 
         private static readonly Vector2 Reference = new Vector2(1080f, 1920f);
         private static readonly Vector3 StagePosition = new Vector3(0f, -500f, 0f);

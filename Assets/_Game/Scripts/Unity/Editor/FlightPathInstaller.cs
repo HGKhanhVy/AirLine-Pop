@@ -17,7 +17,7 @@ namespace AirlinePop.SingleLine.Unity.EditorTools
     {
         private const string ArtFolder = "Assets/_Game/Art/Flight";
         private const string GameplayPrefabPath = "Assets/_Game/Prefabs/SingleLineGameplay.prefab";
-        private const string SolidLineMaterialPath = "Assets/_Game/Asset_Resources/Material/mat_line.mat";
+        private const string SolidLineMaterialPath = "Assets/_Game/Art/Fx/path_line.mat";
 
         private const string DashTexturePath = ArtFolder + "/tex_flight_dash.png";
         private const string RouteMaterialPath = ArtFolder + "/mat_flight_route.mat";

@@ -8583,11 +8583,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   panel: {fileID: 971239068141390387}
-  revealClip: {fileID: 8300000, guid: 2f8defa5b7bbb404ab4cab1e6ff9f77e, type: 3}
+  revealClip: {fileID: 8300000, guid: 9c8e16e5e8764315aded0941c555f5cc, type: 3}
   revealVolume: 0.8
-  milestoneClip: {fileID: 8300000, guid: bb67ce3c8f13f4745a64d56e051d82a2, type: 3}
+  milestoneClip: {fileID: 8300000, guid: d58774601aa545e18d3b1ec827c22d76, type: 3}
   milestoneVolume: 0.8
-  coinClip: {fileID: 8300000, guid: 91d81480462c956408818099c211fbfc, type: 3}
+  coinClip: {fileID: 8300000, guid: f0ca3e30f44743f29b7a00e5f3dbb185, type: 3}
   coinVolume: 0.45
   coinInterval: 0.07
 --- !u!114 &4395748427814586685
