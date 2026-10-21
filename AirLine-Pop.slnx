@@ -1,6 +1,6 @@
 ﻿<Solution>
-  <Project Path="Assembly-CSharp.csproj" />
   <Project Path="AirlinePop.SingleLine.Import.csproj" />
+  <Project Path="Assembly-CSharp.csproj" />
   <Project Path="AirlinePop.SingleLine.Core.csproj" />
   <Project Path="IngameDebugConsole.Runtime.csproj" />
   <Project Path="AirlinePop.SingleLine.Core.Tests.csproj" />
