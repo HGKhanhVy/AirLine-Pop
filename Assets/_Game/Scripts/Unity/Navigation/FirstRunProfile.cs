@@ -1,5 +1,3 @@
-using UnityEngine;
-
 namespace AirlinePop.SingleLine.Unity
 {
     /// <summary>
@@ -14,34 +12,11 @@ namespace AirlinePop.SingleLine.Unity
         /// </summary>
         private const string ConsentParam = "consent";
 
-        /// <summary>The key the first build wrote. Read once so old installs are not asked twice.</summary>
-        private const string LegacyConsentKey = "HasAcceptedConsent";
-
         private const string SeededParam = "seeded";
 
-        // Saves from earlier builds mark their first launch with this instead.
-        private const string LegacySeededParam = "firstTime";
-
-        /// <summary>
-        /// True once the player has answered. An install from the first build answered into
-        /// PlayerPrefs, so that answer is carried over rather than asked again.
-        /// </summary>
         public static bool HasConsent()
         {
-            PlayerProfile profile = PlayerProfile.Instance;
-
-            if (profile.Get<bool>(ConsentParam))
-            {
-                return true;
-            }
-
-            if (PlayerPrefs.GetInt(LegacyConsentKey, 0) != 1)
-            {
-                return false;
-            }
-
-            profile.Set(ConsentParam, true);
-            return true;
+            return PlayerProfile.Instance.Get<bool>(ConsentParam);
         }
 
         public static void AcceptConsent()
@@ -54,7 +29,7 @@ namespace AirlinePop.SingleLine.Unity
         {
             PlayerProfile profile = PlayerProfile.Instance;
 
-            if (profile.Get<bool>(SeededParam) || profile.Get<bool>(LegacySeededParam))
+            if (profile.Get<bool>(SeededParam))
             {
                 return;
             }

@@ -9,9 +9,8 @@ namespace AirlinePop.SingleLine.Unity
     /// </summary>
     public sealed class GameAudio : MonoBehaviour
     {
-        // Kept from the first builds so a player who muted the game stays muted.
-        private const string MusicOffKey = "settingMuteMusic";
-        private const string SoundOffKey = "settingMuteSound";
+        private const string MusicOffKey = "music_off";
+        private const string SoundOffKey = "sound_off";
 
         [SerializeField, Min(1)] private int soundVoices = 8;
 

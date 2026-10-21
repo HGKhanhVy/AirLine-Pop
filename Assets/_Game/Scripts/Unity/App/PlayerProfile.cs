@@ -16,10 +16,6 @@ namespace AirlinePop.SingleLine.Unity
     {
         private const string StorageKey = "airlinepop_profile";
 
-        // Builds before this class kept the save under another key and layout; it is read
-        // once so testers keep their progress, then removed.
-        private const string LegacyKey = "USER_DATA";
-
         private const string CoinsField = "coins";
         private const string LevelField = "level";
         private const string ValuesField = "values";
@@ -127,16 +123,25 @@ namespace AirlinePop.SingleLine.Unity
             if (PlayerPrefs.HasKey(StorageKey))
             {
                 profile.Read(PlayerPrefs.GetString(StorageKey));
+#if UNITY_ANDROID || UNITY_EDITOR
+                if (LegacySaveImport.TryUpgradeValues(profile.values))
+                {
+                    profile.Save();
+                    LegacySaveImport.CompleteImport();
+                }
+#endif
                 return profile;
             }
 
-            if (PlayerPrefs.HasKey(LegacyKey))
+#if UNITY_ANDROID || UNITY_EDITOR
+            if (LegacySaveImport.TryRead(out string imported))
             {
-                profile.ReadLegacy(PlayerPrefs.GetString(LegacyKey));
+                profile.Read(imported);
                 profile.Save();
-                PlayerPrefs.DeleteKey(LegacyKey);
+                LegacySaveImport.CompleteImport();
                 return profile;
             }
+#endif
 
             profile.levelNumber = 1;
             profile.values = new JObject();
@@ -149,15 +154,6 @@ namespace AirlinePop.SingleLine.Unity
             coins = root.Value<long?>(CoinsField) ?? 0;
             levelNumber = Math.Max(1, root.Value<int?>(LevelField) ?? 1);
             values = root[ValuesField] as JObject ?? new JObject();
-        }
-
-        /// <summary>The old layout kept the values as a JSON string inside the record.</summary>
-        private void ReadLegacy(string json)
-        {
-            JObject root = ParseOrEmpty(json);
-            coins = root.Value<long?>("coin") ?? 0;
-            levelNumber = Math.Max(1, root.Value<int?>("level") ?? 1);
-            values = ParseOrEmpty(root.Value<string>("data"));
         }
 
         private static JObject ParseOrEmpty(string json)

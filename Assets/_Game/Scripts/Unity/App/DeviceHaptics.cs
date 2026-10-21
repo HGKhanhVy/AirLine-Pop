@@ -11,8 +11,7 @@ namespace AirlinePop.SingleLine.Unity
     /// </summary>
     public sealed class DeviceHaptics : IHapticService
     {
-        // Kept from the first builds so a player who turned vibration off keeps it off.
-        private const string VibrationOffKey = "settingMuteVibration";
+        private const string VibrationOffKey = "vibration_off";
         private const float MinSecondsBetween = 0.04f;
 
         private static DeviceHaptics instance;
